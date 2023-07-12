@@ -1,0 +1,45 @@
+<mat-card *ngIf="user" fxFlex
+          [ngClass]="{'cms-card-secondary-color': config.useSecondaryColor, 'cms-card': true}">
+    <mat-card-title>
+      <div>
+        <span [ngClass]="config.showLink ? 'cms-link': 'null'" [routerLink]="['/account', user.id]">
+          <span>{{user.firstName}} {{user.lastName}}</span>
+          <mat-icon *ngIf="!user.enabled">person_off</mat-icon>
+        </span>
+      </div>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <div>
+        <mat-icon>person</mat-icon>
+        <span>{{user.username}}</span>
+      </div>
+      <div *ngIf="user.email">
+        <mat-icon>alternate_email</mat-icon>
+        <span>{{user.email}}</span>
+      </div>
+      <div *ngIf="user.phoneNumber">
+        <mat-icon> phone</mat-icon>
+        <span>{{user.phoneNumber}}</span>
+      </div>
+      <div *ngIf="user.accountType">
+        <mat-icon>perm_identity</mat-icon>
+        <span>{{getTranslatedAccountType()}}</span>
+      </div>
+      <div *ngFor="let university of user.enrolledUniversities">
+            <span class="cms-link" [routerLink]="['/university', university.id]">
+                <mat-icon>business</mat-icon>
+                <span>{{university.name}}</span>
+            </span>
+      </div>
+    </mat-card-subtitle>
+
+  <mat-divider *ngIf="user.description" inset></mat-divider>
+
+  <mat-card-content>
+    <span>{{user.description}}</span>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <ng-content></ng-content>
+  </mat-card-actions>
+</mat-card>

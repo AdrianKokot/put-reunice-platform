@@ -1,0 +1,14 @@
+:host {
+  flex-grow: 1;
+
+  h1 {
+    margin: 0;
+    padding: 2vh;
+  }
+
+  ag-grid-angular {
+    max-width: 1400px;
+    width: 90%;
+    margin-bottom: 4vh;
+  }
+}

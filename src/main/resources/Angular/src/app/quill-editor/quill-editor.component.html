@@ -1,0 +1,29 @@
+<div fxFlex fxLayout='column' fxLayoutAlign="center center" class="cms-padding cms-layout-gap">
+  <mat-card fxFlex>
+    <mat-card-title>{{title}}</mat-card-title>
+    <mat-card-subtitle>{{subtitle}}</mat-card-subtitle>
+
+    <mat-card-actions>
+      <button [disabled]="!content" mat-button (click)="save()">
+        <mat-icon>save</mat-icon>
+        {{"SAVE" | translate}}
+      </button>
+      <button mat-button [routerLink]="onCloseLink" [queryParams]="onCloseLinkParams">
+        <mat-icon>exit_to_app</mat-icon>
+        {{"CLOSE" | translate}}
+      </button>
+      <ng-content></ng-content>
+    </mat-card-actions>
+  </mat-card>
+
+  <div fxFlex="100" fxLayout='column'>
+    <div fxFlex fxLayout='column' class="editor mat-elevation-z4">
+      <quill-editor [ngModel]="content"
+                    (ngModelChange)="onContentChanged($event)"
+                    [sanitize]="true"
+                    (onEditorCreated)="created($event)"
+                    [modules]="modules">
+      </quill-editor>
+    </div>
+  </div>
+</div>

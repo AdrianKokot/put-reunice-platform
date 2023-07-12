@@ -1,0 +1,29 @@
+<div class="form-input">
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>{{"NAME" | translate}}</mat-label>
+      <input matInput required [(ngModel)]="university.name" [formControl]="nameValid">
+      <mat-error *ngIf="nameValid.hasError('required')">{{"UNIVERSITY_NAME_REQUIRED" | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>{{"SHORT_NAME" | translate}}</mat-label>
+      <input matInput required [(ngModel)]="university.shortName" [formControl]="shortNameValid">
+      <mat-error *ngIf="shortNameValid.hasError('required')">{{"UNIVERSITY_SHORT_NAME_REQUIRED" | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>{{"DESCRIPTION" | translate}}</mat-label>
+      <input matInput required [(ngModel)]="university.description" [formControl]="descriptionValid">
+      <mat-error *ngIf="descriptionValid.hasError('required')">{{"UNIVERSITY_DESCRIPTION_REQUIRED" | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+</div>
+<span mat-dialog-actions style="justify-content: center">
+  <button mat-raised-button color="primary" *ngIf="!edit" (click)="createUniversity()">{{"ADD_UNIVERSITY" | translate}}</button>
+  <button mat-raised-button color="primary" *ngIf="edit"
+          (click)="editUniversity()">{{"SAVE" | translate}}</button>
+  <button mat-raised-button color="warn" (click)="close()">{{"CLOSE" | translate}}</button>
+</span>

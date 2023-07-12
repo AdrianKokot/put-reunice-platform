@@ -1,0 +1,15 @@
+<div fxFlex fxLayout='column' fxLayoutAlign="center center">
+  <h1 fxFlex>{{"USERS" | translate}}</h1>
+  <button fxFlex mat-button (click)="addUser()">{{"ADD_USER" | translate}}</button>
+  <ag-grid-angular fxFlex="100"
+    class="ag-theme-alpine"
+    [suppressCellFocus]="true"
+    [rowSelection]="'single'"
+    [rowData]="data"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [overlayNoRowsTemplate]="noRowsTemplate"
+    (rowSelected)="onRowSelected($event)"
+    (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+</div>

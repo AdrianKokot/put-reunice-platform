@@ -1,0 +1,11 @@
+<div class="form-input">
+    <div class="row">
+        <app-key-words-selectors [keyWords]="listOfKeyWords" (keyWordsChanged)="onKeyWordsChanged($event)"
+            [form]="form">
+        </app-key-words-selectors>
+    </div>
+    <span mat-dialog-actions style="justify-content: center">
+        <button mat-raised-button color="primary" (click)="changeKeyWords()">{{"SAVE" | translate}}</button>
+        <button mat-raised-button color="warn" (click)="close()">{{"CLOSE" | translate}}</button>
+    </span>
+</div>
