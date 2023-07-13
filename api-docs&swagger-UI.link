@@ -1,4 +1,0 @@
-default: http://localhost:8080/v3/api-docs
-set:     http://localhost:8080/api/api-docs (available through nginx proxy at http://localhost/api/api-docs)
-http://localhost:8080/api/swagger-ui/index.html (available through nginx proxy at http://localhost/api/swagger-ui/index.html)
-http://localhost:8080/universities (available through nginx proxy at http://localhost/api/universities)

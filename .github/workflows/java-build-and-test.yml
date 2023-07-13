@@ -1,4 +1,4 @@
-name: 🏗️ Java Build & Test
+name: 🏗️ Maven
 
 on:
   push:

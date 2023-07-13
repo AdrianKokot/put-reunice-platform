@@ -1,11 +1,4 @@
-# CMS Prototype
-
-## Authors:
-- Damian Mielczarek
-- Mateusz Olszewski
-- Mateusz Matkowski
-- Wiktoria Moczulak
-- Marcin Szeląg (refactoring and preparing production release)
+# REUNICE Platform
 
 ## Docker
 
@@ -27,8 +20,3 @@ Please read the instructions in the `.env` file (located in the main project dir
 - [http://localhost/api/api-docs](http://localhost/api/api-docs) - OpenAPI 3 specification of the application's RESTful API (supplied by the SpringBoot Java backend component)
 - [http://localhost/api/swagger-ui](http://localhost/api/swagger-ui) - Swagger UI documentation and test platform for the application's RESTful API
 - [http://localhost/api/universities](http://localhost/api/universities) - exemplary RESTful API call using HTTP GET method (forwarded by nginx to the backend container)
-
-### Useful links from other host on the Internet (assuming ms.cs.put.poznan.pl Docker host is running the application)
-- [http://ms.cs.put.poznan.pl/api/api-docs](http://ms.cs.put.poznan.pl/api/api-docs) - OpenAPI 3 specification of the application's RESTful API (supplied by the SpringBoot Java backend component)
-- [http://ms.cs.put.poznan.pl/api/swagger-ui](http://ms.cs.put.poznan.pl/api/swagger-ui) - Swagger UI documentation and test platform for the application's RESTful API
-- [http://ms.cs.put.poznan.pl/api/universities](http://ms.cs.put.poznan.pl/api/universities) - exemplary RESTful API call using HTTP GET method (forwarded by nginx to the backend container)
