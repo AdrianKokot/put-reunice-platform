@@ -14,7 +14,7 @@ services:
 
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
       args:
         APPLICATION_SERVER: ${APPLICATION_SERVER}
@@ -31,7 +31,7 @@ services:
       - postgres
 
   frontend:
-    build: ./src/main/resources/Angular
+    build: ./frontend/Angular
     container_name: frontend
     ports:
       - "80:80"
