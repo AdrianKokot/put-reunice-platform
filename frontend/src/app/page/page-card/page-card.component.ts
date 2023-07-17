@@ -1,23 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Page} from "../../../assets/models/page";
-import {SecurityService} from "../../../assets/service/security.service";
+import { Component, Input } from '@angular/core';
+import { Page } from '../../../assets/models/page';
+import { SecurityService } from '../../../assets/service/security.service';
 
 @Component({
-  selector: 'app-page-card',
+  selector: 'reunice-page-card',
   templateUrl: './page-card.component.html',
-  styleUrls: ['./page-card.component.scss']
+  styleUrls: ['./page-card.component.scss'],
 })
-export class PageCardComponent implements OnInit {
-
+export class PageCardComponent {
   @Input() page?: Page;
-  @Input() config: PageCardConfig = {} as PageCardConfig
+  @Input() config: PageCardConfig = {} as PageCardConfig;
 
-  constructor(public securityService: SecurityService) {
-  }
-
-  ngOnInit(): void {
-  }
-
+  constructor(public securityService: SecurityService) {}
 }
 
 export interface PageCardConfig {

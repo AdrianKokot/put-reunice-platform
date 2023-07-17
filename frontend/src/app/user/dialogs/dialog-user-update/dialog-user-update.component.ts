@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../../assets/service/dialog.service';
 
 @Component({
-  selector: 'app-dialog-user-update',
+  selector: 'reunice-dialog-user-update',
   templateUrl: './dialog-user-update.component.html',
   styleUrls: ['./dialog-user-update.component.scss'],
 })
@@ -30,7 +30,8 @@ export class DialogUserUpdateComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogUserUpdateComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Partial<{ user: UserForm & {id: number} }>,
+    @Inject(MAT_DIALOG_DATA)
+    public data: Partial<{ user: UserForm & { id: number } }>,
     private userService: UserService,
     private dialogService: DialogService,
     private translate: TranslateService

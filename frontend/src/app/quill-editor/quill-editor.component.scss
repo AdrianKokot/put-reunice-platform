@@ -4,7 +4,7 @@
   flex-grow: 1;
 
   mat-card {
-    @extend .cms-fixed-width
+    @extend .cms-fixed-width;
   }
 
   .editor {

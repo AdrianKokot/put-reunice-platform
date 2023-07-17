@@ -6,45 +6,51 @@ import { ErrorHandlerService } from './error-handler.service';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class KeyWordsService {
-
   private keyWordsUrl = `${environment.backendAPIRootUrl}/keyWords`;
 
   httpOptions = {
-    withCredentials: true
+    withCredentials: true,
   };
 
   constructor(
     private http: HttpClient,
     private errorHandler: ErrorHandlerService
-  ) {
-  }
+  ) {}
 
-  getKeyWord(id: number, defaultErrorHandling: boolean = true): Observable<Keyword> {
-    return this.http.get<Keyword>(`${this.keyWordsUrl}/${id}`, this.httpOptions)
+  getKeyWord(id: number, defaultErrorHandling = true): Observable<Keyword> {
+    return this.http
+      .get<Keyword>(`${this.keyWordsUrl}/${id}`, this.httpOptions)
       .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
   }
 
-  getAllKeyWords(defaultErrorHandling: boolean = true): Observable<Keyword[]> {
-    return this.http.get<Keyword[]>(this.keyWordsUrl + "/all", this.httpOptions)
+  getAllKeyWords(defaultErrorHandling = true): Observable<Keyword[]> {
+    return this.http
+      .get<Keyword[]>(this.keyWordsUrl + '/all', this.httpOptions)
       .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
   }
 
-  addKeyWord(word: string, defaultErrorHandling: boolean = true): Observable<string> {
-    return this.http.post<string>(this.keyWordsUrl, word, this.httpOptions)
+  addKeyWord(word: string, defaultErrorHandling = true): Observable<string> {
+    return this.http
+      .post<string>(this.keyWordsUrl, word, this.httpOptions)
       .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
   }
 
-
-  modifyKeyWordWordField(id: Number, word: string, defaultErrorHandling: boolean = true): Observable<void> {
-    return this.http.post<void>(`${this.keyWordsUrl}/${id}`, word, this.httpOptions)
+  modifyKeyWordWordField(
+    id: number,
+    word: string,
+    defaultErrorHandling = true
+  ): Observable<void> {
+    return this.http
+      .post<void>(`${this.keyWordsUrl}/${id}`, word, this.httpOptions)
       .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
   }
 
-  deleteKeyWord(id: Number, defaultErrorHandling: boolean = true): Observable<any> {
-    return this.http.delete<void>(`${this.keyWordsUrl}/${id}`, this.httpOptions)
+  deleteKeyWord(id: number, defaultErrorHandling = true): Observable<any> {
+    return this.http
+      .delete<void>(`${this.keyWordsUrl}/${id}`, this.httpOptions)
       .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
   }
 }

@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {PageService} from "../../assets/service/page.service";
-import {Page} from "../../assets/models/page";
-import {PageCardConfig} from "../page/page-card/page-card.component";
-import {DialogService} from 'src/assets/service/dialog.service';
-import {SpinnerService} from 'src/assets/service/spinner.service';
+import { Component, OnInit } from '@angular/core';
+import { PageService } from '../../assets/service/page.service';
+import { Page } from '../../assets/models/page';
+import { PageCardConfig } from '../page/page-card/page-card.component';
+import { DialogService } from 'src/assets/service/dialog.service';
+import { SpinnerService } from 'src/assets/service/spinner.service';
 
 @Component({
-  selector: 'app-main-page',
+  selector: 'reunice-main-page',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.scss']
+  styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
   pages: Page[] = [];
@@ -20,12 +20,14 @@ export class MainPageComponent implements OnInit {
     showDescription: false,
     showUniversity: false,
     showCreatedOn: false,
-    showAuthor: false
+    showAuthor: false,
   };
 
-  constructor(private dialogService: DialogService,
-              private spinnerService: SpinnerService,
-              private pageService: PageService) {}
+  constructor(
+    private dialogService: DialogService,
+    private spinnerService: SpinnerService,
+    private pageService: PageService
+  ) {}
 
   ngOnInit(): void {
     this.loadPages();
@@ -34,27 +36,26 @@ export class MainPageComponent implements OnInit {
 
   loadPages() {
     this.spinnerService.show();
-    this.pageService.getMainPages()
-      .subscribe({
-        next: res => {
-          this.pages = res;
-          this.spinnerService.hide();
-        },
-        error: () => {
-          this.spinnerService.hide();
-        }
-      });
+    this.pageService.getMainPages().subscribe({
+      next: (res) => {
+        this.pages = res;
+        this.spinnerService.hide();
+      },
+      error: () => {
+        this.spinnerService.hide();
+      },
+    });
   }
 
   onResize(event: Event) {
-    if (!(event.target instanceof Window)){return;}
-    this.breakpoint =  this.countBreakpoint(event.target.innerWidth);
+    if (!(event.target instanceof Window)) {
+      return;
+    }
+    this.breakpoint = this.countBreakpoint(event.target.innerWidth);
   }
 
-  countBreakpoint(width: number):number{
-    if(width < 800)
-      return Math.floor(width/ 325);
-    return Math.floor(width/ 400);
+  countBreakpoint(width: number): number {
+    if (width < 800) return Math.floor(width / 325);
+    return Math.floor(width / 400);
   }
-
 }

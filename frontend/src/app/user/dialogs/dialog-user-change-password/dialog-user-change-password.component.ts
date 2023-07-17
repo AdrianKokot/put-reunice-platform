@@ -30,7 +30,7 @@ export class PasswordErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-dialog-user-change-password',
+  selector: 'reunice-dialog-user-change-password',
   templateUrl: './dialog-user-change-password.component.html',
   styleUrls: ['./dialog-user-change-password.component.scss'],
 })

@@ -7,9 +7,9 @@
   "USERS": "Użytkownicy",
   "RECENTLY_ADDED_PAGES": "Ostatnio dodane strony",
   "UNIVERSITIES_WE_WORK_WITH": "Uniwersytety, z którymi współpracujemy",
-  "YES" : "Tak",
-  "NO" : "Nie",
-  "UNIVERSITY_DELETE_DESCRIPTION" : "Czy na pewno chcesz usunąć tę uczelnię? Może to wywołać inne zmiany.",
+  "YES": "Tak",
+  "NO": "Nie",
+  "UNIVERSITY_DELETE_DESCRIPTION": "Czy na pewno chcesz usunąć tę uczelnię? Może to wywołać inne zmiany.",
   "CONFIRM": "Potwierdź",
   "ARE_YOU_SURE": "Czy jesteś pewny?",
   "CLOSE": "Zamknij",
@@ -183,14 +183,14 @@
     "404": "Nie znaleziono zasobu",
     "500": "Błąd serwera",
     "PAGE": {
-      "400":{
+      "400": {
         "DELETING_WITH_CHILD": "Nie można usunąć strony z podstronami"
       },
       "403": "Brak dostępu do strony",
       "404": "Nie znaleziono strony"
     },
     "UNIVERSITY": {
-      "400":{
+      "400": {
         "NAME_TAKEN": "Ta nazwa jest już zajęta",
         "UNIVERSITY_NOT_HIDDEN": "Nie można usunąć widocznych uniwersytetów",
         "ACTIVE_USER_EXISTS": "Nie można usunąć uniwersytetu z aktywnymi użytkownikami"
@@ -199,7 +199,7 @@
       "404": "Nie znaleziono uniwersytetu"
     },
     "USER": {
-      "400":{
+      "400": {
         "PAGES_EXISTS": "Nie można usunąć użytkownika, jeśli jest on autorem jakiejkolwiek strony",
         "SAME_PASSWORD": "Stare hasło jest takie samo jak nowe hasło",
         "USERNAME_TAKEN": "Podana nazwa użytkownika jest już zajęta",
@@ -242,7 +242,6 @@
     "EDIT_MODE": "Tryb edycji",
     "CLOSE": "Zamknij",
     "VIEW_MODE": "Tryb widoku"
-
   },
   "NO_FILES": "Nie dodano jeszcze żadnego pliku.",
   "DELETE_FILE_CONFIRMATION": "Usuwanie pliku powiodło sie.",

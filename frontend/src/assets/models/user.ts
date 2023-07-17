@@ -1,4 +1,4 @@
-import {University} from "./university";
+import { University } from './university';
 
 export interface User {
   id: number;
@@ -15,13 +15,12 @@ export interface User {
 }
 
 export interface UserForm {
-    username: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-  description: string
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  description: string;
   accountType: string;
 }
-

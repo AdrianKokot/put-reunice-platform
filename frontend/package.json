@@ -7,7 +7,9 @@
     "build": "nx build",
     "test": "nx test",
     "format": "nx format:check",
+    "format:fix": "nx format:write",
     "lint": "nx lint",
+    "lint:fix": "nx lint --fix=true",
     "e2e": "nx e2e e2e"
   },
   "private": true,

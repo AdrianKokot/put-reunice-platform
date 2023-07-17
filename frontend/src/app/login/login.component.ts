@@ -1,18 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {UserService} from 'src/assets/service/user.service';
-import {ErrorHandlerService} from "../../assets/service/error-handler.service";
-import {DialogService} from "../../assets/service/dialog.service";
-import {TranslateService} from "@ngx-translate/core";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from 'src/assets/service/user.service';
+import { ErrorHandlerService } from '../../assets/service/error-handler.service';
+import { DialogService } from '../../assets/service/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-login',
+  selector: 'reunice-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
-  user = {} as { username: string, password: string };
+  user = {} as { username: string; password: string };
   showSpinner = false;
 
   constructor(
@@ -20,8 +19,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private errorHandler: ErrorHandlerService,
     private dialogService: DialogService,
-    private translateService: TranslateService) {
-  }
+    private translateService: TranslateService
+  ) {}
 
   ngOnInit(): void {
     if (this.userService.loggedUser) {
@@ -33,21 +32,22 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.user, false).subscribe({
       next: () => {
         this.userService.getLoggedUser().subscribe({
-          next: user => {
+          next: (user) => {
             this.userService.loggedUser = user;
             window.location.reload();
-          }
-        })
+          },
+        });
       },
-      error: err => {
+      error: (err) => {
         if (err.status === 401) {
-          this.user = {username: '', password: ''};
-          this.dialogService.openErrorDialog(err.message ? this.translateService.instant(err.message) :
-            this.translateService.instant("ERRORS.401"))
-        } else
-            this.errorHandler.handleError(err);
-      }
+          this.user = { username: '', password: '' };
+          this.dialogService.openErrorDialog(
+            err.message
+              ? this.translateService.instant(err.message)
+              : this.translateService.instant('ERRORS.401')
+          );
+        } else this.errorHandler.handleError(err);
+      },
     });
   }
-
 }

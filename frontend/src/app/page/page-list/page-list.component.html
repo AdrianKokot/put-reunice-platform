@@ -1,6 +1,7 @@
-<div fxFlex fxLayout='column' fxLayoutAlign="center center">
-  <h1>{{"PAGES" | translate}}</h1>
-  <ag-grid-angular fxFlex="100"
+<div fxFlex fxLayout="column" fxLayoutAlign="center center">
+  <h1>{{ 'PAGES' | translate }}</h1>
+  <ag-grid-angular
+    fxFlex="100"
     class="ag-theme-alpine"
     [suppressCellFocus]="true"
     [rowSelection]="'single'"
@@ -9,6 +10,7 @@
     [defaultColDef]="defaultColDef"
     [overlayNoRowsTemplate]="noRowsTemplate"
     (rowSelected)="onRowSelected($event)"
-    (gridReady)="onGridReady($event)">
+    (gridReady)="onGridReady($event)"
+  >
   </ag-grid-angular>
 </div>

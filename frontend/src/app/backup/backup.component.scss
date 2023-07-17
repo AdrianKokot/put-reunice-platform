@@ -1,4 +1,4 @@
-$border-color: solid rgba(0,0,0,.12);
+$border-color: solid rgba(0, 0, 0, 0.12);
 
 [mat-card-title] {
   text-align: center;
@@ -15,7 +15,8 @@ mat-card {
   overflow: auto;
 }
 
-mat-card-content h3, button {
+mat-card-content h3,
+button {
   text-align: center;
 }
 

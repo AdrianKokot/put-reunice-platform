@@ -1,11 +1,11 @@
 export interface FileResource {
-  filename: string,
+  filename: string;
 
-  fileType: string,
+  fileType: string;
 
-  fileSize: string,
+  fileSize: string;
 
-  uploadDate: string,
+  uploadDate: string;
 
-  uploadedBy: string,
+  uploadedBy: string;
 }

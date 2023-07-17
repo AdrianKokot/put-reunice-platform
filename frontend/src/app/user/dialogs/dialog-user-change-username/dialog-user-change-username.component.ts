@@ -6,7 +6,7 @@ import { DialogService } from '../../../../assets/service/dialog.service';
 import { UserService } from '../../../../assets/service/user.service';
 
 @Component({
-  selector: 'app-dialog-user-change-username',
+  selector: 'reunice-dialog-user-change-username',
   templateUrl: './dialog-user-change-username.component.html',
   styleUrls: ['./dialog-user-change-username.component.scss'],
 })
@@ -16,7 +16,8 @@ export class DialogUserChangeUsernameComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogUserChangeUsernameComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { user: { id: number, username: string } },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { user: { id: number; username: string } },
     private userService: UserService,
     private dialogService: DialogService,
     private translate: TranslateService

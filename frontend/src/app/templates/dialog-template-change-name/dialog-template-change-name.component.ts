@@ -5,7 +5,7 @@ import { TemplateService } from '../../../assets/service/template.service';
 import { DialogTemplateCreateComponent } from '../dialog-template-create/dialog-template-create.component';
 
 @Component({
-  selector: 'app-dialog-template-change-name',
+  selector: 'reunice-dialog-template-change-name',
   templateUrl: './dialog-template-change-name.component.html',
   styleUrls: ['./dialog-template-change-name.component.scss'],
 })

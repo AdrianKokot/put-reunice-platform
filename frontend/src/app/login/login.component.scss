@@ -1,22 +1,21 @@
 .button,
 button {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    cursor: pointer;
-    color: rgb(0, 0, 0);
-    border: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+  border: none;
 }
 
 .loginButton {
-    border-radius: 2px;
-    font-size: 20px;
-    background-color: var(--base-button-blue);
-
+  border-radius: 2px;
+  font-size: 20px;
+  background-color: var(--base-button-blue);
 }
 
 .subButton {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .button:hover,

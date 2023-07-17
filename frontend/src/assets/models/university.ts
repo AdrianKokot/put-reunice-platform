@@ -1,5 +1,5 @@
-import {Page} from "./page";
-import {User} from "./user";
+import { Page } from './page';
+import { User } from './user';
 
 export interface University {
   id: number;

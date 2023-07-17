@@ -1,22 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {University} from "../../../assets/models/university";
+import { Component, Input } from '@angular/core';
+import { University } from '../../../assets/models/university';
 
 @Component({
-  selector: 'app-university-card',
+  selector: 'reunice-university-card',
   templateUrl: './university-card.component.html',
-  styleUrls: ['./university-card.component.scss']
+  styleUrls: ['./university-card.component.scss'],
 })
-export class UniversityCardComponent implements OnInit {
-
+export class UniversityCardComponent {
   @Input() university?: University;
-  @Input() config: UniversityCardConfig = {} as UniversityCardConfig
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+  @Input() config: UniversityCardConfig = {} as UniversityCardConfig;
 }
 
 export interface UniversityCardConfig {

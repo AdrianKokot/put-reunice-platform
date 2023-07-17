@@ -1,30 +1,29 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import Quill from "quill";
+import Quill from 'quill';
 import ImageResize from 'quill-image-resize-module';
 
-Quill.register('modules/imageResize', ImageResize)
+Quill.register('modules/imageResize', ImageResize);
 
 @Component({
-  selector: 'app-quill-editor',
+  selector: 'reunice-quill-editor',
   templateUrl: './quill-editor.component.html',
-  styleUrls: ['./quill-editor.component.scss']
+  styleUrls: ['./quill-editor.component.scss'],
 })
 export class QuillEditorComponent {
-
-  @Input() title = "Editing";
-  @Input() subtitle?: string = "Title"
+  @Input() title = 'Editing';
+  @Input() subtitle?: string = 'Title';
   @Input() content?: string;
   @Input() onCloseLink?: any[] = ['/'];
   @Input() onCloseLinkParams?: any;
-  @Output() saved = new EventEmitter<any>;
+  @Output() saved = new EventEmitter<any>();
   @Output() contentChange = new EventEmitter<string>();
 
-  modules = {}
+  modules = {};
 
   constructor() {
     this.modules = {
       imageResize: {},
-    }
+    };
   }
 
   created(quill: Quill) {
