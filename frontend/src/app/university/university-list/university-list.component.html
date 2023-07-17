@@ -1,0 +1,15 @@
+<div fxFlex fxLayout='column' fxLayoutAlign="center center">
+  <h1 fxFlex>{{"UNIVERSITIES" | translate}}</h1>
+  <button fxFlex mat-button (click)="addUniversity()">{{"ADD_UNIVERSITY" | translate}}</button>
+  <ag-grid-angular fxFlex="100"
+    class="ag-theme-alpine"
+    [rowSelection]="'single'"
+    [suppressCellFocus]="true"
+    [rowData]="data"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [overlayNoRowsTemplate]="noRowsTemplate"
+    (rowSelected)="onRowSelected($event)"
+    (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+</div>

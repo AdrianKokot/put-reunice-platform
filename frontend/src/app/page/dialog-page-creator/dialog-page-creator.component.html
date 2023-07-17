@@ -1,0 +1,15 @@
+<div class="form-input">
+  <h2> {{"CHANGING_CREATOR" | translate}}</h2>
+  <div class="row">
+    <mat-form-field appearance="fill">
+      <mat-label>{{"AUTHOR" | translate}}</mat-label>
+      <input matInput required [(ngModel)]="creatorUsername" [formControl]="creatorUsernameValid">
+      <mat-error *ngIf="creatorUsernameValid.hasError('required')">{{"USERNAME_REQUIRED" | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+</div>
+<span mat-dialog-actions style="justify-content: center">
+  <button mat-raised-button color="primary" (click)="changePageCreator()">{{"SAVE" | translate}}</button>
+  <button mat-raised-button color="warn" (click)="close()">{{"CLOSE" | translate}}</button>
+</span>
+

@@ -43,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-	
+
 	@Autowired
 	private ApplicationConfigurationProvider applicationConfigurationProvider;
 
@@ -90,7 +90,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(/*"http://localhost:4200", */applicationConfigurationProvider.getApplicationServer(), "http://localhost")); //MSz changed origins
+        // configuration.setAllowedOrigins(List.of(/*"http://localhost:4200", */applicationConfigurationProvider.getApplicationServer(), "http://localhost")); //MSz changed origins
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", applicationConfigurationProvider.getApplicationServer(), "http://localhost")); //MSz changed origins
         configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "File-Name"));

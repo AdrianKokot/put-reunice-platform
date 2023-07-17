@@ -1,0 +1,110 @@
+.tableContainer {
+  overflow-y: auto;
+  height: 320px;
+}
+
+.flex-container {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.uploadText {
+  background-color: var(--base-button-blue);
+  padding: 16px 20px 5px 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1;
+  border: none;
+}
+
+.uploadText:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.progress {
+  margin-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.myInput {
+  opacity: 0; //Not visible
+  font-size: 0;
+  z-index: 0;
+  padding: 0;
+  //Button dimensions
+  width: 15px;
+  height: 0.001px;
+  cursor: pointer;
+}
+
+.form-group {
+  display: inline-block;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  font-size: 14px;
+  background-color: var(--base-button-blue);
+  text-align: center !important;
+}
+
+td {
+  color: rgb(0, 0, 0);
+  text-align: center !important;
+}
+
+.noRowsTemplate {
+  padding: 40px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bolder;
+  font-style: italic;
+}
+
+.mat-column-filename {
+  padding: 2px;
+  min-width: 30px !important;
+  max-width: 45px !important;
+  word-wrap: break-word;
+}
+
+.mat-column-uploadedBy {
+  padding: 5px;
+  min-width: 30px !important;
+  max-width: 40px !important;
+  word-wrap: break-word;
+}
+
+.mat-column-fileSize {
+  padding: 5px;
+  min-width: 20px !important;
+  max-width: 25px !important;
+  word-wrap: break-word;
+}
+
+.mat-column-fileType {
+  padding: 10px;
+  min-width: 110px !important;
+  max-width: 130px !important;
+  word-wrap: break-word;
+}
+
+.mat-column-uploadDate {
+  padding: 10px;
+  min-width: 30px !important;
+  max-width: 40px !important;
+  word-wrap: break-word;
+}
+
+.mat-column-action {
+  padding: 5px;
+  width: 150px;
+}

@@ -1,0 +1,74 @@
+<form [formGroup]="form" autocomplete="new-password">
+    <h2 mat-dialog-title>{{"ADDING_USER" | translate}}</h2>
+    <mat-dialog-content fxLayout='row wrap'>
+        <mat-form-field fxFlex="50" fxFlex.lt-sm="100" appearance="fill">
+            <mat-label>{{"USERNAME" | translate}}</mat-label>
+            <input matInput type="text" formControlName="username">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="form.controls.username.hasError('required')">{{"FIELD_REQUIRED" | translate}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50" fxFlex.lt-sm="100" appearance="fill">
+            <mat-label>{{"PASSWORD" | translate}}</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="form.controls.password.hasError('required')">{{"FIELD_REQUIRED" | translate}}</mat-error>
+            <mat-error *ngIf="form.controls.password.hasError('pattern')">
+              {{"PASSWORD_PATTERN" | translate}}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50" fxFlex.lt-sm="100" appearance="fill" class="input">
+            <mat-label>{{"FIRST_NAME" | translate}}</mat-label>
+            <input matInput type="text" formControlName="firstName">
+            <mat-error *ngIf="form.controls.firstName.hasError('required')">{{"FIELD_REQUIRED" | translate}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50" fxFlex.lt-sm="100" appearance="fill" class="input">
+            <mat-label>{{"LAST_NAME" | translate}}</mat-label>
+            <input matInput type="text" formControlName="lastName">
+            <mat-error *ngIf="form.controls.lastName.hasError('required')">{{"FIELD_REQUIRED" | translate}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50" fxFlex.lt-sm="100" appearance="fill" class="input">
+            <mat-label>{{"EMAIL" | translate}}</mat-label>
+            <input matInput type="text" formControlName="email">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="form.controls.email.hasError('email')">{{"EMAIL_INCORRECT" | translate}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50" fxFlex.lt-sm="100" appearance="fill" class="input">
+            <mat-label>{{"PHONE_NUMBER" | translate}}</mat-label>
+            <input matInput type="text" formControlName="phoneNumber">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="form.controls.phoneNumber.hasError('pattern')">{{"PHONE_NUMBER_INCORRECT" | translate}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="100" appearance="fill">
+            <mat-label>{{"ACCOUNT_TYPE" | translate}}</mat-label>
+            <mat-select formControlName="accountType">
+                <mat-option *ngIf="securityService.hasLoggedUserHigherRole('USER')"
+                            [value]="'USER'">{{"USER" | translate}}</mat-option>
+                <mat-option *ngIf="securityService.hasLoggedUserHigherRole('MODERATOR')"
+                            [value]="'MODERATOR'">{{"UNIVERSITY_ADMIN" | translate}}</mat-option>
+                <mat-option *ngIf="securityService.hasLoggedUserHigherRole('ADMIN')"
+                            [value]="'ADMIN'">{{"MAIN_ADMIN" | translate}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls.accountType.hasError('required')">{{"FIELD_REQUIRED" | translate}}</mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions mat-dialog-actions style="justify-content: center">
+        <button mat-raised-button color="primary"
+        (click)="createUser()"
+        [disabled]="!form.valid||pending">{{"ADD_USER" | translate}}
+    </button>
+    <button mat-raised-button color="warn" [mat-dialog-close]="undefined" [disabled]="pending">{{"CANCEL" | translate}}</button>
+    </mat-dialog-actions>
+</form>
+
+
+

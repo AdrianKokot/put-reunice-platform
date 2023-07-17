@@ -1,0 +1,27 @@
+:host {
+  flex-grow: 1;
+
+  h1 {
+    margin: 0;
+    padding: 2vh 2vh 0;
+  }
+
+  button {
+    margin: 2vh;
+  }
+
+  ag-grid-angular {
+    max-width: 1200px;
+    width: 90%;
+    margin-bottom: 4vh;
+  }
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: var(--base-button-blue);
+  color: rgb(0, 0, 0);
+  border: none;
+}

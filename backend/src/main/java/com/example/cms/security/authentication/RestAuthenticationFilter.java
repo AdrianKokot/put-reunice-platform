@@ -25,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-	
+
 	@Autowired
 	private ApplicationConfigurationProvider applicationConfigurationProvider;
-	
+
     public RestAuthenticationFilter(AuthenticationManager authenticationManager,
                                     AuthenticationSuccessHandler authenticationSuccessHandler,
                                     AuthenticationFailureHandler authenticationFailureHandler,
@@ -57,12 +57,12 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 //			response.setHeader("Access-Control-Allow-Origin", origin);
 //		}
     	//response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200"); //MSz commented
-    	System.out.println("** Application server address read from properties file: "+applicationConfigurationProvider.getApplicationServer()); //MSz added
-        response.setHeader("Access-Control-Allow-Origin", applicationConfigurationProvider.getApplicationServer()); //MSz added
+    	// System.out.println("** Application server address read from properties file: "+applicationConfigurationProvider.getApplicationServer()); //MSz added
+      //   response.setHeader("Access-Control-Allow-Origin", applicationConfigurationProvider.getApplicationServer()); //MSz added
         //END MSz
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        
+
 
         LoginForm form;
         try {
@@ -73,7 +73,7 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                 form.getUsername(), form.getPassword());
-        
+
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 

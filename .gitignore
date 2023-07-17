@@ -1,4 +1,5 @@
 db-resources/
+db
 .env
 
 .vscode/
