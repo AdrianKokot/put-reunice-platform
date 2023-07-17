@@ -5,7 +5,10 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "format": "nx format:check",
+    "lint": "nx lint",
+    "e2e": "nx e2e e2e"
   },
   "private": true,
   "dependencies": {
