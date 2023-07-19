@@ -1,0 +1,14 @@
+<reunice-quill-editor
+  *ngIf="page"
+  fxFlex
+  [title]="'EDITING_PAGE' | translate"
+  [subtitle]="page.title"
+  [(content)]="content"
+  [onCloseLink]="['/page', page.id]"
+  (saved)="onSaved($event)"
+>
+  <button mat-button (click)="onLoadTemplate()">
+    <mat-icon>restore_page</mat-icon>
+    <span>{{ 'TEMPLATE.LOAD' | translate }}</span>
+  </button>
+</reunice-quill-editor>

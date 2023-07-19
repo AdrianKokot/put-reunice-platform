@@ -6,15 +6,15 @@ services:
     image: postgres:9.6-alpine
     container_name: postgres
     env_file:
-      - .env
+      - ./.env
     volumes:
-      - cms-db:/var/lib/postgresql/data
-    expose:
+      - ./db:/var/lib/postgresql/data
+    ports:
       - "5432"
 
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
       args:
         APPLICATION_SERVER: ${APPLICATION_SERVER}
@@ -22,20 +22,20 @@ services:
         DATABASE_SCHEMA_CREATE_TYPE: ${DATABASE_SCHEMA_CREATE_TYPE}
     container_name: backend
     env_file:
-      - .env
+      - ./.env
     volumes:
       - ./db-resources:/db-resources
-    expose:
-      - "8080"
-    links:
+    ports:
+      - "8080:8080"
+    depends_on:
       - postgres
 
   frontend:
-    build: ./src/main/resources/Angular
+    build: ./frontend
     container_name: frontend
     ports:
       - "80:80"
-    links:
+    depends_on:
       - backend
 
 volumes:

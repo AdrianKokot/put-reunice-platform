@@ -1,0 +1,109 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ErrorHandlerService } from './error-handler.service';
+import { Observable } from 'rxjs';
+import { Template } from '../models/template';
+import { environment } from '../../environments/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TemplateService {
+  private templateUrl = `${environment.backendAPIRootUrl}/templates`;
+
+  httpOptions = {
+    withCredentials: true,
+  };
+
+  constructor(
+    private http: HttpClient,
+    private errorHandler: ErrorHandlerService
+  ) {}
+
+  getTemplate(id: number, defaultErrorHandling = true): Observable<Template> {
+    return this.http
+      .get<Template>(`${this.templateUrl}/${id}`, this.httpOptions)
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  getAllTemplates(defaultErrorHandling = true): Observable<Template[]> {
+    return this.http
+      .get<Template[]>(this.templateUrl + '/all', this.httpOptions)
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  getUniversityTemplates(
+    universityID: number,
+    defaultErrorHandling = true
+  ): Observable<Template[]> {
+    return this.http
+      .get<Template[]>(
+        `${this.templateUrl}/?universityID=${universityID}`,
+        this.httpOptions
+      )
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  addTemplate(name: string, defaultErrorHandling = true): Observable<Template> {
+    return this.http
+      .post<Template>(this.templateUrl, name, this.httpOptions)
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  addUniversityToTemplate(
+    templateID: number,
+    universityID: number,
+    defaultErrorHandling = true
+  ): Observable<Template> {
+    return this.http
+      .post<Template>(
+        `${this.templateUrl}/${templateID}/universities/${universityID}`,
+        null,
+        this.httpOptions
+      )
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  removeUniversityFromTemplate(
+    templateID: number,
+    universityID: number,
+    defaultErrorHandling = true
+  ): Observable<Template> {
+    return this.http
+      .delete<Template>(
+        `${this.templateUrl}/${templateID}/universities/${universityID}`,
+        this.httpOptions
+      )
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  modifyTemplateNameField(
+    id: number,
+    name: string,
+    defaultErrorHandling = true
+  ): Observable<void> {
+    return this.http
+      .patch<void>(`${this.templateUrl}/${id}/name`, name, this.httpOptions)
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  modifyTemplateContentField(
+    id: number,
+    content: string,
+    defaultErrorHandling = true
+  ): Observable<void> {
+    return this.http
+      .patch<void>(
+        `${this.templateUrl}/${id}/content`,
+        content,
+        this.httpOptions
+      )
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+
+  deleteTemplate(id: number, defaultErrorHandling = true): Observable<any> {
+    return this.http
+      .delete<void>(`${this.templateUrl}/${id}`, this.httpOptions)
+      .pipe(this.errorHandler.getErrorHandling(defaultErrorHandling));
+  }
+}

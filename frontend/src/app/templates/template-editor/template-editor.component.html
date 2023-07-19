@@ -1,0 +1,11 @@
+<reunice-quill-editor
+  *ngIf="template"
+  fxFlex
+  [title]="'TEMPLATE.EDITOR_HEADER' | translate"
+  [subtitle]="template.name"
+  [content]="template.content"
+  [onCloseLink]="['/templates']"
+  [onCloseLinkParams]="{ id: template.id }"
+  (saved)="onSaved($event)"
+>
+</reunice-quill-editor>

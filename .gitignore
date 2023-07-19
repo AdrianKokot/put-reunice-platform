@@ -1,46 +1,10 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+db-resources/
+db
+.env
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
+.vscode/
 .idea
 *.iws
 *.iml
 *.ipr
 .jpb
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-### H2 ####
-/h2db.mv.db
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Other
-db-resources/
-
-.env
