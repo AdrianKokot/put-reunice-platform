@@ -1,5 +1,5 @@
-import { Page } from "./page";
-import { User } from "./user";
+import { Page } from './page';
+import { User } from './user';
 
 export interface University {
   id: number;
@@ -11,7 +11,8 @@ export interface University {
   hidden: boolean;
 }
 
-export interface CreateUniversityPayload extends Pick<University, 'id' |'name' | 'shortName' | 'description'> {
+export interface CreateUniversityPayload
+  extends Pick<University, 'id' | 'name' | 'shortName' | 'description'> {
   creatorId: number;
 }
 

@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserForm } from 'modules/shared/data-access/src/lib/models/user';
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogService } from '../../../../assets/service/dialog.service';
-import { SecurityService } from '../../../../../modules/shared/data-access/src/lib/services/security.service';
+import { SecurityService } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-dialog-user-create',

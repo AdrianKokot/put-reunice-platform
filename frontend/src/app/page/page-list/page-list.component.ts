@@ -7,10 +7,11 @@ import {
   RowSelectedEvent,
 } from 'ag-grid-community';
 import { Page } from 'modules/shared/data-access/src/lib/models/page';
-import { DialogService } from 'src/assets/service/dialog.service';
-import { SpinnerService } from 'src/assets/service/spinner.service';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
+
+import { PageService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
+import { SpinnerService } from '../../../assets/service/spinner.service';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-page-list',

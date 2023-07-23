@@ -1,22 +1,30 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { UniversityService } from "../../../../modules/shared/data-access/src/lib/services/university.service";
-import { FormControl, Validators } from "@angular/forms";
-import { University, UniversityForm } from "modules/shared/data-access/src/lib/models/university";
-import { UserService } from "modules/shared/data-access/src/lib/services/user.service";
-import { DialogService } from "src/assets/service/dialog.service";
-import { TranslateService } from "@ngx-translate/core";
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { UniversityService } from '@reunice/modules/shared/data-access';
+import { FormControl, Validators } from '@angular/forms';
+import {
+  University,
+  UniversityForm,
+} from 'modules/shared/data-access/src/lib/models/university';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
+
+import { TranslateService } from '@ngx-translate/core';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
-  selector: "reunice-dialog-university-create",
-  templateUrl: "./dialog-university-create.component.html",
-  styleUrls: ["./dialog-university-create.component.scss"]
+  selector: 'reunice-dialog-university-create',
+  templateUrl: './dialog-university-create.component.html',
+  styleUrls: ['./dialog-university-create.component.scss'],
 })
 export class DialogUniversityCreateComponent implements OnInit {
   readonly university = {} as UniversityForm;
-  nameValid = new FormControl("", Validators["required"]);
-  shortNameValid = new FormControl("", Validators["required"]);
-  descriptionValid = new FormControl("", Validators["required"]);
+  nameValid = new FormControl('', Validators['required']);
+  shortNameValid = new FormControl('', Validators['required']);
+  descriptionValid = new FormControl('', Validators['required']);
   edit = false;
 
   constructor(
@@ -27,8 +35,7 @@ export class DialogUniversityCreateComponent implements OnInit {
     private universityService: UniversityService,
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.edit = this.data.edit ?? this.edit;
@@ -51,17 +58,17 @@ export class DialogUniversityCreateComponent implements OnInit {
 
   createUniversity() {
     if (
-      this.nameValid.status == "VALID" &&
-      this.shortNameValid.status == "VALID" &&
-      this.descriptionValid.status == "VALID"
+      this.nameValid.status == 'VALID' &&
+      this.shortNameValid.status == 'VALID' &&
+      this.descriptionValid.status == 'VALID'
     ) {
       this.universityService.addNewUniversity(this.university).subscribe({
         next: () => {
           this.dialogService.openSuccessDialog(
-            this.translate.instant("ADDED_UNIVERSITY")
+            this.translate.instant('ADDED_UNIVERSITY')
           );
           this.dialogRef.close(true);
-        }
+        },
       });
       this.close();
     }
@@ -69,12 +76,12 @@ export class DialogUniversityCreateComponent implements OnInit {
 
   editUniversity() {
     if (
-      this.nameValid.status == "VALID" &&
-      this.shortNameValid.status == "VALID" &&
-      this.descriptionValid.status == "VALID"
+      this.nameValid.status == 'VALID' &&
+      this.shortNameValid.status == 'VALID' &&
+      this.descriptionValid.status == 'VALID'
     ) {
       this.universityService.editUniversity(this.university).subscribe({
-        next: (university) => this.dialogRef.close(university)
+        next: (university) => this.dialogRef.close(university),
       });
     }
   }

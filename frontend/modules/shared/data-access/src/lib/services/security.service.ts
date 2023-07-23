@@ -1,26 +1,25 @@
-import { Injectable } from "@angular/core";
-import { UserService } from "./user.service";
-import { Page } from "../models/page";
-import { User } from "../models/user";
-import { University } from "../models/university";
+import { Injectable } from '@angular/core';
+import { UserService } from './user.service';
+import { Page } from '../models/page';
+import { User } from '../models/user';
+import { University } from '../models/university';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class SecurityService {
-  constructor(private userService: UserService) {
-  }
+  constructor(private userService: UserService) {}
 
   public isForbiddenPage(page?: Page): boolean {
     const loggedUser: User | null = this.userService.loggedUser;
 
     if (loggedUser && page) {
       switch (loggedUser.accountType) {
-        case "ADMIN":
+        case 'ADMIN':
           return false;
-        case "MODERATOR":
+        case 'MODERATOR':
           return !this.hasUniversity(page.university.id);
-        case "USER":
+        case 'USER':
           return (
             page.creator.id !== loggedUser.id ||
             !this.hasUniversity(page.university.id)
@@ -36,11 +35,11 @@ export class SecurityService {
 
     if (loggedUser && university) {
       switch (loggedUser.accountType) {
-        case "ADMIN":
+        case 'ADMIN':
           return false;
-        case "MODERATOR":
+        case 'MODERATOR':
           return !this.hasUniversity(university.id);
-        case "USER":
+        case 'USER':
           return true;
       }
     }
@@ -57,9 +56,9 @@ export class SecurityService {
       }
 
       switch (loggedUser.accountType) {
-        case "ADMIN":
+        case 'ADMIN':
           return false;
-        case "MODERATOR":
+        case 'MODERATOR':
           return (
             loggedUser.id !== user.id &&
             (!this.hasLoggedUserHigherRole(user.accountType) ||
@@ -67,7 +66,7 @@ export class SecurityService {
                 user.enrolledUniversities.map((university) => university.id)
               ))
           );
-        case "USER":
+        case 'USER':
           return loggedUser.id !== user.id;
       }
     }
@@ -79,14 +78,14 @@ export class SecurityService {
     const loggedUser: User | null = this.userService.loggedUser;
     if (loggedUser && role) {
       switch (role) {
-        case "ADMIN":
-          return loggedUser.accountType === "ADMIN";
-        case "MODERATOR":
+        case 'ADMIN':
+          return loggedUser.accountType === 'ADMIN';
+        case 'MODERATOR':
           return (
-            loggedUser.accountType === "MODERATOR" ||
-            loggedUser.accountType === "ADMIN"
+            loggedUser.accountType === 'MODERATOR' ||
+            loggedUser.accountType === 'ADMIN'
           );
-        case "USER":
+        case 'USER':
           return true;
       }
     }
@@ -108,7 +107,7 @@ export class SecurityService {
           break;
         }
       }
-      return loggedUser.accountType === "ADMIN" || sameUniversity;
+      return loggedUser.accountType === 'ADMIN' || sameUniversity;
     }
     return false;
   }
@@ -117,7 +116,7 @@ export class SecurityService {
     const loggedUser: User | null = this.userService.loggedUser;
     if (loggedUser && universityId) {
       return (
-        loggedUser.accountType === "ADMIN" ||
+        loggedUser.accountType === 'ADMIN' ||
         loggedUser.enrolledUniversities
           .map((university) => university.id)
           .includes(universityId)
@@ -128,11 +127,11 @@ export class SecurityService {
 
   public hasUserHigherRole(userRole: string, role: string): boolean {
     switch (role) {
-      case "ADMIN":
-      case "MODERATOR":
-        return userRole === "ADMIN";
-      case "USER":
-        return userRole === "ADMIN" || userRole === "MODERATOR";
+      case 'ADMIN':
+      case 'MODERATOR':
+        return userRole === 'ADMIN';
+      case 'USER':
+        return userRole === 'ADMIN' || userRole === 'MODERATOR';
     }
     return false;
   }

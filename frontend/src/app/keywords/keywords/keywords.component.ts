@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Keyword } from 'modules/shared/data-access/src/lib/models/keyword';
-import { DialogService } from 'src/assets/service/dialog.service';
+
 import { KeyWordsService } from 'modules/shared/data-access/src/lib/services/key-words.service';
-import { SpinnerService } from 'src/assets/service/spinner.service';
+
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogInputKeywordsComponent } from '../dialog-input-keywords/dialog-input-keywords.component';
+import { SpinnerService } from '../../../assets/service/spinner.service';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-keywords',
@@ -97,7 +99,6 @@ export class KeywordsComponent implements OnInit {
   }
 
   onDeleteKeyword() {
-    console.log(this.selectedKeyword.id);
     if (this.selectedKeyword.id < 0) return;
 
     this.dialogService

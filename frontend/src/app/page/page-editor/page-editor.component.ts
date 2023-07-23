@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
+import { PageService } from '@reunice/modules/shared/data-access';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Page } from '../../../../modules/shared/data-access/src/lib/models/page';
+import { Page } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DialogTemplateLoadComponent } from '../../templates/dialog-template-load/dialog-template-load.component';

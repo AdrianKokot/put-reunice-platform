@@ -2,13 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Page } from 'modules/shared/data-access/src/lib/models/page';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
+import { PageService } from '@reunice/modules/shared/data-access';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPageCreateComponent } from '../dialog-page-create/dialog-page-create.component';
 import { PageCardConfig } from '../page-card/page-card.component';
 import { DialogPageCreatorComponent } from '../dialog-page-creator/dialog-page-creator.component';
-import { SecurityService } from '../../../../modules/shared/data-access/src/lib/services/security.service';
-import { EditPageKeyWordsComponent } from 'src/app/keywords/edit-page-key-words/edit-page-key-words.component';
+import { SecurityService } from '@reunice/modules/shared/data-access';
 import { DialogPageEditBasicComponent } from '../dialog-page-edit-basic/dialog-page-edit-basic.component';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
 import { DialogService } from '../../../assets/service/dialog.service';
@@ -18,6 +17,7 @@ import { MatDrawerMode, MatSidenav } from '@angular/material/sidenav';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { Subscription } from 'rxjs';
+import { EditPageKeyWordsComponent } from '../../keywords/edit-page-key-words/edit-page-key-words.component';
 
 @Component({
   selector: 'reunice-page-details',

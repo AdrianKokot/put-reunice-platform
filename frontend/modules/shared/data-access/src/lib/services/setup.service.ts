@@ -1,14 +1,13 @@
-import { Injectable } from "@angular/core";
-import { UserService } from "./user.service";
-import { ErrorHandlerService } from "./error-handler.service";
+import { Injectable } from '@angular/core';
+import { UserService } from './user.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable()
 export class SetupService {
   constructor(
     private userService: UserService,
     private errorHandler: ErrorHandlerService
-  ) {
-  }
+  ) {}
 
   public initialize(): Promise<any> {
     return new Promise((resolve) => {
@@ -22,7 +21,7 @@ export class SetupService {
             this.errorHandler.handleError(err);
           }
           resolve(true);
-        }
+        },
       });
     });
   }

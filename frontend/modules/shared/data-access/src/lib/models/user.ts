@@ -1,5 +1,15 @@
 import { University } from './university';
 
+export enum AccountType {
+  Admin = 'ADMIN',
+  Moderator = 'MODERATOR',
+  User = 'USER',
+  Guest = 'GUEST',
+  Authorized = 'AUTHORIZED',
+}
+
+export const ACCOUNT_TYPES = new Set<string>(Object.values(AccountType));
+
 export interface User {
   id: number;
   username: string;
@@ -9,7 +19,7 @@ export interface User {
   email: string;
   phoneNumber: string;
   description: string;
-  accountType: string;
+  accountType: AccountType;
   enabled: boolean;
   enrolledUniversities: University[];
 }

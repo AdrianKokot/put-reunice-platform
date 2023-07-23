@@ -5,7 +5,7 @@ import { KeyWordsService } from 'modules/shared/data-access/src/lib/services/key
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { SpinnerService } from 'src/assets/service/spinner.service';
+import { SpinnerService } from '../../../assets/service/spinner.service';
 
 @Component({
   selector: 'reunice-key-words-selectors',

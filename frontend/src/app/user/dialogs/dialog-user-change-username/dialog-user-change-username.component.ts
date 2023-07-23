@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../../assets/service/dialog.service';
-import { UserService } from '../../../../../modules/shared/data-access/src/lib/services/user.service';
+import { UserService } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-dialog-user-change-username',

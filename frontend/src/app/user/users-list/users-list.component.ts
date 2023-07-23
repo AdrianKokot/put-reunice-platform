@@ -8,11 +8,11 @@ import {
   RowSelectedEvent,
 } from 'ag-grid-community';
 import { User } from 'modules/shared/data-access/src/lib/models/user';
-import { DialogService } from 'src/assets/service/dialog.service';
-import { SpinnerService } from 'src/assets/service/spinner.service';
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogUserCreateComponent } from '../dialogs/dialog-user-create/dialog-user-create.component';
 import { TranslateService } from '@ngx-translate/core';
+import { SpinnerService } from '../../../assets/service/spinner.service';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-users-list',

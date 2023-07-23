@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
-import { Page } from '../../../../modules/shared/data-access/src/lib/models/page';
+import { PageService } from '@reunice/modules/shared/data-access';
+import { Page } from '@reunice/modules/shared/data-access';
 import { ActivatedRoute } from '@angular/router';
-import { DialogService } from 'src/assets/service/dialog.service';
-import { SpinnerService } from 'src/assets/service/spinner.service';
+import { SpinnerService } from '../../../assets/service/spinner.service';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-page-user',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { University } from '../../../../modules/shared/data-access/src/lib/models/university';
+import { University } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-university-card',

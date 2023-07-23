@@ -11,10 +11,12 @@ import { University } from 'modules/shared/data-access/src/lib/models/university
 import { UniversityService } from 'modules/shared/data-access/src/lib/services/university.service';
 import { DialogUniversityCreateComponent } from '../dialog-university-create/dialog-university-create.component';
 import { MatDialog } from '@angular/material/dialog';
-import { SpinnerService } from 'src/assets/service/spinner.service';
+
 import { take } from 'rxjs';
-import { DialogService } from 'src/assets/service/dialog.service';
+
 import { TranslateService } from '@ngx-translate/core';
+import { SpinnerService } from '../../../assets/service/spinner.service';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-university-list',

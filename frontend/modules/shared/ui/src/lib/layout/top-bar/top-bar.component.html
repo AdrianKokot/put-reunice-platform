@@ -1,0 +1,55 @@
+<div>
+  <a href="/" tuiLink routerLink="/"> REUNICE </a>
+
+  <ng-content select="[left]"></ng-content>
+</div>
+
+<div>
+  <ng-content></ng-content>
+</div>
+
+<div class="justify-self-end d-flex align-center">
+  <ng-content select="[right]"></ng-content>
+
+  <a
+    *reuniceUser="'GUEST'; else loggedMenu"
+    href="/login"
+    tuiIconButton
+    routerLink="/login"
+    [icon]="'tuiIconUser'"
+  ></a>
+
+  <ng-template #loggedMenu let-user="user">
+    <tui-hosted-dropdown [content]="profileMenu" #profileMenuDropdown>
+      <button
+        type="button"
+        tuiIconButton
+        [pseudoHover]="profileMenuDropdown.open || null"
+      >
+        <tui-avatar
+          text="{{ user.firstName }} {{ user.lastName }}"
+        ></tui-avatar>
+      </button>
+    </tui-hosted-dropdown>
+    <ng-template #profileMenu let-close="close">
+      <tui-data-list role="menu" size="s">
+        <a
+          href="/accounts/profile"
+          routerLink="/accounts/profile"
+          tuiOption
+          role="menuitem"
+          (click)="close()"
+          >Profile</a
+        >
+        <a
+          href="/auth/logout"
+          routerLink="/auth/logout"
+          tuiOption
+          role="menuitem"
+          (click)="close()"
+          >Logout</a
+        >
+      </tui-data-list>
+    </ng-template>
+  </ng-template>
+</div>

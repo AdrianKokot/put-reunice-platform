@@ -1,17 +1,16 @@
-import { Injectable } from "@angular/core";
-import { catchError, OperatorFunction, throwError } from "rxjs";
-import { Router } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
+import { Injectable } from '@angular/core';
+import { catchError, OperatorFunction, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class ErrorHandlerService {
   constructor(
     private router: Router,
     private translateService: TranslateService
-  ) {
-  }
+  ) {}
 
   public getRestError(responseError: any): RestError {
     let error: RestError = responseError.error as RestError;
@@ -45,30 +44,28 @@ export class ErrorHandlerService {
         console.error(
           error.message
             ? this.translateService.instant(error.message)
-            : this.translateService.instant("ERRORS.400")
+            : this.translateService.instant('ERRORS.400')
         );
         break;
       case 401:
-        this.router.navigateByUrl("/login");
+        this.router.navigateByUrl('/login');
         break;
       case 403:
         console.error(
           error.message
             ? this.translateService.instant(error.message)
-            : this.translateService.instant("ERRORS.403")
+            : this.translateService.instant('ERRORS.403')
         );
         break;
       case 404:
         console.error(
           error.message
             ? this.translateService.instant(error.message)
-            : this.translateService.instant("ERRORS.404")
+            : this.translateService.instant('ERRORS.404')
         );
         break;
       case 500:
-        console.error(
-          this.translateService.instant("ERRORS.500")
-        );
+        console.error(this.translateService.instant('ERRORS.500'));
         break;
     }
   }

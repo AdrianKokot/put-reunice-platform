@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BackupService } from '../../../modules/shared/data-access/src/lib/services/backup.service';
-import { Backup } from '../../../modules/shared/data-access/src/lib/models/backup';
+import { BackupService } from '@reunice/modules/shared/data-access';
+import { Backup } from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../assets/service/dialog.service';
 import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';

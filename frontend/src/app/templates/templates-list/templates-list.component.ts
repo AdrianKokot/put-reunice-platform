@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Template } from '../../../../modules/shared/data-access/src/lib/models/template';
-import { University } from '../../../../modules/shared/data-access/src/lib/models/university';
+import { Template } from '@reunice/modules/shared/data-access';
+import { University } from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../../assets/service/dialog.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { TemplateService } from '../../../../modules/shared/data-access/src/lib/services/template.service';
+import { TemplateService } from '@reunice/modules/shared/data-access';
 import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogTemplateCreateComponent } from '../dialog-template-create/dialog-template-create.component';
 import { DialogTemplateChangeNameComponent } from '../dialog-template-change-name/dialog-template-change-name.component';
-import { UserService } from '../../../../modules/shared/data-access/src/lib/services/user.service';
+import { UserService } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-templates-list',

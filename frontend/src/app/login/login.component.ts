@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
-import { ErrorHandlerService } from '../../../modules/shared/data-access/src/lib/services/error-handler.service';
+import { ErrorHandlerService } from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../assets/service/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 

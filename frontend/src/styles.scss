@@ -65,6 +65,7 @@ body {
   .ag-root {
     .ag-header {
       border-bottom: #74b5ff 1px solid;
+
       .ag-header-viewport {
         background-color: var(--base-button-blue);
       }
@@ -87,20 +88,29 @@ body {
   }
 }
 
-
 //@import '@taiga-ui/core/styles/taiga-ui-theme.less';
 //@import '@taiga-ui/core/styles/taiga-ui-fonts.less';
 //@import '@taiga-ui/styles/taiga-ui-global.less';
 
-
-
-
-
-
-
 // New styles
+:root {
+  --top-bar-height: 3.9375rem;
+}
 
 .t-root-content {
   display: flex;
   min-height: 100vh;
+}
+
+// Utility styles
+.d-flex {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-self-end {
+  justify-self: end;
 }

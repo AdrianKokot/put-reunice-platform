@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { University } from 'modules/shared/data-access/src/lib/models/university';
-import { DialogService } from 'src/assets/service/dialog.service';
+
 import { UniversityService } from 'modules/shared/data-access/src/lib/services/university.service';
 import { PageCardConfig } from '../../page/page-card/page-card.component';
 import { UserCardConfig } from '../../user/user-card/user-card.component';
 import { UniversityCardConfig } from '../university-card/university-card.component';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
+import { PageService } from '@reunice/modules/shared/data-access';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUniversityCreateComponent } from '../dialog-university-create/dialog-university-create.component';
 import { TranslateService } from '@ngx-translate/core';
-import { SecurityService } from '../../../../modules/shared/data-access/src/lib/services/security.service';
+import { SecurityService } from '@reunice/modules/shared/data-access';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-university-details',

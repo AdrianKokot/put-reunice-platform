@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'modules/shared/data-access/src/lib/models/user';
-import { DialogService } from 'src/assets/service/dialog.service';
+
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-user-settings',

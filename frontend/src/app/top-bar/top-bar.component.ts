@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { Page } from 'modules/shared/data-access/src/lib/models/page';
 import { University } from 'modules/shared/data-access/src/lib/models/university';
 import { User } from 'modules/shared/data-access/src/lib/models/user';
-import { PageService } from '../../../modules/shared/data-access/src/lib/services/page.service';
+import { PageService } from '@reunice/modules/shared/data-access';
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
-import { ErrorHandlerService } from '../../../modules/shared/data-access/src/lib/services/error-handler.service';
+import { ErrorHandlerService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../assets/service/dialog.service';
-import { UniversityService } from '../../../modules/shared/data-access/src/lib/services/university.service';
+import { UniversityService } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-top-bar',

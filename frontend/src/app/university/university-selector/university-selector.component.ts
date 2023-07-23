@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { University } from '../../../../modules/shared/data-access/src/lib/models/university';
+import { University } from '@reunice/modules/shared/data-access';
 import { map, Observable, startWith } from 'rxjs';
 import {
   AbstractControl,
@@ -7,9 +7,9 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { UniversityService } from '../../../../modules/shared/data-access/src/lib/services/university.service';
-import { UserService } from '../../../../modules/shared/data-access/src/lib/services/user.service';
-import { User } from '../../../../modules/shared/data-access/src/lib/models/user';
+import { UniversityService } from '@reunice/modules/shared/data-access';
+import { UserService } from '@reunice/modules/shared/data-access';
+import { User } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-university-selector',

@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
+import { PageService } from '@reunice/modules/shared/data-access';
 import { FormControl, Validators } from '@angular/forms';
-import { PageUpdateForm } from '../../../../modules/shared/data-access/src/lib/models/page';
+import { PageUpdateForm } from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../../assets/service/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 

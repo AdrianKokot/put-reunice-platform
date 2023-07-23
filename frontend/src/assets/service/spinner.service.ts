@@ -1,16 +1,15 @@
-import { Overlay, OverlayRef } from "@angular/cdk/overlay";
-import { ComponentPortal } from "@angular/cdk/portal";
-import { Injectable } from "@angular/core";
-import { SpinnerComponent } from "src/app/spinner/spinner.component";
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Injectable } from '@angular/core';
+import { SpinnerComponent } from '../../app/spinner/spinner.component';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root',
 })
 export class SpinnerService {
   private overlayRef!: OverlayRef;
 
-  constructor(private overlay: Overlay) {
-  }
+  constructor(private overlay: Overlay) {}
 
   public show() {
     if (!this.overlayRef) {

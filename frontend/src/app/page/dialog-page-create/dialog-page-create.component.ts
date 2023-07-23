@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Page, PageForm } from '../../../../modules/shared/data-access/src/lib/models/page';
-import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
+import { Page, PageForm } from '@reunice/modules/shared/data-access';
+import { PageService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
-import { UserService } from '../../../../modules/shared/data-access/src/lib/services/user.service';
+import { UserService } from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../../assets/service/dialog.service';
-import { Template } from '../../../../modules/shared/data-access/src/lib/models/template';
+import { Template } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-dialog-page-create',

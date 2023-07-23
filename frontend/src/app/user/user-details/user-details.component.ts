@@ -8,15 +8,16 @@ import { UserService } from 'modules/shared/data-access/src/lib/services/user.se
 import { PageCardConfig } from '../../page/page-card/page-card.component';
 import { UserCardConfig } from '../user-card/user-card.component';
 import { DialogUserEnrolledUniversitiesComponent } from '../dialogs/dialog-user-enrolled-universities/dialog-user-enrolled-universities.component';
-import { DialogService } from 'src/assets/service/dialog.service';
+
 import { DialogUserChangePasswordComponent } from '../dialogs/dialog-user-change-password/dialog-user-change-password.component';
 import { DialogUserChangeUsernameComponent } from '../dialogs/dialog-user-change-username/dialog-user-change-username.component';
 import { DialogUserUpdateComponent } from '../dialogs/dialog-user-update/dialog-user-update.component';
 import { DialogUserChangeAccountTypeComponent } from '../dialogs/dialog-user-change-account-type/dialog-user-change-account-type.component';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
-import { SecurityService } from '../../../../modules/shared/data-access/src/lib/services/security.service';
+import { SecurityService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
-import { ErrorHandlerService } from '../../../../modules/shared/data-access/src/lib/services/error-handler.service';
+import { ErrorHandlerService } from '@reunice/modules/shared/data-access';
+import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
   selector: 'reunice-user-details',
