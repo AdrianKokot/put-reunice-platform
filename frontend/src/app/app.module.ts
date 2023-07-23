@@ -1,3 +1,5 @@
+import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
+import { TuiRootModule, TuiDialogModule, TuiAlertModule, TUI_SANITIZER } from "@taiga-ui/core";
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
@@ -231,7 +233,10 @@ export function SetupApp(setup: SetupService) {
     MatTableModule,
     MatTooltipModule,
     MatTreeModule,
-  ],
+      TuiRootModule,
+      TuiDialogModule,
+      TuiAlertModule
+],
   providers: [
     SetupService,
     {
@@ -240,7 +245,8 @@ export function SetupApp(setup: SetupService) {
       deps: [SetupService],
       multi: true,
     },
-  ],
+      {provide: TUI_SANITIZER, useClass: NgDompurifySanitizer}
+],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
