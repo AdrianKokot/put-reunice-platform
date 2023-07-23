@@ -13,7 +13,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../../assets/service/dialog.service';
-import { UserService } from '../../../../assets/service/user.service';
+import { UserService } from '../../../../../modules/shared/data-access/src/lib/services/user.service';
 
 export class PasswordErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(

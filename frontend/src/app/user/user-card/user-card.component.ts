@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { User } from '../../../assets/models/user';
+import { User } from '../../../../modules/shared/data-access/src/lib/models/user';
 
 @Component({
   selector: 'reunice-user-card',

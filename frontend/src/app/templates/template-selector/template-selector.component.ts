@@ -8,8 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
-import { Template } from '../../../assets/models/template';
-import { TemplateService } from '../../../assets/service/template.service';
+import { Template } from '../../../../modules/shared/data-access/src/lib/models/template';
+import { TemplateService } from '../../../../modules/shared/data-access/src/lib/services/template.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({

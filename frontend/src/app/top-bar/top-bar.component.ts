@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Page } from 'src/assets/models/page';
-import { University } from 'src/assets/models/university';
-import { User } from 'src/assets/models/user';
-import { PageService } from '../../assets/service/page.service';
-import { UserService } from 'src/assets/service/user.service';
-import { ErrorHandlerService } from '../../assets/service/error-handler.service';
+import { Page } from 'modules/shared/data-access/src/lib/models/page';
+import { University } from 'modules/shared/data-access/src/lib/models/university';
+import { User } from 'modules/shared/data-access/src/lib/models/user';
+import { PageService } from '../../../modules/shared/data-access/src/lib/services/page.service';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
+import { ErrorHandlerService } from '../../../modules/shared/data-access/src/lib/services/error-handler.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../assets/service/dialog.service';
-import { UniversityService } from '../../assets/service/university.service';
+import { UniversityService } from '../../../modules/shared/data-access/src/lib/services/university.service';
 
 @Component({
   selector: 'reunice-top-bar',
@@ -62,7 +62,7 @@ export class TopBarComponent implements OnInit {
   }
 
   logout() {
-    this.userService.logout(false).subscribe({
+    this.userService.logout().subscribe({
       next: () => {
         this.logged = false;
         this.userLogged = null;

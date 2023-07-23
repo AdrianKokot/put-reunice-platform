@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Template } from '../../../assets/models/template';
-import { TemplateService } from '../../../assets/service/template.service';
+import { Template } from '../../../../modules/shared/data-access/src/lib/models/template';
+import { TemplateService } from '../../../../modules/shared/data-access/src/lib/services/template.service';
 
 @Component({
   selector: 'reunice-template-editor',

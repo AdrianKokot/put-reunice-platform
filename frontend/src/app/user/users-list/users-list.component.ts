@@ -7,10 +7,10 @@ import {
   GridApi,
   RowSelectedEvent,
 } from 'ag-grid-community';
-import { User } from 'src/assets/models/user';
+import { User } from 'modules/shared/data-access/src/lib/models/user';
 import { DialogService } from 'src/assets/service/dialog.service';
 import { SpinnerService } from 'src/assets/service/spinner.service';
-import { UserService } from 'src/assets/service/user.service';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogUserCreateComponent } from '../dialogs/dialog-user-create/dialog-user-create.component';
 import { TranslateService } from '@ngx-translate/core';
 

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Page } from '../../../assets/models/page';
-import { SecurityService } from '../../../assets/service/security.service';
+import { Page } from '../../../../modules/shared/data-access/src/lib/models/page';
+import { SecurityService } from '../../../../modules/shared/data-access/src/lib/services/security.service';
 
 @Component({
   selector: 'reunice-page-card',

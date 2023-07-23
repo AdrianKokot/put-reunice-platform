@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
-import { KeyWordsService } from 'src/assets/service/key-words.service';
+import { KeyWordsService } from 'modules/shared/data-access/src/lib/services/key-words.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';

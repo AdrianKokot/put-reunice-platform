@@ -6,10 +6,10 @@ import {
   GridApi,
   RowSelectedEvent,
 } from 'ag-grid-community';
-import { Page } from 'src/assets/models/page';
+import { Page } from 'modules/shared/data-access/src/lib/models/page';
 import { DialogService } from 'src/assets/service/dialog.service';
 import { SpinnerService } from 'src/assets/service/spinner.service';
-import { PageService } from '../../../assets/service/page.service';
+import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

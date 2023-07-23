@@ -1,5 +1,5 @@
-import { Page } from './page';
-import { User } from './user';
+import { Page } from "./page";
+import { User } from "./user";
 
 export interface University {
   id: number;
@@ -9,6 +9,10 @@ export interface University {
   mainPage: Page;
   enrolledUsers: User[];
   hidden: boolean;
+}
+
+export interface CreateUniversityPayload extends Pick<University, 'id' |'name' | 'shortName' | 'description'> {
+  creatorId: number;
 }
 
 export interface UniversityForm {

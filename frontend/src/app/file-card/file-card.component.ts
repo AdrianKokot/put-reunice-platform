@@ -1,14 +1,14 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FileService } from '../../assets/service/file.service';
+import { FileService } from '../../../modules/shared/data-access/src/lib/services/file.service';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { saveAs } from 'file-saver';
-import { Page } from '../../assets/models/page';
-import { UserService } from '../../assets/service/user.service';
+import { Page } from '../../../modules/shared/data-access/src/lib/models/page';
+import { UserService } from '../../../modules/shared/data-access/src/lib/services/user.service';
 import { DialogService } from '../../assets/service/dialog.service';
-import { FileResource } from '../../assets/models/file';
-import { PageService } from '../../assets/service/page.service';
+import { FileResource } from '../../../modules/shared/data-access/src/lib/models/file';
+import { PageService } from '../../../modules/shared/data-access/src/lib/services/page.service';
 import { TranslateService } from '@ngx-translate/core';
-import { SecurityService } from '../../assets/service/security.service';
+import { SecurityService } from '../../../modules/shared/data-access/src/lib/services/security.service';
 
 @Component({
   selector: 'reunice-file-card',

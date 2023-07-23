@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Page } from 'src/assets/models/page';
-import { User } from 'src/assets/models/user';
-import { PageService } from 'src/assets/service/page.service';
-import { UserService } from 'src/assets/service/user.service';
+import { Page } from 'modules/shared/data-access/src/lib/models/page';
+import { User } from 'modules/shared/data-access/src/lib/models/user';
+import { PageService } from 'modules/shared/data-access/src/lib/services/page.service';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { PageCardConfig } from '../../page/page-card/page-card.component';
 import { UserCardConfig } from '../user-card/user-card.component';
 import { DialogUserEnrolledUniversitiesComponent } from '../dialogs/dialog-user-enrolled-universities/dialog-user-enrolled-universities.component';
@@ -14,9 +14,9 @@ import { DialogUserChangeUsernameComponent } from '../dialogs/dialog-user-change
 import { DialogUserUpdateComponent } from '../dialogs/dialog-user-update/dialog-user-update.component';
 import { DialogUserChangeAccountTypeComponent } from '../dialogs/dialog-user-change-account-type/dialog-user-change-account-type.component';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
-import { SecurityService } from '../../../assets/service/security.service';
+import { SecurityService } from '../../../../modules/shared/data-access/src/lib/services/security.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ErrorHandlerService } from '../../../assets/service/error-handler.service';
+import { ErrorHandlerService } from '../../../../modules/shared/data-access/src/lib/services/error-handler.service';
 
 @Component({
   selector: 'reunice-user-details',

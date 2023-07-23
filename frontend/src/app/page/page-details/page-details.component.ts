@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Page } from 'src/assets/models/page';
-import { PageService } from '../../../assets/service/page.service';
+import { Page } from 'modules/shared/data-access/src/lib/models/page';
+import { PageService } from '../../../../modules/shared/data-access/src/lib/services/page.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPageCreateComponent } from '../dialog-page-create/dialog-page-create.component';
 import { PageCardConfig } from '../page-card/page-card.component';
 import { DialogPageCreatorComponent } from '../dialog-page-creator/dialog-page-creator.component';
-import { SecurityService } from '../../../assets/service/security.service';
+import { SecurityService } from '../../../../modules/shared/data-access/src/lib/services/security.service';
 import { EditPageKeyWordsComponent } from 'src/app/keywords/edit-page-key-words/edit-page-key-words.component';
 import { DialogPageEditBasicComponent } from '../dialog-page-edit-basic/dialog-page-edit-basic.component';
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';

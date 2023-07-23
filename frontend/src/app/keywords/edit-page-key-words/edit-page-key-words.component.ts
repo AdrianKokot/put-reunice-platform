@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PageService } from 'src/assets/service/page.service';
+import { PageService } from 'modules/shared/data-access/src/lib/services/page.service';
 
 @Component({
   selector: 'reunice-edit-page-key-words',

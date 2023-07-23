@@ -86,3 +86,21 @@ body {
     }
   }
 }
+
+
+//@import '@taiga-ui/core/styles/taiga-ui-theme.less';
+//@import '@taiga-ui/core/styles/taiga-ui-fonts.less';
+//@import '@taiga-ui/styles/taiga-ui-global.less';
+
+
+
+
+
+
+
+// New styles
+
+.t-root-content {
+  display: flex;
+  min-height: 100vh;
+}

@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { UserForm } from 'src/assets/models/user';
-import { UserService } from 'src/assets/service/user.service';
+import { UserForm } from 'modules/shared/data-access/src/lib/models/user';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogService } from '../../../../assets/service/dialog.service';
-import { SecurityService } from '../../../../assets/service/security.service';
+import { SecurityService } from '../../../../../modules/shared/data-access/src/lib/services/security.service';
 
 @Component({
   selector: 'reunice-dialog-user-create',

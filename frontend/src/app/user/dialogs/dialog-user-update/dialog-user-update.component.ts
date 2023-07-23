@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '../../../../assets/service/user.service';
-import { UserForm } from '../../../../assets/models/user';
+import { UserService } from '../../../../../modules/shared/data-access/src/lib/services/user.service';
+import { UserForm } from '../../../../../modules/shared/data-access/src/lib/models/user';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../../assets/service/dialog.service';
 

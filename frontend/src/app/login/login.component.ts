@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from 'src/assets/service/user.service';
-import { ErrorHandlerService } from '../../assets/service/error-handler.service';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
+import { ErrorHandlerService } from '../../../modules/shared/data-access/src/lib/services/error-handler.service';
 import { DialogService } from '../../assets/service/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.userService.login(this.user, false).subscribe({
+    this.userService.login(this.user).subscribe({
       next: () => {
         this.userService.getLoggedUser().subscribe({
           next: (user) => {

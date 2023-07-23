@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Keyword } from 'src/assets/models/keywords';
+import { Keyword } from 'modules/shared/data-access/src/lib/models/keyword';
 import { DialogService } from 'src/assets/service/dialog.service';
-import { KeyWordsService } from 'src/assets/service/key-words.service';
+import { KeyWordsService } from 'modules/shared/data-access/src/lib/services/key-words.service';
 import { SpinnerService } from 'src/assets/service/spinner.service';
-import { UserService } from 'src/assets/service/user.service';
+import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogInputKeywordsComponent } from '../dialog-input-keywords/dialog-input-keywords.component';
 
 @Component({

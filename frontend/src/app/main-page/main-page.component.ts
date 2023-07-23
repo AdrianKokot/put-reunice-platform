@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PageService } from '../../assets/service/page.service';
-import { Page } from '../../assets/models/page';
+import { PageService } from '../../../modules/shared/data-access/src/lib/services/page.service';
+import { Page } from '../../../modules/shared/data-access/src/lib/models/page';
 import { PageCardConfig } from '../page/page-card/page-card.component';
 import { DialogService } from 'src/assets/service/dialog.service';
 import { SpinnerService } from 'src/assets/service/spinner.service';

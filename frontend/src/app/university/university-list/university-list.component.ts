@@ -7,8 +7,8 @@ import {
   RowSelectedEvent,
 } from 'ag-grid-community';
 
-import { University } from 'src/assets/models/university';
-import { UniversityService } from 'src/assets/service/university.service';
+import { University } from 'modules/shared/data-access/src/lib/models/university';
+import { UniversityService } from 'modules/shared/data-access/src/lib/services/university.service';
 import { DialogUniversityCreateComponent } from '../dialog-university-create/dialog-university-create.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerService } from 'src/assets/service/spinner.service';

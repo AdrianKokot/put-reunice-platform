@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TemplateService } from '../../../assets/service/template.service';
+import { TemplateService } from '../../../../modules/shared/data-access/src/lib/services/template.service';
 import { DialogTemplateCreateComponent } from '../dialog-template-create/dialog-template-create.component';
 
 @Component({

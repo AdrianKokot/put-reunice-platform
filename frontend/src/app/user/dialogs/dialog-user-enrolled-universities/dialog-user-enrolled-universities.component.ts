@@ -6,14 +6,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { University } from '../../../../assets/models/university';
-import { UniversityService } from '../../../../assets/service/university.service';
-import { UserService } from '../../../../assets/service/user.service';
+import { University } from '../../../../../modules/shared/data-access/src/lib/models/university';
+import { UniversityService } from '../../../../../modules/shared/data-access/src/lib/services/university.service';
+import { UserService } from '../../../../../modules/shared/data-access/src/lib/services/user.service';
 import { map, Observable, startWith } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { User } from '../../../../assets/models/user';
+import { User } from '../../../../../modules/shared/data-access/src/lib/models/user';
 import { DialogService } from '../../../../assets/service/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 
