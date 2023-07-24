@@ -34,7 +34,6 @@ export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(
     takeUntilDestroyed(),
     map((user) => ({ type: user?.accountType ?? AccountType.Guest, user })),
-    tap(console.log),
     shareReplay()
   );
 

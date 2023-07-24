@@ -26,7 +26,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     title?: string;
     message: string;
   }>();
-  private readonly _ignoredUrls = ['/api/users/logged'];
+  private readonly _ignoredUrls = ['/api/users/logged', '/api/login'];
 
   constructor(
     private readonly _router: Router,
@@ -68,7 +68,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
 
         if (error.status === 401) {
-          return from(this._router.navigate(['/login'])).pipe(
+          return from(this._router.navigate(['/auth/login'])).pipe(
             switchMap(() => NEVER)
           );
         }

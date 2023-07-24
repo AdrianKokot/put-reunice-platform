@@ -101,6 +101,7 @@
   "PASSWORD_CHANGED": "The password has been successfully changed",
   "USERNAME_CHANGE": "Username change",
   "USERNAME_CHANGED": "The username has been successfully changed",
+  "USERNAME_PLACEHOLDER": "user@domain.com",
   "ADDING_USER": "Adding user",
   "ADDING_PAGE": "Adding page",
   "FIRST_NAME": "First name",

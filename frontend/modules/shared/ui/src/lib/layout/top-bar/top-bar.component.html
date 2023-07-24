@@ -1,5 +1,5 @@
 <div>
-  <a href="/" tuiLink routerLink="/"> REUNICE </a>
+  <a tuiLink routerLink="/"> REUNICE </a>
 
   <ng-content select="[left]"></ng-content>
 </div>
@@ -13,9 +13,8 @@
 
   <a
     *reuniceUser="'GUEST'; else loggedMenu"
-    href="/login"
     tuiIconButton
-    routerLink="/login"
+    routerLink="/auth/login"
     [icon]="'tuiIconUser'"
   ></a>
 
@@ -23,6 +22,7 @@
     <tui-hosted-dropdown [content]="profileMenu" #profileMenuDropdown>
       <button
         type="button"
+        size="s"
         tuiIconButton
         [pseudoHover]="profileMenuDropdown.open || null"
       >
@@ -34,21 +34,21 @@
     <ng-template #profileMenu let-close="close">
       <tui-data-list role="menu" size="s">
         <a
-          href="/accounts/profile"
           routerLink="/accounts/profile"
           tuiOption
           role="menuitem"
           (click)="close()"
-          >Profile</a
         >
+          Profile
+        </a>
         <a
-          href="/auth/logout"
           routerLink="/auth/logout"
           tuiOption
           role="menuitem"
           (click)="close()"
-          >Logout</a
         >
+          Logout
+        </a>
       </tui-data-list>
     </ng-template>
   </ng-template>

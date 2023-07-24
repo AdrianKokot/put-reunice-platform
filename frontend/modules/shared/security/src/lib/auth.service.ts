@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import {
   BehaviorSubject,
   catchError,
+  Observable,
   of,
-  shareReplay,
   switchMap,
   tap,
 } from 'rxjs';
@@ -15,18 +15,30 @@ import { User } from '@reunice/modules/shared/data-access';
 })
 export class AuthService {
   private readonly _http = inject(HttpClient);
-  private readonly _checkUserTrigger = new BehaviorSubject(null);
+  private readonly _user$ = new BehaviorSubject<User | null>(null);
 
-  readonly user$ = this._checkUserTrigger.pipe(
-    switchMap(() =>
-      this._http.get<User>('/api/users/logged').pipe(catchError(() => of(null)))
-    ),
-    shareReplay()
-  );
+  readonly user$ = this._user$.asObservable();
 
-  logout() {
+  constructor() {
+    this.getUser().subscribe((user) => this._user$.next(user));
+  }
+
+  private getUser() {
     return this._http
-      .get('/api/logout')
-      .pipe(tap(() => this._checkUserTrigger.next(null)));
+      .get<User>('/api/users/logged')
+      .pipe(catchError(() => of(null)));
+  }
+
+  login(user: Pick<User, 'password' | 'username'>): Observable<User | null> {
+    return this._http.post(`/api/login`, user).pipe(
+      switchMap(() => this.getUser()),
+      tap((user) => this._user$.next(user))
+    );
+  }
+
+  logout(): Observable<void> {
+    return this._http
+      .get<void>('/api/logout')
+      .pipe(tap(() => this._user$.next(null)));
   }
 }

@@ -1,4 +1,4 @@
-import { NgModule, Type } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainPageComponent } from './main-page/main-page.component';
 import { UniversityListComponent } from './university/university-list/university-list.component';
@@ -14,10 +14,8 @@ import { PageUserComponent } from './page/page-user/page-user.component';
 import { TemplatesListComponent } from './templates/templates-list/templates-list.component';
 import { TemplateEditorComponent } from './templates/template-editor/template-editor.component';
 import { BackupComponent } from './backup/backup.component';
-import { LoginComponent } from './login/login.component';
 import { SearchComponent } from './search/search.component';
 import { KeywordsComponent } from './keywords/keywords/keywords.component';
-import { logoutFn } from '@reunice/modules/shared/security';
 
 const routes: Routes = [
   { path: '', component: MainPageComponent, title: 'Strona główna' },
@@ -70,13 +68,12 @@ const routes: Routes = [
     title: 'Edycja szablonu',
   },
   { path: 'backups', component: BackupComponent, title: 'Kopie zapasowe' },
-  { path: 'login', component: LoginComponent, title: 'Logowanie' },
   { path: 'search', component: SearchComponent, title: 'Search' },
   { path: 'keywords', component: KeywordsComponent, title: 'Keywords' },
   {
-    path: 'auth/logout',
-    canMatch: [logoutFn],
-    component: {} as Type<unknown>,
+    loadChildren: () =>
+      import('@reunice/modules/auth').then((m) => m.AuthModule),
+    path: 'auth',
   },
 ];
 

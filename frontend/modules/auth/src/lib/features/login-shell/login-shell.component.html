@@ -1,0 +1,49 @@
+<form [formGroup]="form" (ngSubmit)="submit$.next()" class="max-w-xs mx-auto">
+  <h3 class="tui-form__header tui-form__header_margin-top_none">
+    {{ 'LOGIN' | translate }}
+  </h3>
+
+  <label [tuiLabel]="'USERNAME' | translate" class="tui-form__row">
+    <tui-input
+      formControlName="username"
+      tuiTextfieldSize="m"
+      tuiAutoFocus
+      [tuiTextfieldLabelOutside]="true"
+    >
+      {{ 'USERNAME_PLACEHOLDER' | translate }}
+    </tui-input>
+
+    <tui-error
+      formControlName="username"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <label [tuiLabel]="'PASSWORD' | translate" class="tui-form__row">
+    <tui-input-password
+      formControlName="password"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      class="mt-1"
+    >
+      ••••••••
+    </tui-input-password>
+
+    <tui-error
+      formControlName="password"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <div class="tui-form__buttons">
+    <button
+      tuiButton
+      size="m"
+      type="submit"
+      class="tui-form__button w-full"
+      [showLoader]="(showLoader$ | async) ?? false"
+    >
+      {{ 'LOGIN' | translate }}
+    </button>
+  </div>
+</form>

@@ -3,12 +3,14 @@ import {
   TUI_SANITIZER,
   TuiAlertModule,
   TuiButtonModule,
+  tuiButtonOptionsProvider,
   TuiDataListModule,
   TuiDialogModule,
   TuiHostedDropdownModule,
+  TuiLoaderModule,
   TuiRootModule,
 } from '@taiga-ui/core';
-import { APP_INITIALIZER, inject, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,7 +26,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { RootComponent } from './root.component';
 import { MainPageComponent } from './main-page/main-page.component';
-import { TopBarComponent } from './top-bar/top-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   HTTP_INTERCEPTORS,
@@ -43,7 +44,6 @@ import { PageListComponent } from './page/page-list/page-list.component';
 import { UniversityListComponent } from './university/university-list/university-list.component';
 import { UniversityDetailsComponent } from './university/university-details/university-details.component';
 import { DialogUserCreateComponent } from './user/dialogs/dialog-user-create/dialog-user-create.component';
-import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { DialogUniversityCreateComponent } from './university/dialog-university-create/dialog-university-create.component';
 import { PageUserComponent } from './page/page-user/page-user.component';
@@ -96,12 +96,13 @@ import { MatTreeModule } from '@angular/material/tree';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { HttpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
 import { UiModule } from '@reunice/modules/shared/ui';
-import { AuthService } from '@reunice/modules/shared/security';
 import {
   TuiDataListWrapperModule,
+  TuiIslandModule,
   TuiMultiSelectModule,
   TuiSelectModule,
 } from '@taiga-ui/kit';
+import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 
 export function SetupApp(setup: SetupService) {
   return () => setup.initialize();
@@ -111,7 +112,6 @@ export function SetupApp(setup: SetupService) {
   declarations: [
     RootComponent,
     MainPageComponent,
-    TopBarComponent,
     UserDetailsComponent,
     UsersListComponent,
     PageDetailsComponent,
@@ -119,7 +119,6 @@ export function SetupApp(setup: SetupService) {
     UniversityListComponent,
     UniversityDetailsComponent,
     DialogUserCreateComponent,
-    LoginComponent,
     UserProfileComponent,
     DialogUniversityCreateComponent,
     PageUserComponent,
@@ -182,6 +181,7 @@ export function SetupApp(setup: SetupService) {
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({
+      defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
@@ -208,8 +208,13 @@ export function SetupApp(setup: SetupService) {
     TuiButtonModule,
     TuiDataListModule,
     TuiMultiSelectModule,
+    TuiIslandModule,
+    TuiLetModule,
+    TuiForModule,
+    TuiLoaderModule,
   ],
   providers: [
+    tuiButtonOptionsProvider({ size: 'm' }),
     // SetupService,
     // {
     //   provide: APP_INITIALIZER,

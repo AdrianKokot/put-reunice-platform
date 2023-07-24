@@ -1,21 +1,20 @@
-<div class="cms-padding cms-layout-gap" style="text-align: center">
-  <span style="align-items: center; margin: 10px">
-    <h1>{{ 'UNIVERSITIES_WE_WORK_WITH' | translate }}:</h1>
-  </span>
-  <mat-grid-list
-    [cols]="breakpoint"
-    rowHeight="2:1"
-    gutterSize="1%"
-    (window:resize)="onResize($event)"
+<h2 class="tui-text_h2">{{ 'UNIVERSITIES_WE_WORK_WITH' | translate }}</h2>
+
+<div class="tui-row" *tuiLet="universities$ | async as universities">
+  <div
+    class="tui-col_md-4"
+    *ngFor="let page of universities$ | async; else: loading; empty: blank"
   >
-    <ng-container *ngFor="let page of pages">
-      <mat-grid-tile>
-        <button mat-button [routerLink]="['/page', page.id]">
-          <mat-card-title>
-            {{ page.title }}
-          </mat-card-title>
-        </button>
-      </mat-grid-tile>
-    </ng-container>
-  </mat-grid-list>
+    <a tuiIsland [routerLink]="['/page', page.id]">
+      <h3 class="tui-island__title">{{ page.title }}</h3>
+    </a>
+  </div>
 </div>
+
+<ng-template #loading>
+  <!--  TODO Add some skeleton after making the list look nice -->
+  Loading....
+  <tui-loader></tui-loader>
+</ng-template>
+
+<ng-template #blank> No items to show </ng-template>

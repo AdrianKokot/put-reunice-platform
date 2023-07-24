@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@reunice/modules/auth": ["modules/auth/src/index.ts"],
       "@reunice/modules/shared/data-access": [
         "modules/shared/data-access/src/index.ts"
       ],
