@@ -29,6 +29,7 @@ services:
       - "8080:8080"
     depends_on:
       - postgres
+      - mailpit
 
   frontend:
     build: ./frontend
@@ -38,5 +39,14 @@ services:
     depends_on:
       - backend
 
-volumes:
-  cms-db:
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    environment:
+      MP_SMTP_AUTH_ALLOW_INSECURE: true
+      MP_UI_AUTH_FILE: /etc/.mailpitpsswd
+      MP_SMTP_AUTH_FILE: /etc/.mailpitpsswd
+    volumes:
+      - ./.dev/.mailpitpsswd:/etc/.mailpitpsswd
