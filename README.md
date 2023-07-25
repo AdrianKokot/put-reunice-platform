@@ -3,13 +3,13 @@
 ## Docker
 
 ### Run the application, rebuilding all images from source code
-`docker-compose up -d --build`
+`docker compose up -d --build`
 
 ### Run the application using already built images
-`docker-compose up -d`
+`docker compose up -d`
 
 ### Stop the application, but leave Docker Volumes intact
-`docker-compose down`
+`docker compose down`
 
 ### Run only the backend service in container, frontend locally
 ```bash
