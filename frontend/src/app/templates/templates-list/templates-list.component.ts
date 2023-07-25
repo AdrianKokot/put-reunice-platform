@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Template } from '@reunice/modules/shared/data-access';
-import { University } from '@reunice/modules/shared/data-access';
+import {
+  Template,
+  TemplateService,
+  University,
+  UserService,
+} from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../../assets/service/dialog.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { TemplateService } from '@reunice/modules/shared/data-access';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogTemplateCreateComponent } from '../dialog-template-create/dialog-template-create.component';
 import { DialogTemplateChangeNameComponent } from '../dialog-template-change-name/dialog-template-change-name.component';
-import { UserService } from '@reunice/modules/shared/data-access';
 
 @Component({
   selector: 'reunice-templates-list',
@@ -27,7 +28,6 @@ export class TemplatesListComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private templateService: TemplateService,
-    private spinnerService: SpinnerService,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog
   ) {}
@@ -46,13 +46,11 @@ export class TemplatesListComponent implements OnInit {
   }
 
   loadTemplates() {
-    this.spinnerService.show();
     this.templateService.getAllTemplates().subscribe({
       next: (res) => {
         const id = Number(this.activatedRoute.snapshot.queryParams['id']);
 
         this.templates = res;
-        this.spinnerService.hide();
         this.templates.forEach((template) => {
           template.safeContent = this.sanitizer.bypassSecurityTrustHtml(
             template.content
@@ -61,9 +59,6 @@ export class TemplatesListComponent implements OnInit {
             this.selectedTemplate = template;
           }
         });
-      },
-      error: () => {
-        this.spinnerService.hide();
       },
     });
   }

@@ -6,7 +6,6 @@ import { KeyWordsService } from 'modules/shared/data-access/src/lib/services/key
 
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogInputKeywordsComponent } from '../dialog-input-keywords/dialog-input-keywords.component';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
@@ -23,7 +22,6 @@ export class KeywordsComponent implements OnInit {
     private dialogService: DialogService,
     private keyWordsService: KeyWordsService,
     public userService: UserService,
-    private spinnerService: SpinnerService,
     private dialog: MatDialog
   ) {}
 
@@ -32,15 +30,9 @@ export class KeywordsComponent implements OnInit {
   }
 
   loadKeyWords() {
-    this.spinnerService.show();
-
     this.keyWordsService.getAllKeyWords().subscribe({
       next: (res) => {
         this.allKeyWords = res;
-        this.spinnerService.hide();
-      },
-      error: () => {
-        this.spinnerService.hide();
       },
     });
   }
@@ -56,14 +48,9 @@ export class KeywordsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((next) => {
       if (next) {
-        this.spinnerService.show();
         this.keyWordsService.addKeyWord(next.word).subscribe({
           next: () => {
-            this.spinnerService.hide();
             this.loadKeyWords();
-          },
-          error: () => {
-            this.spinnerService.hide();
           },
         });
         this.selectedKeyword = { id: -1, word: '' };
@@ -81,16 +68,11 @@ export class KeywordsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((next) => {
       if (next) {
-        this.spinnerService.show();
         this.keyWordsService
           .modifyKeyWordWordField(next.id, next.word)
           .subscribe({
             next: () => {
-              this.spinnerService.hide();
               this.loadKeyWords();
-            },
-            error: () => {
-              this.spinnerService.hide();
             },
           });
         this.selectedKeyword = { id: -1, word: '' };
@@ -106,20 +88,12 @@ export class KeywordsComponent implements OnInit {
       .afterClosed()
       .subscribe((value) => {
         if (value && this.selectedKeyword) {
-          this.spinnerService.show();
           this.allKeyWords = this.allKeyWords.filter((keyword) => {
             return keyword.id !== this.selectedKeyword?.id;
           });
           this.keyWordsService
             .deleteKeyWord(this.selectedKeyword.id)
-            .subscribe({
-              next: () => {
-                this.spinnerService.hide();
-              },
-              error: () => {
-                this.spinnerService.hide();
-              },
-            });
+            .subscribe({});
           this.selectedKeyword = { id: -1, word: '' };
         }
       });

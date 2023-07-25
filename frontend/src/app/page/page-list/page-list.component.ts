@@ -10,7 +10,6 @@ import { Page } from 'modules/shared/data-access/src/lib/models/page';
 
 import { PageService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
@@ -30,7 +29,6 @@ export class PageListComponent implements OnInit {
   constructor(
     private router: Router,
     private dialogService: DialogService,
-    private spinnerService: SpinnerService,
     private pageService: PageService,
     private translate: TranslateService
   ) {}
@@ -45,15 +43,10 @@ export class PageListComponent implements OnInit {
   }
 
   loadPages() {
-    this.spinnerService.show();
     this.pageService.getPages().subscribe({
       next: (res) => {
-        this.spinnerService.hide();
         this.pages = res;
         this.translateData();
-      },
-      error: () => {
-        this.spinnerService.hide();
       },
     });
   }

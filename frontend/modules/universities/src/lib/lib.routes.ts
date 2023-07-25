@@ -1,23 +1,23 @@
-import { Route } from "@angular/router";
-import { UniversityListComponent } from "./features/university-list/university-list.component";
-import { UniversityShellComponent } from "./features/university-shell/university-shell.component";
-import { PageDetailsComponent } from "./features/page-details/page-details.component";
+import { Route } from '@angular/router';
+import { UniversityListComponent } from './features/university-list/university-list.component';
+import { UniversityShellComponent } from './features/university-shell/university-shell.component';
+import { PageDetailsComponent } from './features/page-details/page-details.component';
 
 export const universitiesRoutes: Route[] = [
   {
-    path: "",
+    path: '',
     component: UniversityListComponent,
-    title: "Uniwersytety"
+    title: 'Uniwersytety',
   },
   {
-    path: ":id",
+    path: ':id',
     component: UniversityShellComponent,
-    title: "Szczegóły uniwersytetu",
+    title: 'Szczegóły uniwersytetu',
     children: [
       {
-        path: "page/:pageId",
-        component: PageDetailsComponent
-      }
-    ]
-  }
+        path: 'page/:pageId',
+        component: PageDetailsComponent,
+      },
+    ],
+  },
 ];

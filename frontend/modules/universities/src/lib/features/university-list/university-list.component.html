@@ -3,7 +3,11 @@
 <div class="tui-row" *tuiLet="universities$ | async as universities">
   <div
     class="tui-col_md-4"
-    *ngFor="let university of universities$ | async; else: loading; empty: blank"
+    *ngFor="
+      let university of universities$ | async;
+      else: loading;
+      empty: blank
+    "
   >
     <a tuiIsland [routerLink]="[university.id]">
       <h3 class="tui-island__title">{{ university.title }}</h3>

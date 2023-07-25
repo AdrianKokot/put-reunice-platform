@@ -15,7 +15,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { take } from 'rxjs';
 
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
@@ -35,7 +34,6 @@ export class UniversityListComponent implements OnInit {
   constructor(
     private router: Router,
     private dialogService: DialogService,
-    private spinnerService: SpinnerService,
     private universityService: UniversityService,
     public dialog: MatDialog,
     private translate: TranslateService
@@ -51,15 +49,10 @@ export class UniversityListComponent implements OnInit {
   }
 
   loadUniversities() {
-    this.spinnerService.show();
     this.universityService.getUniversities().subscribe({
       next: (res) => {
-        this.spinnerService.hide();
         this.universities = res;
         this.translateData();
-      },
-      error: () => {
-        this.spinnerService.hide();
       },
     });
   }

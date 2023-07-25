@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { PageService } from '@reunice/modules/shared/data-access';
 import { Page } from '@reunice/modules/shared/data-access';
 import { ActivatedRoute } from '@angular/router';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
@@ -16,7 +15,6 @@ export class PageUserComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private spinnerService: SpinnerService,
     private dialogService: DialogService,
     private pageService: PageService
   ) {}
@@ -28,14 +26,9 @@ export class PageUserComponent implements OnInit {
   }
 
   loadPages(userId: number) {
-    this.spinnerService.show();
     this.pageService.getPages().subscribe({
       next: (res) => {
-        this.spinnerService.hide();
         this.pages = res.filter((element) => element.creator.id == userId);
-      },
-      error: () => {
-        this.spinnerService.hide();
       },
     });
   }

@@ -6,10 +6,11 @@ import {
   tuiButtonOptionsProvider,
   TuiDataListModule,
   TuiDialogModule,
-  TuiHostedDropdownModule, TuiLinkModule,
+  TuiHostedDropdownModule,
+  TuiLinkModule,
   TuiLoaderModule,
-  TuiRootModule
-} from "@taiga-ui/core";
+  TuiRootModule,
+} from '@taiga-ui/core';
 import { NgModule } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
@@ -57,7 +58,6 @@ import { UserCardComponent } from './user/user-card/user-card.component';
 import { UniversityCardComponent } from './university/university-card/university-card.component';
 import { ConfirmationDialogComponent } from './dialog/confirmation-dialog/confirmation-dialog.component';
 import { ErrorDialogComponent } from './dialog/error-dialog/error-dialog.component';
-import { SpinnerComponent } from './spinner/spinner.component';
 import { DialogUserEnrolledUniversitiesComponent } from './user/dialogs/dialog-user-enrolled-universities/dialog-user-enrolled-universities.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DialogPageCreatorComponent } from './page/dialog-page-creator/dialog-page-creator.component';
@@ -66,7 +66,6 @@ import { SuccessDialogComponent } from './dialog/success-dialog/success-dialog.c
 import { DialogUserChangeUsernameComponent } from './user/dialogs/dialog-user-change-username/dialog-user-change-username.component';
 import { DialogUserUpdateComponent } from './user/dialogs/dialog-user-update/dialog-user-update.component';
 import { DialogUserChangeAccountTypeComponent } from './user/dialogs/dialog-user-change-account-type/dialog-user-change-account-type.component';
-import { SetupService } from 'modules/shared/data-access/src/lib/services/setup.service';
 import { SearchComponent } from './search/search.component';
 import { TemplatesListComponent } from './templates/templates-list/templates-list.component';
 import { MatListModule } from '@angular/material/list';
@@ -97,8 +96,9 @@ import {
   TuiDataListWrapperModule,
   TuiIslandModule,
   TuiMultiSelectModule,
-  TuiSelectModule, TuiTreeModule
-} from "@taiga-ui/kit";
+  TuiSelectModule,
+  TuiTreeModule,
+} from '@taiga-ui/kit';
 import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
@@ -119,7 +119,6 @@ import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
     UniversityCardComponent,
     ConfirmationDialogComponent,
     ErrorDialogComponent,
-    SpinnerComponent,
     DialogUserEnrolledUniversitiesComponent,
     DialogPageCreatorComponent,
     DialogUserChangePasswordComponent,
@@ -171,12 +170,12 @@ import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: "en",
+      defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        deps: [HttpClient],
+      },
     }),
     MatDividerModule,
     MatExpansionModule,
@@ -203,7 +202,7 @@ import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
     TuiForModule,
     TuiLoaderModule,
     TuiLinkModule,
-    TuiTreeModule
+    TuiTreeModule,
   ],
   providers: [
     tuiButtonOptionsProvider({ size: 'm' }),

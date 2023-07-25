@@ -5,7 +5,6 @@ import { KeyWordsService } from 'modules/shared/data-access/src/lib/services/key
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 
 @Component({
   selector: 'reunice-key-words-selectors',
@@ -21,10 +20,7 @@ export class KeyWordsSelectorsComponent implements OnInit {
   selectedKeyWords: string[] = [];
   filteredKeyWords!: Observable<string[]>;
   allKeyWords: string[] = [];
-  constructor(
-    private keyWordsService: KeyWordsService,
-    private spinnerService: SpinnerService
-  ) {
+  constructor(private keyWordsService: KeyWordsService) {
     this.filteredKeyWords = this.keyWordsControl.valueChanges.pipe(
       startWith(null),
       map((keyWord: string | null) =>
@@ -49,14 +45,10 @@ export class KeyWordsSelectorsComponent implements OnInit {
   }
 
   loadKeyWords() {
-    this.spinnerService.show();
-
     this.keyWordsService.getAllKeyWords().subscribe({
       next: (res) => {
         this.allKeyWords = res.map((keyWord) => keyWord['word']);
-        this.spinnerService.hide();
       },
-      error: () => this.spinnerService.hide(),
     });
   }
 

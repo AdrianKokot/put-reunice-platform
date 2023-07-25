@@ -4,11 +4,12 @@ import {
   TuiButtonModule,
   tuiButtonOptionsProvider,
   TuiDataListModule,
-  TuiHostedDropdownModule, TuiLinkModule
-} from "@taiga-ui/core";
-import { TuiAvatarModule, tuiAvatarOptionsProvider } from "@taiga-ui/kit";
-import { UserDirective } from "@reunice/modules/shared/security";
-import { RouterLink, RouterModule } from "@angular/router";
+  TuiHostedDropdownModule,
+  TuiLinkModule,
+} from '@taiga-ui/core';
+import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
+import { UserDirective } from '@reunice/modules/shared/security';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'reunice-ui-top-bar',
@@ -23,7 +24,7 @@ import { RouterLink, RouterModule } from "@angular/router";
     TuiHostedDropdownModule,
     TuiAvatarModule,
     TuiDataListModule,
-    TuiLinkModule
+    TuiLinkModule,
   ],
   providers: [
     tuiButtonOptionsProvider({

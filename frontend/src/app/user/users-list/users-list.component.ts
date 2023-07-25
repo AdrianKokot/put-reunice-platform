@@ -11,7 +11,6 @@ import { User } from 'modules/shared/data-access/src/lib/models/user';
 import { UserService } from 'modules/shared/data-access/src/lib/services/user.service';
 import { DialogUserCreateComponent } from '../dialogs/dialog-user-create/dialog-user-create.component';
 import { TranslateService } from '@ngx-translate/core';
-import { SpinnerService } from '../../../assets/service/spinner.service';
 import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
@@ -32,7 +31,6 @@ export class UsersListComponent implements OnInit {
     private router: Router,
     private dialogService: DialogService,
     private userService: UserService,
-    private spinnerService: SpinnerService,
     public dialog: MatDialog,
     private translate: TranslateService
   ) {}
@@ -47,15 +45,10 @@ export class UsersListComponent implements OnInit {
   }
 
   loadUsers() {
-    this.spinnerService.show();
     this.userService.getUsers().subscribe({
       next: (res) => {
-        this.spinnerService.hide();
         this.users = res;
         this.translateData();
-      },
-      error: () => {
-        this.spinnerService.hide();
       },
     });
   }
