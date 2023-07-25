@@ -33,16 +33,16 @@ export class UserService {
     return this.http.put<User>(`${this.userUrl}/${id}`, user);
   }
 
-  login(user: { username: string; password: string }): Observable<any> {
-    return this.http.post<any>(`/api/login`, user);
+  login(user: { username: string; password: string }): Observable<unknown> {
+    return this.http.post<unknown>(`/api/login`, user);
   }
 
-  logout(): Observable<any> {
-    return this.http.get<any>(`/api/logout`);
+  logout(): Observable<unknown> {
+    return this.http.get<unknown>(`/api/logout`);
   }
 
-  getLoggedUser(): Observable<any> {
-    return this.http.get<any>(`${this.userUrl}/logged`);
+  getLoggedUser(): Observable<User> {
+    return this.http.get<User>(`${this.userUrl}/logged`);
   }
 
   modifyUserEnabledField(id: number, enabled: boolean): Observable<void> {

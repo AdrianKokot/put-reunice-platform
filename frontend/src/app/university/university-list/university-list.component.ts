@@ -4,6 +4,7 @@ import {
   ColDef,
   ColumnApi,
   GridApi,
+  GridReadyEvent,
   RowSelectedEvent,
 } from 'ag-grid-community';
 
@@ -136,7 +137,7 @@ export class UniversityListComponent implements OnInit {
     this.router.navigateByUrl('/university/' + event.data.id);
   }
 
-  onGridReady(params: any) {
+  onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
   }

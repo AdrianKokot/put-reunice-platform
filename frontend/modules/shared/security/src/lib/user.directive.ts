@@ -14,7 +14,7 @@ import {
   AccountType,
   User,
 } from '@reunice/modules/shared/data-access';
-import { map, shareReplay, tap } from 'rxjs';
+import { map, shareReplay } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 class UserContext {
@@ -29,6 +29,25 @@ class UserContext {
   }
 }
 
+/**
+ * @description This directive is used to show or hide content based on the user's account type.
+ *              Directive also exposes context with user data.
+ * @example
+ * <div *reuniceUser="AccountType.Authorized; else unauthorized; let user = user">
+ *   <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
+ *  </div>
+ *  <ng-template #unauthorized>
+ *    <p>Unauthorized content</p>
+ *  </ng-template>
+ *
+ *  @example
+ *  <div *reuniceUser="AccountType.Guest; else authorized">
+ *    <p>Guest content</p>
+ *  </div>
+ *  <ng-template #authorized let-user>
+ *    <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
+ *  </ng-template>
+ */
 @Directive({ selector: '[reuniceUser]', standalone: true })
 export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(

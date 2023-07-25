@@ -4,6 +4,7 @@ import {
   ColDef,
   ColumnApi,
   GridApi,
+  GridReadyEvent,
   RowSelectedEvent,
 } from 'ag-grid-community';
 import { Page } from 'modules/shared/data-access/src/lib/models/page';
@@ -136,7 +137,7 @@ export class PageListComponent implements OnInit {
     this.router.navigateByUrl('/page/' + event.data.id);
   }
 
-  onGridReady(params: any) {
+  onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
   }

@@ -41,7 +41,7 @@ export class PageService {
     return this.http.patch<void>(`${this.pageUrl}/${id}/hidden`, hidden);
   }
 
-  deletePage(id: number): Observable<any> {
+  deletePage(id: number): Observable<unknown> {
     return this.http.delete<Page>(`${this.pageUrl}/${id}`);
   }
 

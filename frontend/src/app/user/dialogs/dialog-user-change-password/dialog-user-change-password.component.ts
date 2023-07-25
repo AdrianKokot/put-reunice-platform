@@ -3,8 +3,6 @@ import {
   AbstractControl,
   FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm,
   ValidationErrors,
   ValidatorFn,
   Validators,
@@ -16,10 +14,7 @@ import { DialogService } from '../../../../assets/service/dialog.service';
 import { UserService } from '@reunice/modules/shared/data-access';
 
 export class PasswordErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
+  isErrorState(control: FormControl | null): boolean {
     const invalidCtrl = !!(control?.invalid && control?.parent?.dirty);
     const invalidParent = !!(
       control?.parent?.invalid && control?.parent?.dirty

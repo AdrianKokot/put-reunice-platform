@@ -1,7 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Page } from '@reunice/modules/shared/data-access';
-import { Template } from '@reunice/modules/shared/data-access';
+import { Page, Template } from '@reunice/modules/shared/data-access';
 import { FormGroup } from '@angular/forms';
 import { DialogService } from '../../../assets/service/dialog.service';
 import { TranslateService } from '@ngx-translate/core';

@@ -16,7 +16,6 @@ import { DialogUserChangeAccountTypeComponent } from '../dialogs/dialog-user-cha
 import { ConfirmationDialogComponent } from '../../dialog/confirmation-dialog/confirmation-dialog.component';
 import { SecurityService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
-import { ErrorHandlerService } from '@reunice/modules/shared/data-access';
 import { DialogService } from '../../../assets/service/dialog.service';
 
 @Component({
@@ -49,7 +48,6 @@ export class UserDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
-    private errorHandler: ErrorHandlerService,
     private dialogService: DialogService,
     private pageService: PageService,
     private translate: TranslateService
@@ -104,9 +102,6 @@ export class UserDetailsComponent implements OnInit {
     this.pageService.getCreatorPages(userId).subscribe({
       next: (res) => {
         this.pages = res;
-      },
-      error: (err) => {
-        if (err.status !== 404) this.errorHandler.handleError(err);
       },
     });
   }

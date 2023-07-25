@@ -9,7 +9,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
 import { UserDirective } from '@reunice/modules/shared/security';
-import { RouterLink, RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'reunice-ui-top-bar',

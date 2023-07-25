@@ -5,11 +5,9 @@ import {
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
-import { Template } from '@reunice/modules/shared/data-access';
-import { TemplateService } from '@reunice/modules/shared/data-access';
+import { Template, TemplateService } from '@reunice/modules/shared/data-access';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({

@@ -56,7 +56,7 @@ export class TemplateService {
     return this.http.patch<void>(`${this.templateUrl}/${id}/content`, content);
   }
 
-  deleteTemplate(id: number): Observable<any> {
+  deleteTemplate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.templateUrl}/${id}`);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import Quill from 'quill';
 import ImageResize from 'quill-image-resize-module';
+import { Params } from '@angular/router';
 
 Quill.register('modules/imageResize', ImageResize);
 
@@ -13,9 +14,9 @@ export class QuillEditorComponent {
   @Input() title = 'Editing';
   @Input() subtitle?: string = 'Title';
   @Input() content?: string;
-  @Input() onCloseLink?: any[] = ['/'];
-  @Input() onCloseLinkParams?: any;
-  @Output() saved = new EventEmitter<any>();
+  @Input() onCloseLink?: string | null | (string | number)[] = ['/'];
+  @Input() onCloseLinkParams?: Params | undefined;
+  @Output() saved = new EventEmitter<string>();
   @Output() contentChange = new EventEmitter<string>();
 
   modules = {};

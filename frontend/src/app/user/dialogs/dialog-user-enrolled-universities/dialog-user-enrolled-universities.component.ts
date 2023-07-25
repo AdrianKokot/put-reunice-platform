@@ -57,7 +57,7 @@ export class DialogUserEnrolledUniversitiesComponent implements OnInit {
   }
 
   onEnter(event: MatChipInputEvent): void {
-    event.chipInput!.clear();
+    event.chipInput.clear();
     this.universityControl.setValue(null);
   }
 

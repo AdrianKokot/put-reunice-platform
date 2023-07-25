@@ -1,8 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '@reunice/modules/shared/data-access';
-import { UserForm } from '@reunice/modules/shared/data-access';
+import { UserForm, UserService } from '@reunice/modules/shared/data-access';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../../../../assets/service/dialog.service';
 

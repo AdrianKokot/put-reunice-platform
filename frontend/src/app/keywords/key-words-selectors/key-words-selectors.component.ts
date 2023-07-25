@@ -55,7 +55,7 @@ export class KeyWordsSelectorsComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     this.addToSelected((event.value || '').trim());
 
-    event.chipInput!.clear();
+    event.chipInput.clear();
     this.keyWordsControl.setValue(null);
   }
 
