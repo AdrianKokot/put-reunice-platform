@@ -35,8 +35,6 @@ services:
     container_name: frontend
     ports:
       - "80:80"
-    depends_on:
-      - backend
 
 volumes:
   cms-db:
