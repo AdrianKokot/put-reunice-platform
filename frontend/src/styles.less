@@ -1,0 +1,60 @@
+@import '@taiga-ui/core/styles/taiga-ui-theme.less';
+@import '@taiga-ui/core/styles/taiga-ui-fonts.less';
+@import '@taiga-ui/styles/taiga-ui-global.less';
+
+:root {
+  --top-bar-height: 3.9375rem;
+}
+
+.reunice-root-outlet-container {
+  &:extend(.w-full);
+
+  > :not(.ignore-tui-container) {
+    &:extend(.d-block);
+    &:extend(.tui-container);
+    &:extend(.tui-container_adaptive);
+  }
+}
+
+.t-root-content {
+  min-height: 100vh;
+}
+
+// Makes alerts appear below the top bar
+tui-alert-host > .t-wrapper {
+  margin-top: var(--top-bar-height);
+}
+
+// Utility styles
+.d-flex {
+  display: flex;
+}
+
+.d-block {
+  display: block;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-self-end {
+  justify-self: end;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-xs {
+  max-width: 22rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-underline {
+  text-decoration: underline !important;
+}

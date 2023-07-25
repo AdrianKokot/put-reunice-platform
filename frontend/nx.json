@@ -57,7 +57,8 @@
     },
     "@nx/angular:component": {
       "inlineStyle": true,
-      "changeDetection": "OnPush"
+      "changeDetection": "OnPush",
+      "standalone": true
     }
   },
   "defaultProject": "reunice"
