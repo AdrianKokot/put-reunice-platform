@@ -14,6 +14,11 @@ import { SearchComponent } from './search/search.component';
 import { KeywordsComponent } from './keywords/keywords/keywords.component';
 
 const routes: Routes = [
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('@reunice/modules/admin').then((m) => m.AdminModule),
+  },
   { path: '', redirectTo: 'universities', pathMatch: 'full' },
   // { path: "", component: MainPageComponent, title: "Strona główna" },
   {
