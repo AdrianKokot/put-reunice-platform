@@ -14,7 +14,12 @@
       "inputs": ["production", "^production"]
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js", "{workspaceRoot}/setup-jest.js"]
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js",
+        "{workspaceRoot}/setup-jest.js"
+      ]
     },
     "e2e": {
       "inputs": ["default", "^production"]
@@ -51,7 +56,7 @@
       "unitTestRunner": "jest"
     },
     "@nx/angular:component": {
-      "style": "inline",
+      "inlineStyle": true,
       "changeDetection": "OnPush"
     }
   },

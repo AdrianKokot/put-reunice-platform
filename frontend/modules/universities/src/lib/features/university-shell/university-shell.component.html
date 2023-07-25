@@ -1,0 +1,19 @@
+<div *ngIf="university$ | async as university">
+
+
+  <tui-tree [tuiTreeController]="true" [content]="treeContent" [value]="(pages$ | async) ?? []"
+            [childrenHandler]="handler"></tui-tree>
+
+  <ng-template #treeContent let-value>
+    <a tuiLink [routerLink]="['page', value.id]" routerLinkActive="text-underline">{{ value.title }}</a>
+  </ng-template>
+
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+
+  <h3>University details</h3>
+  <pre>{{ university | json}}</pre>
+
+</div>
+

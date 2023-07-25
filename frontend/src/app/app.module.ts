@@ -6,10 +6,10 @@ import {
   tuiButtonOptionsProvider,
   TuiDataListModule,
   TuiDialogModule,
-  TuiHostedDropdownModule,
+  TuiHostedDropdownModule, TuiLinkModule,
   TuiLoaderModule,
-  TuiRootModule,
-} from '@taiga-ui/core';
+  TuiRootModule
+} from "@taiga-ui/core";
 import { NgModule } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,7 +25,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RootComponent } from './root.component';
-import { MainPageComponent } from './main-page/main-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   HTTP_INTERCEPTORS,
@@ -39,10 +38,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { UsersListComponent } from './user/users-list/users-list.component';
-import { PageDetailsComponent } from './page/page-details/page-details.component';
 import { PageListComponent } from './page/page-list/page-list.component';
 import { UniversityListComponent } from './university/university-list/university-list.component';
-import { UniversityDetailsComponent } from './university/university-details/university-details.component';
 import { DialogUserCreateComponent } from './user/dialogs/dialog-user-create/dialog-user-create.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { DialogUniversityCreateComponent } from './university/dialog-university-create/dialog-university-create.component';
@@ -100,24 +97,17 @@ import {
   TuiDataListWrapperModule,
   TuiIslandModule,
   TuiMultiSelectModule,
-  TuiSelectModule,
-} from '@taiga-ui/kit';
+  TuiSelectModule, TuiTreeModule
+} from "@taiga-ui/kit";
 import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
-
-export function SetupApp(setup: SetupService) {
-  return () => setup.initialize();
-}
 
 @NgModule({
   declarations: [
     RootComponent,
-    MainPageComponent,
     UserDetailsComponent,
     UsersListComponent,
-    PageDetailsComponent,
     PageListComponent,
     UniversityListComponent,
-    UniversityDetailsComponent,
     DialogUserCreateComponent,
     UserProfileComponent,
     DialogUniversityCreateComponent,
@@ -181,12 +171,12 @@ export function SetupApp(setup: SetupService) {
     // ngx-translate and the loader module
     HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'en',
+      defaultLanguage: "en",
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
+        deps: [HttpClient]
+      }
     }),
     MatDividerModule,
     MatExpansionModule,
@@ -212,10 +202,11 @@ export function SetupApp(setup: SetupService) {
     TuiLetModule,
     TuiForModule,
     TuiLoaderModule,
+    TuiLinkModule,
+    TuiTreeModule
   ],
   providers: [
     tuiButtonOptionsProvider({ size: 'm' }),
-    // SetupService,
     // {
     //   provide: APP_INITIALIZER,
     //   useFactory: (service: AuthService) => () => service.user$,
