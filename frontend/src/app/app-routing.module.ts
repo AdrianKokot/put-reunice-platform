@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UsersListComponent } from './user/users-list/users-list.component';
 import { DialogUserCreateComponent } from './user/dialogs/dialog-user-create/dialog-user-create.component';
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import { UserDetailsComponent } from './user/user-details/user-details.component';
-import { PageListComponent } from './page/page-list/page-list.component';
 import { PageEditorComponent } from './page/page-editor/page-editor.component';
 import { PageUserComponent } from './page/page-user/page-user.component';
-import { TemplatesListComponent } from './templates/templates-list/templates-list.component';
 import { TemplateEditorComponent } from './templates/template-editor/template-editor.component';
 import { BackupComponent } from './backup/backup.component';
 import { SearchComponent } from './search/search.component';
@@ -26,8 +23,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('@reunice/modules/universities').then((m) => m.UniversitiesModule),
   },
-
-  { path: 'accounts', component: UsersListComponent, title: 'Użytkownicy' },
   {
     path: 'accounts/create',
     component: DialogUserCreateComponent,
@@ -43,18 +38,12 @@ const routes: Routes = [
     component: UserDetailsComponent,
     title: 'Szczegóły użytkownika',
   },
-  { path: 'pages', component: PageListComponent, title: 'Strony' },
   {
     path: 'page/:pageId/edit',
     component: PageEditorComponent,
     title: 'Edycja strony',
   },
   { path: 'pages/:userId', component: PageUserComponent },
-  {
-    path: 'templates',
-    component: TemplatesListComponent,
-    title: 'Szablony',
-  },
   {
     path: 'template/:templateId/edit',
     component: TemplateEditorComponent,

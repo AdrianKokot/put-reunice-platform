@@ -1,7 +1,27 @@
 <tui-root>
   <reunice-ui-top-bar></reunice-ui-top-bar>
 
-  <div class="reunice-root-outlet-container">
-    <router-outlet></router-outlet>
+  <div class="d-flex">
+    <nav>
+      <h3>Admin console</h3>
+      <ul>
+        <li><a routerLink="/admin/keywords">Keyword list</a></li>
+        <li><a routerLink="/admin/pages">Page list</a></li>
+        <li><a routerLink="/admin/templates">Template list</a></li>
+        <li><a routerLink="/admin/universities">University list</a></li>
+        <li><a routerLink="/admin/users">User list</a></li>
+        <li><a routerLink="/admin/backups">Backup list</a></li>
+      </ul>
+
+      <h3>User pages</h3>
+      <ul>
+        <li><a routerLink="/">Root</a></li>
+        <li><a routerLink="/universities">Universities</a></li>
+      </ul>
+    </nav>
+
+    <div class="tui-container tui-container_adaptive">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </tui-root>

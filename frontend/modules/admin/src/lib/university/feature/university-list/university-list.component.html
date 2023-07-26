@@ -4,6 +4,7 @@
       <th *tuiHead="'name'" tuiTh>Name</th>
       <th *tuiHead="'shortName'" tuiTh>Short name</th>
       <th *tuiHead="'hidden'" tuiTh>Hidden</th>
+      <th *tuiHead="'actions'" tuiTh>Actions</th>
     </tr>
   </thead>
   <tbody *tuiLet="(universities$ | async) ?? [] as data" tuiTbody [data]="data">
@@ -16,6 +17,9 @@
       </td>
       <td *tuiCell="'hidden'" tuiTd>
         {{ item.hidden.toString() }}
+      </td>
+      <td *tuiCell="'actions'" tuiTd>
+        <a tuiLink [routerLink]="['/universities', item.id]">See university</a>
       </td>
     </tr>
   </tbody>

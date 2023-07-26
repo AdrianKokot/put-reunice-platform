@@ -1,0 +1,34 @@
+<table tuiTable [columns]="columns">
+  <thead>
+    <tr tuiThGroup>
+      <th *tuiHead="'name'" tuiTh>Name</th>
+      <th *tuiHead="'firstName'" tuiTh>First name</th>
+      <th *tuiHead="'lastName'" tuiTh>Last name</th>
+      <th *tuiHead="'role'" tuiTh>Role</th>
+      <th *tuiHead="'active'" tuiTh>Active</th>
+      <th *tuiHead="'actions'" tuiTh>Actions</th>
+    </tr>
+  </thead>
+  <tbody *tuiLet="(users$ | async) ?? [] as data" tuiTbody [data]="data">
+    <tr *ngFor="let item of data" tuiTr>
+      <td *tuiCell="'name'" tuiTd>
+        {{ item.username }}
+      </td>
+      <td *tuiCell="'firstName'" tuiTd>
+        {{ item.firstName }}
+      </td>
+      <td *tuiCell="'lastName'" tuiTd>
+        {{ item.lastName }}
+      </td>
+      <td *tuiCell="'role'" tuiTd>
+        {{ item.accountType }}
+      </td>
+      <td *tuiCell="'active'" tuiTd>
+        {{ item.enabled }}
+      </td>
+      <td *tuiCell="'actions'" tuiTd>
+        <!--      <a tuiLink [routerLink]="['/universities', item.id]">See university</a>-->
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { UserService } from '@reunice/modules/shared/data-access';
 import { CommonModule } from '@angular/common';
-import { UniversityService } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiTableModule } from '@taiga-ui/addon-table';
 import { TuiLinkModule } from '@taiga-ui/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'reunice-university-list',
+  selector: 'reunice-user-list',
+  templateUrl: './user-list.component.html',
   standalone: true,
   imports: [
     CommonModule,
@@ -16,13 +17,19 @@ import { RouterLink } from '@angular/router';
     TuiLinkModule,
     RouterLink,
   ],
-  templateUrl: './university-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UniversityListComponent {
-  private readonly _universityService = inject(UniversityService);
+export class UserListComponent {
+  private readonly _userService = inject(UserService);
 
-  readonly columns = ['name', 'shortName', 'hidden', 'actions'];
+  readonly columns = [
+    'name',
+    'firstName',
+    'lastName',
+    'role',
+    'active',
+    'actions',
+  ];
 
-  readonly universities$ = this._universityService.getUniversities();
+  readonly users$ = this._userService.getUsers();
 }
