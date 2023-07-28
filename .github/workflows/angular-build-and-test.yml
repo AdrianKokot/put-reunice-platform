@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v3
       - name: 📦 Install packages
-        run: npm install --legacy-peer-deps
+        run: npm ci
 
       - name: 📄 Check formatting
         run: npx nx format:check
