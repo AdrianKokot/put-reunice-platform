@@ -10,11 +10,11 @@ import {
 } from '@angular/core';
 import { AuthService } from './auth.service';
 import {
-  ACCOUNT_TYPES,
   AccountType,
+  AccountTypeEnum,
   User,
 } from '@reunice/modules/shared/data-access';
-import { map, shareReplay } from 'rxjs';
+import { distinctUntilKeyChanged, map, shareReplay } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 class UserContext {
@@ -33,7 +33,7 @@ class UserContext {
  * @description This directive is used to show or hide content based on the user's account type.
  *              Directive also exposes context with user data.
  * @example
- * <div *reuniceUser="AccountType.Authorized; else unauthorized; let user = user">
+ * <div *reuniceUser="AccountTypeEnum.AUTHORIZED; else unauthorized; let user = user">
  *   <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
  *  </div>
  *  <ng-template #unauthorized>
@@ -41,7 +41,7 @@ class UserContext {
  *  </ng-template>
  *
  *  @example
- *  <div *reuniceUser="AccountType.Guest; else authorized">
+ *  <div *reuniceUser="AccountTypeEnum.GUEST; else authorized">
  *    <p>Guest content</p>
  *  </div>
  *  <ng-template #authorized let-user>
@@ -52,7 +52,7 @@ class UserContext {
 export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(
     takeUntilDestroyed(),
-    map((user) => ({ type: user?.accountType ?? AccountType.Guest, user })),
+    map((user) => ({ type: user?.accountType ?? AccountTypeEnum.GUEST, user })),
     shareReplay()
   );
 
@@ -62,16 +62,16 @@ export class UserDirective implements OnInit {
     alias: 'reuniceUser',
     transform: (value: string) => {
       console.assert(
-        ACCOUNT_TYPES.has(value),
+        value in AccountTypeEnum,
         `Passed invalid account type: ${value}`
       );
-      return ACCOUNT_TYPES.has(value) ? value : null;
+      return value in AccountTypeEnum ? value : null;
     },
   })
-  reuniceUser: AccountType = AccountType.Authorized;
+  requiredAccountType: AccountType | null = AccountTypeEnum.AUTHORIZED;
 
-  @Input()
-  reuniceUserElse: TemplateRef<unknown> | null = null;
+  @Input('reuniceUserElse')
+  fallbackTemplate: TemplateRef<unknown> | null = null;
 
   constructor(
     private templateRef: TemplateRef<unknown>,
@@ -80,25 +80,29 @@ export class UserDirective implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._userType$.subscribe(({ type, user }) => {
-      if (this.reuniceUser === null) {
-        return;
-      }
+    this._userType$
+      .pipe(distinctUntilKeyChanged('type'))
+      .subscribe(({ type, user }) => {
+        this.viewContainer.clear();
 
-      this.viewContainer.clear();
+        if (
+          type === this.requiredAccountType ||
+          this.requiredAccountType === null
+        ) {
+          this.viewContainer.createEmbeddedView(
+            this.templateRef,
+            this._context
+          );
+        } else if (this.fallbackTemplate !== null) {
+          this.viewContainer.createEmbeddedView(
+            this.fallbackTemplate,
+            this._context
+          );
+        }
 
-      if (type === this.reuniceUser) {
-        this.viewContainer.createEmbeddedView(this.templateRef, this._context);
-      } else if (this.reuniceUserElse !== null) {
-        this.viewContainer.createEmbeddedView(
-          this.reuniceUserElse,
-          this._context
-        );
-      }
-
-      this._context.user = user;
-      this._cdr.markForCheck();
-    });
+        this._context.user = user;
+        this._cdr.markForCheck();
+      });
   }
 
   static ngTemplateContextGuard(

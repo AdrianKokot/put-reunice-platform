@@ -1,14 +1,18 @@
 import { University } from './university';
 
-export enum AccountType {
-  Admin = 'ADMIN',
-  Moderator = 'MODERATOR',
-  User = 'USER',
-  Guest = 'GUEST',
-  Authorized = 'AUTHORIZED',
-}
-
-export const ACCOUNT_TYPES = new Set<string>(Object.values(AccountType));
+export type AccountType =
+  | 'ADMIN'
+  | 'MODERATOR'
+  | 'USER'
+  | 'GUEST'
+  | 'AUTHORIZED';
+export const AccountTypeEnum: Record<AccountType, AccountType> = {
+  ADMIN: 'ADMIN',
+  MODERATOR: 'MODERATOR',
+  USER: 'USER',
+  GUEST: 'GUEST',
+  AUTHORIZED: 'AUTHORIZED',
+} as const;
 
 export interface User {
   id: number;

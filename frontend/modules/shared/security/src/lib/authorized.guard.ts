@@ -2,12 +2,42 @@ import { CanMatchFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { map } from 'rxjs';
 import { AuthService } from './auth.service';
+import {
+  AccountType,
+  AccountTypeEnum,
+  User,
+} from '@reunice/modules/shared/data-access';
 
-export const AuthorizedGuard: CanMatchFn = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+const isUserOfType = (user: User | null, accountType: AccountType): boolean => {
+  if (accountType === AccountTypeEnum.GUEST) {
+    return user === null;
+  }
 
-  return authService.user$.pipe(
-    map((user) => (user !== null ? true : router.createUrlTree(['/'])))
-  );
+  if (accountType === AccountTypeEnum.AUTHORIZED) {
+    return user !== null;
+  }
+
+  return user?.accountType === accountType;
 };
+
+export const AuthorizedOfTypeGuard = (
+  accountType: AccountType,
+  redirectCommands: Parameters<Router['createUrlTree']>[0] = ['/']
+): CanMatchFn => {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
+
+    return authService.user$.pipe(
+      map((user) =>
+        isUserOfType(user, accountType)
+          ? true
+          : router.createUrlTree(redirectCommands)
+      )
+    );
+  };
+};
+
+export const AuthorizedGuard = AuthorizedOfTypeGuard(
+  AccountTypeEnum.AUTHORIZED
+);
