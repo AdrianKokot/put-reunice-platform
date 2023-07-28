@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PageListComponent } from './page-list.component';
+import { UniversityShellComponent } from './university-shell.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('PageListComponent', () => {
-  let component: PageListComponent;
-  let fixture: ComponentFixture<PageListComponent>;
+describe('UniversityShellComponent', () => {
+  let component: UniversityShellComponent;
+  let fixture: ComponentFixture<UniversityShellComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestingModule, PageListComponent],
+      imports: [TestingModule, UniversityShellComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PageListComponent);
+    fixture = TestBed.createComponent(UniversityShellComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

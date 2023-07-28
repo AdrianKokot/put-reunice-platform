@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PageListComponent } from './page-list.component';
+import { PageDetailsComponent } from './page-details.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('PageListComponent', () => {
-  let component: PageListComponent;
-  let fixture: ComponentFixture<PageListComponent>;
+describe('PageDetailsComponent', () => {
+  let component: PageDetailsComponent;
+  let fixture: ComponentFixture<PageDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestingModule, PageListComponent],
+      imports: [TestingModule, PageDetailsComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PageListComponent);
+    fixture = TestBed.createComponent(PageDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

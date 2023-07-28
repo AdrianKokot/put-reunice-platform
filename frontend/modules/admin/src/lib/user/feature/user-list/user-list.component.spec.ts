@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserListComponent } from './user-list.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TestingModule } from '@reunice/testing';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -10,12 +8,7 @@ describe('UserListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule,
-        NoopAnimationsModule,
-        UserListComponent,
-      ],
+      imports: [TestingModule, UserListComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserListComponent);

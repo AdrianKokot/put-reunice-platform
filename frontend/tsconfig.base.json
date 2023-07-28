@@ -24,7 +24,7 @@
         "modules/shared/security/src/index.ts"
       ],
       "@reunice/modules/shared/ui": ["modules/shared/ui/src/index.ts"],
-      "@reunice/modules/universities": ["modules/universities/src/index.ts"]
+      "@reunice/testing": ["testing/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

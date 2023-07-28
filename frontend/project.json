@@ -24,13 +24,7 @@
             "output": "assets/taiga-ui/icons"
           }
         ],
-        "styles": ["./src/styles.less"],
-        "scripts": ["./node_modules/quill/dist/quill.js"],
-        "allowedCommonJsDependencies": [
-          "quill",
-          "quill-image-resize-module",
-          "file-saver"
-        ]
+        "styles": ["./src/styles.less"]
       },
       "configurations": {
         "production": {
