@@ -24,6 +24,8 @@ export class SecurityService {
             page.creator.id !== loggedUser.id ||
             !this.hasUniversity(page.university.id)
           );
+        default:
+          return true;
       }
     }
 
@@ -40,6 +42,8 @@ export class SecurityService {
         case 'MODERATOR':
           return !this.hasUniversity(university.id);
         case 'USER':
+          return true;
+        default:
           return true;
       }
     }
@@ -68,6 +72,8 @@ export class SecurityService {
           );
         case 'USER':
           return loggedUser.id !== user.id;
+        default:
+          return true;
       }
     }
 

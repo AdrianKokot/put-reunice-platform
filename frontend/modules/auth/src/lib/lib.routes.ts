@@ -5,5 +5,9 @@ import { Type } from '@angular/core';
 
 export const authRoutes: Route[] = [
   { path: 'login', component: LoginShellComponent, canMatch: [GuestGuard] },
-  { path: 'logout', canMatch: [logoutFn], component: {} as Type<unknown> },
+  {
+    path: 'logout',
+    canMatch: [logoutFn],
+    component: {} as const as Type<unknown>,
+  },
 ];
