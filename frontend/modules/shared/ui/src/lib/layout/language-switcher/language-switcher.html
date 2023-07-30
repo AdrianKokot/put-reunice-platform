@@ -3,13 +3,14 @@
   [tuiTextfieldLabelOutside]="true"
   tuiTextfieldSize="m"
   [valueContent]="flagContent"
+  tuiTextfieldAppearance="outline"
 >
   <tui-data-list *tuiDataList>
     <button
       *ngFor="let name of names"
       tuiOption
       [value]="name"
-      (click)="translateService.use(name)"
+      (click)="translateService.setDefaultLang(name)"
     >
       <img [alt]="name" class="t-flag" [src]="flags.get(name) | tuiFlag" />
     </button>

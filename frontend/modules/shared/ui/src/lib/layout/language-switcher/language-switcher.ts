@@ -41,8 +41,11 @@ export class LanguageSwitcherComponent {
   readonly names: TuiLanguageName[] = Array.from(this.flags.keys());
 
   constructor() {
-    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
-      localStorage.setItem('locale', event.lang);
-    });
+    this.translateService.onDefaultLangChange.subscribe(
+      ({ lang }: LangChangeEvent) => {
+        localStorage.setItem('locale', lang);
+        document.documentElement.lang = lang;
+      }
+    );
   }
 }
