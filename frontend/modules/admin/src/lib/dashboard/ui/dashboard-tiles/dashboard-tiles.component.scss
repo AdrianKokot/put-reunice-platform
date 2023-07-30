@@ -1,0 +1,15 @@
+:host {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+[tuiAction] {
+  border-color: var(--tui-base-02);
+  box-shadow: none;
+}
+
+.tui-island__marker {
+  color: var(--tui-positive);
+  background: var(--tui-success-bg);
+}

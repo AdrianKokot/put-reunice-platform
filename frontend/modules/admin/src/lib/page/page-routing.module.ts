@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    title: 'Pages',
     path: '',
     loadComponent: () =>
       import('./feature/page-list/page-list.component').then(

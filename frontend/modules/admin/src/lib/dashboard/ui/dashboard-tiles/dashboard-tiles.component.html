@@ -1,0 +1,15 @@
+<ng-container *ngFor="let item of links$ | async">
+  <a tuiAction [routerLink]="item.url" class="justify-start align-center">
+    <tui-marker-icon
+      [src]="item.icon"
+      class="tui-island__marker"
+      size="xs"
+    ></tui-marker-icon>
+    <div>
+      <div>
+        {{ item.title }}
+      </div>
+      <div class="tui-text_body-xs text-02">{{ item.description }}</div>
+    </div>
+  </a>
+</ng-container>

@@ -8,9 +8,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2022",
+    "target": "es6",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2022", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -24,6 +24,7 @@
         "modules/shared/security/src/index.ts"
       ],
       "@reunice/modules/shared/ui": ["modules/shared/ui/src/index.ts"],
+      "@reunice/modules/shared/util": ["modules/shared/util/src/index.ts"],
       "@reunice/testing": ["testing/src/index.ts"]
     }
   },
