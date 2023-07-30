@@ -10,10 +10,10 @@
   <ng-content></ng-content>
 </div>
 
-<reunice-language-switcher></reunice-language-switcher>
-
-<div class="justify-self-end d-flex align-center">
+<div class="justify-self-end d-flex align-center gap-1">
   <ng-content select="[right]"></ng-content>
+
+  <reunice-language-switcher></reunice-language-switcher>
 
   <a
     *reuniceUser="'GUEST'; else loggedMenu"
