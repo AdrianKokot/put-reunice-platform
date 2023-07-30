@@ -1,0 +1,20 @@
+<tui-select
+  [formControl]="language"
+  [tuiTextfieldLabelOutside]="true"
+  tuiTextfieldSize="m"
+  [valueContent]="flagContent"
+>
+  <tui-data-list *tuiDataList>
+    <button
+      *ngFor="let name of names"
+      tuiOption
+      [value]="name"
+      (click)="translateService.use(name)"
+    >
+      <img [alt]="name" class="t-flag" [src]="flags.get(name) | tuiFlag" />
+    </button>
+  </tui-data-list>
+  <ng-template #flagContent let-name>
+    <img [alt]="name" class="t-flag" [src]="flags.get(name) | tuiFlag" />
+  </ng-template>
+</tui-select>

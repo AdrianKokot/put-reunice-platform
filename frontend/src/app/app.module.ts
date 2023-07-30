@@ -35,7 +35,7 @@ import { UiModule } from '@reunice/modules/shared/ui';
     AppRoutingModule,
     HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'pl',
+      defaultLanguage: localStorage.getItem('locale') || 'pl',
       loader: {
         provide: TranslateLoader,
         useFactory: (http: HttpClient) => new TranslateHttpLoader(http),

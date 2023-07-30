@@ -1,22 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { UserDirective } from '@reunice/modules/shared/security';
 import {
   TuiAppearance,
   TuiButtonModule,
-  tuiButtonOptionsProvider,
   TuiDataListModule,
+  TuiFlagPipeModule,
   TuiHostedDropdownModule,
   TuiLinkModule,
-  TuiTextfieldControllerModule,
+  tuiButtonOptionsProvider,
 } from '@taiga-ui/core';
 import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
-import { UserDirective } from '@reunice/modules/shared/security';
-import { RouterLink } from '@angular/router';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiDataListWrapperModule, TuiSelectModule } from '@taiga-ui/kit';
-import { TuiFlagPipeModule } from '@taiga-ui/core';
-import { TuiCountryIsoCode, TuiLanguageName } from '@taiga-ui/i18n';
-import { TranslateService } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'reunice-ui-top-bar',
@@ -33,12 +29,8 @@ import { CommonModule } from '@angular/common';
     TuiAvatarModule,
     TuiDataListModule,
     TuiLinkModule,
-    FormsModule,
-    ReactiveFormsModule,
-    TuiDataListWrapperModule,
-    TuiSelectModule,
     TuiFlagPipeModule,
-    TuiTextfieldControllerModule,
+    LanguageSwitcherComponent,
   ],
   providers: [
     tuiButtonOptionsProvider({
@@ -49,15 +41,4 @@ import { CommonModule } from '@angular/common';
     tuiAvatarOptionsProvider({ size: 's', rounded: true, autoColor: true }),
   ],
 })
-export class TopBarComponent {
-  readonly translateService = inject(TranslateService);
-
-  readonly language = new FormControl(this.translateService.defaultLang);
-
-  readonly flags = new Map<TuiLanguageName, TuiCountryIsoCode>([
-    ['pl', TuiCountryIsoCode.PL],
-    ['en', TuiCountryIsoCode.GB],
-  ]);
-
-  readonly names: TuiLanguageName[] = Array.from(this.flags.keys());
-}
+export class TopBarComponent {}
