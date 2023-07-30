@@ -7,7 +7,7 @@ import { FileResource } from '../models/file';
   providedIn: 'root',
 })
 export class FileService {
-  private server = `/api/file`;
+  private server = '/api/file';
 
   constructor(private http: HttpClient) {}
 

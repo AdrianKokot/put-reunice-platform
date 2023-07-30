@@ -7,7 +7,7 @@ import { User, UserForm } from '../models/user';
   providedIn: 'root',
 })
 export class UserService {
-  private userUrl = `/api/users`;
+  private userUrl = '/api/users';
 
   public loggedUser!: User | null;
 
@@ -34,11 +34,11 @@ export class UserService {
   }
 
   login(user: { username: string; password: string }): Observable<unknown> {
-    return this.http.post<unknown>(`/api/login`, user);
+    return this.http.post<unknown>('/api/login', user);
   }
 
   logout(): Observable<unknown> {
-    return this.http.get<unknown>(`/api/logout`);
+    return this.http.get<unknown>('/api/logout');
   }
 
   getLoggedUser(): Observable<User> {
