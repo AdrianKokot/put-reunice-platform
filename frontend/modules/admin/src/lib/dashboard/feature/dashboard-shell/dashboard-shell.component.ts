@@ -24,8 +24,7 @@ export class DashboardShellComponent {
   private readonly _breadcrumbService = inject(BreadcrumbService);
 
   breadcrumbs$ = this._breadcrumbService.breadcrumbs$;
-  // .pipe(map((breadcrumbs) => breadcrumbs.slice(0, breadcrumbs.length - 1)));
   title$ = this._breadcrumbService.breadcrumbs$.pipe(
-    map((breadcrumbs) => breadcrumbs[breadcrumbs.length - 1]?.title)
+    map((breadcrumbs) => breadcrumbs.at(-1)?.title)
   );
 }
