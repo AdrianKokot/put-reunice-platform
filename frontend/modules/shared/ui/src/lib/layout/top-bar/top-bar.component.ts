@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UserDirective } from '@reunice/modules/shared/security';
@@ -21,7 +20,6 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     UserDirective,
     TuiButtonModule,
     RouterLink,
