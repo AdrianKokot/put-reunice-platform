@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   login(user: Pick<User, 'password' | 'username'>): Observable<User | null> {
-    return this._http.post(`/api/login`, user).pipe(
+    return this._http.post('/api/login', user).pipe(
       switchMap(() => this.getUser()),
       tap((user) => this._user$.next(user))
     );

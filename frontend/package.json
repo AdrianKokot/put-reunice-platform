@@ -9,7 +9,7 @@
     "format": "nx format:check",
     "format:fix": "nx format:write",
     "lint": "nx affected:lint",
-    "lint:fix": "nx lint --fix=true",
+    "lint:fix": "nx run-many --all --target=lint --parallel",
     "fix": "npm run format:fix && npm run lint:fix",
     "e2e": "nx e2e e2e"
   },

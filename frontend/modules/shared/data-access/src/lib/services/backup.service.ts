@@ -7,7 +7,7 @@ import { Backup } from '../models/backup';
   providedIn: 'root',
 })
 export class BackupService {
-  private backupUrl = `/api/backups`;
+  private backupUrl = '/api/backups';
 
   constructor(private http: HttpClient) {}
 

@@ -8,10 +8,10 @@ import { AbstractApiService } from './abstract-api.service';
   providedIn: 'root',
 })
 export class UniversityService extends AbstractApiService<University> {
-  private universityUrl = `/api/universities`;
+  private universityUrl = '/api/universities';
 
   constructor(private http: HttpClient) {
-    super(`/api/universities`);
+    super('/api/universities');
   }
 
   getUniversity(id: number): Observable<University> {

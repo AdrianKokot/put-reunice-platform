@@ -7,7 +7,7 @@ import { Keyword } from '../models/keyword';
   providedIn: 'root',
 })
 export class KeyWordsService {
-  private keyWordsUrl = `/api/keyWords`;
+  private keyWordsUrl = '/api/keyWords';
 
   constructor(private http: HttpClient) {}
 
