@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    title: 'Keywords',
     path: '',
     loadComponent: () =>
       import('./feature/keyword-list/keyword-list.component').then(

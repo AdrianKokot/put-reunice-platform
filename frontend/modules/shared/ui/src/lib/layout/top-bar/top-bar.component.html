@@ -35,6 +35,9 @@
     </tui-hosted-dropdown>
     <ng-template #profileMenu let-close="close">
       <tui-data-list role="menu" size="s">
+        <a href="/admin" tuiOption role="menuitem" (click)="close()">
+          Admin console
+        </a>
         <a
           routerLink="/accounts/profile"
           tuiOption

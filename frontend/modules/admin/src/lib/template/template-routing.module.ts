@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    title: 'Templates',
     path: '',
     loadComponent: () =>
       import('./feature/template-list/template-list.component').then(

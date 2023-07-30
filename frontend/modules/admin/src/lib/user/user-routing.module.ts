@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    title: 'Users',
     path: '',
     loadComponent: () =>
       import('./feature/user-list/user-list.component').then(
