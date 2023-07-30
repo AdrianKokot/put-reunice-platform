@@ -11,6 +11,7 @@ import {
   tuiButtonOptionsProvider,
 } from '@taiga-ui/core';
 import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
+import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
 
 @Component({
@@ -29,6 +30,7 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
     TuiLinkModule,
     TuiFlagPipeModule,
     LanguageSwitcherComponent,
+    TranslateModule,
   ],
   providers: [
     tuiButtonOptionsProvider({

@@ -43,7 +43,7 @@
           role="menuitem"
           (click)="close()"
         >
-          Profile
+          {{ 'PROFILE' | translate }}
         </a>
         <a
           routerLink="/auth/logout"
@@ -51,7 +51,7 @@
           role="menuitem"
           (click)="close()"
         >
-          Logout
+          {{ 'LOGOUT' | translate }}
         </a>
       </tui-data-list>
     </ng-template>
