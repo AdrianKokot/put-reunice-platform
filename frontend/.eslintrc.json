@@ -5,7 +5,7 @@
       "files": ["*.ts"],
       "parserOptions": {
         "ecmaVersion": "latest",
-        "project": ["tsconfig.editor.json"],
+        "project": ["tsconfig.eslint.json"],
         "sourceType": "module"
       },
       "extends": [
