@@ -10,6 +10,38 @@
   <ng-content></ng-content>
 </div>
 
+<tui-select
+  [formControl]="language"
+  [tuiTextfieldLabelOutside]="true"
+  tuiTextfieldSize="m"
+  [valueContent]="flagContent"
+>
+  <ng-content></ng-content>
+  <tui-data-list-wrapper
+    *tuiDataList
+    [items]="names"
+    [itemContent]="flagContent"
+  ></tui-data-list-wrapper>
+  <ng-template #flagContent let-name>
+    <img
+      alt=""
+      class="t-flag"
+      [src]="flags.get(name) | tuiFlag"
+      (click)="translateService.use(name)"
+    />
+  </ng-template>
+  <!-- <tui-data-list *tuiDataList>
+    <button
+      *ngFor="let name of names"
+      tuiOption
+      [value]="name"
+      (click)="translateService.use(name)"
+    >
+      <img alt="" class="t-flag" [src]="flags.get(name) | tuiFlag" />
+    </button>
+  </tui-data-list> -->
+</tui-select>
+
 <div class="justify-self-end d-flex align-center">
   <ng-content select="[right]"></ng-content>
 

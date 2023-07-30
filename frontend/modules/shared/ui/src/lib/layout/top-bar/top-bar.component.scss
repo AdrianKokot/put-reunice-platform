@@ -6,10 +6,15 @@
   right: 0;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto 80px 50px;
   height: var(--top-bar-height);
   align-items: center;
   padding: 0 1.25rem;
   background: var(--tui-base-01);
   border-bottom: 1px solid var(--tui-base-03);
+}
+
+.t-flag {
+  width: 1.75rem;
+  height: 1.25rem;
 }
