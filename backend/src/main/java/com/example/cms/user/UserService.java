@@ -8,6 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,8 +53,10 @@ public class UserService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<UserDtoSimple> getUsers() {
-        return userRepository.findAll().stream().map(UserDtoSimple::of).collect(Collectors.toList());
+    public List<UserDtoSimple> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).stream()
+                .map(UserDtoSimple::of)
+                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_MODERATOR")
