@@ -27,7 +27,7 @@ public interface PageRepository extends JpaRepository<Page, Long> {
     @Query("from Page where hidden = false and university.hidden = false")
     List<Page> findVisible(Pageable pageable);
 
-    List<Page> findAllByParent(Sort sort, Page parent);
+    List<Page> findAllByParent(Pageable pageable, Page parent);
 
     @Query("from Page where " +
             "(LOWER(title) LIKE :text " +

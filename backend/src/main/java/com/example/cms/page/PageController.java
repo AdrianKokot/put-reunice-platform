@@ -33,13 +33,13 @@ public class PageController {
     }
 
     @GetMapping("/main")
-    List<PageDtoSimple> readMainPages(Sort sort) {
-        return service.getSubpagesByParentPage(sort, null);
+    List<PageDtoSimple> readMainPages(Pageable pageable) {
+        return service.getSubpagesByParentPage(pageable, null);
     }
 
     @GetMapping("/children/{parentId}")
-    List<PageDtoSimple> readSubpages(Sort sort, @PathVariable long parentId) {
-        return service.getSubpagesByParentPage(sort, parentId);
+    List<PageDtoSimple> readSubpages(Pageable pageable, @PathVariable long parentId) {
+        return service.getSubpagesByParentPage(pageable, parentId);
     }
 
     @GetMapping("/hierarchy/{universityId}")

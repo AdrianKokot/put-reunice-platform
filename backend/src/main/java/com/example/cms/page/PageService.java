@@ -15,6 +15,7 @@ import com.example.cms.user.exceptions.UserForbidden;
 import com.example.cms.user.exceptions.UserNotFound;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
@@ -40,7 +41,7 @@ public class PageService {
             if (!isPageVisible(page.getParent())) {
                 page.setParent(null);
             }
-            return PageDtoDetailed.of(page, findVisibleSubpages(Sort.by("title"), page));
+            return PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
         }).orElseThrow(PageNotFound::new);
     }
 
@@ -89,18 +90,18 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
-    public List<PageDtoSimple> getSubpagesByParentPage(Sort sort, Long parentId) {
+    public List<PageDtoSimple> getSubpagesByParentPage(Pageable pageable, Long parentId) {
         Page parent = Optional.ofNullable(parentId)
                 .map(id -> pageRepository.findById(id).orElseThrow(PageNotFound::new))
                 .orElse(null);
 
-        return findVisibleSubpages(sort, parent).stream()
+        return findVisibleSubpages(pageable, parent).stream()
                 .map(PageDtoSimple::of)
                 .collect(Collectors.toList());
     }
 
-    private List<Page> findVisibleSubpages(Sort sort, Page page) {
-        return pageRepository.findAllByParent(sort, page).stream()
+    private List<Page> findVisibleSubpages(Pageable pageable, Page page) {
+        return pageRepository.findAllByParent(pageable, page).stream()
                 .filter(this::isPageVisible)
                 .collect(Collectors.toList());
     }
