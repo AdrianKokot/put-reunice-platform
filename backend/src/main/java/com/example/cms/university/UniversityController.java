@@ -25,8 +25,8 @@ public class UniversityController {
     }
 
     @GetMapping
-    public List<UniversityDtoSimple> getUniversities() {
-        return service.getUniversities();
+    public List<UniversityDtoSimple> getUniversities(Pageable pageable) {
+        return service.getUniversities(pageable);
     }
 
     @GetMapping("/search/{text}")

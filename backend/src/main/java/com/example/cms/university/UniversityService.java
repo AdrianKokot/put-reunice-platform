@@ -45,8 +45,8 @@ public class UniversityService {
         }).orElseThrow(UniversityNotFound::new);
     }
 
-    public List<UniversityDtoSimple> getUniversities() {
-        return universityRepository.findAll().stream()
+    public List<UniversityDtoSimple> getUniversities(Pageable pageable) {
+        return universityRepository.findAll(pageable).stream()
                 .filter(this::isUniversityVisible)
                 .map(UniversityDtoSimple::of)
                 .collect(Collectors.toList());
