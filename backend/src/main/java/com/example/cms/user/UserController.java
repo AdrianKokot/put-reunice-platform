@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/search/{text}")
-    List<UserDtoSimple> searchUser(@PathVariable String text) {
-        return service.searchUser("%".concat(text.toLowerCase().concat("%")));
+    List<UserDtoSimple> searchUser(Pageable pageable, @PathVariable String text) {
+        return service.searchUser(pageable, "%".concat(text.toLowerCase().concat("%")));
     }
 
     @PostMapping

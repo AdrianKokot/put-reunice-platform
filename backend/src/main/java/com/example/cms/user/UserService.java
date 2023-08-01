@@ -218,8 +218,8 @@ public class UserService {
         }
     }
 
-    public List<UserDtoSimple> searchUser(String text) {
-        return userRepository.searchUser(text).stream()
+    public List<UserDtoSimple> searchUser(Pageable pageable, String text) {
+        return userRepository.searchUser(pageable, text).stream()
                 .map(UserDtoSimple::of)
                 .collect(Collectors.toList());
     }
