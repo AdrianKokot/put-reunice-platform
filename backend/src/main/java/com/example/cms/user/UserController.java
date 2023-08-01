@@ -36,12 +36,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDtoSimple>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+    public ResponseEntity<List<UserDtoSimple>> getUsers(Pageable pageable) {
         return new ResponseEntity<>(
-                service.getUsers(PageRequest.of(page, size)),
+                service.getUsers(pageable),
                 HttpStatus.OK);
     }
 
