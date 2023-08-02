@@ -3,6 +3,7 @@ package com.example.cms.template;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,18 +38,20 @@ public class TemplateService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<TemplateDtoDetailed> getAll() {
-        return templateRepository.findAll().stream().map(TemplateDtoDetailed::of).collect(Collectors.toList());
+    public List<TemplateDtoDetailed> getAll(Pageable pageable) {
+        return templateRepository.findAll(pageable).stream()
+                .map(TemplateDtoDetailed::of)
+                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_USER") //added by MSz
-    public List<TemplateDtoSimple> getAllByUniversity(Long universityID) {
+    public List<TemplateDtoSimple> getAllByUniversity(Pageable pageable, Long universityID) {
         University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFound::new);
         if (!securityService.hasUniversity(university.getId())) {
             throw new UniversityForbidden();
         }
 
-        return templateRepository.findByUniversities_Id(universityID).stream()
+        return templateRepository.findByUniversities_Id(pageable, universityID).stream()
                 .map(TemplateDtoSimple::of)
                 .collect(Collectors.toList());
     }

@@ -2,6 +2,7 @@ package com.example.cms.template;
 
 import com.example.cms.template.projections.TemplateDtoDetailed;
 import com.example.cms.template.projections.TemplateDtoSimple;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +24,13 @@ public class TemplateController {
     }
 
     @GetMapping("/all")
-    List<TemplateDtoDetailed> readAllTemplates() {
-        return service.getAll();
+    List<TemplateDtoDetailed> readAllTemplates(Pageable pageable) {
+        return service.getAll(pageable);
     }
 
     @GetMapping
-    List<TemplateDtoSimple> readAllTemplatesByUniversity(@RequestParam long universityID) {
-        return service.getAllByUniversity(universityID);
+    List<TemplateDtoSimple> readAllTemplatesByUniversity(Pageable pageable, @RequestParam long universityID) {
+        return service.getAllByUniversity(pageable, universityID);
     }
 
     @PostMapping
