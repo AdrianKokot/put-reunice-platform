@@ -13,6 +13,7 @@ export const adminRoutes: Route[] = [
         component: DashboardTilesComponent,
       },
       {
+        title: 'Universities',
         path: 'universities',
         loadChildren: () => import('./university/university.module'),
       },

@@ -56,3 +56,12 @@ tui-alert-host > .t-wrapper {
 .text-02 {
   color: var(--tui-text-02);
 }
+
+form.form-skeleton {
+  [tuiWrapper] {
+    .tui-skeleton;
+    &:after {
+      border-radius: inherit;
+    }
+  }
+}
