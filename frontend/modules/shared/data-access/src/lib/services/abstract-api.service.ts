@@ -12,11 +12,11 @@ export abstract class AbstractApiService<
 
   protected constructor(private _resourceUrl: string) {}
 
-  get(id: T['id']) {
+  get(id: T['id'] | string | number) {
     return this._http.get<T>(`${this._resourceUrl}/${id}`);
   }
 
-  getAll(params: ApiParams<T> | ApiParams) {
+  getAll(params: ApiParams<T> | ApiParams = {}) {
     return this._http.get<T[]>(this._resourceUrl, {
       params: new HttpParams({ fromObject: params }),
     });

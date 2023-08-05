@@ -7,7 +7,7 @@ import { User, UserForm } from '../models/user';
   providedIn: 'root',
 })
 export class UserService {
-  private userUrl = '/api/users';
+  private readonly userUrl = '/api/users';
 
   public loggedUser!: User | null;
 

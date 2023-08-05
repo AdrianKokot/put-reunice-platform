@@ -10,16 +10,3 @@ export interface University {
   enrolledUsers: User[];
   hidden: boolean;
 }
-
-export interface CreateUniversityPayload
-  extends Pick<University, 'id' | 'name' | 'shortName' | 'description'> {
-  creatorId: number;
-}
-
-export interface UniversityForm {
-  id: number;
-  name: string;
-  shortName: string;
-  description: string;
-  creatorId: number;
-}

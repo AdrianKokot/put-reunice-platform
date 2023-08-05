@@ -86,7 +86,8 @@
         "@angular-eslint/use-component-selector": "error",
         "@angular-eslint/use-lifecycle-interface": "error",
         "@angular-eslint/use-pipe-transform-interface": "error",
-        "@angular-eslint/no-lifecycle-call": "error"
+        "@angular-eslint/no-lifecycle-call": "error",
+        "@typescript-eslint/prefer-readonly": "warn"
       }
     },
     {

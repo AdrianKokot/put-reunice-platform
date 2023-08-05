@@ -1,11 +1,14 @@
 <div *tuiLet="university$ | async as university">
-  <form [formGroup]="form" [class.form-skeleton]="university === null">
+  <form
+    [formGroup]="form"
+    [class.form-skeleton]="university === null"
+    (ngSubmit)="submit$.next()"
+  >
     <div class="tui-form__row tui-form__row_multi-fields">
       <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
         <tui-input
           formControlName="name"
           tuiTextfieldSize="m"
-          [readOnly]="readOnly"
           [tuiTextfieldLabelOutside]="true"
         >
           <input tuiTextfield type="text" />
@@ -24,7 +27,6 @@
         <tui-input
           formControlName="shortName"
           tuiTextfieldSize="m"
-          [readOnly]="readOnly"
           [tuiTextfieldLabelOutside]="true"
         >
           <input tuiTextfield type="text" />
@@ -43,7 +45,6 @@
         <tui-select
           formControlName="hidden"
           tuiTextfieldSize="m"
-          [readOnly]="readOnly"
           [valueContent]="valueContent"
           [tuiTextfieldLabelOutside]="true"
         >
@@ -70,7 +71,6 @@
       <tui-text-area
         formControlName="description"
         tuiTextfieldSize="m"
-        [readOnly]="readOnly"
         [tuiTextfieldLabelOutside]="true"
         [maxLength]="255"
         [expandable]="true"
@@ -82,5 +82,27 @@
         [error]="[] | tuiFieldError | async"
       ></tui-error>
     </label>
+
+    <div class="tui-form__buttons tui-form__buttons_align_end">
+      <a
+        [routerLink]="['..']"
+        tuiButton
+        type="button"
+        appearance="flat"
+        size="m"
+        class="tui-form__button"
+      >
+        {{ 'CANCEL' | translate }}
+      </a>
+      <button
+        tuiButton
+        size="m"
+        type="submit"
+        class="tui-form__button"
+        [showLoader]="(showLoader$ | async) ?? false"
+      >
+        {{ 'SAVE' | translate }}
+      </button>
+    </div>
   </form>
 </div>

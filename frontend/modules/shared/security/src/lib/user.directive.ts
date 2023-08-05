@@ -56,7 +56,7 @@ export class UserDirective implements OnInit {
     shareReplay()
   );
 
-  private _context = new UserContext();
+  private readonly _context = new UserContext();
 
   @Input({
     alias: 'reuniceUser',
@@ -74,9 +74,9 @@ export class UserDirective implements OnInit {
   fallbackTemplate: TemplateRef<unknown> | null = null;
 
   constructor(
-    private templateRef: TemplateRef<unknown>,
-    private viewContainer: ViewContainerRef,
-    private _cdr: ChangeDetectorRef
+    private readonly templateRef: TemplateRef<unknown>,
+    private readonly viewContainer: ViewContainerRef,
+    private readonly _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {

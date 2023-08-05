@@ -40,7 +40,7 @@ export class UniversityListComponent {
 
   readonly columns = ['name', 'shortName', 'hidden', 'actions'];
 
-  readonly items$ = this._universityService.getUniversities();
+  readonly items$ = this._universityService.getAll();
 
   readonly trackById = (index: number, item: University) => item.id;
 }
