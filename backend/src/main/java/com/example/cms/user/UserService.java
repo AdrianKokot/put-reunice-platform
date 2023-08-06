@@ -57,11 +57,6 @@ public class UserService {
     public List<UserDtoSimple> getUsers(Pageable pageable, Map<String, String> filterVars) {
         Specification<User> combinedSpecification = null;
 
-        System.out.println("filterVars");
-        for (Map.Entry<String, String> entry : filterVars.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-        }
-
         if (!filterVars.isEmpty()) {
             List<UserSpecification> specifications = filterVars.entrySet().stream()
                     .map(entries -> {
