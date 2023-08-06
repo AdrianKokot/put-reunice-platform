@@ -5,6 +5,7 @@ import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.user.projections.UserDtoSimple;
+import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,10 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,9 +39,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDtoSimple>> getUsers(Pageable pageable) {
+    public ResponseEntity<List<UserDtoSimple>> getUsers(
+            Pageable pageable,
+            @RequestParam Map<String, String> vars) {
+
         return new ResponseEntity<>(
-                service.getUsers(pageable),
+                service.getUsers(
+                        pageable,
+                        FilterPathVariableValidator.validate(vars, User.class)),
                 HttpStatus.OK);
     }
 

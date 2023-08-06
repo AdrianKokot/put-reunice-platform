@@ -8,9 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,8 @@ import com.example.cms.validation.exceptions.WrongDataStructureException;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.sound.midi.Soundbank;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -53,8 +54,35 @@ public class UserService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<UserDtoSimple> getUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).stream()
+    public List<UserDtoSimple> getUsers(Pageable pageable, Map<String, String> filterVars) {
+        Specification<User> combinedSpecification = null;
+
+        System.out.println("filterVars");
+        for (Map.Entry<String, String> entry : filterVars.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+
+        if (!filterVars.isEmpty()) {
+            List<UserSpecification> specifications = filterVars.entrySet().stream()
+                    .map(entries -> {
+                        String[] filterBy = entries.getKey().split("_");
+
+                        return new UserSpecification(new SearchCriteria(
+                                filterBy[0],
+                                filterBy[filterBy.length - 1],
+                                entries.getValue()
+                        ));
+                    }).collect(Collectors.toList());
+
+            for (Specification<User> spec : specifications) {
+                if (combinedSpecification == null) {
+                    combinedSpecification = Specification.where(spec);
+                }
+                combinedSpecification = combinedSpecification.and(spec);
+            }
+        }
+
+        return userRepository.findAll(combinedSpecification, pageable).stream()
                 .map(UserDtoSimple::of)
                 .collect(Collectors.toList());
     }
