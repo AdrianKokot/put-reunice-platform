@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateListComponent } from './template-list.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('TemplateListComponent', () => {
+describe(TemplateListComponent.name, () => {
   let component: TemplateListComponent;
   let fixture: ComponentFixture<TemplateListComponent>;
 

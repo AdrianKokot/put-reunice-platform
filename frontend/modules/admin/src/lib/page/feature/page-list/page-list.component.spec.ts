@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageListComponent } from './page-list.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('PageListComponent', () => {
+describe(PageListComponent.name, () => {
   let component: PageListComponent;
   let fixture: ComponentFixture<PageListComponent>;
 

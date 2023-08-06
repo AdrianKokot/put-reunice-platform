@@ -56,12 +56,10 @@ import { TuiEditorModule } from '@tinkoff/tui-editor';
     TuiDataListModule,
     TuiTextAreaModule,
     RouterLink,
-    TuiButtonModule,
-
     TuiEditorModule,
+    TuiButtonModule,
   ],
   templateUrl: './page-edit-form.component.html',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageEditFormComponent {

@@ -19,7 +19,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('LoginShellComponent', () => {
+describe(LoginShellComponent.name, () => {
   let component: LoginShellComponent;
   let fixture: ComponentFixture<LoginShellComponent>;
 
