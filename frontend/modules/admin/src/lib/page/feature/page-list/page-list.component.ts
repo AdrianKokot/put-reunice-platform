@@ -32,5 +32,5 @@ export class PageListComponent {
     'actions',
   ];
 
-  readonly pages$ = this._pageService.getPages();
+  readonly pages$ = this._pageService.getAll();
 }

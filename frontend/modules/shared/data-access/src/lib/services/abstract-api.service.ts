@@ -8,9 +8,9 @@ export abstract class AbstractApiService<
   TCreatePayload = T,
   TUpdatePayload = T
 > {
-  private _http = inject(HttpClient);
+  protected readonly _http = inject(HttpClient);
 
-  protected constructor(private _resourceUrl: string) {}
+  protected constructor(protected readonly _resourceUrl: string) {}
 
   get(id: T['id'] | string | number) {
     return this._http.get<T>(`${this._resourceUrl}/${id}`);

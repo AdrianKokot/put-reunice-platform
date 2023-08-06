@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { PageService } from '@reunice/modules/shared/data-access';
 import {
   TuiAlertService,
   TuiButtonModule,
@@ -10,18 +10,7 @@ import {
   TuiNotification,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { TranslateModule } from '@ngx-translate/core';
-import {
-  TuiFieldErrorPipeModule,
-  TuiInputModule,
-  TuiSelectModule,
-  TuiTextAreaModule,
-} from '@taiga-ui/kit';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  TuiLetModule,
-  tuiMarkControlAsTouchedAndValidate,
-} from '@taiga-ui/cdk';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import {
   catchError,
   exhaustMap,
@@ -35,41 +24,61 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { UniversityService } from '@reunice/modules/shared/data-access';
+import {
+  TuiLetModule,
+  tuiMarkControlAsTouchedAndValidate,
+} from '@taiga-ui/cdk';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import {
+  TuiFieldErrorPipeModule,
+  TuiInputModule,
+  TuiSelectModule,
+  TuiTextAreaModule,
+} from '@taiga-ui/kit';
+import { TuiEditorModule } from '@tinkoff/tui-editor';
 
 @Component({
-  selector: 'reunice-university-edit-form',
+  selector: 'reunice-page-edit-form',
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
-    TuiLabelModule,
-    TranslateModule,
-    TuiInputModule,
+    TuiLetModule,
     ReactiveFormsModule,
+    TranslateModule,
+    TuiLabelModule,
+    TuiInputModule,
     TuiTextfieldControllerModule,
     TuiErrorModule,
     TuiFieldErrorPipeModule,
-    TuiTextAreaModule,
-    TuiLetModule,
     TuiSelectModule,
     TuiDataListModule,
+    TuiTextAreaModule,
+    RouterLink,
     TuiButtonModule,
+
+    TuiEditorModule,
   ],
-  templateUrl: './university-edit-form.component.html',
+  templateUrl: './page-edit-form.component.html',
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UniversityEditFormComponent {
-  private readonly _service = inject(UniversityService);
+export class PageEditFormComponent {
+  private readonly _service = inject(PageService);
   private readonly _alert = inject(TuiAlertService);
 
-  university$ = inject(ActivatedRoute).paramMap.pipe(
+  item$ = inject(ActivatedRoute).paramMap.pipe(
     filter((params) => params.has('id')),
     map((params) => params.get('id') ?? ''),
     switchMap((id) =>
       this._service.get(id).pipe(
-        tap((item) => this.form.patchValue(item)),
+        tap((item) =>
+          this.form.patchValue({
+            ...item,
+            author: item.creator.firstName + ' ' + item.creator.lastName,
+          })
+        ),
         startWith(null)
       )
     ),
@@ -104,9 +113,7 @@ export class UniversityEditFormComponent {
       this.form.patchValue(result);
 
       return this._alert
-        .open('University updated successfully', {
-          status: TuiNotification.Success,
-        })
+        .open('Page updated successfully', { status: TuiNotification.Success })
         .pipe(
           startWith(null),
           map(() => false)
@@ -116,9 +123,10 @@ export class UniversityEditFormComponent {
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],
-    name: ['', [Validators.required, Validators.maxLength(255)]],
-    shortName: ['', [Validators.required, Validators.maxLength(255)]],
+    title: ['', [Validators.required, Validators.maxLength(255)]],
+    author: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
+    content: [''],
   });
 }
