@@ -1,4 +1,4 @@
-package com.example.cms.user;
+package com.example.cms;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

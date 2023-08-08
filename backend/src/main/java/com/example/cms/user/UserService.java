@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.example.cms.SearchCriteria;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
@@ -32,8 +33,6 @@ import com.example.cms.user.projections.UserDtoSimple;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 
 import lombok.RequiredArgsConstructor;
-
-import javax.sound.midi.Soundbank;
 
 @Service
 @RequiredArgsConstructor
