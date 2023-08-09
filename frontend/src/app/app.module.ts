@@ -24,6 +24,7 @@ import {
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { HttpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
 import { UiModule } from '@reunice/modules/shared/ui';
+import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
 
 @NgModule({
   declarations: [RootComponent],
@@ -49,6 +50,17 @@ import { UiModule } from '@reunice/modules/shared/ui';
   ],
   providers: [
     tuiButtonOptionsProvider({ size: 'm' }),
+
+    tuiLanguageSwitcher(async (language: TuiLanguageName): Promise<unknown> => {
+      switch (language) {
+        case 'polish':
+          return import('@taiga-ui/i18n/languages/polish');
+
+        default:
+          return import('@taiga-ui/i18n/languages/english');
+      }
+    }),
+
     // {
     //   provide: APP_INITIALIZER,
     //   useFactory: (service: AuthService) => () => service.user$,

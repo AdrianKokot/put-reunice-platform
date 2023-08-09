@@ -4,15 +4,15 @@ import { UserDirective } from '@reunice/modules/shared/security';
 import {
   TuiAppearance,
   TuiButtonModule,
+  tuiButtonOptionsProvider,
   TuiDataListModule,
   TuiFlagPipeModule,
   TuiHostedDropdownModule,
   TuiLinkModule,
-  tuiButtonOptionsProvider,
 } from '@taiga-ui/core';
 import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
 import { TranslateModule } from '@ngx-translate/core';
-import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 
 @Component({
   selector: 'reunice-ui-top-bar',
@@ -29,8 +29,8 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
     TuiDataListModule,
     TuiLinkModule,
     TuiFlagPipeModule,
-    LanguageSwitcherComponent,
     TranslateModule,
+    LanguageSwitcherComponent,
   ],
   providers: [
     tuiButtonOptionsProvider({
