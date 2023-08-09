@@ -7,7 +7,7 @@ import { Page, PageForm, PageUpdateForm } from '../models/page';
   providedIn: 'root',
 })
 export class PageService {
-  private pageUrl = `/api/pages`;
+  private pageUrl = '/api/pages';
 
   sidenavToggled = new EventEmitter();
 

@@ -7,7 +7,7 @@ import { Template } from '../models/template';
   providedIn: 'root',
 })
 export class TemplateService {
-  private templateUrl = `/api/templates`;
+  private templateUrl = '/api/templates';
 
   constructor(private http: HttpClient) {}
 

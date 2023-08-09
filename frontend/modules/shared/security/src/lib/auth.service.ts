@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  BehaviorSubject,
   catchError,
   Observable,
   of,
+  shareReplay,
+  Subject,
   switchMap,
   tap,
 } from 'rxjs';
@@ -15,9 +16,9 @@ import { User } from '@reunice/modules/shared/data-access';
 })
 export class AuthService {
   private readonly _http = inject(HttpClient);
-  private readonly _user$ = new BehaviorSubject<User | null>(null);
+  private readonly _user$ = new Subject<User | null>();
 
-  readonly user$ = this._user$.asObservable();
+  readonly user$ = this._user$.pipe(shareReplay());
 
   constructor() {
     this.getUser().subscribe((user) => this._user$.next(user));
@@ -30,7 +31,7 @@ export class AuthService {
   }
 
   login(user: Pick<User, 'password' | 'username'>): Observable<User | null> {
-    return this._http.post(`/api/login`, user).pipe(
+    return this._http.post('/api/login', user).pipe(
       switchMap(() => this.getUser()),
       tap((user) => this._user$.next(user))
     );

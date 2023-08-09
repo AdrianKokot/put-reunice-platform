@@ -36,7 +36,7 @@ import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
     AppRoutingModule,
     HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: localStorage.getItem('locale') || 'pl',
+      defaultLanguage: localStorage.getItem('locale') ?? 'en',
       loader: {
         provide: TranslateLoader,
         useFactory: (http: HttpClient) => new TranslateHttpLoader(http),

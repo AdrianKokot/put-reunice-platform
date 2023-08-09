@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    title: 'Backups',
     path: '',
     loadComponent: () =>
       import('./feature/backup-list/backup-list.component').then(
