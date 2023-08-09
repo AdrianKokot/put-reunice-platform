@@ -25,5 +25,5 @@ export class TemplateListComponent {
 
   readonly columns = ['name', 'actions'];
 
-  readonly templates$ = this._templateService.getAllTemplates();
+  readonly templates$ = this._templateService.getAll();
 }

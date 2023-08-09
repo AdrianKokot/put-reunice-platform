@@ -1,14 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TemplateListComponent } from './feature/template-list/template-list.component';
+import { TemplateEditFormComponent } from './feature/template-edit-form/template-edit-form.component';
 
 const routes: Routes = [
   {
-    title: 'Templates',
     path: '',
-    loadComponent: () =>
-      import('./feature/template-list/template-list.component').then(
-        (m) => m.TemplateListComponent
-      ),
+    component: TemplateListComponent,
+  },
+  {
+    path: ':id',
+    children: [
+      {
+        title: 'Edit template',
+        path: 'edit',
+        component: TemplateEditFormComponent,
+      },
+    ],
   },
 ];
 

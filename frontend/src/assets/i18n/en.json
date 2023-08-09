@@ -250,5 +250,9 @@
   "EDIT_INFORMATION": "Edit information",
   "CHANGING_BASE_INFORMATION": "Changing basic information",
   "INFORMATION_CHANGED": "Basic information changed successfully.",
-  "CHANGING_CREATOR": "Changing author"
+  "CHANGING_CREATOR": "Changing author",
+  "BASIC_INFORMATION": "Basic information",
+  "TEMPLATE_CONTENT": "Template content",
+  "PAGE_CONTENT": "Page content",
+  "CONTENT": "Content"
 }

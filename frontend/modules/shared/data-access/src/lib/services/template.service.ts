@@ -1,62 +1,52 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable, switchMap } from 'rxjs';
 import { Template } from '../models/template';
+import { AbstractApiService } from './abstract-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TemplateService {
-  private templateUrl = '/api/templates';
-
-  constructor(private http: HttpClient) {}
-
-  getTemplate(id: number): Observable<Template> {
-    return this.http.get<Template>(`${this.templateUrl}/${id}`);
+export class TemplateService extends AbstractApiService<Template> {
+  constructor() {
+    super('/api/templates');
   }
 
-  getAllTemplates(): Observable<Template[]> {
-    return this.http.get<Template[]>(this.templateUrl + '/all');
+  override getAll(): Observable<Template[]> {
+    return this._http.get<Template[]>(this._resourceUrl + '/all');
   }
+  //
+  // addUniversityToTemplate(
+  //   templateID: number,
+  //   universityID: number
+  // ): Observable<Template> {
+  //   return this.http.post<Template>(
+  //     `${this.templateUrl}/${templateID}/universities/${universityID}`,
+  //     null
+  //   );
+  // }
+  //
+  // removeUniversityFromTemplate(
+  //   templateID: number,
+  //   universityID: number
+  // ): Observable<Template> {
+  //   return this.http.delete<Template>(
+  //     `${this.templateUrl}/${templateID}/universities/${universityID}`
+  //   );
+  // }
 
-  getUniversityTemplates(universityID: number): Observable<Template[]> {
-    return this.http.get<Template[]>(
-      `${this.templateUrl}/?universityID=${universityID}`
-    );
-  }
-
-  addTemplate(name: string): Observable<Template> {
-    return this.http.post<Template>(this.templateUrl, name);
-  }
-
-  addUniversityToTemplate(
-    templateID: number,
-    universityID: number
+  override update(
+    resource: Partial<Template> & Pick<Template, 'id'>
   ): Observable<Template> {
-    return this.http.post<Template>(
-      `${this.templateUrl}/${templateID}/universities/${universityID}`,
-      null
-    );
-  }
-
-  removeUniversityFromTemplate(
-    templateID: number,
-    universityID: number
-  ): Observable<Template> {
-    return this.http.delete<Template>(
-      `${this.templateUrl}/${templateID}/universities/${universityID}`
-    );
-  }
-
-  modifyTemplateNameField(id: number, name: string): Observable<void> {
-    return this.http.patch<void>(`${this.templateUrl}/${id}/name`, name);
-  }
-
-  modifyTemplateContentField(id: number, content: string): Observable<void> {
-    return this.http.patch<void>(`${this.templateUrl}/${id}/content`, content);
-  }
-
-  deleteTemplate(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.templateUrl}/${id}`);
+    return combineLatest([
+      this._http.patch<Template>(
+        `${this._resourceUrl}/${resource.id}/content`,
+        resource.content
+      ),
+      this._http.patch<Template>(
+        `${this._resourceUrl}/${resource.id}/name`,
+        resource.name
+      ),
+      // this._http.put<Template>(`${this._resourceUrl}/${resource.id}`, resource),
+    ]).pipe(switchMap(() => this.get(resource.id)));
   }
 }
