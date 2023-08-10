@@ -22,7 +22,6 @@ public class EmailController {
     public void sendEmail() {
         try {
             emailSendingService.sendEmail("test@mailpit", "Test", "This is an example");
-            System.out.println("Fooo");
         } catch (Exception e) {
             System.out.println("Error sending email: " + e.getMessage());
         }
