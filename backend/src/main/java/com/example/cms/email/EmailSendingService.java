@@ -1,4 +1,4 @@
-package com.example.cms.mail;
+package com.example.cms.email;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class MailSendingService {
+public class EmailSendingService {
     @Autowired
     private JavaMailSender mailSender;
 
     public void sendEmail(String receiver, String subject, String body){
+
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("test@gmail.com");
+        message.setFrom("test@mailpit");
         message.setTo(receiver);
         message.setSubject(subject);
         message.setText(body);
