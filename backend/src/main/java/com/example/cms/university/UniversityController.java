@@ -4,13 +4,17 @@ import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.university.projections.UniversityDtoSimple;
+import com.example.cms.user.User;
+import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -25,8 +29,12 @@ public class UniversityController {
     }
 
     @GetMapping
-    public List<UniversityDtoSimple> getUniversities(Pageable pageable) {
-        return service.getUniversities(pageable);
+    public ResponseEntity<List<UniversityDtoSimple>> getUniversities(Pageable pageable, @RequestParam Map<String, String> vars) {
+        return new ResponseEntity<>(
+                service.getUniversities(
+                        pageable,
+                        FilterPathVariableValidator.validate(vars, University.class)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/search/{text}")

@@ -1,5 +1,6 @@
 package com.example.cms.university;
 
+import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.SecurityService;
 import com.example.cms.template.Template;
@@ -14,15 +15,18 @@ import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
+import com.example.cms.user.UserSpecification;
 import com.example.cms.user.exceptions.UserForbidden;
 import com.example.cms.user.exceptions.UserNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,8 +49,30 @@ public class UniversityService {
         }).orElseThrow(UniversityNotFound::new);
     }
 
-    public List<UniversityDtoSimple> getUniversities(Pageable pageable) {
-        return universityRepository.findAll(pageable).stream()
+    public List<UniversityDtoSimple> getUniversities(Pageable pageable, Map<String, String> filterVars) {
+        Specification<University> combinedSpecification = null;
+
+        if (!filterVars.isEmpty()) {
+            List<UniversitySpecification> specifications = filterVars.entrySet().stream()
+                    .map(entries -> {
+                        String[] filterBy = entries.getKey().split("_");
+
+                        return new UniversitySpecification(new SearchCriteria(
+                                filterBy[0],
+                                filterBy[filterBy.length - 1],
+                                entries.getValue()
+                        ));
+                    }).collect(Collectors.toList());
+
+            for (Specification<University> spec : specifications) {
+                if (combinedSpecification == null) {
+                    combinedSpecification = Specification.where(spec);
+                }
+                combinedSpecification = combinedSpecification.and(spec);
+            }
+        }
+
+        return universityRepository.findAll(combinedSpecification, pageable).stream()
                 .filter(this::isUniversityVisible)
                 .map(UniversityDtoSimple::of)
                 .collect(Collectors.toList());
