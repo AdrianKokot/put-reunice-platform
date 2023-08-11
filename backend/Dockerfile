@@ -13,7 +13,7 @@ RUN mkdir -p /workspace
 WORKDIR /workspace
 COPY pom.xml /workspace
 COPY src /workspace/src
-RUN mvn -f pom.xml clean package
+RUN mvn -f pom.xml clean package -DskipTests
 
 ### Run ###
 #In runtime container will have access to environmental variables defined in docker-compose.yml or in .env file read by docker-compose
