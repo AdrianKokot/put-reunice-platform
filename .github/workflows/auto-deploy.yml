@@ -3,7 +3,6 @@ name: 🏗️ Docker
 on:
   pull_request:
     types: [ closed ]
-    branches: [ "main" ]
 
 permissions:
   contents: 'read'
@@ -11,7 +10,7 @@ permissions:
 
 jobs:
   build-and-push-image:
-    if: ${{ (github.event.pull_request.merged == true) && (contains(github.event.pull_request.labels.*.name, 'Deploy to dev')) }}
+    if: ${{ (github.base_ref == 'main') && (contains(github.event.pull_request.labels.*.name, 'Deploy to dev')) }}
     name: 📦 Build and push container image to registry
     runs-on: ubuntu-latest
 
