@@ -1,8 +1,9 @@
 name: 🏗️ Docker
 
 on:
-  pull_request:
-    types: [ closed ]
+  push:
+    branches:
+      - main
 
 permissions:
   contents: 'read'
@@ -10,7 +11,6 @@ permissions:
 
 jobs:
   build-and-push-image:
-    if: ${{ (github.base_ref == 'main') && (contains(github.event.pull_request.labels.*.name, 'Deploy to dev')) }}
     name: 📦 Build and push container image to registry
     runs-on: ubuntu-latest
 
@@ -33,6 +33,13 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ env.IMAGE_NAME }}
+          tags: |
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
+            # tag event
+            type=ref,event=tag
+            # pull request event
+            type=ref,event=pr
 
       - name: Build and push container image to registry
         uses: docker/build-push-action@v4
@@ -56,6 +63,13 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ghcr.io/${{ env.IMAGE_NAME }}
+        tags: |
+          # set latest tag for default branch
+          type=raw,value=latest,enable={{is_default_branch}}
+          # tag event
+          type=ref,event=tag
+          # pull request event
+          type=ref,event=pr
 
     - name: Pull image
       uses: appleboy/ssh-action@v1.0.0
