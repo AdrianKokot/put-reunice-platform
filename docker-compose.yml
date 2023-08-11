@@ -8,9 +8,9 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - ./db:/var/lib/postgresql/data 777
     ports:
-      - "5432"
+      - "5432:5432"
 
   backend:
     build:
@@ -36,8 +36,8 @@ services:
     container_name: frontend
     ports:
       - "80:80"
-    depends_on:
-      - backend
+    volumes:
+      - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
 
   mailpit:
     image: axllent/mailpit
