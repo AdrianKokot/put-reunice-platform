@@ -1,8 +1,8 @@
 <div *tuiLet="university$ | async as university">
   <form
-    [formGroup]="form"
+    [formGroup]="handler.form"
     [class.form-skeleton]="university === null"
-    (ngSubmit)="submit$.next()"
+    (ngSubmit)="handler.submit()"
   >
     <div class="tui-form__row tui-form__row_multi-fields">
       <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
@@ -99,7 +99,7 @@
         size="m"
         type="submit"
         class="tui-form__button"
-        [showLoader]="(showLoader$ | async) ?? false"
+        [showLoader]="(handler.loading$ | async) ?? false"
       >
         {{ 'SAVE' | translate }}
       </button>

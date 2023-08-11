@@ -31,5 +31,5 @@ export class UserListComponent {
     'actions',
   ];
 
-  readonly users$ = this._userService.getUsers();
+  readonly users$ = this._userService.getAll();
 }

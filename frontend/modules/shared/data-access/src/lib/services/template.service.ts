@@ -14,6 +14,7 @@ export class TemplateService extends AbstractApiService<Template> {
   override getAll(): Observable<Template[]> {
     return this._http.get<Template[]>(this._resourceUrl + '/all');
   }
+
   //
   // addUniversityToTemplate(
   //   templateID: number,

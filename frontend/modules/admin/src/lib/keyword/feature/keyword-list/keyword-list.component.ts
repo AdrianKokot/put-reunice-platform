@@ -25,5 +25,5 @@ export class KeywordListComponent {
 
   readonly columns = ['word', 'actions'];
 
-  readonly keywords$ = this._keywordService.getAllKeyWords();
+  readonly keywords$ = this._keywordService.getAll();
 }

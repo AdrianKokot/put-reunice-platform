@@ -254,5 +254,8 @@
   "BASIC_INFORMATION": "Basic information",
   "TEMPLATE_CONTENT": "Template content",
   "PAGE_CONTENT": "Page content",
-  "CONTENT": "Content"
+  "CONTENT": "Content",
+  "ACCOUNT_TYPE_ADMIN": "Main administrator",
+  "ACCOUNT_TYPE_USER": "University user",
+  "ACCOUNT_TYPE_MODERATOR": "University administrator"
 }

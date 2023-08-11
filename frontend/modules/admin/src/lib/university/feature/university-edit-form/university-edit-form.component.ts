@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import {
   TuiAlertService,
   TuiButtonModule,
@@ -18,25 +18,12 @@ import {
   TuiTextAreaModule,
 } from '@taiga-ui/kit';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  TuiLetModule,
-  tuiMarkControlAsTouchedAndValidate,
-} from '@taiga-ui/cdk';
-import {
-  catchError,
-  exhaustMap,
-  filter,
-  map,
-  mergeMap,
-  of,
-  shareReplay,
-  startWith,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { TuiLetModule } from '@taiga-ui/cdk';
 import { UniversityService } from '@reunice/modules/shared/data-access';
-import { HttpErrorResponse } from '@angular/common/http';
+import {
+  FormSubmitWrapper,
+  resourceFromRoute,
+} from '@reunice/modules/shared/util';
 
 @Component({
   selector: 'reunice-university-edit-form',
@@ -64,54 +51,8 @@ export class UniversityEditFormComponent {
   private readonly _service = inject(UniversityService);
   private readonly _alert = inject(TuiAlertService);
 
-  university$ = inject(ActivatedRoute).paramMap.pipe(
-    filter((params) => params.has('id')),
-    map((params) => params.get('id') ?? ''),
-    switchMap((id) =>
-      this._service.get(id).pipe(
-        tap((item) => this.form.patchValue(item)),
-        startWith(null)
-      )
-    ),
-    shareReplay()
-  );
-
-  readonly submit$ = new Subject<void>();
-  readonly showLoader$ = this.submit$.pipe(
-    filter(() => {
-      if (this.form.invalid) {
-        tuiMarkControlAsTouchedAndValidate(this.form);
-        return false;
-      }
-
-      return true;
-    }),
-    exhaustMap(() =>
-      this._service.update(this.form.getRawValue()).pipe(
-        catchError((err: HttpErrorResponse) => {
-          // TODO Handle validation errors
-          console.log(err);
-          return of(false);
-        }),
-        startWith(true)
-      )
-    ),
-    mergeMap((result) => {
-      if (typeof result === 'boolean') {
-        return of(result);
-      }
-
-      this.form.patchValue(result);
-
-      return this._alert
-        .open('University updated successfully', {
-          status: TuiNotification.Success,
-        })
-        .pipe(
-          startWith(null),
-          map(() => false)
-        );
-    })
+  readonly university$ = resourceFromRoute(this._service, (v) =>
+    this.form.patchValue(v)
   );
 
   readonly form = inject(FormBuilder).nonNullable.group({
@@ -120,5 +61,15 @@ export class UniversityEditFormComponent {
     shortName: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
+  });
+  readonly handler = new FormSubmitWrapper(this.form, {
+    submit: (value) => this._service.update(value),
+    effect: (result) => {
+      this.form.patchValue(result);
+
+      return this._alert.open('University updated successfully', {
+        status: TuiNotification.Success,
+      });
+    },
   });
 }

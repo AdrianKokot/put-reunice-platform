@@ -1,14 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { KeywordListComponent } from './feature/keyword-list/keyword-list.component';
+import { KeywordEditFormComponent } from './feature/keyword-edit-form/keyword-edit-form.component';
 
 const routes: Routes = [
   {
-    title: 'Keywords',
     path: '',
-    loadComponent: () =>
-      import('./feature/keyword-list/keyword-list.component').then(
-        (m) => m.KeywordListComponent
-      ),
+    component: KeywordListComponent,
+  },
+  {
+    path: ':id',
+    children: [
+      {
+        title: 'Edit keyword',
+        path: 'edit',
+        component: KeywordEditFormComponent,
+      },
+    ],
   },
 ];
 

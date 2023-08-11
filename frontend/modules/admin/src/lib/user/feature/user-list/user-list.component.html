@@ -27,7 +27,7 @@
         {{ item.enabled }}
       </td>
       <td *tuiCell="'actions'" tuiTd>
-        <!--      <a tuiLink [routerLink]="['/universities', item.id]">See university</a>-->
+        <a tuiLink [routerLink]="[item.id, 'edit']"> Edit </a>
       </td>
     </tr>
   </tbody>
