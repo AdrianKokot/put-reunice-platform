@@ -1,15 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { UserDirective } from '@reunice/modules/shared/security';
 import {
   TuiAppearance,
   TuiButtonModule,
   tuiButtonOptionsProvider,
   TuiDataListModule,
+  TuiFlagPipeModule,
   TuiHostedDropdownModule,
   TuiLinkModule,
 } from '@taiga-ui/core';
 import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
-import { UserDirective } from '@reunice/modules/shared/security';
-import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 
 @Component({
   selector: 'reunice-ui-top-bar',
@@ -25,6 +28,9 @@ import { RouterLink } from '@angular/router';
     TuiAvatarModule,
     TuiDataListModule,
     TuiLinkModule,
+    TuiFlagPipeModule,
+    TranslateModule,
+    LanguageSwitcherComponent,
   ],
   providers: [
     tuiButtonOptionsProvider({

@@ -10,8 +10,10 @@
   <ng-content></ng-content>
 </div>
 
-<div class="justify-self-end d-flex align-center">
+<div class="justify-self-end d-flex align-center gap-1">
   <ng-content select="[right]"></ng-content>
+
+  <reunice-language-switcher></reunice-language-switcher>
 
   <a
     *reuniceUser="'GUEST'; else loggedMenu"
@@ -36,7 +38,7 @@
     <ng-template #profileMenu let-close="close">
       <tui-data-list role="menu" size="s">
         <a href="/admin" tuiOption role="menuitem" (click)="close()">
-          Admin console
+          {{ 'ADMIN_CONSOLE' | translate }}
         </a>
         <a
           routerLink="/accounts/profile"
@@ -44,7 +46,7 @@
           role="menuitem"
           (click)="close()"
         >
-          Profile
+          {{ 'PROFILE' | translate }}
         </a>
         <a
           routerLink="/auth/logout"
@@ -52,7 +54,7 @@
           role="menuitem"
           (click)="close()"
         >
-          Logout
+          {{ 'LOGOUT' | translate }}
         </a>
       </tui-data-list>
     </ng-template>
