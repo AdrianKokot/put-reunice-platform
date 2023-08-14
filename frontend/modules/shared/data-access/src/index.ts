@@ -14,3 +14,5 @@ export * from './lib/services/template.service';
 export * from './lib/services/university.service';
 export * from './lib/services/user.service';
 export * from './lib/services/abstract-api.service';
+
+export * from './lib/api.params';

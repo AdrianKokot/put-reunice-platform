@@ -3,7 +3,7 @@ import { UserService } from '@reunice/modules/shared/data-access';
 import { CommonModule } from '@angular/common';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiTableModule } from '@taiga-ui/addon-table';
-import { TuiLinkModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiLinkModule } from '@taiga-ui/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -16,6 +16,7 @@ import { RouterLink } from '@angular/router';
     TuiTableModule,
     TuiLinkModule,
     RouterLink,
+    TuiButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

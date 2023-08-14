@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UniversityCreateFormComponent } from './university-create-form.component';
-import {TestingModule} from "@reunice/testing";
+import { TestingModule } from '@reunice/testing';
 
 describe('UniversityCreateFormComponent', () => {
   let component: UniversityCreateFormComponent;

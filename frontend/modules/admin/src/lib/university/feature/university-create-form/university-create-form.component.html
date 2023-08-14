@@ -1,77 +1,71 @@
-<form
-        [formGroup]="handler.form"
-        (ngSubmit)="handler.submit()"
->
-    <div class="tui-form__row tui-form__row_multi-fields">
-        <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
-            <tui-input
-                    formControlName="name"
-                    tuiTextfieldSize="m"
-                    [tuiTextfieldLabelOutside]="true"
-            >
-                <input tuiTextfield type="text"/>
-            </tui-input>
+<form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="name"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
 
-            <tui-error
-                    formControlName="name"
-                    [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </label>
-
-        <label
-                [tuiLabel]="'SHORT_NAME' | translate"
-                class="tui-form__multi-field"
-        >
-            <tui-input
-                    formControlName="shortName"
-                    tuiTextfieldSize="m"
-                    [tuiTextfieldLabelOutside]="true"
-            >
-                <input tuiTextfield type="text"/>
-            </tui-input>
-
-            <tui-error
-                    formControlName="shortName"
-                    [error]="[] | tuiFieldError | async"
-            ></tui-error>
-        </label>
-    </div>
-
-    <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
-        <tui-text-area
-                formControlName="description"
-                tuiTextfieldSize="m"
-                [tuiTextfieldLabelOutside]="true"
-                [maxLength]="255"
-                [expandable]="true"
-        >
-        </tui-text-area>
-
-        <tui-error
-                formControlName="description"
-                [error]="[] | tuiFieldError | async"
-        ></tui-error>
+      <tui-error
+        formControlName="name"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
     </label>
 
-    <div class="tui-form__buttons tui-form__buttons_align_end">
-        <a
-                [routerLink]="['..']"
-                tuiButton
-                type="button"
-                appearance="flat"
-                size="m"
-                class="tui-form__button"
-        >
-            {{ 'CANCEL' | translate }}
-        </a>
-        <button
-                tuiButton
-                size="m"
-                type="submit"
-                class="tui-form__button"
-                [showLoader]="(handler.loading$ | async) ?? false"
-        >
-            {{ 'SAVE' | translate }}
-        </button>
-    </div>
+    <label [tuiLabel]="'SHORT_NAME' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="shortName"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="shortName"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </div>
+
+  <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+    <tui-text-area
+      formControlName="description"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      [maxLength]="255"
+      [expandable]="true"
+    >
+    </tui-text-area>
+
+    <tui-error
+      formControlName="description"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <a
+      [routerLink]="['..']"
+      tuiButton
+      type="button"
+      appearance="flat"
+      size="m"
+      class="tui-form__button"
+    >
+      {{ 'CANCEL' | translate }}
+    </a>
+    <button
+      tuiButton
+      size="m"
+      type="submit"
+      class="tui-form__button"
+      [showLoader]="(handler.loading$ | async) ?? false"
+    >
+      {{ 'SAVE' | translate }}
+    </button>
+  </div>
 </form>

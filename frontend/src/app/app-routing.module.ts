@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@reunice/modules/shared/security';
-import {AuthModule} from "@reunice/modules/auth";
-import {UniversityModule} from "./university/university.module";
+import { AuthModule } from '@reunice/modules/auth';
+import { UniversityModule } from './university/university.module';
 
 const routes: Routes = [
   {

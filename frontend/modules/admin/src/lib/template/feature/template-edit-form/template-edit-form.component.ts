@@ -7,12 +7,13 @@ import {
 } from '@reunice/modules/shared/util';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiLetModule } from '@taiga-ui/cdk';
+import { TuiEditorModule } from '@tinkoff/tui-editor';
 
 @Component({
   selector: 'reunice-template-edit-form',
   templateUrl: './template-edit-form.component.html',
   standalone: true,
-  imports: [BaseFormImportsModule, TuiLetModule],
+  imports: [BaseFormImportsModule, TuiLetModule, TuiEditorModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateEditFormComponent {
