@@ -276,5 +276,6 @@
     "UPDATE": {
       "SUCCESS": "Page updated successfully"
     }
-  }
+  },
+  "ADMIN_CONSOLE": "Admin console"
 }
