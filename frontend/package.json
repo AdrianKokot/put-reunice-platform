@@ -39,6 +39,7 @@
     "@taiga-ui/layout": "^3.37.0",
     "@taiga-ui/styles": "^3.37.0",
     "@tinkoff/ng-dompurify": "3.0.0",
+    "@tinkoff/ng-polymorpheus": "^4.1.0",
     "@tinkoff/tui-editor": "^1.2.0",
     "dompurify": "2.2.9",
     "rxjs": "~7.8.0",

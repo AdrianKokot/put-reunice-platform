@@ -1,9 +1,7 @@
 {
   "CURRENT_LANGUAGE": "English (en)",
   "CURRENT_LANGUAGE_SHORT": "EN",
-  "UNIVERSITY": "University",
   "UNIVERSITIES": "Universities",
-  "USER": "User",
   "USERS": "Users",
   "RECENTLY_ADDED_PAGES": "Recently added pages",
   "UNIVERSITIES_WE_WORK_WITH": "Universities we work with",
@@ -138,7 +136,15 @@
   "CREATED_ON": "Creation date",
   "ROLE": "Role",
   "ENABLED": "Activated",
+  "USER": {
+    "UPDATE": {
+      "SUCCESS": "User updated successfully"
+    }
+  },
   "TEMPLATE": {
+    "UPDATE": {
+      "SUCCESS": "Template updated successfully"
+    },
     "ONE": "Template",
     "MANY": "Templates",
     "FIELD_NAME": "Template name",
@@ -233,6 +239,9 @@
   "DELETE_FILE_TOOLTIP": "Delete file",
   "DOWNLOAD_FILE_TOOLTIP": "Download plik",
   "KEYWORD": {
+    "UPDATE": {
+      "SUCCESS": "Keyword updated successfully"
+    },
     "ONE": "Keyword",
     "MANY": "Keywords",
     "EDIT": "Edit",
@@ -257,5 +266,19 @@
   "CONTENT": "Content",
   "ACCOUNT_TYPE_ADMIN": "Main administrator",
   "ACCOUNT_TYPE_USER": "University user",
-  "ACCOUNT_TYPE_MODERATOR": "University administrator"
+  "ACCOUNT_TYPE_MODERATOR": "University administrator",
+  "UNIVERSITY": {
+    "": "University",
+    "UPDATE": {
+      "SUCCESS": "University updated successfully"
+    }
+  },
+  "VISIBILITY": "Visibility",
+  "HIDDEN": "Hidden",
+  "VISIBLE": "Visible",
+  "PAGE": {
+    "UPDATE": {
+      "SUCCESS": "Page updated successfully"
+    }
+  }
 }

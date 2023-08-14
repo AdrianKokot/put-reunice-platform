@@ -13,7 +13,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {
   TuiFieldErrorPipeModule,
   TuiInputModule,
@@ -52,6 +52,7 @@ import {
 export class PageEditFormComponent {
   private readonly _service = inject(PageService);
   private readonly _alert = inject(TuiAlertService);
+  private readonly _translate = inject(TranslateService);
 
   readonly item$ = resourceFromRoute(this._service, (item) => {
     this.form.patchValue({
@@ -73,7 +74,7 @@ export class PageEditFormComponent {
     effect: (result) => {
       this.form.patchValue(result);
 
-      return this._alert.open('Page updated successfully', {
+      return this._alert.open(this._translate.instant('PAGE.UPDATE.SUCCESS'), {
         status: TuiNotification.Success,
       });
     },

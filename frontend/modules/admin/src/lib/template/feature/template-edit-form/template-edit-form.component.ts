@@ -11,7 +11,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import { TuiFieldErrorPipeModule, TuiInputModule } from '@taiga-ui/kit';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { CommonModule } from '@angular/common';
@@ -43,6 +43,7 @@ import {
 export class TemplateEditFormComponent {
   private readonly _service = inject(TemplateService);
   private readonly _alert = inject(TuiAlertService);
+  private readonly _translate = inject(TranslateService);
 
   item$ = resourceFromRoute(this._service, (v) => this.form.patchValue(v));
 
@@ -56,7 +57,7 @@ export class TemplateEditFormComponent {
     effect: (result) => {
       this.form.patchValue(result);
 
-      return this._alert.open('Template updated successfully', {
+      return this._alert.open(this._translate.instant('TEMPLATE.UPDATE.SUCCESS'), {
         status: TuiNotification.Success,
       });
     },

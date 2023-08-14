@@ -10,7 +10,7 @@ import {
   TuiNotification,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { TranslateModule } from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {
   TuiFieldErrorPipeModule,
   TuiInputModule,
@@ -50,6 +50,7 @@ import {
 export class UniversityEditFormComponent {
   private readonly _service = inject(UniversityService);
   private readonly _alert = inject(TuiAlertService);
+  private readonly _translate = inject(TranslateService);
 
   readonly university$ = resourceFromRoute(this._service, (v) =>
     this.form.patchValue(v)
@@ -67,7 +68,7 @@ export class UniversityEditFormComponent {
     effect: (result) => {
       this.form.patchValue(result);
 
-      return this._alert.open('University updated successfully', {
+      return this._alert.open(this._translate.instant('UNIVERSITY.UPDATE.SUCCESS'), {
         status: TuiNotification.Success,
       });
     },

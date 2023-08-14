@@ -20,13 +20,14 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   TuiFieldErrorPipeModule,
-  TuiInputModule,
-  TuiSelectModule,
+  TuiInputModule, TuiInputPhoneInternationalModule, TuiInputPhoneModule,
+  TuiSelectModule, TuiSortCountriesPipeModule,
   TuiTextAreaModule,
 } from '@taiga-ui/kit';
-import { TranslateModule } from '@ngx-translate/core';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { RouterLink } from '@angular/router';
+import {TuiCountryIsoCode} from '@taiga-ui/i18n';
 
 @Component({
   selector: 'reunice-user-edit-form',
@@ -53,6 +54,7 @@ import { RouterLink } from '@angular/router';
 export class UserEditFormComponent {
   private readonly _service = inject(UserService);
   private readonly _alert = inject(TuiAlertService);
+  private readonly _translate = inject(TranslateService);
 
   readonly item$ = resourceFromRoute(this._service, (v) =>
     this.form.patchValue(v)
@@ -75,10 +77,11 @@ export class UserEditFormComponent {
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     effect: () =>
-      this._alert.open('User updated successfully', {
+      this._alert.open(this._translate.instant('USER.UPDATE.SUCCESS'), {
         status: TuiNotification.Success,
       }),
   });
 
   readonly accountType = AccountTypeEnum;
+  readonly countries = Object.values(TuiCountryIsoCode);
 }

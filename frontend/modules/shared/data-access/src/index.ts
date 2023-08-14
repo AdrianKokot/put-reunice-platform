@@ -10,7 +10,6 @@ export * from './lib/services/backup.service';
 export * from './lib/services/file.service';
 export * from './lib/services/key-words.service';
 export * from './lib/services/page.service';
-export * from './lib/services/security.service';
 export * from './lib/services/template.service';
 export * from './lib/services/university.service';
 export * from './lib/services/user.service';
