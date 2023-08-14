@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, switchMap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap } from 'rxjs';
 import { Template } from '../models/template';
 import { AbstractApiService } from './abstract-api.service';
 
@@ -47,7 +47,22 @@ export class TemplateService extends AbstractApiService<Template> {
         `${this._resourceUrl}/${resource.id}/name`,
         resource.name
       ),
-      // this._http.put<Template>(`${this._resourceUrl}/${resource.id}`, resource),
     ]).pipe(switchMap(() => this.get(resource.id)));
+  }
+
+  override create(resource: Partial<Template>): Observable<Template> {
+    return this._http
+      .post<Template>(`${this._resourceUrl}`, resource.name)
+      .pipe(
+        switchMap((template) =>
+          this._http
+            .patch<Template>(
+              `${this._resourceUrl}/${template.id}/content`,
+              resource.content
+            )
+            .pipe(map(() => template))
+        ),
+        switchMap((template) => this.get(template.id))
+      );
   }
 }
