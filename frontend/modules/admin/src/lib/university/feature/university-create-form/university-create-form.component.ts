@@ -1,35 +1,28 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { UniversityService } from '@reunice/modules/shared/data-access';
-import {
-  formResourceFromRoute,
-  FormSubmitWrapper,
-} from '@reunice/modules/shared/util';
+import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { FormBuilder, Validators } from '@angular/forms';
+import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
 
 @Component({
-  selector: 'reunice-university-edit-form',
+  selector: 'reunice-university-create-form',
   standalone: true,
-  imports: [BaseFormImportsModule, TuiLetModule],
-  templateUrl: './university-edit-form.component.html',
+  imports: [BaseFormImportsModule],
+  templateUrl: './university-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UniversityEditFormComponent {
+export class UniversityCreateFormComponent {
   private readonly _service = inject(UniversityService);
 
   readonly form = inject(FormBuilder).nonNullable.group({
-    id: [-1, [Validators.required]],
     name: ['', [Validators.required, Validators.maxLength(255)]],
     shortName: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
-    hidden: [true, [Validators.required]],
   });
-
-  readonly item$ = formResourceFromRoute(this._service, this.form);
-
   readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) => this._service.update(value),
-    successAlertMessage: 'UNIVERSITY.UPDATE.SUCCESS',
+    submit: (value) => this._service.create(value),
+    successAlertMessage: 'UNIVERSITY.CREATE.SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 }

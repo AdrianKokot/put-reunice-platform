@@ -1,82 +1,43 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PageService } from '@reunice/modules/shared/data-access';
-import {
-  TuiAlertService,
-  TuiButtonModule,
-  TuiDataListModule,
-  TuiErrorModule,
-  TuiLabelModule,
-  TuiNotification,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {
-  TuiFieldErrorPipeModule,
-  TuiInputModule,
-  TuiSelectModule,
-  TuiTextAreaModule,
-} from '@taiga-ui/kit';
-import { TuiEditorModule } from '@tinkoff/tui-editor';
-import {
-  FormSubmitWrapper,
-  resourceFromRoute,
-} from '@reunice/modules/shared/util';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {PageService} from '@reunice/modules/shared/data-access';
+import {TuiLetModule} from '@taiga-ui/cdk';
+import {FormBuilder, Validators} from '@angular/forms';
+import {FormSubmitWrapper, resourceFromRoute,} from '@reunice/modules/shared/util';
+import {BaseFormImportsModule} from "../../../shared/base-form-imports.module";
+import {TuiEditorModule} from "@tinkoff/tui-editor";
 
 @Component({
-  selector: 'reunice-page-edit-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TuiLetModule,
-    ReactiveFormsModule,
-    TranslateModule,
-    TuiLabelModule,
-    TuiInputModule,
-    TuiTextfieldControllerModule,
-    TuiErrorModule,
-    TuiFieldErrorPipeModule,
-    TuiSelectModule,
-    TuiDataListModule,
-    TuiTextAreaModule,
-    RouterLink,
-    TuiEditorModule,
-    TuiButtonModule,
-  ],
-  templateUrl: './page-edit-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'reunice-page-edit-form',
+    standalone: true,
+    imports: [
+        TuiLetModule,
+        BaseFormImportsModule,
+        TuiEditorModule
+    ],
+    templateUrl: './page-edit-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageEditFormComponent {
-  private readonly _service = inject(PageService);
-  private readonly _alert = inject(TuiAlertService);
-  private readonly _translate = inject(TranslateService);
+    private readonly _service = inject(PageService);
 
-  readonly item$ = resourceFromRoute(this._service, (item) => {
-    this.form.patchValue({
-      ...item,
-      author: item.creator.firstName + ' ' + item.creator.lastName,
+    readonly form = inject(FormBuilder).nonNullable.group({
+        id: [-1, [Validators.required]],
+        title: ['', [Validators.required, Validators.maxLength(255)]],
+        author: ['', [Validators.required, Validators.maxLength(255)]],
+        description: ['', [Validators.required, Validators.maxLength(255)]],
+        hidden: [true, [Validators.required]],
+        content: [''],
     });
-  });
 
-  readonly form = inject(FormBuilder).nonNullable.group({
-    id: [-1, [Validators.required]],
-    title: ['', [Validators.required, Validators.maxLength(255)]],
-    author: ['', [Validators.required, Validators.maxLength(255)]],
-    description: ['', [Validators.required, Validators.maxLength(255)]],
-    hidden: [true, [Validators.required]],
-    content: [''],
-  });
-  readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) => this._service.update(value),
-    effect: (result) => {
-      this.form.patchValue(result);
+    readonly item$ = resourceFromRoute(this._service, (item) => {
+        this.form.patchValue({
+            ...item,
+            author: item.creator.firstName + ' ' + item.creator.lastName,
+        });
+    });
 
-      return this._alert.open(this._translate.instant('PAGE.UPDATE.SUCCESS'), {
-        status: TuiNotification.Success,
-      });
-    },
-  });
+    readonly handler = new FormSubmitWrapper(this.form, {
+        submit: (value) => this._service.update(value),
+        successAlertMessage: 'PAGE.UPDATE.SUCCESS'
+    });
 }

@@ -1,6 +1,8 @@
 package com.example.cms.university;
 
 import com.example.cms.page.PageRepository;
+import com.example.cms.security.LoggedUser;
+import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.template.Template;
 import com.example.cms.template.TemplateRepository;
@@ -69,10 +71,15 @@ public class UniversityService {
             throw new UniversityException(UniversityExceptionType.NAME_TAKEN);
         }
 
-        User creator = userRepository.findById(form.getCreatorId())
-                .orElseThrow(() -> {
-                    throw new UserNotFound();
-                });
+//        LoggedUser loggedUser = securityService.getPrincipal().orElseThrow(UserNotFound::new);
+//
+//        if (loggedUser.getAccountType() != Role.ADMIN) {
+//            throw new UserForbidden();
+//        }
+
+        User creator = userRepository.findById(1L) //loggedUser.getId())
+                .orElseThrow(UserNotFound::new);
+
         if (securityService.isForbiddenUser(creator)) {
             throw new UserForbidden();
         }

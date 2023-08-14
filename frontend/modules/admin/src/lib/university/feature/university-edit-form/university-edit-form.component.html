@@ -1,7 +1,7 @@
-<div *tuiLet="university$ | async as university">
+<div *tuiLet="item$ | async as item">
   <form
     [formGroup]="handler.form"
-    [class.form-skeleton]="university === null"
+    [class.form-skeleton]="item === null"
     (ngSubmit)="handler.submit()"
   >
     <div class="tui-form__row tui-form__row_multi-fields">

@@ -1,64 +1,25 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   AccountTypeEnum,
   UserService,
 } from '@reunice/modules/shared/data-access';
 import {
-  TuiAlertService,
-  TuiButtonModule,
-  TuiDataListModule,
-  TuiErrorModule,
-  TuiLabelModule,
-  TuiNotification,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/core';
-import {
+  formResourceFromRoute,
   FormSubmitWrapper,
-  resourceFromRoute,
 } from '@reunice/modules/shared/util';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  TuiFieldErrorPipeModule,
-  TuiInputModule, TuiInputPhoneInternationalModule, TuiInputPhoneModule,
-  TuiSelectModule, TuiSortCountriesPipeModule,
-  TuiTextAreaModule,
-} from '@taiga-ui/kit';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { RouterLink } from '@angular/router';
-import {TuiCountryIsoCode} from '@taiga-ui/i18n';
 
 @Component({
   selector: 'reunice-user-edit-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    TuiFieldErrorPipeModule,
-    ReactiveFormsModule,
-    TuiErrorModule,
-    TuiTextfieldControllerModule,
-    TuiInputModule,
-    TuiLabelModule,
-    TranslateModule,
-    TuiLetModule,
-    TuiTextAreaModule,
-    RouterLink,
-    TuiButtonModule,
-    TuiSelectModule,
-    TuiDataListModule,
-  ],
+  imports: [BaseFormImportsModule, TuiLetModule],
   templateUrl: './user-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserEditFormComponent {
   private readonly _service = inject(UserService);
-  private readonly _alert = inject(TuiAlertService);
-  private readonly _translate = inject(TranslateService);
-
-  readonly item$ = resourceFromRoute(this._service, (v) =>
-    this.form.patchValue(v)
-  );
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],
@@ -74,14 +35,13 @@ export class UserEditFormComponent {
     accountType: [AccountTypeEnum.GUEST, [Validators.required]],
     enabled: [true, [Validators.required]],
   });
+
+  readonly item$ = formResourceFromRoute(this._service, this.form);
+
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
-    effect: () =>
-      this._alert.open(this._translate.instant('USER.UPDATE.SUCCESS'), {
-        status: TuiNotification.Success,
-      }),
+    successAlertMessage: 'USER.UPDATE.SUCCESS',
   });
 
   readonly accountType = AccountTypeEnum;
-  readonly countries = Object.values(TuiCountryIsoCode);
 }
