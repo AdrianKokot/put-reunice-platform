@@ -1,11 +1,7 @@
 <form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
-  <h3 class="tui-form__header">
-    {{ 'BASIC_INFORMATION' | translate }}
-  </h3>
-
-  <label [tuiLabel]="'NAME' | translate" class="tui-form__row">
+  <label [tuiLabel]="'WORD' | translate" class="tui-form__row">
     <tui-input
-      formControlName="name"
+      formControlName="word"
       tuiTextfieldSize="m"
       [tuiTextfieldLabelOutside]="true"
     >
@@ -13,25 +9,7 @@
     </tui-input>
 
     <tui-error
-      formControlName="name"
-      [error]="[] | tuiFieldError | async"
-    ></tui-error>
-  </label>
-
-  <h3 class="tui-form__header">
-    {{ 'TEMPLATE_CONTENT' | translate }}
-  </h3>
-
-  <label class="tui-form__row" [tuiLabel]="'CONTENT' | translate">
-    <tui-editor
-      formControlName="content"
-      tuiTextfieldSize="m"
-      [tuiTextfieldLabelOutside]="true"
-    >
-    </tui-editor>
-
-    <tui-error
-      formControlName="content"
+      formControlName="word"
       [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>

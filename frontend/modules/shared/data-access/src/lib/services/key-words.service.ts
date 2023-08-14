@@ -21,6 +21,10 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
       .pipe(switchMap(() => this.get(resource.id)));
   }
 
+  override create(resource: Partial<Keyword>): Observable<Keyword> {
+    return super.create(resource.word as any);
+  }
+
   override getAll(
     params: ApiParams<Keyword> | ApiParams = {}
   ): Observable<Keyword[]> {
