@@ -267,12 +267,8 @@
   "ACCOUNT_TYPE_ADMIN": "Main administrator",
   "ACCOUNT_TYPE_USER": "University user",
   "ACCOUNT_TYPE_MODERATOR": "University administrator",
-  "UNIVERSITY": {
-    "": "University",
-    "UPDATE": {
-      "SUCCESS": "University updated successfully"
-    }
-  },
+  "UNIVERSITY": "University",
+  "UNIVERSITY_UPDATE_SUCCESS": "University updated successfully",
   "VISIBILITY": "Visibility",
   "HIDDEN": "Hidden",
   "VISIBLE": "Visible",

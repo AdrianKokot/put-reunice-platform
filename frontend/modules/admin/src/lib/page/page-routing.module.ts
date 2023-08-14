@@ -2,11 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PageEditFormComponent } from './feature/page-edit-form/page-edit-form.component';
 import { PageListComponent } from './feature/page-list/page-list.component';
+import { PageCreateFormComponent } from './feature/page-create-form/page-create-form.component';
 
 const routes: Routes = [
   {
     path: '',
     component: PageListComponent,
+  },
+  {
+    path: 'new',
+    component: PageCreateFormComponent,
   },
   {
     path: ':id',

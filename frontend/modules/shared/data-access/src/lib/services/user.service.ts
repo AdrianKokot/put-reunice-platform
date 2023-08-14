@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { AbstractApiService } from './abstract-api.service';
-import { combineLatest, Observable, switchMap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import { ApiParams } from '../api.params';
 
 type UpdateUser = Omit<User, 'enrolledUniversities'> & {
   enrolledUniversities: number[];
@@ -17,6 +18,18 @@ export class UserService extends AbstractApiService<
 > {
   constructor() {
     super('/api/users');
+  }
+
+  override getAll(
+    params: ApiParams<User> | ApiParams = {}
+  ): Observable<User[]> {
+    return super
+      .getAll(params)
+      .pipe(
+        map((users) =>
+          users.map((u) => ({ ...u, name: u.firstName + ' ' + u.lastName }))
+        )
+      );
   }
 
   override update(

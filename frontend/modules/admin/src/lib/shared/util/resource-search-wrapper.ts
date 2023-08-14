@@ -2,6 +2,7 @@ import {
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
+  filter,
   map,
   Observable,
   shareReplay,
@@ -25,19 +26,22 @@ export class ResourceSearchWrapper<T extends { id: string | number }> {
   readonly items$ = this._search$.pipe(
     debounceTime(300),
     distinctUntilChanged(),
-    switchMap((search) => this._service.getAll({ [this.searchKey]: search })),
+    switchMap((search) =>
+      this._service.getAll({ [this.searchKey]: search }).pipe(startWith(null))
+    ),
     shareReplay()
   );
 
   readonly itemIds$: Observable<ReadonlyArray<T['id']> | null> =
     this.items$.pipe(
-      map((items) => items.map((item) => item.id)),
+      map((items) => (items !== null ? items.map((item) => item.id) : items)),
       shareReplay()
     );
 
   readonly stringify$: Observable<
     TuiHandler<TuiContextWithImplicit<T['id']> | T['id'], string>
   > = this.items$.pipe(
+    filter((items): items is T[] => items !== null),
     map(
       (items) =>
         new Map(
@@ -57,7 +61,7 @@ export class ResourceSearchWrapper<T extends { id: string | number }> {
   );
 
   constructor(
-    private readonly _service: AbstractApiService<T>,
+    private readonly _service: AbstractApiService<T, unknown, unknown>,
     readonly searchKey: keyof ApiFilter<T>,
     readonly stringifyKey: OnlyKeysOfType<T, string> & string
   ) {}

@@ -60,6 +60,7 @@ tui-alert-host > .t-wrapper {
 form.form-skeleton {
   [tuiWrapper] {
     .tui-skeleton;
+
     &:after {
       border-radius: inherit;
     }
@@ -68,4 +69,30 @@ form.form-skeleton {
 
 .tui-form__row_multi-fields {
   align-items: flex-start;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.reunice-tree-item-option {
+  color: var(--tui-primary);
+  transition-property: color;
+  transition-duration: var(--tui-duration, 0.3s);
+  transition-timing-function: ease-in-out;
+
+  &:hover,
+  &._active,
+  &:focus {
+    color: var(--tui-primary-hover);
+  }
+
+  &._selected {
+    color: var(--tui-primary);
+    font-weight: bold;
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
 }

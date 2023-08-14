@@ -16,13 +16,11 @@ export interface Page {
   keyWords: string;
 }
 export interface PageForm {
-  id: number;
   title: string;
   description: string;
   content: string;
   creatorId: number;
   parentId: number;
-  keyWords: string;
 }
 
 export interface PageUpdateForm {

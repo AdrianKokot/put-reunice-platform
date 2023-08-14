@@ -44,21 +44,6 @@
     </div>
 
     <div class="tui-form__row tui-form__row_multi-fields">
-      <label [tuiLabel]="'USERNAME' | translate" class="tui-form__multi-field">
-        <tui-input
-          formControlName="username"
-          tuiTextfieldSize="m"
-          [tuiTextfieldLabelOutside]="true"
-        >
-          <input tuiTextfield type="text" />
-        </tui-input>
-
-        <tui-error
-          formControlName="username"
-          [error]="[] | tuiFieldError | async"
-        ></tui-error>
-      </label>
-
       <label [tuiLabel]="'EMAIL' | translate" class="tui-form__multi-field">
         <tui-input
           formControlName="email"
@@ -94,8 +79,23 @@
     </div>
 
     <h3 class="tui-form__header">
-      {{ 'USER_STATE' | translate }}
+      {{ 'ACCOUNT_INFORMATION' | translate }}
     </h3>
+
+    <label [tuiLabel]="'USERNAME' | translate" class="tui-form__row">
+      <tui-input
+        formControlName="username"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="username"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
 
     <div class="tui-form__row tui-form__row_multi-fields">
       <label [tuiLabel]="'STATE' | translate" class="tui-form__multi-field">
