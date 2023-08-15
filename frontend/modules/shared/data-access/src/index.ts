@@ -5,6 +5,7 @@ export * from './lib/models/page';
 export * from './lib/models/template';
 export * from './lib/models/university';
 export * from './lib/models/user';
+export * from './lib/models/account-type';
 
 export * from './lib/services/backup.service';
 export * from './lib/services/file.service';

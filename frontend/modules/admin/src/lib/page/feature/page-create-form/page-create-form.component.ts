@@ -4,28 +4,26 @@ import {
   Page,
   PageService,
   UniversityService,
-  User,
   UserService,
 } from '@reunice/modules/shared/data-access';
 import { FormSubmitWrapper } from '@reunice/modules/shared/util';
 import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
-import { AuthService } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import {
   distinctUntilChanged,
   filter,
   shareReplay,
   startWith,
   switchMap,
-  take,
   tap,
 } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
+  TuiIslandModule,
   TuiRadioLabeledModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
@@ -47,46 +45,33 @@ import { TuiLinkModule } from '@taiga-ui/core';
     RouterLinkActive,
     TuiLinkModule,
     TuiRadioLabeledModule,
+    TuiIslandModule,
+    UserDirective,
   ],
   templateUrl: './page-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageCreateFormComponent {
   private readonly _service = inject(PageService);
-
-  constructor(auth: AuthService) {
-    auth.user$
-      .pipe(
-        filter((user): user is User => user !== null),
-        take(1),
-        takeUntilDestroyed(),
-        tap((user) =>
-          this.form.patchValue({
-            creatorId: user.id,
-            universityId:
-              user.enrolledUniversities.length > 0
-                ? user.enrolledUniversities[0].id
-                : null,
-          })
-        )
-      )
-      .subscribe();
-  }
+  private readonly _user = inject(AuthService).userSnapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
-    creatorId: [-1, [Validators.required]],
+    creatorId: [this._user?.id ?? -1, [Validators.required]],
     parentId: [-1, [Validators.required]],
-    universityId: [null as null | number, [Validators.required]],
+    universityId: [
+      this._user?.enrolledUniversities?.at(0)?.id ?? null,
+      [Validators.required],
+    ],
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.create(value),
     successAlertMessage: 'PAGE.CREATE.SUCCESS',
-    effect: navigateToResourceDetails(),
+    effect: navigateToResourceDetails(['edit']),
   });
 
   readonly userSearch = new ResourceSearchWrapper(
@@ -102,6 +87,7 @@ export class PageCreateFormComponent {
   );
 
   readonly pagesTree$ = this.form.controls.universityId.valueChanges.pipe(
+    startWith(this.form.controls.universityId.value),
     distinctUntilChanged(),
     filter((id): id is number => id !== null),
     tap(() => this.form.controls.parentId.reset()),
@@ -116,6 +102,4 @@ export class PageCreateFormComponent {
 
   readonly pagesTreeHandler: TuiHandler<Page, readonly Page[]> = (item) =>
     item?.children ?? [];
-
-  pageTreeMap = new Map<Page, boolean>();
 }

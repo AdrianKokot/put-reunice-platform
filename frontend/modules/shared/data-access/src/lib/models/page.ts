@@ -18,7 +18,7 @@ export interface Page {
 export interface PageForm {
   title: string;
   description: string;
-  content: string;
+  content?: string;
   creatorId: number;
   parentId: number;
 }

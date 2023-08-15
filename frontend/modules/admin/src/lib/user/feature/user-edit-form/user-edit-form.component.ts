@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AccountTypeEnum,
+  ExtendedAccountTypeEnum,
   UniversityService,
+  User,
   UserService,
 } from '@reunice/modules/shared/data-access';
 import {
@@ -13,6 +15,9 @@ import { BaseFormImportsModule } from '../../../shared/base-form-imports.module'
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiDataListWrapperModule, TuiMultiSelectModule } from '@taiga-ui/kit';
 import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
+import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { filter, map, startWith } from 'rxjs';
+import { TuiHintModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-user-edit-form',
@@ -22,12 +27,15 @@ import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrap
     TuiLetModule,
     TuiDataListWrapperModule,
     TuiMultiSelectModule,
+    TuiHintModule,
+    UserDirective,
   ],
   templateUrl: './user-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserEditFormComponent {
   private readonly _service = inject(UserService);
+  private readonly _user = inject(AuthService).userSnapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],
@@ -39,7 +47,7 @@ export class UserEditFormComponent {
       [Validators.required, Validators.maxLength(255), Validators.email],
     ],
     phoneNumber: ['', [Validators.required, Validators.maxLength(255)]],
-    accountType: [AccountTypeEnum.GUEST, [Validators.required]],
+    accountType: [AccountTypeEnum.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
     enrolledUniversities: [[] as number[]],
   });
@@ -63,4 +71,23 @@ export class UserEditFormComponent {
   });
 
   readonly accountType = AccountTypeEnum;
+
+  readonly editingOwnAccount$ = this.item$.pipe(
+    filter((user): user is User => user !== null),
+    map((user) => user.id === this._user?.id),
+    startWith(false)
+  );
+
+  readonly allFieldsReadonly$ = this.item$.pipe(
+    filter((user): user is User => user !== null),
+    map(
+      (user) =>
+        this._user?.accountType !== ExtendedAccountTypeEnum.ADMIN &&
+        (user.accountType === ExtendedAccountTypeEnum.ADMIN ||
+          !this._user?.enrolledUniversities.every((u) =>
+            user.enrolledUniversities.some((eu) => eu.id === u.id)
+          ))
+    ),
+    startWith(true)
+  );
 }

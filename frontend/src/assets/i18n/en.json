@@ -277,5 +277,20 @@
       "SUCCESS": "Page updated successfully"
     }
   },
-  "ADMIN_CONSOLE": "Admin console"
+  "ADMIN_CONSOLE": "Admin console",
+  "ACCOUNT_INFORMATION": "Account information",
+  "INITIAL_PASSWORD": "Initial password",
+  "STATE": "Account state",
+  "ACTIVE": "Enabled",
+  "DEACTIVATED": "Disabled",
+  "UNIVERSITIES_MANAGEMENT": "Universities management",
+  "TEMPLATES": "Templates",
+  "TEMPLATES_FOR_UNIVERSITY_PAGES": "Templates for university pages",
+  "UNIVERSITY_PAGES_CONTENT": "University pages content",
+  "ACCOUNTS_AND_ROLES_MANAGEMENT": "Accounts & roles management",
+  "KEYWORDS": "Keywords",
+  "BACKUPS": "Backups",
+  "SYSTEM_BACKUP_AND_RESTORE": "System backup & restore",
+  "PAGE_LOCATION": "Page location",
+  "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account"
 }

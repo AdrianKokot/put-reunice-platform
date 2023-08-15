@@ -15,6 +15,7 @@ import {
 } from '@taiga-ui/kit';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
+import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 
 @Component({
   selector: 'reunice-user-create-form',
@@ -25,12 +26,14 @@ import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrap
     TuiLetModule,
     TuiDataListWrapperModule,
     TuiInputPasswordModule,
+    UserDirective,
   ],
   templateUrl: './user-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserCreateFormComponent {
   private readonly _service = inject(UserService);
+  private readonly _user = inject(AuthService).userSnapshot;
 
   readonly accountType = AccountTypeEnum;
 
@@ -46,7 +49,9 @@ export class UserCreateFormComponent {
     phoneNumber: ['', [Validators.required, Validators.maxLength(12)]],
     accountType: [this.accountType.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
-    enrolledUniversities: [[] as number[]],
+    enrolledUniversities: [
+      this._user?.enrolledUniversities.map((u) => u.id) ?? [],
+    ],
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {

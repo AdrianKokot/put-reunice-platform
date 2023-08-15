@@ -145,7 +145,11 @@
         [tuiTextfieldLabelOutside]="true"
       >
         <tui-data-list *tuiDataList>
-          <button tuiOption [value]="accountType.ADMIN">
+          <button
+            tuiOption
+            [value]="accountType.ADMIN"
+            *reuniceUser="accountType.ADMIN"
+          >
             {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
           </button>
           <button tuiOption [value]="accountType.MODERATOR">
@@ -168,35 +172,37 @@
     </label>
   </div>
 
-  <label
-    [tuiLabel]="'ENROLLED_UNIVERSITIES' | translate"
-    class="tui-form__row"
-    *ngIf="
-      form.controls.accountType.value &&
-      form.controls.accountType.value !== accountType.ADMIN
-    "
-  >
-    <tui-multi-select
-      tuiTextfieldSize="m"
-      *tuiLet="universitySearch.itemIds$ | async as items"
-      formControlName="enrolledUniversities"
-      [tuiTextfieldLabelOutside]="true"
-      (searchChange)="universitySearch.search($event)"
-      [stringify]="(universitySearch.stringify$ | async)!"
+  <ng-container *reuniceUser="accountType.ADMIN">
+    <label
+      [tuiLabel]="'ENROLLED_UNIVERSITIES' | translate"
+      class="tui-form__row"
+      *ngIf="
+        form.controls.accountType.value &&
+        form.controls.accountType.value !== accountType.ADMIN
+      "
     >
-      <tui-data-list-wrapper
-        *tuiDataList
-        tuiMultiSelectGroup
-        [items]="items"
-        [itemContent]="(universitySearch.stringify$ | async)!"
-      ></tui-data-list-wrapper>
-    </tui-multi-select>
+      <tui-multi-select
+        tuiTextfieldSize="m"
+        *tuiLet="universitySearch.itemIds$ | async as items"
+        formControlName="enrolledUniversities"
+        [tuiTextfieldLabelOutside]="true"
+        (searchChange)="universitySearch.search($event)"
+        [stringify]="(universitySearch.stringify$ | async)!"
+      >
+        <tui-data-list-wrapper
+          *tuiDataList
+          tuiMultiSelectGroup
+          [items]="items"
+          [itemContent]="(universitySearch.stringify$ | async)!"
+        ></tui-data-list-wrapper>
+      </tui-multi-select>
 
-    <tui-error
-      formControlName="enrolledUniversities"
-      [error]="[] | tuiFieldError | async"
-    ></tui-error>
-  </label>
+      <tui-error
+        formControlName="enrolledUniversities"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </ng-container>
 
   <div class="tui-form__buttons tui-form__buttons_align_end">
     <a

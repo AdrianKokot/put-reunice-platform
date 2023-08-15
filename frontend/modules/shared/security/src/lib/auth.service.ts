@@ -18,7 +18,15 @@ export class AuthService {
   private readonly _http = inject(HttpClient);
   private readonly _user$ = new Subject<User | null>();
 
-  readonly user$ = this._user$.pipe(shareReplay());
+  private _userSnapshot: User | null = null;
+  readonly user$ = this._user$.pipe(
+    tap((user) => (this._userSnapshot = user)),
+    shareReplay()
+  );
+
+  get userSnapshot() {
+    return this._userSnapshot;
+  }
 
   constructor() {
     this.getUser().subscribe((user) => this._user$.next(user));

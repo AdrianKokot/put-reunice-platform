@@ -1,5 +1,83 @@
 <form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
   <h3 class="tui-form__header">
+    {{ 'PAGE_LOCATION' | translate }}
+  </h3>
+
+  <label
+    [tuiLabel]="'UNIVERSITY' | translate"
+    class="tui-form__row"
+    *reuniceUser="'ADMIN'"
+  >
+    <tui-combo-box
+      tuiTextfieldSize="m"
+      *tuiLet="universitySearch.itemIds$ | async as items"
+      formControlName="universityId"
+      [tuiTextfieldLabelOutside]="true"
+      (searchChange)="universitySearch.search($event)"
+      [stringify]="(universitySearch.stringify$ | async)!"
+    >
+      <tui-data-list-wrapper
+        *tuiDataList
+        [items]="items"
+        [itemContent]="(universitySearch.stringify$ | async)!"
+      ></tui-data-list-wrapper>
+    </tui-combo-box>
+
+    <tui-error
+      formControlName="universityId"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <div class="tui-form__row">
+    <p class="t-label tui-space_top-0 tui-space_bottom-1">
+      {{ 'PARENT_PAGE' | translate }}
+    </p>
+
+    <tui-island
+      size="s"
+      data-appearance="textfield"
+      *tuiLet="pagesTree$ | async as items"
+    >
+      <div class="tui-island__content">
+        <tui-tree
+          class="tui-island__paragraph"
+          *ngIf="items; else loading"
+          [tuiTreeController]="true"
+          [value]="items"
+          [content]="treeContent"
+          [childrenHandler]="pagesTreeHandler"
+        ></tui-tree>
+        <ng-template #loading>
+          <span
+            [class.tui-skeleton]="form.controls.universityId.value !== null"
+            class="text-02"
+          >
+            {{ 'NO_UNIVERSITY_SELECTED' | translate }}
+          </span>
+        </ng-template>
+        <ng-template #treeContent let-page>
+          <label
+            [class._selected]="inputElement.checked"
+            class="cursor-pointer reunice-tree-item-option"
+          >
+            <input
+              type="radio"
+              formControlName="parentId"
+              [value]="page.id"
+              #inputElement
+            />
+
+            <span>
+              {{ page.title }}
+            </span>
+          </label>
+        </ng-template>
+      </div>
+    </tui-island>
+  </div>
+
+  <h3 class="tui-form__header">
     {{ 'BASIC_INFORMATION' | translate }}
   </h3>
 
@@ -79,76 +157,6 @@
 
     <tui-error
       formControlName="description"
-      [error]="[] | tuiFieldError | async"
-    ></tui-error>
-  </label>
-
-  <h3 class="tui-form__header">
-    {{ 'PAGE_LOCATION' | translate }}
-  </h3>
-
-  <label [tuiLabel]="'UNIVERSITY' | translate" class="tui-form__row">
-    <tui-combo-box
-      tuiTextfieldSize="m"
-      *tuiLet="universitySearch.itemIds$ | async as items"
-      formControlName="universityId"
-      [tuiTextfieldLabelOutside]="true"
-      (searchChange)="universitySearch.search($event)"
-      [stringify]="(universitySearch.stringify$ | async)!"
-    >
-      <tui-data-list-wrapper
-        *tuiDataList
-        [items]="items"
-        [itemContent]="(universitySearch.stringify$ | async)!"
-      ></tui-data-list-wrapper>
-    </tui-combo-box>
-
-    <tui-error
-      formControlName="universityId"
-      [error]="[] | tuiFieldError | async"
-    ></tui-error>
-  </label>
-
-  <div class="tui-form__row" *ngIf="pagesTree$ | async as items">
-    <p class="t-label tui-space_top-0 tui-space_bottom-2">
-      {{ 'PARENT_PAGE' | translate }}
-    </p>
-
-    <tui-tree
-      [tuiTreeController]="false"
-      [map]="pageTreeMap"
-      [value]="items"
-      [content]="treeContent"
-      [childrenHandler]="pagesTreeHandler"
-    ></tui-tree>
-    <ng-template #treeContent let-page>
-      <label
-        [class._selected]="inputElement.checked"
-        class="cursor-pointer reunice-tree-item-option"
-      >
-        <input
-          type="radio"
-          formControlName="parentId"
-          [value]="page.id"
-          #inputElement
-        />
-
-        <span>
-          {{ page.title }}
-        </span>
-      </label>
-    </ng-template>
-  </div>
-
-  <h3 class="tui-form__header">
-    {{ 'PAGE_CONTENT' | translate }}
-  </h3>
-
-  <label class="tui-form__row" [tuiLabel]="'CONTENT' | translate">
-    <tui-editor formControlName="content"></tui-editor>
-
-    <tui-error
-      formControlName="content"
       [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>
