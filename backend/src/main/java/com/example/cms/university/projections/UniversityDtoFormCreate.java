@@ -6,12 +6,14 @@ import com.example.cms.university.University;
 import com.example.cms.user.User;
 import lombok.Value;
 
+import java.util.Optional;
+
 @Value
 public class UniversityDtoFormCreate {
     String name;
     String shortName;
     String description;
-    Long creatorId;
+    Optional<Long> creatorId;
 
     public University toUniversity(User creator, String content) {
         University university = new University();

@@ -286,5 +286,7 @@
   "PAGE_LOCATION": "Page location",
   "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account",
   "TEMPLATE_AVAILABLE_FOR_UNIVERSITIES": "Available for universities",
-  "CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES": "Mark as available for all universities"
+  "CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES": "Mark as available for all universities",
+  "LOAD_TEMPLATE": "Load template",
+  "NO_TEMPLATES_AVAILABLE": "No templates available"
 }

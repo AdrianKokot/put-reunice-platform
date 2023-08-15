@@ -12,7 +12,12 @@ import {
   providers: [
     {
       provide: TUI_EDITOR_EXTENSIONS,
-      useValue: defaultEditorExtensions,
+      useValue: [
+        ...defaultEditorExtensions,
+        import(
+          './shared/editor-extensions/load-template/load-template.extension'
+        ).then((m) => m.LoadTemplateExtension),
+      ],
     },
   ],
 })

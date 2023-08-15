@@ -90,7 +90,15 @@
     </h3>
 
     <label class="tui-form__row" [tuiLabel]="'CONTENT' | translate">
-      <tui-editor formControlName="content"></tui-editor>
+      <tui-editor formControlName="content">
+        <ng-container ngProjectAs="tools">
+          <reunice-load-template-tool
+            tuiItem
+            [universityId]="item?.university?.id ?? null"
+          >
+          </reunice-load-template-tool>
+        </ng-container>
+      </tui-editor>
 
       <tui-error
         formControlName="content"

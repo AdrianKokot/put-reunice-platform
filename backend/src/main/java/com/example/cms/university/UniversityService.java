@@ -71,14 +71,14 @@ public class UniversityService {
             throw new UniversityException(UniversityExceptionType.NAME_TAKEN);
         }
 
-//        LoggedUser loggedUser = securityService.getPrincipal().orElseThrow(UserNotFound::new);
-//
-//        if (loggedUser.getAccountType() != Role.ADMIN) {
-//            throw new UserForbidden();
-//        }
+        Long creatorId = form.getCreatorId().orElse(securityService.getPrincipal().orElseThrow(UserNotFound::new).getId());
 
-        User creator = userRepository.findById(1L) //loggedUser.getId())
+        User creator = userRepository.findById(creatorId)
                 .orElseThrow(UserNotFound::new);
+
+        if (creator.getAccountType() != Role.ADMIN) {
+            throw new UserForbidden();
+        }
 
         if (securityService.isForbiddenUser(creator)) {
             throw new UserForbidden();

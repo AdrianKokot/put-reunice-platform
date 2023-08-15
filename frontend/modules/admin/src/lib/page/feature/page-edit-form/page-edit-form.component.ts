@@ -8,11 +8,17 @@ import {
 } from '@reunice/modules/shared/util';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
+import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
 
 @Component({
   selector: 'reunice-page-edit-form',
   standalone: true,
-  imports: [TuiLetModule, BaseFormImportsModule, TuiEditorModule],
+  imports: [
+    TuiLetModule,
+    BaseFormImportsModule,
+    TuiEditorModule,
+    LoadTemplateComponent,
+  ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
