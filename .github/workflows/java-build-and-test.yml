@@ -20,5 +20,6 @@ jobs:
         cache: maven
     - name: Run maven
       run: |
+        export $(grep -v '^#' .env.example | grep -v '^\W$')
         cd backend
         mvn verify --batch-mode --update-snapshots

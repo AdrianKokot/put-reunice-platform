@@ -77,7 +77,7 @@ springdoc:
     path: /api-docs
   swagger-ui:
     enabled: true
-  path: /swagger-ui
+    path: /swagger-ui
 
 spring:
   mail:
@@ -89,6 +89,4 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
-
-
-
+9
