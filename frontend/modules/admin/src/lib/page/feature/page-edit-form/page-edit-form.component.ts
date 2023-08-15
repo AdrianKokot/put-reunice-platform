@@ -37,6 +37,6 @@ export class PageEditFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
-    successAlertMessage: 'PAGE.UPDATE.SUCCESS',
+    successAlertMessage: 'PAGE_UPDATE_SUCCESS',
   });
 }

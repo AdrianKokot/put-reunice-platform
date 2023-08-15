@@ -21,7 +21,7 @@ export class KeywordCreateFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.create(value),
-    successAlertMessage: 'KEYWORD.CREATE.SUCCESS',
+    successAlertMessage: 'KEYWORD_CREATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
 }

@@ -67,7 +67,7 @@ export class UserEditFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
-    successAlertMessage: 'USER.UPDATE.SUCCESS',
+    successAlertMessage: 'USER_UPDATE_SUCCESS',
   });
 
   readonly accountType = AccountTypeEnum;

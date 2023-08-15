@@ -27,6 +27,6 @@ export class KeywordEditFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
-    successAlertMessage: 'KEYWORD.UPDATE.SUCCESS',
+    successAlertMessage: 'KEYWORD_UPDATE_SUCCESS',
   });
 }

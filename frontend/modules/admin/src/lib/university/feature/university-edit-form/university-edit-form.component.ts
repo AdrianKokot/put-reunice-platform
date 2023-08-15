@@ -30,6 +30,6 @@ export class UniversityEditFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
-    successAlertMessage: 'UNIVERSITY.UPDATE.SUCCESS',
+    successAlertMessage: 'UNIVERSITY_UPDATE_SUCCESS',
   });
 }

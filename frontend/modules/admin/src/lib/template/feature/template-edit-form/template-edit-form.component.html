@@ -23,6 +23,40 @@
       ></tui-error>
     </label>
 
+    <label
+      *reuniceUser="'ADMIN'"
+      [tuiLabel]="'TEMPLATE_AVAILABLE_FOR_UNIVERSITIES' | translate"
+      class="tui-form__row"
+    >
+      <tui-multi-select
+        *ngIf="!form.controls.allUniversities.value"
+        tuiTextfieldSize="m"
+        formControlName="universities"
+        [tuiTextfieldLabelOutside]="true"
+        (searchChange)="universitySearch.search($event)"
+        [stringify]="(universitySearch.stringify$ | async)!"
+      >
+        <tui-data-list-wrapper
+          *tuiDataList
+          tuiMultiSelectGroup
+          [items]="universitySearch.itemIds$ | async"
+          [itemContent]="(universitySearch.stringify$ | async)!"
+        ></tui-data-list-wrapper>
+      </tui-multi-select>
+
+      <tui-error
+        formControlName="universities"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+
+      <tui-checkbox-labeled
+        class="tui-form__field-checkbox"
+        formControlName="allUniversities"
+      >
+        {{ 'CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES' | translate }}
+      </tui-checkbox-labeled>
+    </label>
+
     <h3 class="tui-form__header">
       {{ 'TEMPLATE_CONTENT' | translate }}
     </h3>

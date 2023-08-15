@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, map, Observable, switchMap } from 'rxjs';
-import { Template } from '../models/template';
+import { combineLatest, Observable, switchMap } from 'rxjs';
+import { Template, TemplateCreate } from '../models/template';
 import { AbstractApiService } from './abstract-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TemplateService extends AbstractApiService<Template> {
+export class TemplateService extends AbstractApiService<
+  Template,
+  TemplateCreate,
+  TemplateCreate
+> {
   constructor() {
     super('/api/templates');
   }
@@ -15,28 +19,8 @@ export class TemplateService extends AbstractApiService<Template> {
     return this._http.get<Template[]>(this._resourceUrl + '/all');
   }
 
-  //
-  // addUniversityToTemplate(
-  //   templateID: number,
-  //   universityID: number
-  // ): Observable<Template> {
-  //   return this.http.post<Template>(
-  //     `${this.templateUrl}/${templateID}/universities/${universityID}`,
-  //     null
-  //   );
-  // }
-  //
-  // removeUniversityFromTemplate(
-  //   templateID: number,
-  //   universityID: number
-  // ): Observable<Template> {
-  //   return this.http.delete<Template>(
-  //     `${this.templateUrl}/${templateID}/universities/${universityID}`
-  //   );
-  // }
-
   override update(
-    resource: Partial<Template> & Pick<Template, 'id'>
+    resource: Partial<TemplateCreate> & Pick<Template, 'id'>
   ): Observable<Template> {
     return combineLatest([
       this._http.patch<Template>(
@@ -47,22 +31,20 @@ export class TemplateService extends AbstractApiService<Template> {
         `${this._resourceUrl}/${resource.id}/name`,
         resource.name
       ),
+      ...(resource.universities?.map((id) =>
+        this._http.post<void>(
+          `${this._resourceUrl}/${resource.id}/universities/${id}`,
+          ''
+        )
+      ) ?? []),
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
 
-  override create(resource: Partial<Template>): Observable<Template> {
+  override create(resource: Partial<TemplateCreate>): Observable<Template> {
     return this._http
       .post<Template>(`${this._resourceUrl}`, resource.name)
       .pipe(
-        switchMap((template) =>
-          this._http
-            .patch<Template>(
-              `${this._resourceUrl}/${template.id}/content`,
-              resource.content
-            )
-            .pipe(map(() => template))
-        ),
-        switchMap((template) => this.get(template.id))
+        switchMap((template) => this.update({ id: template.id, ...resource }))
       );
   }
 }

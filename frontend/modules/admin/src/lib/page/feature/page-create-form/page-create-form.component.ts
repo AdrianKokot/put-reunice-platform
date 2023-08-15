@@ -70,7 +70,7 @@ export class PageCreateFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.create(value),
-    successAlertMessage: 'PAGE.CREATE.SUCCESS',
+    successAlertMessage: 'PAGE_CREATE_SUCCESS',
     effect: navigateToResourceDetails(['edit']),
   });
 

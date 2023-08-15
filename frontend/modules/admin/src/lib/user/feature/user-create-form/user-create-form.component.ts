@@ -56,7 +56,7 @@ export class UserCreateFormComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.create(value),
-    successAlertMessage: 'USER.CREATE.SUCCESS',
+    successAlertMessage: 'USER_CREATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
 

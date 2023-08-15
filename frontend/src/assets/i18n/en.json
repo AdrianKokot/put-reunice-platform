@@ -136,15 +136,11 @@
   "CREATED_ON": "Creation date",
   "ROLE": "Role",
   "ENABLED": "Activated",
-  "USER": {
-    "UPDATE": {
-      "SUCCESS": "User updated successfully"
-    }
-  },
+  "USER_UPDATE_SUCCESS": "User updated successfully",
+  "USER_CREATE_SUCCESS": "User created successfully",
+  "TEMPLATE_UPDATE_SUCCESS": "Template updated successfully",
+  "TEMPLATE_CREATE_SUCCESS": "Template created successfully",
   "TEMPLATE": {
-    "UPDATE": {
-      "SUCCESS": "Template updated successfully"
-    },
     "ONE": "Template",
     "MANY": "Templates",
     "FIELD_NAME": "Template name",
@@ -238,10 +234,9 @@
   "UPLOADED_BY": "Uploaded by",
   "DELETE_FILE_TOOLTIP": "Delete file",
   "DOWNLOAD_FILE_TOOLTIP": "Download plik",
+  "KEYWORD_UPDATE_SUCCESS": "Keyword updated successfully",
+  "KEYWORD_CREATE_SUCCESS": "Keyword created successfully",
   "KEYWORD": {
-    "UPDATE": {
-      "SUCCESS": "Keyword updated successfully"
-    },
     "ONE": "Keyword",
     "MANY": "Keywords",
     "EDIT": "Edit",
@@ -272,11 +267,8 @@
   "VISIBILITY": "Visibility",
   "HIDDEN": "Hidden",
   "VISIBLE": "Visible",
-  "PAGE": {
-    "UPDATE": {
-      "SUCCESS": "Page updated successfully"
-    }
-  },
+  "PAGE_UPDATE_SUCCESS": "Page updated successfully",
+  "PAGE_CREATE_SUCCESS": "Page created successfully",
   "ADMIN_CONSOLE": "Admin console",
   "ACCOUNT_INFORMATION": "Account information",
   "INITIAL_PASSWORD": "Initial password",
@@ -292,5 +284,7 @@
   "BACKUPS": "Backups",
   "SYSTEM_BACKUP_AND_RESTORE": "System backup & restore",
   "PAGE_LOCATION": "Page location",
-  "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account"
+  "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account",
+  "TEMPLATE_AVAILABLE_FOR_UNIVERSITIES": "Available for universities",
+  "CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES": "Mark as available for all universities"
 }

@@ -22,7 +22,7 @@ export class UniversityCreateFormComponent {
   });
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.create(value),
-    successAlertMessage: 'UNIVERSITY.CREATE.SUCCESS',
+    successAlertMessage: 'UNIVERSITY_CREATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
 }
