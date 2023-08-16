@@ -3,6 +3,7 @@ applicationServer: ${APPLICATION_SERVER:http://localhost}
 databaseSchemaHandlingOnStartup: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP:create} #none|validate|update|create
 databaseSchemaCreateType: ${DATABASE_SCHEMA_CREATE_TYPE:populate} #populate|initialize
 
+
 server:
   servlet:
     session:
@@ -77,3 +78,14 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui
+
+spring:
+  mail:
+    host: ${SMTP_SERVER}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    protocol: smtp
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
