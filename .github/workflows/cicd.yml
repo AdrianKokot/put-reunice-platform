@@ -1,4 +1,4 @@
-name: 🤖 CI
+name: 🤖 CI/CD
 
 on:
   push:
@@ -92,10 +92,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  deploy:
+  deploy-to-development:
     name: 🚀 Deploy to DEV
     needs: [ build-and-push-image ]
     runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://reunice.kokotadrian.pl
 
     steps:
       - name: Lowercase the repo name
