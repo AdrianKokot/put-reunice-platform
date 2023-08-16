@@ -1,15 +1,18 @@
 package com.example.cms.validation;
 
-import com.example.cms.user.User;
-import org.hibernate.annotations.Any;
-
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.example.cms.template.Template;
+import com.example.cms.user.User;
+
 public class FilterPathVariableValidator {
-    private static final List<String> forbidenFields = List.of("password");
+    private static final Map<Class, List<String>> forbiddenFields = Map.of(
+            User.class, List.of("password"),
+            Template.class, List.of("content")
+    );
 
     public static Map<String, String> validate(Map<String, String> vars, Class klass) {
 
@@ -20,7 +23,7 @@ public class FilterPathVariableValidator {
         return vars.entrySet().stream()
                 .filter(entry ->
                         klassFields.contains(entry.getKey().split("_")[0]) &&
-                                !forbidenFields.contains(entry.getKey().split("_")[0]))
+                                !forbiddenFields.get(klass).contains(entry.getKey().split("_")[0]))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

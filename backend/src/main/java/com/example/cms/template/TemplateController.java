@@ -2,12 +2,16 @@ package com.example.cms.template;
 
 import com.example.cms.template.projections.TemplateDtoDetailed;
 import com.example.cms.template.projections.TemplateDtoSimple;
+import com.example.cms.user.User;
+import com.example.cms.validation.FilterPathVariableValidator;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "templates")
@@ -24,8 +28,13 @@ public class TemplateController {
     }
 
     @GetMapping("/all")
-    List<TemplateDtoDetailed> readAllTemplates(Pageable pageable) {
-        return service.getAll(pageable);
+    ResponseEntity<List<TemplateDtoDetailed>> readAllTemplates(Pageable pageable, @RequestParam Map<String, String> vars) {
+
+        return new ResponseEntity<>(
+                service.getAll(
+                        pageable,
+                        FilterPathVariableValidator.validate(vars, Template.class)),
+                HttpStatus.OK);
     }
 
     @GetMapping
