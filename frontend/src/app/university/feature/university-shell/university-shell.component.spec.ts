@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UniversityShellComponent } from './university-shell.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('UniversityShellComponent', () => {
+describe(UniversityShellComponent.name, () => {
   let component: UniversityShellComponent;
   let fixture: ComponentFixture<UniversityShellComponent>;
 

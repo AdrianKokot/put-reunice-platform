@@ -23,7 +23,7 @@ export class PageDetailsComponent {
   );
 
   readonly page$ = this._pageId$.pipe(
-    switchMap((id) => this._pageService.getPage(id).pipe(startWith(null)))
+    switchMap((id) => this._pageService.get(id).pipe(startWith(null)))
   );
 
   readonly files$ = this._pageId$.pipe(

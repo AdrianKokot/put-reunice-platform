@@ -1,85 +1,59 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User, UserForm } from '../models/user';
+import { User } from '../models/user';
+import { AbstractApiService } from './abstract-api.service';
+import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import { ApiParams } from '../api.params';
+
+type UpdateUser = Omit<User, 'enrolledUniversities'> & {
+  enrolledUniversities: number[];
+};
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
-  private userUrl = '/api/users';
-
-  public loggedUser!: User | null;
-
-  constructor(private http: HttpClient) {}
-
-  getUser(id: number): Observable<User> {
-    return this.http.get<User>(`${this.userUrl}/${id}`);
+export class UserService extends AbstractApiService<
+  User,
+  UpdateUser,
+  UpdateUser
+> {
+  constructor() {
+    super('/api/users');
   }
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.userUrl);
+  override getAll(
+    params: ApiParams<User> | ApiParams = {}
+  ): Observable<User[]> {
+    return super
+      .getAll(params)
+      .pipe(
+        map((users) =>
+          users.map((u) => ({ ...u, name: u.firstName + ' ' + u.lastName }))
+        )
+      );
   }
 
-  searchUsers(text: string): Observable<User[]> {
-    return this.http.get<User[]>(`${this.userUrl}/search/${text}`);
-  }
-
-  createUser(user: UserForm): Observable<User> {
-    return this.http.post<User>(this.userUrl, user);
-  }
-
-  editUser(id: number, user: UserForm): Observable<User> {
-    return this.http.put<User>(`${this.userUrl}/${id}`, user);
-  }
-
-  login(user: { username: string; password: string }): Observable<unknown> {
-    return this.http.post<unknown>('/api/login', user);
-  }
-
-  logout(): Observable<unknown> {
-    return this.http.get<unknown>('/api/logout');
-  }
-
-  getLoggedUser(): Observable<User> {
-    return this.http.get<User>(`${this.userUrl}/logged`);
-  }
-
-  modifyUserEnabledField(id: number, enabled: boolean): Observable<void> {
-    return this.http.patch<void>(`${this.userUrl}/${id}/enabled`, enabled);
-  }
-
-  updateUserEnrolledUniversities(
-    id: number,
-    universitiesId: number[]
+  override update(
+    resource: Partial<UpdateUser> & Pick<User, 'id'>
   ): Observable<User> {
-    return this.http.put<User>(
-      `${this.userUrl}/${id}/universities`,
-      universitiesId
+    return combineLatest([
+      this._http.put<User>(`${this._resourceUrl}/${resource.id}`, resource),
+      this._http.put<User>(
+        `${this._resourceUrl}/${resource.id}/universities`,
+        resource.enrolledUniversities
+      ),
+    ]).pipe(switchMap(() => this.get(resource.id)));
+  }
+
+  override create(resource: Partial<UpdateUser>): Observable<User> {
+    console.log(resource);
+    return this._http.post<User>(this._resourceUrl, resource).pipe(
+      switchMap((user) =>
+        this._http.put<User>(
+          `${this._resourceUrl}/${user.id}/universities`,
+          resource.enrolledUniversities
+        )
+      ),
+      switchMap((user) => this.get(user.id))
     );
-  }
-
-  modifyUserPasswordField(
-    id: number,
-    passwords: { oldPassword: string; newPassword: string }
-  ): Observable<void> {
-    return this.http.patch<void>(`${this.userUrl}/${id}/password`, passwords);
-  }
-
-  modifyUserUsernameField(id: number, username: string): Observable<void> {
-    return this.http.patch<void>(`${this.userUrl}/${id}/username`, username);
-  }
-
-  modifyUserAccountTypeField(
-    id: number,
-    accountType: string
-  ): Observable<void> {
-    return this.http.patch<void>(`${this.userUrl}/${id}/accountType`, {
-      accountType: accountType,
-    });
-  }
-
-  deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.userUrl}/${id}`);
   }
 }

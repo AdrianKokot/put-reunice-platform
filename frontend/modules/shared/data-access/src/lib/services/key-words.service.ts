@@ -1,33 +1,35 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Keyword } from '../models/keyword';
+import { AbstractApiService } from './abstract-api.service';
+import { ApiParams } from '../api.params';
 
 @Injectable({
   providedIn: 'root',
 })
-export class KeyWordsService {
-  private keyWordsUrl = '/api/keyWords';
-
-  constructor(private http: HttpClient) {}
-
-  getKeyWord(id: number): Observable<Keyword> {
-    return this.http.get<Keyword>(`${this.keyWordsUrl}/${id}`);
+export class KeyWordsService extends AbstractApiService<Keyword> {
+  constructor() {
+    super('/api/keyWords');
   }
 
-  getAllKeyWords(): Observable<Keyword[]> {
-    return this.http.get<Keyword[]>(this.keyWordsUrl + '/all');
+  override update(
+    resource: Partial<Keyword> & Pick<Keyword, 'id'>
+  ): Observable<Keyword> {
+    return this._http
+      .post<void>(`${this._resourceUrl}/${resource.id}`, resource.word)
+      .pipe(switchMap(() => this.get(resource.id)));
   }
 
-  addKeyWord(word: string): Observable<string> {
-    return this.http.post<string>(this.keyWordsUrl, word);
+  override create(resource: Partial<Keyword>): Observable<Keyword> {
+    return super.create(resource.word as any);
   }
 
-  modifyKeyWordWordField(id: number, word: string): Observable<void> {
-    return this.http.post<void>(`${this.keyWordsUrl}/${id}`, word);
-  }
-
-  deleteKeyWord(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.keyWordsUrl}/${id}`);
+  override getAll(
+    params: ApiParams<Keyword> | ApiParams = {}
+  ): Observable<Keyword[]> {
+    return this._http.get<Keyword[]>(this._resourceUrl + '/all', {
+      params: new HttpParams({ fromObject: params }),
+    });
   }
 }

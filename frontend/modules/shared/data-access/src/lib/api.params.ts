@@ -9,7 +9,8 @@ type OnlyKeysOfType<T, TProp> = {
 
 export type ApiFilter<T> =
   | ApiFilterOperator<T, 'eq'> &
-      ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'>;
+      ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'> &
+      Partial<{ search: string }>;
 
 export type ApiSort = {
   sort?: string;

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TopBarComponent } from './top-bar.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('TopBarComponent', () => {
+describe(TopBarComponent.name, () => {
   let component: TopBarComponent;
   let fixture: ComponentFixture<TopBarComponent>;
 

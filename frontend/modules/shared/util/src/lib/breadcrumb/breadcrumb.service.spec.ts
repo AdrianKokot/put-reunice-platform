@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { BreadcrumbService } from './breadcrumb.service';
 import { TestingModule } from '@reunice/testing';
 
-describe('BreadcrumbService', () => {
+describe(BreadcrumbService.name, () => {
   let service: BreadcrumbService;
 
   beforeEach(() => {

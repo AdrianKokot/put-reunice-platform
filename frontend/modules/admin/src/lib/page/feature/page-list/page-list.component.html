@@ -1,3 +1,5 @@
+<a [routerLink]="['new']" tuiButton>Create</a>
+
 <table tuiTable [columns]="columns">
   <thead>
     <tr tuiThGroup>
@@ -19,11 +21,13 @@
       </td>
       <td *tuiCell="'hidden'" tuiTd>{{ item.hidden }}</td>
       <td *tuiCell="'actions'" tuiTd>
-        <a
-          tuiLink
-          [routerLink]="['/universities', item.university.id, 'page', item.id]"
-          >See page</a
-        >
+        <!--      <a-->
+        <!--        tuiLink-->
+        <!--        [routerLink]="['/universities', item.university.id, 'page', item.id]"-->
+        <!--      >-->
+        <!--        See page-->
+        <!--      </a>-->
+        <a tuiLink [routerLink]="[item.id, 'edit']"> Edit page </a>
       </td>
     </tr>
   </tbody>

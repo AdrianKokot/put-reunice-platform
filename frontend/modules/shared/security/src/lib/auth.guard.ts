@@ -3,25 +3,35 @@ import { inject } from '@angular/core';
 import { map } from 'rxjs';
 import { AuthService } from './auth.service';
 import {
-  AccountType,
-  AccountTypeEnum,
+  ExtendedAccountType,
+  ExtendedAccountTypeEnum,
   User,
 } from '@reunice/modules/shared/data-access';
 
-const isUserOfType = (user: User | null, accountType: AccountType): boolean => {
-  if (accountType === AccountTypeEnum.GUEST) {
+export const isUserOfType = (
+  user: User | null,
+  accountType: ExtendedAccountType
+): boolean => {
+  if (accountType === ExtendedAccountTypeEnum.GUEST) {
     return user === null;
   }
 
-  if (accountType === AccountTypeEnum.AUTHORIZED) {
+  if (accountType === ExtendedAccountTypeEnum.AUTHORIZED) {
     return user !== null;
+  }
+
+  if (accountType === ExtendedAccountTypeEnum.ADMINISTRATIVE) {
+    return (
+      user?.accountType === ExtendedAccountTypeEnum.ADMIN ||
+      user?.accountType === ExtendedAccountTypeEnum.MODERATOR
+    );
   }
 
   return user?.accountType === accountType;
 };
 
 export const AuthorizedOfTypeGuard = (
-  accountType: AccountType,
+  accountType: ExtendedAccountType,
   redirectCommands: Parameters<Router['createUrlTree']>[0] = ['/']
 ): CanMatchFn => {
   return () => {
@@ -38,6 +48,8 @@ export const AuthorizedOfTypeGuard = (
   };
 };
 
-export const AuthorizedGuard = AuthorizedOfTypeGuard(
-  AccountTypeEnum.AUTHORIZED
+export const AuthGuard = AuthorizedOfTypeGuard(
+  ExtendedAccountTypeEnum.AUTHORIZED
 );
+
+export const GuestGuard = AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.GUEST);

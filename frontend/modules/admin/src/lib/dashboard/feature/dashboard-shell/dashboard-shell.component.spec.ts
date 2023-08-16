@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardShellComponent } from './dashboard-shell.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('DashboardShellComponent', () => {
+describe(DashboardShellComponent.name, () => {
   let component: DashboardShellComponent;
   let fixture: ComponentFixture<DashboardShellComponent>;
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KeywordListComponent } from './keyword-list.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('KeywordListComponent', () => {
+describe(KeywordListComponent.name, () => {
   let component: KeywordListComponent;
   let fixture: ComponentFixture<KeywordListComponent>;
 

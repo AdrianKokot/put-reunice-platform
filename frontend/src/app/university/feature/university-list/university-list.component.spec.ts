@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UniversityListComponent } from './university-list.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('UniversityListComponent', () => {
+describe(UniversityListComponent.name, () => {
   let component: UniversityListComponent;
   let fixture: ComponentFixture<UniversityListComponent>;
 

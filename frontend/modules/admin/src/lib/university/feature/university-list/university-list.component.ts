@@ -1,10 +1,20 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UniversityService } from '@reunice/modules/shared/data-access';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import {
+  University,
+  UniversityService,
+} from '@reunice/modules/shared/data-access';
+import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TuiTableModule } from '@taiga-ui/addon-table';
-import { TuiLinkModule } from '@taiga-ui/core';
+import {
+  TuiButtonModule,
+  TuiLinkModule,
+  TuiLoaderModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/core';
 import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TuiInputModule } from '@taiga-ui/kit';
 
 @Component({
   selector: 'reunice-university-list',
@@ -15,6 +25,12 @@ import { RouterLink } from '@angular/router';
     TuiTableModule,
     TuiLinkModule,
     RouterLink,
+    TuiTextfieldControllerModule,
+    ReactiveFormsModule,
+    TuiInputModule,
+    TuiButtonModule,
+    TuiForModule,
+    TuiLoaderModule,
   ],
   templateUrl: './university-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,5 +40,7 @@ export class UniversityListComponent {
 
   readonly columns = ['name', 'shortName', 'hidden', 'actions'];
 
-  readonly universities$ = this._universityService.getUniversities();
+  readonly items$ = this._universityService.getAll();
+
+  readonly trackById = (index: number, item: University) => item.id;
 }

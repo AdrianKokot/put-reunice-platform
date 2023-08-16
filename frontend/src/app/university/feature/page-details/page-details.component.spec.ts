@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageDetailsComponent } from './page-details.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('PageDetailsComponent', () => {
+describe(PageDetailsComponent.name, () => {
   let component: PageDetailsComponent;
   let fixture: ComponentFixture<PageDetailsComponent>;
 

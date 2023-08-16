@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BackupListComponent } from './backup-list.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('BackupListComponent', () => {
+describe(BackupListComponent.name, () => {
   let component: BackupListComponent;
   let fixture: ComponentFixture<BackupListComponent>;
 

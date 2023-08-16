@@ -6,3 +6,7 @@ export interface Template {
   content: string;
   universities: University[];
 }
+
+export interface TemplateCreate extends Omit<Template, 'universities'> {
+  universities: number[] | null;
+}

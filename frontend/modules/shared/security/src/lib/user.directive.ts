@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { AuthService } from './auth.service';
 import {
-  AccountType,
-  AccountTypeEnum,
+  ExtendedAccountType,
+  ExtendedAccountTypeEnum,
   User,
 } from '@reunice/modules/shared/data-access';
 import { distinctUntilKeyChanged, map, shareReplay } from 'rxjs';
@@ -52,31 +52,35 @@ class UserContext {
 export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(
     takeUntilDestroyed(),
-    map((user) => ({ type: user?.accountType ?? AccountTypeEnum.GUEST, user })),
+    map((user) => ({
+      type: user?.accountType ?? ExtendedAccountTypeEnum.GUEST,
+      user,
+    })),
     shareReplay()
   );
 
-  private _context = new UserContext();
+  private readonly _context = new UserContext();
 
   @Input({
     alias: 'reuniceUser',
     transform: (value: string) => {
       console.assert(
-        value in AccountTypeEnum,
+        value in ExtendedAccountTypeEnum,
         `Passed invalid account type: ${value}`
       );
-      return value in AccountTypeEnum ? value : null;
+      return value in ExtendedAccountTypeEnum ? value : null;
     },
   })
-  requiredAccountType: AccountType | null = AccountTypeEnum.AUTHORIZED;
+  requiredAccountType: ExtendedAccountType | null =
+    ExtendedAccountTypeEnum.AUTHORIZED;
 
   @Input('reuniceUserElse')
   fallbackTemplate: TemplateRef<unknown> | null = null;
 
   constructor(
-    private templateRef: TemplateRef<unknown>,
-    private viewContainer: ViewContainerRef,
-    private _cdr: ChangeDetectorRef
+    private readonly templateRef: TemplateRef<unknown>,
+    private readonly viewContainer: ViewContainerRef,
+    private readonly _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {

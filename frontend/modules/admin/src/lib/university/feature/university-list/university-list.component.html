@@ -1,26 +1,54 @@
-<table tuiTable [columns]="columns">
-  <thead>
-    <tr tuiThGroup>
-      <th *tuiHead="'name'" tuiTh>Name</th>
-      <th *tuiHead="'shortName'" tuiTh>Short name</th>
-      <th *tuiHead="'hidden'" tuiTh>Hidden</th>
-      <th *tuiHead="'actions'" tuiTh>Actions</th>
-    </tr>
-  </thead>
-  <tbody *tuiLet="(universities$ | async) ?? [] as data" tuiTbody [data]="data">
-    <tr *ngFor="let item of data" tuiTr>
-      <td *tuiCell="'name'" tuiTd>
-        {{ item.name }}
-      </td>
-      <td *tuiCell="'shortName'" tuiTd>
-        {{ item.shortName }}
-      </td>
-      <td *tuiCell="'hidden'" tuiTd>
-        {{ item.hidden.toString() }}
-      </td>
-      <td *tuiCell="'actions'" tuiTd>
-        <a tuiLink [routerLink]="['/universities', item.id]">See university</a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="w-full d-flex gap-4 mb-4">
+  <label class="w-full">
+    <tui-input tuiTextfieldSize="m">
+      Search
+      <input tuiTextfield type="text" />
+    </tui-input>
+  </label>
+
+  <button appearance="primary" tuiButton size="m" type="button">
+    New university
+  </button>
+</div>
+
+<div class="table-container">
+  <table tuiTable [columns]="columns" class="w-full">
+    <thead>
+      <tr tuiThGroup>
+        <th *tuiHead="'transactionDate'" tuiTh [sorter]="null" class="w-100px">
+          Date
+        </th>
+        <th *tuiHead="'name'" tuiTh [sorter]="null">Name</th>
+        <th *tuiHead="'shortName'" tuiTh [sorter]="null">Short name</th>
+        <th *tuiHead="'hidden'" tuiTh [sorter]="null">Hidden</th>
+        <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
+      </tr>
+    </thead>
+
+    <tbody tuiTbody>
+      <tr *ngFor="let item of items$ | async; trackBy: trackById" tuiTr>
+        <td *tuiCell="'name'" tuiTd>
+          {{ item.name }}
+        </td>
+        <td *tuiCell="'shortName'" tuiTd>
+          {{ item.shortName }}
+        </td>
+        <td *tuiCell="'hidden'" tuiTd>
+          {{ item.hidden.toString() }}
+        </td>
+
+        <td *tuiCell="'actions'" tuiTd>
+          <a
+            tuiIconButton
+            appearance="flat"
+            size="s"
+            [icon]="'tuiIconEdit'"
+            title="Edit"
+            shape="rounded"
+            [routerLink]="[item.id, 'edit']"
+          ></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

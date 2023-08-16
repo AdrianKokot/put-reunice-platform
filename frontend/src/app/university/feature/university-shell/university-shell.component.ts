@@ -41,9 +41,7 @@ export class UniversityShellComponent {
   );
 
   public readonly university$ = this._universityId$.pipe(
-    switchMap((id) =>
-      this._universityService.getUniversity(id).pipe(startWith(null))
-    )
+    switchMap((id) => this._universityService.get(id).pipe(startWith(null)))
   );
 
   public readonly pages$ = this._universityId$.pipe(

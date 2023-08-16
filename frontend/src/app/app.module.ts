@@ -50,7 +50,6 @@ import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
   ],
   providers: [
     tuiButtonOptionsProvider({ size: 'm' }),
-
     tuiLanguageSwitcher(async (language: TuiLanguageName): Promise<unknown> => {
       switch (language) {
         case 'polish':
@@ -60,13 +59,6 @@ import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
           return import('@taiga-ui/i18n/languages/english');
       }
     }),
-
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: (service: AuthService) => () => service.user$,
-    //   deps: [AuthService],
-    //   multi: true
-    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

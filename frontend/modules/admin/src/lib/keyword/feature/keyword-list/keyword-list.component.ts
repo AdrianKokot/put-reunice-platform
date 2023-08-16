@@ -3,7 +3,11 @@ import { KeyWordsService } from '@reunice/modules/shared/data-access';
 import { CommonModule } from '@angular/common';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiTableModule } from '@taiga-ui/addon-table';
-import { TuiFormatDatePipeModule, TuiLinkModule } from '@taiga-ui/core';
+import {
+  TuiButtonModule,
+  TuiFormatDatePipeModule,
+  TuiLinkModule,
+} from '@taiga-ui/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -17,6 +21,7 @@ import { RouterLink } from '@angular/router';
     TuiFormatDatePipeModule,
     RouterLink,
     TuiLinkModule,
+    TuiButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,5 +30,5 @@ export class KeywordListComponent {
 
   readonly columns = ['word', 'actions'];
 
-  readonly keywords$ = this._keywordService.getAllKeyWords();
+  readonly keywords$ = this._keywordService.getAll();
 }
