@@ -4,16 +4,19 @@ FROM maven:3.6.1-jdk-11-slim AS build
 ARG APPLICATION_SERVER
 ARG DATABASE_SCHEMA_HANDLING_ON_STARTUP
 ARG DATABASE_SCHEMA_CREATE_TYPE
+
+
 #Set env. variables to be used during container build
 ENV APPLICATION_SERVER $APPLICATION_SERVER
 ENV DATABASE_SCHEMA_HANDLING_ON_STARTUP $DATABASE_SCHEMA_HANDLING_ON_STARTUP
 ENV DATABASE_SCHEMA_CREATE_TYPE $DATABASE_SCHEMA_CREATE_TYPE
+
 #Do actual work
 RUN mkdir -p /workspace
 WORKDIR /workspace
 COPY pom.xml /workspace
 COPY src /workspace/src
-RUN mvn -f pom.xml clean package
+RUN mvn -f pom.xml clean package -DskipTests
 
 ### Run ###
 #In runtime container will have access to environmental variables defined in docker-compose.yml or in .env file read by docker-compose
