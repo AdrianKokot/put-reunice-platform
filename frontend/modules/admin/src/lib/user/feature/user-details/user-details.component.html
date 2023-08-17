@@ -1,1 +1,64 @@
-<p>user-details works!</p>
+<div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'FIRST_NAME' | translate" class="tui-form__multi-field">
+      {{ item?.firstName ?? '—' }}
+    </label>
+
+    <label [tuiLabel]="'LAST_NAME' | translate" class="tui-form__multi-field">
+      {{ item?.lastName ?? '—' }}
+    </label>
+
+    <label [tuiLabel]="'EMAIL' | translate" class="tui-form__multi-field">
+      {{ item?.email ?? '—' }}
+    </label>
+
+    <label
+      [tuiLabel]="'PHONE_NUMBER' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ item?.phoneNumber ?? '—' }}
+    </label>
+  </div>
+
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'USERNAME' | translate" class="tui-form__multi-field">
+      {{ item?.username ?? '—' }}
+    </label>
+    <label [tuiLabel]="'STATE' | translate" class="tui-form__multi-field">
+      {{ (item?.enabled ? 'ACTIVE' : 'DEACTIVATED') | translate }}
+    </label>
+
+    <label [tuiLabel]="'ROLE' | translate" class="tui-form__multi-field">
+      {{ 'ACCOUNT_TYPE_' + item?.accountType | translate }}
+    </label>
+
+    <div class="tui-form__multi-field"></div>
+  </div>
+
+  <label
+    [tuiLabel]="'ENROLLED_UNIVERSITIES' | translate"
+    class="tui-form__row"
+    *ngIf="item?.accountType !== 'ADMIN'"
+  >
+    <div class="tag-list tui-space_top-1">
+      <tui-tag
+        *ngFor="let university of item?.enrolledUniversities ?? []"
+        status="primary"
+        [hoverable]="false"
+        [value]="university.name"
+      ></tui-tag>
+    </div>
+  </label>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <a
+      [routerLink]="['edit']"
+      tuiButton
+      type="button"
+      appearance="flat"
+      class="tui-form__button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
+</div>
