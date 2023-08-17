@@ -58,13 +58,20 @@ tui-alert-host > .t-wrapper {
   color: var(--tui-text-02);
 }
 
-form.form-skeleton {
-  [tuiWrapper] {
-    .tui-skeleton;
+.details-skeleton .tui-form__row .t-content {
+  .tui-skeleton;
 
-    &:after {
-      border-radius: inherit;
-    }
+  &::before {
+    content: 'SKELETON_TEXT';
+  }
+}
+
+form.form-skeleton [tuiWrapper],
+.details-skeleton [tuiWrapper] {
+  .tui-skeleton;
+
+  &:after {
+    border-radius: inherit;
   }
 }
 

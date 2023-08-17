@@ -20,6 +20,7 @@ const routes: Routes = [
     path: ':id',
     children: [
       {
+        title: 'Keyword details',
         path: '',
         component: KeywordDetailsComponent,
       },

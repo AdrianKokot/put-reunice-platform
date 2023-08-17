@@ -19,6 +19,7 @@ const routes: Routes = [
     path: ':id',
     children: [
       {
+        title: 'Page details',
         path: '',
         component: PageDetailsComponent,
       },
