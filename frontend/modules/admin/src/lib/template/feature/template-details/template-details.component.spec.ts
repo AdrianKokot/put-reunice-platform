@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { KeywordEditFormComponent } from './keyword-edit-form.component';
+import { TemplateDetailsComponent } from './template-details.component';
 import { TestingModule } from '@reunice/testing';
 
-describe(KeywordEditFormComponent.name, () => {
-  let component: KeywordEditFormComponent;
-  let fixture: ComponentFixture<KeywordEditFormComponent>;
+describe(TemplateDetailsComponent.name, () => {
+  let component: TemplateDetailsComponent;
+  let fixture: ComponentFixture<TemplateDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestingModule, KeywordEditFormComponent],
+      imports: [TestingModule, TemplateDetailsComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(KeywordEditFormComponent);
+    fixture = TestBed.createComponent(TemplateDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

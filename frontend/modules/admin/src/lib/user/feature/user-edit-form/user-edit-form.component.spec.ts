@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserEditFormComponent } from './user-edit-form.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('UserEditFormComponent', () => {
+describe(UserEditFormComponent.name, () => {
   let component: UserEditFormComponent;
   let fixture: ComponentFixture<UserEditFormComponent>;
 

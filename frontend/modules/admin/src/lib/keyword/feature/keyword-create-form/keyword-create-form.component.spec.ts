@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KeywordCreateFormComponent } from './keyword-create-form.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('KeywordCreateFormComponent', () => {
+describe(KeywordCreateFormComponent.name, () => {
   let component: KeywordCreateFormComponent;
   let fixture: ComponentFixture<KeywordCreateFormComponent>;
 

@@ -11,6 +11,7 @@
     <tr *ngFor="let item of data" tuiTr>
       <td *tuiCell="'word'" tuiTd>{{ item.word }}</td>
       <td *tuiCell="'actions'" tuiTd>
+        <a tuiLink [routerLink]="[item.id]"> Details </a>
         <a tuiLink [routerLink]="[item.id, 'edit']"> Edit </a>
       </td>
     </tr>

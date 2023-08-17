@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageCreateFormComponent } from './page-create-form.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('PageCreateFormComponent', () => {
+describe(PageCreateFormComponent.name, () => {
   let component: PageCreateFormComponent;
   let fixture: ComponentFixture<PageCreateFormComponent>;
 
