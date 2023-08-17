@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FileService, PageService } from '@reunice/modules/shared/data-access';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, share, startWith, switchMap } from 'rxjs';
+import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'reunice-page-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TuiEditorSocketModule, TuiLetModule],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
