@@ -116,3 +116,17 @@ tui-island {
     .items-center;
   }
 }
+
+html {
+  --reunice-optional-text: 'Optional';
+  &[lang='pl'] {
+    --reunice-optional-text: 'Opcjonalne';
+  }
+}
+
+label._optional .t-label .t-text {
+  &::after {
+    content: ' (' var(--reunice-optional-text) ')';
+    color: var(--tui-text-02);
+  }
+}
