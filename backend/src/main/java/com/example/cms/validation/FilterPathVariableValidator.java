@@ -5,13 +5,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.example.cms.file.FileResource;
 import com.example.cms.template.Template;
 import com.example.cms.user.User;
 
 public class FilterPathVariableValidator {
     private static final Map<Class, List<String>> forbiddenFields = Map.of(
             User.class, List.of("password"),
-            Template.class, List.of("content")
+            Template.class, List.of("content"),
+            FileResource.class, List.of("page")
     );
 
     public static Map<String, String> validate(Map<String, String> vars, Class klass) {

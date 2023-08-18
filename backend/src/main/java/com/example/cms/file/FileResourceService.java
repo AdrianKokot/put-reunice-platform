@@ -1,5 +1,6 @@
 package com.example.cms.file;
 
+import com.example.cms.SearchCriteria;
 import com.example.cms.file.projections.FileDtoSimple;
 import com.example.cms.page.Page;
 import com.example.cms.page.PageRepository;
@@ -12,6 +13,8 @@ import com.example.cms.user.exceptions.UserNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,10 +28,8 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,14 +75,37 @@ public class FileResourceService {
         fileRepository.save(fileResource);
     }
 
-    public List<FileDtoSimple> getAll(Long pageId) {
+    public List<FileDtoSimple> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
         Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
         if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
             throw new PageForbidden();
         }
-        List<Object[]> objects = fileRepository.findAllByPage(pageId);
 
-        return prepareProjectionOutput(objects);
+        Specification<FileResource> combinedSpecification = null;
+
+        if (!filterVars.isEmpty()) {
+            List<FileSpecification> specifications = filterVars.entrySet().stream()
+                    .map(entries -> {
+                        String[] filterBy = entries.getKey().split("_");
+
+                        return new FileSpecification(new SearchCriteria(
+                                filterBy[0],
+                                filterBy[filterBy.length - 1],
+                                entries.getValue()),
+                                pageId);
+                    }).collect(Collectors.toList());
+
+            for (Specification<FileResource> spec : specifications) {
+                if (combinedSpecification == null) {
+                    combinedSpecification = Specification.where(spec);
+                }
+                combinedSpecification = combinedSpecification.and(spec);
+            }
+        }
+
+        return fileRepository.findAll(combinedSpecification, pageable).stream()
+                .map(FileDtoSimple::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional
