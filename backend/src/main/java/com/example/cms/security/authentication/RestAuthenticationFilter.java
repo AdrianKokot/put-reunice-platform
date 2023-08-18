@@ -37,6 +37,7 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
         setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
+        this.setFilterProcessesUrl("/api/login");
     }
 
     @Override
