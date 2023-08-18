@@ -1,46 +1,33 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   University,
   UniversityService,
 } from '@reunice/modules/shared/data-access';
-import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
-import { TuiTableModule } from '@taiga-ui/addon-table';
+import { FormBuilder } from '@angular/forms';
 import {
-  TuiButtonModule,
-  TuiLinkModule,
-  TuiLoaderModule,
-  TuiTextfieldControllerModule,
-} from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TuiInputModule } from '@taiga-ui/kit';
+  provideReuniceTable,
+  ReuniceAbstractTable,
+} from '../../../shared/table/reunice-abstract-table.directive';
+import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 
 @Component({
   selector: 'reunice-university-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    TuiLetModule,
-    TuiTableModule,
-    TuiLinkModule,
-    RouterLink,
-    TuiTextfieldControllerModule,
-    ReactiveFormsModule,
-    TuiInputModule,
-    TuiButtonModule,
-    TuiForModule,
-    TuiLoaderModule,
-  ],
+  imports: [BaseFormImportsModule, BaseTableImportsModule],
   templateUrl: './university-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideReuniceTable(UniversityService)],
 })
-export class UniversityListComponent {
-  private readonly _universityService = inject(UniversityService);
+export class UniversityListComponent extends ReuniceAbstractTable<University> {
+  readonly columns: Array<keyof University | string> = [
+    'name',
+    'shortName',
+    'hidden',
+    'actions',
+  ];
 
-  readonly columns = ['name', 'shortName', 'hidden', 'actions'];
-
-  readonly items$ = this._universityService.getAll();
-
-  readonly trackById = (index: number, item: University) => item.id;
+  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+    search: [''],
+  });
 }

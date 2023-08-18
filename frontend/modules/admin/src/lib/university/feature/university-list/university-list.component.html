@@ -1,32 +1,59 @@
-<div class="w-full d-flex gap-4 mb-4">
+<div class="w-full d-flex gap-4 tui-space_bottom-4" [formGroup]="filtersForm">
   <label class="w-full">
-    <tui-input tuiTextfieldSize="m">
-      Search
+    <tui-input
+      formControlName="search"
+      [tuiTextfieldLabelOutside]="true"
+      class="no-shadow"
+      tuiTextfieldSize="m"
+    >
+      {{ 'SEARCH' | translate }}
       <input tuiTextfield type="text" />
     </tui-input>
   </label>
 
-  <button appearance="primary" tuiButton size="m" type="button">
-    New university
-  </button>
+  <a [routerLink]="['new']" appearance="primary" tuiButton type="button">
+    {{ 'NEW_UNIVERSITY' | translate }}
+  </a>
 </div>
 
-<div class="table-container">
-  <table tuiTable [columns]="columns" class="w-full">
+<tui-scrollbar class="reunice-table-wrapper">
+  <table
+    tuiTable
+    tuiSortBy
+    [columns]="columns"
+    *tuiLet="items$ | async as items"
+  >
     <thead>
       <tr tuiThGroup>
-        <th *tuiHead="'transactionDate'" tuiTh [sorter]="null" class="w-100px">
-          Date
+        <th *tuiHead="'name'" tuiTh tuiSortable class="column-rest">
+          {{ 'NAME' | translate }}
         </th>
-        <th *tuiHead="'name'" tuiTh [sorter]="null">Name</th>
-        <th *tuiHead="'shortName'" tuiTh [sorter]="null">Short name</th>
-        <th *tuiHead="'hidden'" tuiTh [sorter]="null">Hidden</th>
-        <th *tuiHead="'actions'" tuiTh [sorter]="null"></th>
+        <th *tuiHead="'shortName'" tuiTh tuiSortable class="column-sm">
+          {{ 'SHORT_NAME' | translate }}
+        </th>
+        <th *tuiHead="'hidden'" tuiTh tuiSortable class="column-xs">
+          {{ 'HIDDEN' | translate }}
+        </th>
+        <th
+          *tuiHead="'actions'"
+          tuiTh
+          [sorter]="null"
+          [sticky]="true"
+          class="column-actions"
+        ></th>
       </tr>
     </thead>
 
     <tbody tuiTbody>
-      <tr *ngFor="let item of items$ | async; trackBy: trackById" tuiTr>
+      <tr
+        *ngFor="
+          let item of items;
+          else: loadingList;
+          empty: emptyList;
+          trackById
+        "
+        tuiTr
+      >
         <td *tuiCell="'name'" tuiTd>
           {{ item.name }}
         </td>
@@ -34,14 +61,50 @@
           {{ item.shortName }}
         </td>
         <td *tuiCell="'hidden'" tuiTd>
-          {{ item.hidden.toString() }}
+          {{ item.hidden }}
         </td>
+        <td class="column-actions" *tuiCell="'actions'" tuiTd>
+          <a
+            [routerLink]="[item.id]"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconInfo'"
+            shape="rounded"
+            [tuiHint]="'SEE_DETAILS' | translate"
+          >
+          </a>
 
-        <td *tuiCell="'actions'" tuiTd>
-          <a tuiLink [routerLink]="[item.id]"> Details </a>
-          <a tuiLink [routerLink]="[item.id, 'edit']"> Edit </a>
+          <a
+            [routerLink]="[item.id, 'edit']"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconEdit'"
+            shape="rounded"
+            [tuiHint]="'EDIT' | translate"
+          >
+          </a>
         </td>
       </tr>
     </tbody>
   </table>
-</div>
+</tui-scrollbar>
+
+<tui-table-pagination class="tui-space_top-2"></tui-table-pagination>
+
+<ng-template #emptyList>
+  <tr>
+    <td [colSpan]="columns.length">
+      {{ 'NO_RECORDS_FOUND' | translate }}
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #loadingList>
+  <tr>
+    <td [colSpan]="columns.length">
+      <tui-loader></tui-loader>
+    </td>
+  </tr>
+</ng-template>

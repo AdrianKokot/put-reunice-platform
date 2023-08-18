@@ -1,34 +1,25 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { KeyWordsService } from '@reunice/modules/shared/data-access';
-import { CommonModule } from '@angular/common';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { TuiTableModule } from '@taiga-ui/addon-table';
+import { Keyword, KeyWordsService } from '@reunice/modules/shared/data-access';
 import {
-  TuiButtonModule,
-  TuiFormatDatePipeModule,
-  TuiLinkModule,
-} from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
+  provideReuniceTable,
+  ReuniceAbstractTable,
+} from '../../../shared/table/reunice-abstract-table.directive';
+import { FormBuilder } from '@angular/forms';
+import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 
 @Component({
   selector: 'reunice-keyword-list',
   templateUrl: './keyword-list.component.html',
   standalone: true,
-  imports: [
-    CommonModule,
-    TuiLetModule,
-    TuiTableModule,
-    TuiFormatDatePipeModule,
-    RouterLink,
-    TuiLinkModule,
-    TuiButtonModule,
-  ],
+  imports: [BaseFormImportsModule, BaseTableImportsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideReuniceTable(KeyWordsService)],
 })
-export class KeywordListComponent {
-  private readonly _keywordService = inject(KeyWordsService);
-
+export class KeywordListComponent extends ReuniceAbstractTable<Keyword> {
   readonly columns = ['word', 'actions'];
 
-  readonly keywords$ = this._keywordService.getAll();
+  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+    search: [''],
+  });
 }

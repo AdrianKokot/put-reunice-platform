@@ -7,10 +7,9 @@ type OnlyKeysOfType<T, TProp> = {
   [K in keyof T as T[K] extends TProp ? K : never]: T[K];
 };
 
-export type ApiFilter<T> =
-  | ApiFilterOperator<T, 'eq'> &
-      ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'> &
-      Partial<{ search: string }>;
+export type ApiFilter<T> = ApiFilterOperator<T, 'eq'> &
+  ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'> &
+  Partial<{ search: string }>;
 
 export type ApiSort<T = object> = {
   sort: `${keyof T & string},${'asc' | 'desc'}` & string;

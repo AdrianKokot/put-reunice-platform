@@ -7,12 +7,11 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
-import { TuiSvgModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-page-list',
   standalone: true,
-  imports: [BaseFormImportsModule, BaseTableImportsModule, TuiSvgModule],
+  imports: [BaseFormImportsModule, BaseTableImportsModule],
   templateUrl: './page-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideReuniceTable(PageService)],

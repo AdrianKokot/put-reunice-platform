@@ -1,34 +1,25 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TemplateService } from '@reunice/modules/shared/data-access';
-import { CommonModule } from '@angular/common';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { TuiTableModule } from '@taiga-ui/addon-table';
+import { Template, TemplateService } from '@reunice/modules/shared/data-access';
+import { FormBuilder } from '@angular/forms';
 import {
-  TuiButtonModule,
-  TuiFormatDatePipeModule,
-  TuiLinkModule,
-} from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
+  provideReuniceTable,
+  ReuniceAbstractTable,
+} from '../../../shared/table/reunice-abstract-table.directive';
+import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 
 @Component({
   selector: 'reunice-template-list',
   templateUrl: './template-list.component.html',
-  imports: [
-    CommonModule,
-    TuiLetModule,
-    TuiTableModule,
-    TuiFormatDatePipeModule,
-    RouterLink,
-    TuiLinkModule,
-    TuiButtonModule,
-  ],
+  imports: [BaseFormImportsModule, BaseTableImportsModule],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideReuniceTable(TemplateService)],
 })
-export class TemplateListComponent {
-  private readonly _templateService = inject(TemplateService);
+export class TemplateListComponent extends ReuniceAbstractTable<Template> {
+  readonly columns: Array<keyof Template | string> = ['name', 'actions'];
 
-  readonly columns = ['name', 'actions'];
-
-  readonly templates$ = this._templateService.getAll();
+  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+    search: [''],
+  });
 }

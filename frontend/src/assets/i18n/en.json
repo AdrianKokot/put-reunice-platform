@@ -293,5 +293,11 @@
   "UPDATED_AT": "Last edited",
   "MODERATOR_CONSOLE": "University console",
   "USER_CONSOLE": "Content management",
-  "FILL_ONLY_IN_ORDER_TO_CHANGE_PASSWORD": "Fill only in order to change password"
+  "FILL_ONLY_IN_ORDER_TO_CHANGE_PASSWORD": "Fill only in order to change password",
+  "NEW_UNIVERSITY": "New university",
+  "NEW_PAGE": "New page",
+  "NEW_USER": "New user",
+  "NEW_TEMPLATE": "New template",
+  "NEW_KEYWORD": "New keyword",
+  "WORD": "Word"
 }

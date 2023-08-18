@@ -41,7 +41,7 @@ export const REUNICE_TABLE_SERVICE = new InjectionToken<
 >('REUNICE_TABLE_SERVICE');
 
 export const provideReuniceTable = <T extends { id: string | number }>(
-  service: Type<AbstractApiService<T>>
+  service: Type<AbstractApiService<T, unknown, unknown>>
 ): Provider[] => {
   return [
     {
@@ -70,7 +70,7 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
   abstract readonly columns: Array<keyof T | string>;
   abstract readonly filtersForm: FormGroup;
 
-  protected readonly service = inject<AbstractApiService<T>>(
+  protected readonly service = inject<AbstractApiService<T, unknown, unknown>>(
     REUNICE_TABLE_SERVICE
   );
 

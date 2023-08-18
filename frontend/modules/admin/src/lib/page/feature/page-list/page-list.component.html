@@ -4,20 +4,14 @@
       formControlName="search"
       [tuiTextfieldLabelOutside]="true"
       class="no-shadow"
-      tuiTextfieldSize="s"
+      tuiTextfieldSize="m"
     >
       {{ 'SEARCH' | translate }}
       <input tuiTextfield type="text" />
     </tui-input>
   </label>
 
-  <a
-    [routerLink]="['new']"
-    appearance="primary"
-    size="s"
-    tuiButton
-    type="button"
-  >
+  <a [routerLink]="['new']" appearance="primary" tuiButton type="button">
     {{ 'NEW_PAGE' | translate }}
   </a>
 </div>

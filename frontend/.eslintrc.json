@@ -87,16 +87,12 @@
         "@angular-eslint/use-lifecycle-interface": "error",
         "@angular-eslint/use-pipe-transform-interface": "error",
         "@angular-eslint/no-lifecycle-call": "error",
-        "@typescript-eslint/prefer-readonly": "warn",
-        "max-len": ["error", { "code": 120 }]
+        "@typescript-eslint/prefer-readonly": "warn"
       }
     },
     {
       "files": ["*.html"],
-      "extends": ["plugin:@nx/angular-template"],
-      "rules": {
-        "max-len": ["error", { "code": 120 }]
-      }
+      "extends": ["plugin:@nx/angular-template"]
     }
   ],
   "extends": ["./.eslintrc.base.json"]
