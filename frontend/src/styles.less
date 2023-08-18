@@ -58,13 +58,20 @@ tui-alert-host > .t-wrapper {
   color: var(--tui-text-02);
 }
 
-form.form-skeleton {
-  [tuiWrapper] {
-    .tui-skeleton;
+.details-skeleton .tui-form__row .t-content {
+  .tui-skeleton;
 
-    &:after {
-      border-radius: inherit;
-    }
+  &::before {
+    content: 'SKELETON_TEXT';
+  }
+}
+
+form.form-skeleton [tuiWrapper],
+.details-skeleton [tuiWrapper] {
+  .tui-skeleton;
+
+  &:after {
+    border-radius: inherit;
   }
 }
 
@@ -107,5 +114,19 @@ tui-island {
     box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
     .d-flex;
     .items-center;
+  }
+}
+
+html {
+  --reunice-optional-text: 'Optional';
+  &[lang='pl'] {
+    --reunice-optional-text: 'Opcjonalne';
+  }
+}
+
+label._optional .t-label .t-text {
+  &::after {
+    content: ' (' var(--reunice-optional-text) ')';
+    color: var(--tui-text-02);
   }
 }

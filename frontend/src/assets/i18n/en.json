@@ -288,5 +288,10 @@
   "TEMPLATE_AVAILABLE_FOR_UNIVERSITIES": "Available for universities",
   "CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES": "Mark as available for all universities",
   "LOAD_TEMPLATE": "Load template",
-  "NO_TEMPLATES_AVAILABLE": "No templates available"
+  "NO_TEMPLATES_AVAILABLE": "No templates available",
+  "CREATED_AT": "Created",
+  "UPDATED_AT": "Last edited",
+  "MODERATOR_CONSOLE": "University console",
+  "USER_CONSOLE": "Content management",
+  "FILL_ONLY_IN_ORDER_TO_CHANGE_PASSWORD": "Fill only in order to change password"
 }

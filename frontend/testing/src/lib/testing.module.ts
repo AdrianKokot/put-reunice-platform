@@ -8,6 +8,8 @@ import {
   defaultEditorExtensions,
   TUI_EDITOR_EXTENSIONS,
 } from '@tinkoff/tui-editor';
+import { TUI_SANITIZER } from '@taiga-ui/core';
+import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
 
 @NgModule({
   imports: [
@@ -22,6 +24,7 @@ import {
       provide: TUI_EDITOR_EXTENSIONS,
       useValue: defaultEditorExtensions,
     },
+    { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   ],
 })
 export class TestingModule {}

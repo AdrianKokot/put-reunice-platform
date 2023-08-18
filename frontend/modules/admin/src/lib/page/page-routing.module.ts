@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PageEditFormComponent } from './feature/page-edit-form/page-edit-form.component';
 import { PageListComponent } from './feature/page-list/page-list.component';
 import { PageCreateFormComponent } from './feature/page-create-form/page-create-form.component';
+import { PageDetailsComponent } from './feature/page-details/page-details.component';
 
 const routes: Routes = [
   {
@@ -14,8 +15,14 @@ const routes: Routes = [
     component: PageCreateFormComponent,
   },
   {
+    title: 'Page details',
     path: ':id',
     children: [
+      {
+        title: 'Page details',
+        path: '',
+        component: PageDetailsComponent,
+      },
       {
         title: 'Edit page',
         path: 'edit',

@@ -1,0 +1,83 @@
+<div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
+      {{ item?.title ?? '—' }}
+    </label>
+
+    <label [tuiLabel]="'VISIBILITY' | translate" class="tui-form__multi-field">
+      {{ (item?.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+    </label>
+
+    <label [tuiLabel]="'UNIVERSITY' | translate" class="tui-form__multi-field">
+      {{ item?.university?.name ?? '-' }}
+    </label>
+  </div>
+
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
+      {{ item?.creator?.firstName ?? '-' }} {{ item?.creator?.lastName }}
+    </label>
+
+    <label [tuiLabel]="'CREATED_AT' | translate" class="tui-form__multi-field">
+      {{ item?.createdOn }}
+    </label>
+
+    <label [tuiLabel]="'UPDATED_AT' | translate" class="tui-form__multi-field">
+      {{ item?.updatedOn }}
+    </label>
+  </div>
+
+  <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+    {{ item?.description ?? '-' }}
+  </label>
+
+  <div class="tui-form__row">
+    <p class="tui-space_top-0 tui-space_bottom-1 text-02">
+      {{ 'PAGE_LOCATION' | translate }}
+    </p>
+
+    <tui-island size="s" *tuiLet="pagesTree$ | async as items">
+      <div class="tui-island__content">
+        <tui-tree
+          class="tui-island__paragraph"
+          *ngIf="items"
+          [tuiTreeController]="true"
+          [value]="items"
+          [content]="treeContent"
+          [childrenHandler]="pagesTreeHandler"
+        ></tui-tree>
+
+        <ng-template #treeContent let-page>
+          <label
+            [class._selected]="page.id === item?.id"
+            class="reunice-tree-item-option"
+          >
+            <span>
+              {{ page.title }}
+            </span>
+          </label>
+        </ng-template>
+      </div>
+    </tui-island>
+  </div>
+
+  <div class="tui-form__row tui-space_bottom-1 text-02">
+    {{ 'CONTENT' | translate }}
+  </div>
+  <tui-editor-socket
+    class="tui-island tui-island_size_s"
+    [content]="item?.content ?? ''"
+  ></tui-editor-socket>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <a
+      [routerLink]="['edit']"
+      tuiButton
+      type="button"
+      appearance="flat"
+      class="tui-form__button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
+</div>

@@ -13,7 +13,11 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { TuiDataListWrapperModule, TuiMultiSelectModule } from '@taiga-ui/kit';
+import {
+  TuiDataListWrapperModule,
+  TuiInputPasswordModule,
+  TuiMultiSelectModule,
+} from '@taiga-ui/kit';
 import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import { filter, map, startWith } from 'rxjs';
@@ -29,6 +33,7 @@ import { TuiHintModule } from '@taiga-ui/core';
     TuiMultiSelectModule,
     TuiHintModule,
     UserDirective,
+    TuiInputPasswordModule,
   ],
   templateUrl: './user-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,6 +55,7 @@ export class UserEditFormComponent {
     accountType: [AccountTypeEnum.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
     enrolledUniversities: [[] as number[]],
+    password: [''],
   });
 
   readonly universitySearch = new ResourceSearchWrapper(

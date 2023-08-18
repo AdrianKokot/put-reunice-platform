@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateCreateFormComponent } from './template-create-form.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('TemplateCreateFormComponent', () => {
+describe(TemplateCreateFormComponent.name, () => {
   let component: TemplateCreateFormComponent;
   let fixture: ComponentFixture<TemplateCreateFormComponent>;
 

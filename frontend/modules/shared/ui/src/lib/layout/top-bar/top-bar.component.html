@@ -38,7 +38,7 @@
     <ng-template #profileMenu let-close="close">
       <tui-data-list role="menu" size="s">
         <a href="/admin" tuiOption role="menuitem" (click)="close()">
-          {{ 'ADMIN_CONSOLE' | translate }}
+          {{ user.accountType + '_CONSOLE' | translate }}
         </a>
         <a
           routerLink="/accounts/profile"

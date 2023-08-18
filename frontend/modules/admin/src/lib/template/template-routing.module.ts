@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TemplateListComponent } from './feature/template-list/template-list.component';
 import { TemplateEditFormComponent } from './feature/template-edit-form/template-edit-form.component';
 import { TemplateCreateFormComponent } from './feature/template-create-form/template-create-form.component';
+import { TemplateDetailsComponent } from './feature/template-details/template-details.component';
 
 const routes: Routes = [
   {
@@ -15,8 +16,14 @@ const routes: Routes = [
     component: TemplateCreateFormComponent,
   },
   {
+    title: 'Template details',
     path: ':id',
     children: [
+      {
+        title: 'Template details',
+        path: '',
+        component: TemplateDetailsComponent,
+      },
       {
         title: 'Edit template',
         path: 'edit',

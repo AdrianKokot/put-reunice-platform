@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user';
 import { AbstractApiService } from './abstract-api.service';
-import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  map,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 import { ApiParams } from '../api.params';
 
 type UpdateUser = Omit<User, 'enrolledUniversities'> & {
@@ -37,15 +44,29 @@ export class UserService extends AbstractApiService<
   ): Observable<User> {
     return combineLatest([
       this._http.put<User>(`${this._resourceUrl}/${resource.id}`, resource),
-      this._http.put<User>(
-        `${this._resourceUrl}/${resource.id}/universities`,
-        resource.enrolledUniversities
-      ),
+      ...(resource.accountType !== 'ADMIN'
+        ? [
+            this._http.put<User>(
+              `${this._resourceUrl}/${resource.id}/universities`,
+              resource.enrolledUniversities
+            ),
+          ]
+        : []),
+      // ...(resource.password
+      //   ? [
+      //       this._http.patch(`${this._resourceUrl}/${resource.id}/password`, resource.password),
+      //     ]
+      //   : []),
+      this._http
+        .patch(
+          `${this._resourceUrl}/${resource.id}/username`,
+          resource.username
+        )
+        .pipe(catchError(() => of(true))),
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
 
   override create(resource: Partial<UpdateUser>): Observable<User> {
-    console.log(resource);
     return this._http.post<User>(this._resourceUrl, resource).pipe(
       switchMap((user) =>
         this._http.put<User>(

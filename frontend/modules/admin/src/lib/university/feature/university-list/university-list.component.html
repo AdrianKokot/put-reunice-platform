@@ -38,15 +38,8 @@
         </td>
 
         <td *tuiCell="'actions'" tuiTd>
-          <a
-            tuiIconButton
-            appearance="flat"
-            size="s"
-            [icon]="'tuiIconEdit'"
-            title="Edit"
-            shape="rounded"
-            [routerLink]="[item.id, 'edit']"
-          ></a>
+          <a tuiLink [routerLink]="[item.id]"> Details </a>
+          <a tuiLink [routerLink]="[item.id, 'edit']"> Edit </a>
         </td>
       </tr>
     </tbody>

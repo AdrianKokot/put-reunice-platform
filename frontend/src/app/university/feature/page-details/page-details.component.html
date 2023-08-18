@@ -1,7 +1,12 @@
 <h3>Page</h3>
-<pre>
-  {{ page$ | async | json }}
-</pre>
+<ng-container *tuiLet="page$ | async as page">
+  <tui-editor-socket [content]="page?.content ?? ''"></tui-editor-socket>
+
+  <pre
+    >{{ page | json }}
+</pre
+  >
+</ng-container>
 
 <h3>Page files</h3>
 <pre>

@@ -75,10 +75,10 @@ export class UserDirective implements OnInit {
     ExtendedAccountTypeEnum.AUTHORIZED;
 
   @Input('reuniceUserElse')
-  fallbackTemplate: TemplateRef<unknown> | null = null;
+  fallbackTemplate: TemplateRef<UserContext> | null = null;
 
   constructor(
-    private readonly templateRef: TemplateRef<unknown>,
+    private readonly templateRef: TemplateRef<UserContext>,
     private readonly viewContainer: ViewContainerRef,
     private readonly _cdr: ChangeDetectorRef
   ) {}

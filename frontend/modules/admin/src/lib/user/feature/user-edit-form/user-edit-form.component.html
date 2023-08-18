@@ -210,6 +210,31 @@
         ></tui-error>
       </label>
 
+      <h3 class="tui-form__header">
+        {{ 'CHANGE_PASSWORD' | translate }}
+      </h3>
+
+      <label
+        [tuiLabel]="'NEW_PASSWORD' | translate"
+        class="tui-form__row _optional"
+      >
+        <tui-input-password
+          formControlName="password"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+          [readOnly]="readOnly"
+        >
+          <input tuiTextfield type="password" autocomplete="new-password" />
+        </tui-input-password>
+        <div class="tui-form__field-note">
+          {{ 'FILL_ONLY_IN_ORDER_TO_CHANGE_PASSWORD' | translate }}
+        </div>
+        <tui-error
+          formControlName="password"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </label>
+
       <div class="tui-form__buttons tui-form__buttons_align_end">
         <a
           [routerLink]="['..']"
