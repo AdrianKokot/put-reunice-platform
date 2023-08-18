@@ -23,7 +23,7 @@ public class FilterPathVariableValidator {
         return vars.entrySet().stream()
                 .filter(entry ->
                         klassFields.contains(entry.getKey().split("_")[0]) &&
-                                !forbiddenFields.get(klass).contains(entry.getKey().split("_")[0]))
+                                !forbiddenFields.getOrDefault(klass, List.of()).contains(entry.getKey().split("_")[0]))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

@@ -1,14 +1,18 @@
 package com.example.cms.page;
 
 import com.example.cms.page.projections.*;
+import com.example.cms.user.User;
+import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +27,12 @@ public class PageController {
     }
 
     @GetMapping
-    List<PageDtoSimple> readAllPages(Pageable pageable) {
-        return service.getAllVisible(pageable);
+    ResponseEntity<List<PageDtoSimple>> readAllPages(Pageable pageable,
+                                     @RequestParam Map<String, String> vars) {
+        return new ResponseEntity<>(service.getAllVisible(
+                pageable,
+                FilterPathVariableValidator.validate(vars, Page.class)),
+                HttpStatus.OK) ;
     }
 
     @GetMapping("/creator/{userId}")
