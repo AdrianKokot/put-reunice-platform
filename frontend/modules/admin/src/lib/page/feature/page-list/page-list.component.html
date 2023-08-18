@@ -1,35 +1,153 @@
-<a [routerLink]="['new']" tuiButton>Create</a>
+<div class="w-full d-flex gap-4 tui-space_bottom-4" [formGroup]="filtersForm">
+  <label class="w-full">
+    <tui-input
+      formControlName="search"
+      [tuiTextfieldLabelOutside]="true"
+      class="no-shadow"
+      tuiTextfieldSize="s"
+    >
+      {{ 'SEARCH' | translate }}
+      <input tuiTextfield type="text" />
+    </tui-input>
+  </label>
 
-<table tuiTable [columns]="columns">
-  <thead>
-    <tr tuiThGroup>
-      <th *tuiHead="'title'" tuiTh>Title</th>
-      <th *tuiHead="'createdAt'" tuiTh>Created at</th>
-      <th *tuiHead="'university'" tuiTh>University</th>
-      <th *tuiHead="'author'" tuiTh>Author</th>
-      <th *tuiHead="'hidden'" tuiTh>Hidden</th>
-      <th *tuiHead="'actions'" tuiTh>Actions</th>
-    </tr>
-  </thead>
-  <tbody *tuiLet="(pages$ | async) ?? [] as data" tuiTbody [data]="data">
-    <tr *ngFor="let item of data" tuiTr>
-      <td *tuiCell="'title'" tuiTd>{{ item.title }}</td>
-      <td *tuiCell="'createdAt'" tuiTd>{{ item.createdOn }}</td>
-      <td *tuiCell="'university'" tuiTd>{{ item.university.name }}</td>
-      <td *tuiCell="'author'" tuiTd>
-        {{ item.creator.firstName }} {{ item.creator.lastName }}
-      </td>
-      <td *tuiCell="'hidden'" tuiTd>{{ item.hidden }}</td>
-      <td *tuiCell="'actions'" tuiTd>
-        <!--      <a-->
-        <!--        tuiLink-->
-        <!--        [routerLink]="['/universities', item.university.id, 'page', item.id]"-->
-        <!--      >-->
-        <!--        See page-->
-        <!--      </a>-->
-        <a tuiLink [routerLink]="[item.id]"> Details </a>
-        <a tuiLink [routerLink]="[item.id, 'edit']"> Edit </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <a
+    [routerLink]="['new']"
+    appearance="primary"
+    size="s"
+    tuiButton
+    type="button"
+  >
+    {{ 'NEW_PAGE' | translate }}
+  </a>
+</div>
+
+<tui-scrollbar class="reunice-table-wrapper">
+  <table
+    tuiTable
+    tuiSortBy
+    [columns]="columns"
+    *tuiLet="items$ | async as items"
+  >
+    <thead>
+      <tr tuiThGroup>
+        <th *tuiHead="'title'" tuiTh tuiSortable class="column-rest">
+          {{ 'TITLE' | translate }}
+        </th>
+        <th
+          *tuiHead="'createdOn'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'CREATED_ON' | translate }}
+        </th>
+        <th
+          *tuiHead="'university'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'UNIVERSITY' | translate }}
+        </th>
+        <th
+          *tuiHead="'creator'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'AUTHOR' | translate }}
+        </th>
+        <th
+          *tuiHead="'hidden'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-xs"
+        >
+          {{ 'HIDDEN' | translate }}
+        </th>
+        <th
+          *tuiHead="'actions'"
+          tuiTh
+          [sorter]="null"
+          [sticky]="true"
+          class="column-actions"
+        ></th>
+      </tr>
+    </thead>
+
+    <tbody tuiTbody>
+      <tr
+        *ngFor="
+          let item of items;
+          else: loadingList;
+          empty: emptyList;
+          trackById
+        "
+        tuiTr
+      >
+        <td *tuiCell="'title'" tuiTd>
+          {{ item.title }}
+        </td>
+        <td *tuiCell="'createdOn'" tuiTd>
+          {{ item.createdOn }}
+        </td>
+        <td *tuiCell="'university'" tuiTd>
+          {{ item.university.name }}
+        </td>
+        <td *tuiCell="'creator'" tuiTd>
+          {{ item.creator.firstName }} {{ item.creator.lastName }}
+        </td>
+        <td *tuiCell="'hidden'" tuiTd>
+          {{ item.hidden }}
+        </td>
+
+        <td class="column-actions" *tuiCell="'actions'" tuiTd>
+          <a
+            [routerLink]="[item.id]"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconInfo'"
+            shape="rounded"
+            [tuiHint]="'SEE_DETAILS' | translate"
+          >
+          </a>
+
+          <a
+            [routerLink]="[item.id, 'edit']"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconEdit'"
+            shape="rounded"
+            [tuiHint]="'EDIT' | translate"
+          >
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</tui-scrollbar>
+
+<tui-table-pagination class="tui-space_top-2"> </tui-table-pagination>
+
+<ng-template #emptyList>
+  <tr>
+    <td [colSpan]="columns.length">
+      {{ 'NO_RECORDS_FOUND' | translate }}
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #loadingList>
+  <tr>
+    <td [colSpan]="columns.length">
+      <tui-loader></tui-loader>
+    </td>
+  </tr>
+</ng-template>

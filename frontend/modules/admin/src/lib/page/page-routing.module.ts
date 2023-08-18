@@ -11,6 +11,7 @@ const routes: Routes = [
     component: PageListComponent,
   },
   {
+    title: 'New page',
     path: 'new',
     component: PageCreateFormComponent,
   },

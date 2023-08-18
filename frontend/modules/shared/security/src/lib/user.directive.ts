@@ -14,8 +14,9 @@ import {
   ExtendedAccountTypeEnum,
   User,
 } from '@reunice/modules/shared/data-access';
-import { distinctUntilKeyChanged, map, shareReplay } from 'rxjs';
+import { distinctUntilKeyChanged, map, shareReplay, takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TuiDestroyService } from '@taiga-ui/cdk';
 
 class UserContext {
   get $implicit(): User | null {
@@ -48,7 +49,11 @@ class UserContext {
  *    <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
  *  </ng-template>
  */
-@Directive({ selector: '[reuniceUser]', standalone: true })
+@Directive({
+  selector: '[reuniceUser]',
+  standalone: true,
+  providers: [TuiDestroyService],
+})
 export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(
     takeUntilDestroyed(),
@@ -60,6 +65,7 @@ export class UserDirective implements OnInit {
   );
 
   private readonly _context = new UserContext();
+  private readonly _destroy$ = inject(TuiDestroyService);
 
   @Input({
     alias: 'reuniceUser',
@@ -85,7 +91,7 @@ export class UserDirective implements OnInit {
 
   ngOnInit(): void {
     this._userType$
-      .pipe(distinctUntilKeyChanged('type'))
+      .pipe(takeUntil(this._destroy$), distinctUntilKeyChanged('type'))
       .subscribe(({ type, user }) => {
         this.viewContainer.clear();
 

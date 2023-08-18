@@ -6,11 +6,11 @@ import { NgForOf } from '@angular/common';
   standalone: true,
 })
 export class NgForTrackByIdDirective<T extends { id: string | number }> {
-  @Input() ngForOf!: NgIterable<T>;
+  @Input() ngForOf!: NgIterable<T> | null | undefined;
 
   constructor(@Self() ngFor: NgForOf<T>) {
     if (ngFor.ngForTrackBy === undefined) {
-      console.debug('TRACK_BY_ID');
+      console.debug(NgForTrackByIdDirective.name);
       ngFor.ngForTrackBy = (_: number, item: T) => item.id;
     }
   }
