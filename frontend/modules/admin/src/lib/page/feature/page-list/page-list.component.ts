@@ -1,41 +1,32 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PageService } from '@reunice/modules/shared/data-access';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { TuiTableModule } from '@taiga-ui/addon-table';
+import { Page, PageService } from '@reunice/modules/shared/data-access';
 import {
-  TuiButtonModule,
-  TuiFormatDatePipeModule,
-  TuiLinkModule,
-} from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
+  provideReuniceTable,
+  ReuniceAbstractTable,
+} from '../../../shared/table/reunice-abstract-table.directive';
+import { FormBuilder } from '@angular/forms';
+import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 
 @Component({
   selector: 'reunice-page-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    TuiLetModule,
-    TuiTableModule,
-    TuiFormatDatePipeModule,
-    RouterLink,
-    TuiLinkModule,
-    TuiButtonModule,
-  ],
+  imports: [BaseFormImportsModule, BaseTableImportsModule],
   templateUrl: './page-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideReuniceTable(PageService)],
 })
-export class PageListComponent {
-  private readonly _pageService = inject(PageService);
-
-  readonly columns = [
+export class PageListComponent extends ReuniceAbstractTable<Page> {
+  readonly columns: Array<keyof Page | string> = [
     'title',
-    'createdAt',
+    'createdOn',
     'university',
-    'author',
+    'creator',
     'hidden',
     'actions',
   ];
 
-  readonly pages$ = this._pageService.getAll();
+  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+    search: [''],
+  });
 }

@@ -1,8 +1,7 @@
-import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { Keyword } from '../models/keyword';
-import { AbstractApiService } from './abstract-api.service';
+import { AbstractApiService, toHttpParams } from './abstract-api.service';
 import { ApiParams } from '../api.params';
 
 @Injectable({
@@ -29,7 +28,7 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
     params: ApiParams<Keyword> | ApiParams = {}
   ): Observable<Keyword[]> {
     return this._http.get<Keyword[]>(this._resourceUrl + '/all', {
-      params: new HttpParams({ fromObject: params }),
+      params: toHttpParams(params),
     });
   }
 }

@@ -1,36 +1,32 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UserService } from '@reunice/modules/shared/data-access';
-import { CommonModule } from '@angular/common';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { TuiTableModule } from '@taiga-ui/addon-table';
-import { TuiButtonModule, TuiLinkModule } from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
+import { User, UserService } from '@reunice/modules/shared/data-access';
+import {
+  provideReuniceTable,
+  ReuniceAbstractTable,
+} from '../../../shared/table/reunice-abstract-table.directive';
+import { FormBuilder } from '@angular/forms';
+import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 
 @Component({
   selector: 'reunice-user-list',
   templateUrl: './user-list.component.html',
   standalone: true,
-  imports: [
-    CommonModule,
-    TuiLetModule,
-    TuiTableModule,
-    TuiLinkModule,
-    RouterLink,
-    TuiButtonModule,
-  ],
+  imports: [BaseFormImportsModule, BaseTableImportsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideReuniceTable(UserService)],
 })
-export class UserListComponent {
-  private readonly _userService = inject(UserService);
-
-  readonly columns = [
-    'name',
+export class UserListComponent extends ReuniceAbstractTable<User> {
+  readonly columns: Array<keyof User | string> = [
+    'username',
     'firstName',
     'lastName',
-    'role',
-    'active',
+    'accountType',
+    'enabled',
     'actions',
   ];
 
-  readonly users$ = this._userService.getAll();
+  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+    search: [''],
+  });
 }

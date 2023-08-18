@@ -7,19 +7,20 @@ type OnlyKeysOfType<T, TProp> = {
   [K in keyof T as T[K] extends TProp ? K : never]: T[K];
 };
 
-export type ApiFilter<T> =
-  | ApiFilterOperator<T, 'eq'> &
-      ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'> &
-      Partial<{ search: string }>;
+export type ApiFilter<T> = ApiFilterOperator<T, 'eq'> &
+  ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'> &
+  Partial<{ search: string }>;
 
-export type ApiSort = {
-  sort?: string;
-  direction?: 'asc' | 'desc';
+export type ApiSort<T = object> = {
+  sort: `${keyof T & string},${'asc' | 'desc'}` & string;
 };
 
 export type ApiPagination = {
-  page?: number;
-  pageSize?: number;
+  page: number;
+  size: number;
 };
 
-export type ApiParams<T = object> = ApiSort & ApiPagination & ApiFilter<T>;
+export type ApiParams<T = object> =
+  | Partial<ApiSort<T>>
+  | Partial<ApiPagination>
+  | ApiFilter<T>;
