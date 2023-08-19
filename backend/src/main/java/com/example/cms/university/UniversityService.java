@@ -71,9 +71,7 @@ public class UniversityService {
             throw new UniversityException(UniversityExceptionType.NAME_TAKEN);
         }
 
-        Long creatorId = form.getCreatorId().orElse(securityService.getPrincipal().orElseThrow(UserNotFound::new).getId());
-
-        User creator = userRepository.findById(creatorId)
+        User creator = userRepository.findById(form.getCreatorId())
                 .orElseThrow(UserNotFound::new);
 
         if (creator.getAccountType() != Role.ADMIN) {

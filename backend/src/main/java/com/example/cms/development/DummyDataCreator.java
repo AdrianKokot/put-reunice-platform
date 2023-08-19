@@ -547,61 +547,61 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "Poznań University of Technology",
                 "PUT",
                 "blank",
-                Optional.of(1L)
+                1L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Adam Mickiewicz University in Poznań",
                 "UAM",
                 "blank",
-                Optional.of(1L)
+                1L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Poznań University of Medical Sciences",
                 "PUMS",
                 "blank",
-                Optional.of(1L)
+                1L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Poznań University of Economics and Business",
                 "PUEB",
                 "blank",
-                Optional.of(1L)
+                1L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "University of Fine Arts in Poznań",
                 "UFAP",
                 "blank",
-                Optional.of(2L)
+                2L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Wroclaw University of Technology",
                 "WUT",
                 "blank",
-                Optional.of(2L)
+                2L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Karol Lipiński Academy of Music in Wrocław",
                 "KLAMW",
                 "blank",
-                Optional.of(2L)
+                2L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Gdynia Maritime University",
                 "GMU",
                 "blank",
-                Optional.of(3L)
+                3L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Chopin University of Music",
                 "CUM",
                 "blank",
-                Optional.of(3L)
+                3L
         ));
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "University of Szczecin",
                 "US",
                 "blank",
-                Optional.of(3L)
+                3L
         ));
 
         universityService.modifyHiddenField(1L, false);

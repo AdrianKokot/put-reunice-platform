@@ -13,7 +13,7 @@ public class UniversityDtoFormCreate {
     String name;
     String shortName;
     String description;
-    Optional<Long> creatorId;
+    Long creatorId;
 
     public University toUniversity(User creator, String content) {
         University university = new University();
