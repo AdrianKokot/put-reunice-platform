@@ -1,9 +1,8 @@
 ### Build ###
-FROM node:16.17.0-alpine AS build-fe
+FROM node:18-alpine AS build-fe
 WORKDIR /usr/src/app
-COPY frontend/package.json ./
-RUN npm install --force
 COPY frontend/. .
+RUN npm install --force
 RUN npm run build
 
 ### Build ###
@@ -16,7 +15,7 @@ COPY --from=build-fe /usr/src/app/dist/reunice /workspace/src/main/resources/sta
 RUN mvn -f pom.xml clean package -DskipTests
 
 ### Run ###
-FROM openjdk:11-jre-slim-buster
+FROM amazoncorretto:11-alpine-jdk
 WORKDIR /workspace
 COPY --from=build-be /workspace/target/*.jar app.jar
 EXPOSE 8080
