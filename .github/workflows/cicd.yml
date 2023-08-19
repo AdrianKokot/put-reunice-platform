@@ -126,7 +126,7 @@ jobs:
           port: ${{ secrets.MIKRUS_SSH_PORT }}
           script: |
             cd /reunice
-            docker stop "$(docker ps -aq)"
+            docker kill "$(docker ps -aq)"
             docker system prune -f
             docker pull ${{ steps.meta.outputs.tags }}
-            docker run --env-file .env -p 80:8080 -p 443:8080 -d ${{ steps.meta.outputs.tags }}
+            docker run --env-file .env -p 80:8080 --memory="800m" -p 443:8080 -d ${{ steps.meta.outputs.tags }}
