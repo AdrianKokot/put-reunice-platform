@@ -1,5 +1,6 @@
 package com.example.cms.university.projections;
 
+import com.example.cms.page.projections.PageDtoDetailed;
 import com.example.cms.page.projections.PageDtoSimple;
 import com.example.cms.university.University;
 import com.example.cms.user.projections.UserDtoSimple;
@@ -19,7 +20,7 @@ public class UniversityDtoDetailed {
     private String shortName;
     private String description;
     private boolean hidden;
-    private PageDtoSimple mainPage;
+    private PageDtoDetailed mainPage;
     private Set<UserDtoSimple> enrolledUsers;
 
     public static UniversityDtoDetailed of(University university) {
@@ -36,6 +37,6 @@ public class UniversityDtoDetailed {
         description = university.getDescription();
         hidden = university.isHidden();
         enrolledUsers = university.getEnrolledUsers().stream().map(UserDtoSimple::of).collect(Collectors.toSet());
-        mainPage = PageDtoSimple.of(university.getMainPage());
+        mainPage = PageDtoDetailed.of(university.getMainPage());
     }
 }

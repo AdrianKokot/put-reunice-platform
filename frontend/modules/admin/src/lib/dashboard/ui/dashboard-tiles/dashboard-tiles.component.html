@@ -1,0 +1,17 @@
+<ng-container *ngFor="let item of links">
+  <a tuiAction [routerLink]="item.url" class="justify-start items-center">
+    <tui-marker-icon
+      [src]="item.icon"
+      class="tui-island__marker"
+      size="xs"
+    ></tui-marker-icon>
+    <div>
+      <div>
+        {{ item.title | translate }}
+      </div>
+      <div class="tui-text_body-xs text-02">
+        {{ item.description | translate }}
+      </div>
+    </div>
+  </a>
+</ng-container>

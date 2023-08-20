@@ -1,0 +1,48 @@
+<div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
+  <label [tuiLabel]="'NAME' | translate" class="tui-form__row">
+    {{ item?.name ?? '—' }}
+  </label>
+
+  <label
+    [tuiLabel]="'TEMPLATE_AVAILABLE_FOR_UNIVERSITIES' | translate"
+    class="tui-form__row"
+    *reuniceUser="'ADMIN'"
+  >
+    <ng-container
+      *ngIf="(item?.universities?.length ?? 0) === 0; else universityTags"
+    >
+      {{ 'ALL_UNIVERSITIES' | translate }}
+    </ng-container>
+    <ng-template #universityTags>
+      <div class="tag-list tui-space_top-1">
+        <tui-tag
+          *ngFor="let university of item?.universities ?? []"
+          status="primary"
+          [hoverable]="false"
+          [value]="university.name"
+        ></tui-tag>
+      </div>
+    </ng-template>
+  </label>
+
+  <div class="tui-form__row tui-space_bottom-1 text-02">
+    {{ 'CONTENT' | translate }}
+  </div>
+  <tui-editor-socket
+    class="tui-island tui-island_size_s"
+    [content]="item?.content ?? ''"
+  >
+  </tui-editor-socket>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <a
+      [routerLink]="['edit']"
+      tuiButton
+      type="button"
+      appearance="flat"
+      class="tui-form__button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
+</div>

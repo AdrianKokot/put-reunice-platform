@@ -1,0 +1,19 @@
+<h2 class="tui-text_h2">{{ 'UNIVERSITIES_WE_WORK_WITH' | translate }}</h2>
+
+<div class="tui-row">
+  <div
+    class="tui-col_md-4"
+    *ngFor="let page of universities$ | async; else: loading; empty: blank"
+  >
+    <a tuiIsland [routerLink]="[page.university.id, 'page', page.id]">
+      <h3 class="tui-island__title">{{ page.title }}</h3>
+    </a>
+  </div>
+</div>
+<ng-template #loading>
+  <!--  TODO Add some skeleton after making the list look nice -->
+  Loading....
+  <tui-loader></tui-loader>
+</ng-template>
+
+<ng-template #blank> No items to show </ng-template>

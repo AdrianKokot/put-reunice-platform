@@ -1,0 +1,38 @@
+<tui-hosted-dropdown
+  #dropdown
+  class="t-wrapper"
+  [content]="dropdownContent"
+  *tuiLet="templates$ | async as templates"
+>
+  <button
+    tuiIconButton
+    [tuiHint]="'LOAD_TEMPLATE' | translate"
+    tuiHintDirection="top"
+    type="button"
+    size="s"
+    [showLoader]="templates === null"
+    [icon]="'tuiIconFileTextLarge'"
+    appearance="icon"
+    class="tool-button"
+    [disabled]="templates === null"
+    [pseudoActive]="dropdown.open"
+    [focusable]="dropdown.open"
+  ></button>
+
+  <ng-template #dropdownContent let-activeZone let-close>
+    <div [tuiActiveZoneParent]="activeZone">
+      <tui-data-list
+        size="m"
+        [emptyContent]="'NO_TEMPLATES_AVAILABLE' | translate"
+      >
+        <button
+          tuiOption
+          *ngFor="let template of templates ?? []"
+          (click)="loadTemplate(template); close()"
+        >
+          {{ template.name }}
+        </button>
+      </tui-data-list>
+    </div>
+  </ng-template>
+</tui-hosted-dropdown>

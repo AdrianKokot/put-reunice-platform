@@ -2,15 +2,17 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "module": "commonjs",
-    "target": "es2016",
-    "types": ["jest", "node"]
+    "module": "esnext",
+    "types": ["jest", "node"],
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
-  "files": ["src/test-setup.ts"],
+  "files": ["./**/test-setup.ts", "./setup-jest.js"],
   "include": [
     "jest.config.ts",
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts"
+    "./**/*.test.ts",
+    "./**/*.spec.ts",
+    "./**/*.d.ts"
   ]
 }
