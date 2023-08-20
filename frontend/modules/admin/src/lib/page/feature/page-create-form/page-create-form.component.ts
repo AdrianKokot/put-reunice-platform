@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
-  Page,
   PageService,
   UniversityService,
   UserService,
 } from '@reunice/modules/shared/data-access';
-import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import {
+  FormSubmitWrapper,
+  PAGE_TREE_HANDLER,
+} from '@reunice/modules/shared/util';
 import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
@@ -27,7 +29,7 @@ import {
   TuiRadioLabeledModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
-import { TuiHandler, TuiLetModule, TuiValueChangesModule } from '@taiga-ui/cdk';
+import { TuiLetModule, TuiValueChangesModule } from '@taiga-ui/cdk';
 import { RouterLinkActive } from '@angular/router';
 import { TuiLinkModule } from '@taiga-ui/core';
 
@@ -100,6 +102,5 @@ export class PageCreateFormComponent {
     shareReplay()
   );
 
-  readonly pagesTreeHandler: TuiHandler<Page, readonly Page[]> = (item) =>
-    item?.children ?? [];
+  readonly pagesTreeHandler = PAGE_TREE_HANDLER;
 }

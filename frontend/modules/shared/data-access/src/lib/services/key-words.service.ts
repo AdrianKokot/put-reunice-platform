@@ -21,7 +21,7 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
   }
 
   override create(resource: Partial<Keyword>): Observable<Keyword> {
-    return super.create(resource.word as any);
+    return super.create(resource.word as unknown as Keyword);
   }
 
   override getAll(

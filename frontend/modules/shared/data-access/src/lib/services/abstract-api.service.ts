@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
 import { ApiParams } from '../api.params';
+import { BaseResource } from '../models/base-resource';
 
 export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
   const fromObject = (Object.keys(params) as Array<keyof typeof params>).reduce(
@@ -22,7 +23,7 @@ export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
 };
 
 export abstract class AbstractApiService<
-  T extends { id: number | string } = { id: number },
+  T extends BaseResource = BaseResource,
   TCreatePayload = T,
   TUpdatePayload = T
 > {
@@ -30,7 +31,7 @@ export abstract class AbstractApiService<
 
   protected constructor(protected readonly _resourceUrl: string) {}
 
-  get(id: T['id'] | string | number) {
+  get(id: T['id'] | BaseResource['id']) {
     return this._http.get<T>(`${this._resourceUrl}/${id}`);
   }
 

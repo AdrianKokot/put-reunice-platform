@@ -1,30 +1,39 @@
 import {
   filter,
   map,
-  Observable,
+  share,
   shareReplay,
   startWith,
   switchMap,
   tap,
 } from 'rxjs';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AbstractApiService } from '@reunice/modules/shared/data-access';
 import { inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-export const mapToApiResource = <TResult extends { id: string | number }>(
-  service: AbstractApiService<TResult, unknown, unknown>,
-  tapFn?: (item: TResult) => void,
-  paramKey: keyof TResult & string = 'id'
-) => {
-  return function (source: Observable<ParamMap>) {
-    return source.pipe(
-      map((params) => params.get(paramKey)),
-      filter((id): id is string => id !== null),
-      switchMap((id) => service.get(id).pipe(tap(tapFn), startWith(null))),
-      shareReplay()
-    );
-  };
+export const nestedRouteParamMap = (paramKey: string) => {
+  const router = inject(Router);
+  return router.events.pipe(
+    filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+    startWith(null),
+    map(() => {
+      let route = router.routerState.snapshot.root;
+      while (route.firstChild) route = route.firstChild;
+
+      return route.paramMap.get(paramKey);
+    }),
+    filter((id): id is string => id !== null),
+    share()
+  );
+};
+
+export const resourceIdFromRoute = (paramKey = 'id') => {
+  return inject(ActivatedRoute).paramMap.pipe(
+    map((params) => params.get(paramKey)),
+    filter((id): id is string => id !== null),
+    shareReplay()
+  );
 };
 
 export const resourceFromRoute = <
@@ -34,10 +43,11 @@ export const resourceFromRoute = <
 >(
   service: AbstractApiService<TResult, unknown, unknown>,
   tapFn?: (item: TResult) => void,
-  paramKey: keyof TResult & string = 'id'
+  paramKey = 'id'
 ) => {
-  return inject(ActivatedRoute).paramMap.pipe(
-    mapToApiResource(service, tapFn, paramKey)
+  return resourceIdFromRoute(paramKey).pipe(
+    switchMap((id) => service.get(id).pipe(tap(tapFn), startWith(null))),
+    shareReplay()
   );
 };
 

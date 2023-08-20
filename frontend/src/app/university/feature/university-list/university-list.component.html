@@ -3,18 +3,13 @@
 <div class="tui-row">
   <div
     class="tui-col_md-4"
-    *ngFor="
-      let university of universities$ | async;
-      else: loading;
-      empty: blank
-    "
+    *ngFor="let page of universities$ | async; else: loading; empty: blank"
   >
-    <a tuiIsland [routerLink]="[university.id]">
-      <h3 class="tui-island__title">{{ university.title }}</h3>
+    <a tuiIsland [routerLink]="[page.university.id, 'page', page.id]">
+      <h3 class="tui-island__title">{{ page.title }}</h3>
     </a>
   </div>
 </div>
-
 <ng-template #loading>
   <!--  TODO Add some skeleton after making the list look nice -->
   Loading....

@@ -1,24 +1,21 @@
-<div *ngIf="university$ | async as university">
-  <tui-tree
-    [tuiTreeController]="true"
-    [content]="treeContent"
-    [value]="(pages$ | async) ?? []"
-    [childrenHandler]="handler"
-  ></tui-tree>
-
-  <ng-template #treeContent let-value>
+<tui-breadcrumbs
+  class="tui-space_top-4"
+  *tuiLet="breadcrumbs$ | async as breadcrumbs"
+  [class.tui-skeleton]="breadcrumbs === null"
+>
+  <ng-container *ngFor="let item of breadcrumbs ?? []">
     <a
+      *tuiItem
       tuiLink
-      [routerLink]="['page', value.id]"
+      [routerLink]="['page', item.id]"
+      [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive="text-underline"
-      >{{ value.title }}</a
     >
-  </ng-template>
+      {{ item.title }}
+    </a>
+  </ng-container>
+</tui-breadcrumbs>
 
-  <div>
-    <router-outlet></router-outlet>
-  </div>
-
-  <h3>University details</h3>
-  <pre>{{ university | json }}</pre>
+<div>
+  <router-outlet></router-outlet>
 </div>

@@ -1,54 +1,119 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Injector,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Page, PageService } from '@reunice/modules/shared/data-access';
 import {
-  Page,
-  PageService,
-  UniversityService,
-} from '@reunice/modules/shared/data-access';
+  combineLatest,
+  distinctUntilKeyChanged,
+  filter,
+  map,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import {
-  ActivatedRoute,
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet,
-} from '@angular/router';
-import { filter, map, startWith, switchMap } from 'rxjs';
-import { TuiHandler } from '@taiga-ui/cdk';
+  nestedRouteParamMap,
+  resourceIdFromRoute,
+} from '@reunice/modules/shared/util';
+import { SideService } from '../../../shared/side.service';
+import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
+import {
+  UNIVERSITY_PAGE_HIERARCHY,
+  UniversityPagesTreeComponent,
+} from '../../ui/university-pages-tree/university-pages-tree.component';
+import { TuiBreadcrumbsModule } from '@taiga-ui/kit';
 import { TuiLinkModule } from '@taiga-ui/core';
-import { TuiTreeModule } from '@taiga-ui/kit';
+import { RouterModule } from '@angular/router';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'reunice-university-shell',
   standalone: true,
   imports: [
     CommonModule,
+    TuiBreadcrumbsModule,
     TuiLinkModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    TuiTreeModule,
+    RouterModule,
+    TuiLetModule,
   ],
   templateUrl: './university-shell.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UniversityShellComponent {
-  private readonly _universityService = inject(UniversityService);
+export class UniversityShellComponent implements OnDestroy {
   private readonly _pageService = inject(PageService);
+  private readonly _sideService = inject(SideService);
+  private readonly _injector = inject(Injector);
 
-  private readonly _universityId$ = inject(ActivatedRoute).paramMap.pipe(
-    map((params) => params.get('id')),
-    filter((id): id is string => id !== null),
-    map((id) => parseInt(id))
-  );
+  private readonly _universityId$ = resourceIdFromRoute();
+  private readonly _pageId$ = nestedRouteParamMap('pageId');
 
-  public readonly university$ = this._universityId$.pipe(
-    switchMap((id) => this._universityService.get(id).pipe(startWith(null)))
-  );
+  private readonly _pagesMap = new Map<
+    Page['id'],
+    Pick<Page, 'title'> & { parentId: Page['id'] | null }
+  >();
 
   public readonly pages$ = this._universityId$.pipe(
     switchMap((id) =>
-      this._pageService.getUniversityHierarchy(id).pipe(startWith(null))
-    )
+      this._pageService.getUniversityHierarchy(+id).pipe(startWith(null))
+    ),
+    map((pages) => {
+      const addPageToMap = (page: Page, parentId: Page['id'] | null = null) => {
+        this._pagesMap.set(page.id, { title: page.title, parentId });
+        page.children.forEach((p) => addPageToMap(p, page.id));
+      };
+
+      if (pages) {
+        addPageToMap(pages);
+      }
+
+      this._sideService.setLeftSide(
+        new PolymorpheusComponent(
+          UniversityPagesTreeComponent,
+          Injector.create({
+            parent: this._injector,
+            providers: [
+              {
+                provide: UNIVERSITY_PAGE_HIERARCHY,
+                useValue: pages,
+              },
+            ],
+          })
+        )
+      );
+
+      return pages;
+    })
   );
 
-  readonly handler: TuiHandler<Page, readonly Page[]> = (item) => item.children;
+  readonly breadcrumbs$ = combineLatest({
+    page: this.pages$.pipe(filter((x) => x !== null)),
+    pageId: this._pageId$,
+  }).pipe(
+    distinctUntilKeyChanged('pageId'),
+    map(({ pageId }) => {
+      const breadcrumbs: Array<Pick<Page, 'id' | 'title'>> = [];
+
+      let currentId: number | null = +pageId;
+      while (currentId) {
+        const page = this._pagesMap.get(currentId);
+        if (!page) {
+          break;
+        }
+
+        breadcrumbs.unshift({ id: currentId, title: page.title });
+        currentId = page.parentId;
+      }
+
+      return breadcrumbs.length < 2 ? [] : breadcrumbs;
+    }),
+    startWith(null)
+  );
+
+  ngOnDestroy(): void {
+    this._sideService.setLeftSide(null);
+  }
 }

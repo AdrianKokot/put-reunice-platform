@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FileResource } from '../models/file';
+import { BaseResource } from '../models/base-resource';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class FileService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(pageID: number): Observable<FileResource[]> {
+  getAll(pageID: BaseResource['id']): Observable<FileResource[]> {
     return this.http.get<FileResource[]>(`${this.server}/all/page/${pageID}`);
   }
 

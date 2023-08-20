@@ -1,28 +1,34 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileService, PageService } from '@reunice/modules/shared/data-access';
-import { ActivatedRoute } from '@angular/router';
-import { filter, map, share, startWith, switchMap } from 'rxjs';
+import { RouterLinkActive } from '@angular/router';
+import { startWith, switchMap } from 'rxjs';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLetModule } from '@taiga-ui/cdk';
+import { TuiBreadcrumbsModule, TuiLineClampModule } from '@taiga-ui/kit';
+import { TuiLinkModule } from '@taiga-ui/core';
+import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 
 @Component({
   selector: 'reunice-page-details',
   standalone: true,
-  imports: [CommonModule, TuiEditorSocketModule, TuiLetModule],
+  imports: [
+    CommonModule,
+    TuiEditorSocketModule,
+    TuiLetModule,
+    RouterLinkActive,
+    TuiBreadcrumbsModule,
+    TuiLinkModule,
+    TuiLineClampModule,
+  ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageDetailsComponent {
-  private readonly _pageService = inject(PageService);
   private readonly _fileService = inject(FileService);
+  private readonly _pageService = inject(PageService);
 
-  private readonly _pageId$ = inject(ActivatedRoute).paramMap.pipe(
-    map((params) => params.get('pageId')),
-    filter((id): id is string => id !== null),
-    map((id) => parseInt(id)),
-    share()
-  );
+  private readonly _pageId$ = resourceIdFromRoute('pageId');
 
   readonly page$ = this._pageId$.pipe(
     switchMap((id) => this._pageService.get(id).pipe(startWith(null)))

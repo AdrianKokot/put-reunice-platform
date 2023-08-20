@@ -1,14 +1,21 @@
-<h3>Page</h3>
 <ng-container *tuiLet="page$ | async as page">
-  <tui-editor-socket [content]="page?.content ?? ''"></tui-editor-socket>
-
-  <pre
-    >{{ page | json }}
-</pre
+  <h3
+    class="tui-text_h3 tui-space_top-0 tui-space_bottom-2"
+    [class.tui-skeleton]="page === null"
   >
-</ng-container>
+    {{ page?.title ?? '-' }}
+  </h3>
 
-<h3>Page files</h3>
-<pre>
-  {{ files$ | async | json }}
-</pre>
+  <p class="text-02" [class.tui-skeleton]="page === null">
+    {{ page?.description ?? '-' }}
+  </p>
+
+  <hr />
+
+  <div class="d-block tui-space_vertical-3">
+    <tui-editor-socket
+      [content]="page?.content ?? '-'"
+      [class.tui-skeleton]="page === null"
+    ></tui-editor-socket>
+  </div>
+</ng-container>

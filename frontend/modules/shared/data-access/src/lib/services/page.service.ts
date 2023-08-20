@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { combineLatest, Observable, switchMap } from 'rxjs';
 import { Page, PageForm } from '../models/page';
 import { AbstractApiService } from './abstract-api.service';
+import { University } from '../models/university';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +51,7 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
 
-  getUniversityHierarchy(universityId: number): Observable<Page> {
+  getUniversityHierarchy(universityId: University['id']): Observable<Page> {
     return this._http.get<Page>(
       `${this._resourceUrl}/hierarchy/${universityId}`
     );
