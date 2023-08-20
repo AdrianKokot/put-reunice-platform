@@ -181,7 +181,7 @@
         form.controls.accountType.value !== accountType.ADMIN
       "
     >
-      <tui-multi-select
+      <tui-combo-box
         tuiTextfieldSize="m"
         *tuiLet="universitySearch.itemIds$ | async as items"
         formControlName="enrolledUniversities"
@@ -191,11 +191,10 @@
       >
         <tui-data-list-wrapper
           *tuiDataList
-          tuiMultiSelectGroup
           [items]="items"
           [itemContent]="(universitySearch.stringify$ | async)!"
         ></tui-data-list-wrapper>
-      </tui-multi-select>
+      </tui-combo-box>
 
       <tui-error
         formControlName="enrolledUniversities"

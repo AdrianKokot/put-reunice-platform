@@ -23,7 +23,9 @@ import { map } from 'rxjs';
 export class DashboardShellComponent {
   private readonly _breadcrumbService = inject(BreadcrumbService);
 
-  breadcrumbs$ = this._breadcrumbService.breadcrumbs$;
+  breadcrumbs$ = this._breadcrumbService.breadcrumbs$.pipe(
+    map((breadcrumbs) => (breadcrumbs.length > 1 ? breadcrumbs : []))
+  );
   title$ = this._breadcrumbService.breadcrumbs$.pipe(
     map((breadcrumbs) => breadcrumbs.at(-1)?.title)
   );

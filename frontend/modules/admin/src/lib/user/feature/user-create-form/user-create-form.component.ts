@@ -9,6 +9,7 @@ import { FormSubmitWrapper } from '@reunice/modules/shared/util';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 import {
+  TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiInputPasswordModule,
   TuiMultiSelectModule,
@@ -27,6 +28,7 @@ import { AuthService, UserDirective } from '@reunice/modules/shared/security';
     TuiDataListWrapperModule,
     TuiInputPasswordModule,
     UserDirective,
+    TuiComboBoxModule,
   ],
   templateUrl: './user-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,12 +52,19 @@ export class UserCreateFormComponent {
     accountType: [this.accountType.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
     enrolledUniversities: [
-      this._user?.enrolledUniversities.map((u) => u.id) ?? [],
+      (this._user?.enrolledUniversities.map((u) => u.id) ?? []).at(0),
     ],
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) => this._service.create(value),
+    submit: (value) =>
+      this._service.create({
+        ...value,
+        enrolledUniversities:
+          value.enrolledUniversities !== undefined
+            ? [value.enrolledUniversities]
+            : [],
+      }),
     successAlertMessage: 'USER_CREATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });

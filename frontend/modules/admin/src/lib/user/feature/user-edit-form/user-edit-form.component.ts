@@ -14,9 +14,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import {
+  TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiInputPasswordModule,
-  TuiMultiSelectModule,
 } from '@taiga-ui/kit';
 import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
@@ -30,10 +30,10 @@ import { TuiHintModule } from '@taiga-ui/core';
     BaseFormImportsModule,
     TuiLetModule,
     TuiDataListWrapperModule,
-    TuiMultiSelectModule,
     TuiHintModule,
     UserDirective,
     TuiInputPasswordModule,
+    TuiComboBoxModule,
   ],
   templateUrl: './user-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +54,7 @@ export class UserEditFormComponent {
     phoneNumber: ['', [Validators.required, Validators.maxLength(255)]],
     accountType: [AccountTypeEnum.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
-    enrolledUniversities: [[] as number[]],
+    enrolledUniversities: [null as number | null],
     password: [''],
   });
 
@@ -67,12 +67,19 @@ export class UserEditFormComponent {
   readonly item$ = resourceFromRoute(this._service, (user) => {
     this.form.patchValue({
       ...user,
-      enrolledUniversities: user.enrolledUniversities.map((u) => u.id),
+      enrolledUniversities: user.enrolledUniversities.at(0)?.id,
     });
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) => this._service.update(value),
+    submit: (value) =>
+      this._service.update({
+        ...value,
+        enrolledUniversities:
+          value.enrolledUniversities !== null
+            ? [value.enrolledUniversities]
+            : [],
+      }),
     successAlertMessage: 'USER_UPDATE_SUCCESS',
   });
 
