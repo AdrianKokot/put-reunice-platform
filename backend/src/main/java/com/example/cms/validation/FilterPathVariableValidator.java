@@ -10,10 +10,10 @@ import com.example.cms.template.Template;
 import com.example.cms.user.User;
 
 public class FilterPathVariableValidator {
-    private static final Map<Class, List<String>> forbiddenFields = Map.of(
-            User.class, List.of("password"),
-            Template.class, List.of("content"),
-            FileResource.class, List.of("page")
+    private static final Map<Class, Set<String>> forbiddenFields = Map.of(
+            User.class, Set.of("password"),
+            Template.class, Set.of("content"),
+            FileResource.class, Set.of("page")
     );
 
     public static Map<String, String> validate(Map<String, String> vars, Class klass) {
@@ -25,7 +25,7 @@ public class FilterPathVariableValidator {
         return vars.entrySet().stream()
                 .filter(entry ->
                         klassFields.contains(entry.getKey().split("_")[0]) &&
-                                !forbiddenFields.getOrDefault(klass, List.of()).contains(entry.getKey().split("_")[0]))
+                                !forbiddenFields.getOrDefault(klass, Set.of()).contains(entry.getKey().split("_")[0]))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

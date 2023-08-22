@@ -2,10 +2,13 @@ package com.example.cms.user;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.security.Role;
+import com.example.cms.university.University;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
+import java.util.Set;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -41,6 +44,10 @@ public class UserSpecification implements Specification<User> {
                 } catch (Exception e) {
                     return criteriaBuilder.disjunction();
                 }
+            } else if (root.get(criteria.getKey()).getJavaType() == Set.class) {
+                Join<User, University> universityJoin = root.join("enrolledUniversities");
+                return criteriaBuilder.equal(
+                        universityJoin.get("id"), parseInt(criteria.getValue().toString()));
             }
         }
         return criteriaBuilder.disjunction();
