@@ -1,0 +1,12 @@
+<button
+  menu
+  tuiIconButton
+  icon="tuiIconMenu"
+  type="button"
+  (click)="toggle(true)"
+  (tuiActiveZoneChange)="toggle($event)"
+>
+  <div *tuiSidebar="open">
+    <ng-content></ng-content>
+  </div>
+</button>
