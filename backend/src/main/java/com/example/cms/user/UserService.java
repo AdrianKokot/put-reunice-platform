@@ -8,6 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.example.cms.SearchCriteria;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -50,8 +53,32 @@ public class UserService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<UserDtoSimple> getUsers() {
-        return userRepository.findAll().stream().map(UserDtoSimple::of).collect(Collectors.toList());
+    public List<UserDtoSimple> getUsers(Pageable pageable, Map<String, String> filterVars) {
+        Specification<User> combinedSpecification = null;
+
+        if (!filterVars.isEmpty()) {
+            List<UserSpecification> specifications = filterVars.entrySet().stream()
+                    .map(entries -> {
+                        String[] filterBy = entries.getKey().split("_");
+
+                        return new UserSpecification(new SearchCriteria(
+                                filterBy[0],
+                                filterBy[filterBy.length - 1],
+                                entries.getValue()
+                        ));
+                    }).collect(Collectors.toList());
+
+            for (Specification<User> spec : specifications) {
+                if (combinedSpecification == null) {
+                    combinedSpecification = Specification.where(spec);
+                }
+                combinedSpecification = combinedSpecification.and(spec);
+            }
+        }
+
+        return userRepository.findAll(combinedSpecification, pageable).stream()
+                .map(UserDtoSimple::of)
+                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_MODERATOR")
@@ -213,8 +240,8 @@ public class UserService {
         }
     }
 
-    public List<UserDtoSimple> searchUser(String text) {
-        return userRepository.searchUser(text).stream()
+    public List<UserDtoSimple> searchUser(Pageable pageable, String text) {
+        return userRepository.searchUser(pageable, text).stream()
                 .map(UserDtoSimple::of)
                 .collect(Collectors.toList());
     }

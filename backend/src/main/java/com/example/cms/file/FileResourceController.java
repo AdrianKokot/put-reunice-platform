@@ -1,8 +1,12 @@
 package com.example.cms.file;
 
 import com.example.cms.file.projections.FileDtoSimple;
+import com.example.cms.template.Template;
+import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,8 +24,13 @@ public class FileResourceController {
     private final FileResourceService fileService;
 
     @GetMapping("/all/page/{pageId}")
-    public List<FileDtoSimple> getAll(@PathVariable Long pageId) {
-        return fileService.getAll(pageId);
+    public ResponseEntity<List<FileDtoSimple>> getAll(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
+        return new ResponseEntity<>(
+                fileService.getAll(
+                        pageable,
+                        pageId,
+                        FilterPathVariableValidator.validate(vars, FileResource.class)),
+                HttpStatus.OK);
     }
 
     @GetMapping("download/page/{pageId}/{filename}")

@@ -2,8 +2,8 @@ package com.example.cms.page;
 
 import com.example.cms.user.User;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -11,23 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PageRepository extends JpaRepository<Page, Long> {
+public interface PageRepository extends JpaRepository<Page, Long>, JpaSpecificationExecutor<Page> {
     boolean existsByParent(Page parent);
 
-    @Query("from Page where " +
-            "(hidden = false and university.hidden = false) or " +
-            "(:role = 'ADMIN') or" +
-            "(:role= 'MODERATOR' and university.id in :universities) or " +
-            "(:role = 'USER' and creator.id = :creator)")
-    List<Page> findVisible(Pageable pageable,
-                           @Param("role") String accountType,
-                           @Param("universities") List<Long> universities,
-                           @Param("creator") Long creator);
-
-    @Query("from Page where hidden = false and university.hidden = false")
-    List<Page> findVisible(Pageable pageable);
-
-    List<Page> findAllByParent(Sort sort, Page parent);
+    List<Page> findAllByParent(Pageable pageable, Page parent);
 
     @Query("from Page where " +
             "(LOWER(title) LIKE :text " +

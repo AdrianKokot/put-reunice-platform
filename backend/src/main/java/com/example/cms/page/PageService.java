@@ -1,5 +1,6 @@
 package com.example.cms.page;
 
+import com.example.cms.SearchCriteria;
 import com.example.cms.page.exceptions.PageException;
 import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbidden;
@@ -11,16 +12,21 @@ import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
+import com.example.cms.user.UserSpecification;
 import com.example.cms.user.exceptions.UserForbidden;
 import com.example.cms.user.exceptions.UserNotFound;
+import com.example.cms.user.projections.UserDtoSimple;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,24 +46,53 @@ public class PageService {
             if (!isPageVisible(page.getParent())) {
                 page.setParent(null);
             }
-            return PageDtoDetailed.of(page, findVisibleSubpages(Sort.by("title"), page));
+            return PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
         }).orElseThrow(PageNotFound::new);
     }
 
-    public List<PageDtoSimple> getAllVisible(Pageable pageable) {
+    public List<PageDtoSimple> getAllVisible(Pageable pageable,  Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        List<Page> pages;
-        if (loggedUserOptional.isEmpty()) {
-            pages = pageRepository.findVisible(pageable);
-        } else {
+        String role;
+        List<Long> universities;
+        Long creator;
+
+        if (loggedUserOptional.isPresent()) {
             LoggedUser loggedUser = loggedUserOptional.get();
-            pages = pageRepository.findVisible(
-                    pageable,
-                    String.valueOf(loggedUser.getAccountType()),
-                    loggedUser.getUniversities(),
-                    loggedUser.getId());
+            role = String.valueOf(loggedUserOptional);
+            universities = loggedUser.getUniversities();
+            creator = loggedUser.getId();
+        } else {
+            role = null;
+            universities = null;
+            creator = null;
         }
-        return pages.stream()
+
+
+        Specification<Page> combinedSpecification = null;
+
+        if (!filterVars.isEmpty()) {
+            List<PageSpecification> specifications = filterVars.entrySet().stream()
+                    .map(entries -> {
+                        String[] filterBy = entries.getKey().split("_");
+
+                        return new PageSpecification(new SearchCriteria(
+                                filterBy[0],
+                                filterBy[filterBy.length - 1],
+                                entries.getValue()),
+                                role,
+                                universities,
+                                creator);
+                    }).collect(Collectors.toList());
+
+            for (Specification<Page> spec : specifications) {
+                if (combinedSpecification == null) {
+                    combinedSpecification = Specification.where(spec);
+                }
+                combinedSpecification = combinedSpecification.and(spec);
+            }
+        }
+
+        return pageRepository.findAll(combinedSpecification, pageable).stream()
                 .map(PageDtoSimple::of)
                 .collect(Collectors.toList());
     }
@@ -89,18 +124,18 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
-    public List<PageDtoSimple> getSubpagesByParentPage(Sort sort, Long parentId) {
+    public List<PageDtoSimple> getSubpagesByParentPage(Pageable pageable, Long parentId) {
         Page parent = Optional.ofNullable(parentId)
                 .map(id -> pageRepository.findById(id).orElseThrow(PageNotFound::new))
                 .orElse(null);
 
-        return findVisibleSubpages(sort, parent).stream()
+        return findVisibleSubpages(pageable, parent).stream()
                 .map(PageDtoSimple::of)
                 .collect(Collectors.toList());
     }
 
-    private List<Page> findVisibleSubpages(Sort sort, Page page) {
-        return pageRepository.findAllByParent(sort, page).stream()
+    private List<Page> findVisibleSubpages(Pageable pageable, Page page) {
+        return pageRepository.findAllByParent(pageable, page).stream()
                 .filter(this::isPageVisible)
                 .collect(Collectors.toList());
     }

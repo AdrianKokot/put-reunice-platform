@@ -1,7 +1,9 @@
 package com.example.cms.file;
 
 import com.example.cms.page.Page;
+import com.example.cms.template.Template;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FileResourceRepository extends JpaRepository<FileResource, Long> {
+public interface FileResourceRepository extends JpaRepository<FileResource, Long>, JpaSpecificationExecutor<FileResource> {
     Optional<FileResource> findFileResourceByFilenameAndPage(String filename, Page page);
 
     void deleteFileResourceByFilenameAndAndPage(String filename, Page page);

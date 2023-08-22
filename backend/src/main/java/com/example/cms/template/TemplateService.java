@@ -1,8 +1,15 @@
 package com.example.cms.template;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.cms.SearchCriteria;
+import com.example.cms.user.User;
+import com.example.cms.user.UserSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,18 +44,42 @@ public class TemplateService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<TemplateDtoDetailed> getAll() {
-        return templateRepository.findAll().stream().map(TemplateDtoDetailed::of).collect(Collectors.toList());
+    public List<TemplateDtoDetailed> getAll(Pageable pageable, Map<String, String> filterVars) {
+        Specification<Template> combinedSpecification = null;
+
+        if (!filterVars.isEmpty()) {
+            List<TemplateSpecification> specifications = filterVars.entrySet().stream()
+                    .map(entries -> {
+                        String[] filterBy = entries.getKey().split("_");
+
+                        return new TemplateSpecification(new SearchCriteria(
+                                filterBy[0],
+                                filterBy[filterBy.length - 1],
+                                entries.getValue()
+                        ));
+                    }).collect(Collectors.toList());
+
+            for (Specification<Template> spec : specifications) {
+                if (combinedSpecification == null) {
+                    combinedSpecification = Specification.where(spec);
+                }
+                combinedSpecification = combinedSpecification.and(spec);
+            }
+        }
+
+        return templateRepository.findAll(combinedSpecification, pageable).stream()
+                .map(TemplateDtoDetailed::of)
+                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_USER") //added by MSz
-    public List<TemplateDtoSimple> getAllByUniversity(Long universityID) {
+    public List<TemplateDtoSimple> getAllByUniversity(Pageable pageable, Long universityID) {
         University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFound::new);
         if (!securityService.hasUniversity(university.getId())) {
             throw new UniversityForbidden();
         }
 
-        return templateRepository.findByUniversities_Id(universityID).stream()
+        return templateRepository.findByUniversities_Id(pageable, universityID).stream()
                 .map(TemplateDtoSimple::of)
                 .collect(Collectors.toList());
     }

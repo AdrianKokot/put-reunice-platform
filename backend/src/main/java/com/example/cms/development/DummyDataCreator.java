@@ -1254,6 +1254,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         templateService.save("UniversityTemplate");
         templateService.modifyContentField(1L, "Template used for university main page.");
 
+        templateService.save("UniversityTemplate2");
+        templateService.modifyContentField(2L, "Second template used for university main page.");
+
         keyWordsService.save("sztuczna inteligencja");
         keyWordsService.save("si");
         keyWordsService.save("artificial intelligence");

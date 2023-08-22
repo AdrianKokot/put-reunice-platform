@@ -5,7 +5,10 @@ import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.user.projections.UserDtoSimple;
+import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +34,20 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDtoSimple> getUsers() {
-        return service.getUsers();
+    public ResponseEntity<List<UserDtoSimple>> getUsers(
+            Pageable pageable,
+            @RequestParam Map<String, String> vars) {
+
+        return new ResponseEntity<>(
+                service.getUsers(
+                        pageable,
+                        FilterPathVariableValidator.validate(vars, User.class)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/search/{text}")
-    List<UserDtoSimple> searchUser(@PathVariable String text) {
-        return service.searchUser("%".concat(text.toLowerCase().concat("%")));
+    List<UserDtoSimple> searchUser(Pageable pageable, @PathVariable String text) {
+        return service.searchUser(pageable, "%".concat(text.toLowerCase().concat("%")));
     }
 
     @PostMapping
