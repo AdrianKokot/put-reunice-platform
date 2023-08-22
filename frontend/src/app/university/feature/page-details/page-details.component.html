@@ -1,0 +1,21 @@
+<ng-container *tuiLet="page$ | async as page">
+  <h3
+    class="tui-text_h3 tui-space_top-0 tui-space_bottom-2"
+    [class.tui-skeleton]="page === null"
+  >
+    {{ page?.title ?? '-' }}
+  </h3>
+
+  <p class="text-02" [class.tui-skeleton]="page === null">
+    {{ page?.description ?? '-' }}
+  </p>
+
+  <hr />
+
+  <div class="d-block tui-space_vertical-3">
+    <tui-editor-socket
+      [content]="page?.content ?? '-'"
+      [class.tui-skeleton]="page === null"
+    ></tui-editor-socket>
+  </div>
+</ng-container>

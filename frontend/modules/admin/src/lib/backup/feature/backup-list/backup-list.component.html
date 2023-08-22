@@ -1,0 +1,18 @@
+<table tuiTable [columns]="columns">
+  <thead>
+    <tr tuiThGroup>
+      <th *tuiHead="'id'" tuiTh>Id</th>
+      <th *tuiHead="'date'" tuiTh>Date</th>
+      <th *tuiHead="'size'" tuiTh>Size</th>
+      <th *tuiHead="'actions'" tuiTh>Actions</th>
+    </tr>
+  </thead>
+  <tbody *tuiLet="(backups$ | async) ?? [] as data" tuiTbody [data]="data">
+    <tr *ngFor="let item of data; let index = index" tuiTr>
+      <td *tuiCell="'id'" tuiTd>{{ index + 1 }}</td>
+      <td *tuiCell="'date'" tuiTd>{{ item.name }}</td>
+      <td *tuiCell="'size'" tuiTd>{{ item.size }}</td>
+      <td *tuiCell="'actions'" tuiTd></td>
+    </tr>
+  </tbody>
+</table>

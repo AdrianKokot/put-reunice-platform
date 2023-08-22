@@ -1,0 +1,17 @@
+<tui-tree
+  [tuiTreeController]="true"
+  [content]="treeContent"
+  [value]="page ?? []"
+  [childrenHandler]="handler"
+  class="tui-space_vertical-4 tui-space_horizontal-2"
+></tui-tree>
+
+<ng-template #treeContent let-value>
+  <a
+    tuiLink
+    [routerLink]="['page', value.id]"
+    routerLinkActive="text-underline"
+  >
+    {{ value.title }}
+  </a>
+</ng-template>

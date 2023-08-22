@@ -1,0 +1,62 @@
+<div>
+  <header class="tui-text_h6 tui-text_bold">
+    <a tuiLink routerLink="/"> Reunice </a>
+  </header>
+
+  <ng-content select="[left]"></ng-content>
+</div>
+
+<div>
+  <ng-content></ng-content>
+</div>
+
+<div class="justify-self-end d-flex items-center gap-1">
+  <ng-content select="[right]"></ng-content>
+
+  <reunice-language-switcher></reunice-language-switcher>
+
+  <a
+    *reuniceUser="'GUEST'; else loggedMenu"
+    tuiIconButton
+    routerLink="/auth/login"
+    [icon]="'tuiIconUser'"
+  ></a>
+
+  <ng-template #loggedMenu let-user="user">
+    <tui-hosted-dropdown [content]="profileMenu" #profileMenuDropdown>
+      <button
+        type="button"
+        size="s"
+        tuiIconButton
+        [pseudoHover]="profileMenuDropdown.open || null"
+      >
+        <tui-avatar
+          text="{{ user.firstName }} {{ user.lastName }}"
+        ></tui-avatar>
+      </button>
+    </tui-hosted-dropdown>
+    <ng-template #profileMenu let-close="close">
+      <tui-data-list role="menu" size="s">
+        <a href="/admin" tuiOption role="menuitem" (click)="close()">
+          {{ user.accountType + '_CONSOLE' | translate }}
+        </a>
+        <a
+          routerLink="/accounts/profile"
+          tuiOption
+          role="menuitem"
+          (click)="close()"
+        >
+          {{ 'PROFILE' | translate }}
+        </a>
+        <a
+          routerLink="/auth/logout"
+          tuiOption
+          role="menuitem"
+          (click)="close()"
+        >
+          {{ 'LOGOUT' | translate }}
+        </a>
+      </tui-data-list>
+    </ng-template>
+  </ng-template>
+</div>

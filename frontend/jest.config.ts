@@ -1,26 +1,13 @@
-/* eslint-disable */
+import { getJestProjects } from '@nx/jest';
+import { resolve } from 'path';
+
 export default {
-  displayName: 'reunice',
-  preset: './jest.preset.js',
-  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: './coverage/reunice',
-  transform: {
-    '^.+\\.(ts|mjs|js|html)$': [
-      'jest-preset-angular',
-      {
-        tsconfig: '<rootDir>/tsconfig.spec.json',
-        stringifyContentPathRegex: '\\.(html|svg)$',
-      },
-    ],
+  projects: getJestProjects(),
+  globals: {
+    'ts-jest': {
+      tsconfig: resolve(__dirname, `tsconfig.spec.json`),
+      isolatedModules: true,
+    },
   },
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
-  snapshotSerializers: [
-    'jest-preset-angular/build/serializers/no-ng-attributes',
-    'jest-preset-angular/build/serializers/ng-snapshot',
-    'jest-preset-angular/build/serializers/html-comment',
-  ],
-  testMatch: [
-    '<rootDir>/src/**/__tests__/**/*.[jt]s?(x)',
-    '<rootDir>/src/**/*(*.)@(spec|test).[jt]s?(x)',
-  ],
+  extensionsToTreatAsEsm: [`.ts`],
 };

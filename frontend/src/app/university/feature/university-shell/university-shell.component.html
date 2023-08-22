@@ -1,0 +1,21 @@
+<tui-breadcrumbs
+  class="tui-space_top-4"
+  *tuiLet="breadcrumbs$ | async as breadcrumbs"
+  [class.tui-skeleton]="breadcrumbs === null"
+>
+  <ng-container *ngFor="let item of breadcrumbs ?? []">
+    <a
+      *tuiItem
+      tuiLink
+      [routerLink]="['page', item.id]"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive="text-underline"
+    >
+      {{ item.title }}
+    </a>
+  </ng-container>
+</tui-breadcrumbs>
+
+<div>
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,33 @@
+<tui-select
+  [formControl]="language"
+  [tuiTextfieldLabelOutside]="true"
+  tuiTextfieldSize="s"
+  [valueContent]="flagContent"
+  tuiTextfieldAppearance="outline"
+>
+  <tui-data-list *tuiDataList>
+    <button
+      *ngFor="let flag of flags | keyvalue"
+      tuiOption
+      [value]="flag.key"
+      (click)="translateService.setDefaultLang(flag.key)"
+    >
+      <img
+        [alt]="flag.key"
+        class="t-flag"
+        height="20"
+        width="27"
+        [src]="flag.value | tuiFlag"
+      />
+    </button>
+  </tui-data-list>
+  <ng-template #flagContent let-locale>
+    <img
+      [alt]="locale"
+      class="t-flag"
+      height="20"
+      width="27"
+      [src]="flags.get(locale) ?? '' | tuiFlag"
+    />
+  </ng-template>
+</tui-select>

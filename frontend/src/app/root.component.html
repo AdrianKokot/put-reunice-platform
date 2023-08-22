@@ -1,0 +1,21 @@
+<tui-root>
+  <reunice-ui-top-bar></reunice-ui-top-bar>
+
+  <div class="d-flex">
+    <div>
+      <ng-container *polymorpheusOutlet="side.leftSide$ | async as content">{{
+        content
+      }}</ng-container>
+    </div>
+
+    <div class="tui-container tui-container_adaptive">
+      <router-outlet></router-outlet>
+    </div>
+
+    <div>
+      <ng-container *polymorpheusOutlet="side.rightSide$ | async as content">{{
+        content
+      }}</ng-container>
+    </div>
+  </div>
+</tui-root>

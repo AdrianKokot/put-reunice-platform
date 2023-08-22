@@ -1,5 +1,6 @@
 package com.example.cms.university;
 
+import com.example.cms.security.SecurityService;
 import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RequestMapping(path = "universities")
 public class UniversityController {
     private final UniversityService service;
+    private final SecurityService securityService;
 
     @GetMapping("/{id}")
     public UniversityDtoDetailed getUniversity(@PathVariable long id) {
@@ -44,7 +46,7 @@ public class UniversityController {
 
     @PostMapping
     public ResponseEntity<UniversityDtoDetailed> registerNewUniversity(@RequestBody UniversityDtoFormCreate form) {
-        UniversityDtoDetailed result = service.addNewUniversity(form);
+        UniversityDtoDetailed result = service.addNewUniversity(new UniversityDtoFormCreate(form.getName(), form.getShortName(), form.getDescription(), securityService.getPrincipal().get().getId()));
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 
