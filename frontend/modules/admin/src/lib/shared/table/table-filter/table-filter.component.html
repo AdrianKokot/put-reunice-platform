@@ -1,0 +1,15 @@
+<tui-hosted-dropdown
+  tuiDropdownAlign="right"
+  [content]="dropdown"
+  [(open)]="open"
+>
+  <button
+    tuiIconButton
+    size="xs"
+    shape="rounded"
+    appearance="icon"
+    [icon]="'tuiIconFilter'"
+    type="button"
+  ></button>
+</tui-hosted-dropdown>
+<ng-template #dropdown let-close="close"> Filter dropdown </ng-template>

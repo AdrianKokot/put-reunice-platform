@@ -299,5 +299,7 @@
   "NEW_USER": "New user",
   "NEW_TEMPLATE": "New template",
   "NEW_KEYWORD": "New keyword",
-  "WORD": "Word"
+  "WORD": "Word",
+  "USER_ACTIVE": "Active",
+  "SEE_DETAILS": "See details"
 }

@@ -36,9 +36,11 @@
         </th>
         <th *tuiHead="'accountType'" tuiTh tuiSortable class="column-sm">
           {{ 'ROLE' | translate }}
+          <reunice-table-filter></reunice-table-filter>
         </th>
         <th *tuiHead="'enabled'" tuiTh tuiSortable class="column-xs">
-          {{ 'ENABLED' | translate }}
+          {{ 'USER_ACTIVE' | translate }}
+          <reunice-table-filter></reunice-table-filter>
         </th>
         <th
           *tuiHead="'actions'"

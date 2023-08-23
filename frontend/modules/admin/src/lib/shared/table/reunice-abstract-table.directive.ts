@@ -107,6 +107,7 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
           })
         ),
         tap(({ size }) => (this._pageSize = size)),
+        tap(console.debug),
         switchMap((apiParams) =>
           this.service.getAll(apiParams).pipe(
             startWith(null),

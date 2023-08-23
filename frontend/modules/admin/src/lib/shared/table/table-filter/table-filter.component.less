@@ -1,0 +1,29 @@
+:host {
+  position: absolute;
+  right: var(--tui-padding-m);
+  display: inline-block;
+
+  opacity: 0;
+  transition: var(--tui-duration) opacity;
+
+  &._open {
+    opacity: 1 !important;
+    color: var(--tui-primary);
+  }
+}
+
+:host-context(.t-sort:hover) {
+  :host {
+    opacity: 0;
+  }
+
+  :host:hover {
+    opacity: 1;
+  }
+}
+
+:host-context(th:hover) {
+  :host {
+    opacity: 1;
+  }
+}
