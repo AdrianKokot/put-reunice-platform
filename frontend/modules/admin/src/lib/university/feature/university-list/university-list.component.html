@@ -25,13 +25,31 @@
   >
     <thead>
       <tr tuiThGroup>
-        <th *tuiHead="'name'" tuiTh tuiSortable class="column-rest">
+        <th
+          *tuiHead="'name'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
           {{ 'NAME' | translate }}
         </th>
-        <th *tuiHead="'shortName'" tuiTh tuiSortable class="column-sm">
+        <th
+          *tuiHead="'shortName'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
           {{ 'SHORT_NAME' | translate }}
         </th>
-        <th *tuiHead="'hidden'" tuiTh tuiSortable class="column-xs">
+        <th
+          *tuiHead="'hidden'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-xs"
+        >
           {{ 'HIDDEN' | translate }}
         </th>
         <th
