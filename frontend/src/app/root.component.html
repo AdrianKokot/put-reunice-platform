@@ -1,17 +1,13 @@
-<tui-root>
+<tui-root *tuiLet="side.leftSide$ | async as leftSide">
   <reunice-ui-top-bar>
-    <reunice-sidebar
-      menu
-      *ngIf="(side.leftSide$ | async) !== null"
-      class="sidebar-mobile"
-    >
-      <ng-container *ngTemplateOutlet="sidebar"></ng-container>
+    <reunice-sidebar menu *ngIf="leftSide !== null" class="sidebar-mobile">
+      <ng-container *polymorpheusOutlet="leftSide"></ng-container>
     </reunice-sidebar>
   </reunice-ui-top-bar>
 
   <div class="d-flex">
-    <div class="sidebar-desktop" *ngIf="(side.leftSide$ | async) !== null">
-      <ng-container *ngTemplateOutlet="sidebar"></ng-container>
+    <div *ngIf="leftSide !== null" class="sidebar-desktop">
+      <ng-container *polymorpheusOutlet="leftSide"></ng-container>
     </div>
 
     <div class="tui-container tui-container_adaptive">
@@ -25,9 +21,3 @@
     </div>
   </div>
 </tui-root>
-
-<ng-template #sidebar>
-  <ng-container *polymorpheusOutlet="side.leftSide$ | async as content">{{
-    content
-  }}</ng-container>
-</ng-template>

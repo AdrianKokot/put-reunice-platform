@@ -26,6 +26,7 @@ import { HttpErrorInterceptor } from './shared/interceptors/http-error.intercept
 import { UiModule } from '@reunice/modules/shared/ui';
 import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 @NgModule({
   declarations: [RootComponent],
@@ -47,6 +48,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
+    TuiLetModule,
     UiModule,
     PolymorpheusModule,
   ],
