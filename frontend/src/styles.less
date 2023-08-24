@@ -238,6 +238,13 @@ label._optional .t-label .t-text {
   &.no-shadow {
     box-shadow: none !important;
   }
+
+  .no-border &,
+  &.no-border {
+    &:after {
+      border: none !important;
+    }
+  }
 }
 
 .gap-4 {
@@ -246,4 +253,8 @@ label._optional .t-label .t-text {
 
 .t-sort:not(.t-sort_sorted):hover:has(reunice-table-filter:hover) {
   color: inherit;
+}
+
+reunice-table-filter._applied-filter .t-icon {
+  color: var(--tui-primary);
 }

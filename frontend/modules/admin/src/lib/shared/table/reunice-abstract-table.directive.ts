@@ -27,8 +27,10 @@ import {
 } from 'rxjs';
 import {
   AbstractApiService,
+  ApiFilter,
   ApiPagination,
   ApiSort,
+  BaseResource,
 } from '@reunice/modules/shared/data-access';
 import { FormGroup } from '@angular/forms';
 
@@ -49,6 +51,10 @@ export const provideReuniceTable = <T extends { id: string | number }>(
       useExisting: service,
     },
   ];
+};
+
+export type ResourceFilterForm<T extends BaseResource> = {
+  [K in keyof ApiFilter<T>]?: unknown;
 };
 
 @Directive()
@@ -92,11 +98,17 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
       this._pagination.paginationChange.pipe(
         startWith(this._pagination.pagination)
       ),
+      this.filtersForm.valueChanges.pipe(
+        startWith(null),
+        debounceTime(300),
+        map(() => this.filtersForm.getRawValue())
+      ),
     ])
       .pipe(
         debounceTime(200),
         map(
-          ([sort, direction, { page, size }]): ApiPagination & ApiSort<T> => ({
+          ([sort, direction, { page, size }, filters]): ApiPagination &
+            ApiSort<T> => ({
             sort: (typeof sort === 'string' && sort.length > 0
               ? (sort as keyof T).toString() +
                 ',' +
@@ -104,6 +116,7 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
               : undefined) as `${keyof T & string},${'asc' | 'desc'}`,
             page,
             size,
+            ...filters,
           })
         ),
         tap(({ size }) => (this._pageSize = size)),

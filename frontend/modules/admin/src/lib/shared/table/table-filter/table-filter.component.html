@@ -1,15 +1,55 @@
 <tui-hosted-dropdown
-  tuiDropdownAlign="right"
-  [content]="dropdown"
+  class="t-hosted"
+  [canOpen]="interactive"
+  [content]="datalist || searchList"
   [(open)]="open"
+  (tuiActiveZoneChange)="onActiveZone($event)"
 >
-  <button
-    tuiIconButton
-    size="xs"
-    shape="rounded"
-    appearance="icon"
-    [icon]="'tuiIconFilter'"
-    type="button"
-  ></button>
+  <div class="button-container">
+    <button
+      tuiIconButton
+      size="xs"
+      shape="rounded"
+      appearance="icon"
+      [icon]="'tuiIconFilter'"
+      type="button"
+    ></button>
+  </div>
 </tui-hosted-dropdown>
-<ng-template #dropdown let-close="close"> Filter dropdown </ng-template>
+
+<ng-template #searchList let-activeZone>
+  <ng-container *ngIf="searchWrapper !== null">
+    <div class="r-search">
+      <tui-primitive-textfield
+        [tuiTextfieldIconLeft]="'tuiIconSearch'"
+        [tuiTextfieldCleaner]="true"
+        #input
+        tuiTextfieldSize="s"
+        [tuiActiveZoneParent]="activeZone"
+        (valueChange)="searchWrapper.search($event)"
+        class="no-shadow no-border"
+        (keydown.arrowDown.prevent)="onArrowDown($event)"
+      >
+        {{ 'SEARCH' | translate }}
+
+        <input type="text" tuiTextfield />
+      </tui-primitive-textfield>
+      <hr />
+    </div>
+
+    <tui-data-list
+      size="s"
+      *ngIf="searchWrapper.itemIds$ | async as items; else loading"
+      (keydown)="onKeyDown($event.key, input.nativeFocusableElement)"
+    >
+      <ng-container *tuiLet="(searchWrapper.stringify$ | async)! as stringify">
+        <button *ngFor="let item of items" tuiElement tuiOption [value]="item">
+          {{ stringify(item) }}
+        </button>
+      </ng-container>
+    </tui-data-list>
+  </ng-container>
+</ng-template>
+<ng-template #loading>
+  <tui-loader size="s" class="t-loader"></tui-loader>
+</ng-template>

@@ -12,6 +12,7 @@ import {
 import {
   AbstractApiService,
   ApiFilter,
+  BaseResource,
 } from '@reunice/modules/shared/data-access';
 import {
   TuiContextWithImplicit,
@@ -20,7 +21,7 @@ import {
   tuiIsString,
 } from '@taiga-ui/cdk';
 
-export class ResourceSearchWrapper<T extends { id: string | number }> {
+export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
   private readonly _search$ = new BehaviorSubject<string>('');
 
   readonly items$ = this._search$.pipe(

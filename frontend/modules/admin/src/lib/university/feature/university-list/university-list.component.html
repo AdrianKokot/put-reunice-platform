@@ -23,7 +23,7 @@
     [columns]="columns"
     *tuiLet="items$ | async as items"
   >
-    <thead>
+    <thead [formGroup]="filtersForm">
       <tr tuiThGroup>
         <th
           *tuiHead="'name'"
@@ -51,7 +51,17 @@
           class="column-xs"
         >
           {{ 'HIDDEN' | translate }}
-          <reunice-table-filter></reunice-table-filter>
+
+          <reunice-table-filter formControlName="hidden_eq">
+            <tui-data-list *tuiDataList size="s">
+              <button tuiOption [value]="false">
+                {{ 'VISIBLE' | translate }}
+              </button>
+              <button tuiOption [value]="true">
+                {{ 'HIDDEN' | translate }}
+              </button>
+            </tui-data-list>
+          </reunice-table-filter>
         </th>
         <th
           *tuiHead="'actions'"

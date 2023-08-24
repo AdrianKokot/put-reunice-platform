@@ -23,7 +23,7 @@
     [columns]="columns"
     *tuiLet="items$ | async as items"
   >
-    <thead>
+    <thead [formGroup]="filtersForm">
       <tr tuiThGroup>
         <th
           *tuiHead="'username'"
@@ -60,7 +60,23 @@
           class="column-sm"
         >
           {{ 'ROLE' | translate }}
-          <reunice-table-filter></reunice-table-filter>
+          <reunice-table-filter formControlName="accountType_eq">
+            <tui-data-list *tuiDataList size="s">
+              <button
+                tuiOption
+                [value]="accountType.ADMIN"
+                *reuniceUser="accountType.ADMIN"
+              >
+                {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
+              </button>
+              <button tuiOption [value]="accountType.MODERATOR">
+                {{ 'ACCOUNT_TYPE_' + accountType.MODERATOR | translate }}
+              </button>
+              <button tuiOption [value]="accountType.USER">
+                {{ 'ACCOUNT_TYPE_' + accountType.USER | translate }}
+              </button>
+            </tui-data-list>
+          </reunice-table-filter>
         </th>
         <th
           *tuiHead="'enabled'"
@@ -70,7 +86,16 @@
           class="column-xs"
         >
           {{ 'ENABLED' | translate }}
-          <reunice-table-filter></reunice-table-filter>
+          <reunice-table-filter formControlName="enabled_eq">
+            <tui-data-list *tuiDataList size="s">
+              <button tuiOption [value]="true">
+                {{ 'ACTIVE' | translate }}
+              </button>
+              <button tuiOption [value]="false">
+                {{ 'DEACTIVATED' | translate }}
+              </button>
+            </tui-data-list>
+          </reunice-table-filter>
         </th>
         <th
           *tuiHead="'actions'"
