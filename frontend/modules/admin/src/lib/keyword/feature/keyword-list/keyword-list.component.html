@@ -25,7 +25,13 @@
   >
     <thead>
       <tr tuiThGroup>
-        <th *tuiHead="'word'" tuiTh tuiSortable class="column-rest">
+        <th
+          *tuiHead="'word'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
           {{ 'WORD' | translate }}
         </th>
         <th

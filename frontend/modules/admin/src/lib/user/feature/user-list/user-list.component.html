@@ -25,21 +25,51 @@
   >
     <thead>
       <tr tuiThGroup>
-        <th *tuiHead="'username'" tuiTh tuiSortable class="column-rest">
+        <th
+          *tuiHead="'username'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
           {{ 'USERNAME' | translate }}
         </th>
-        <th *tuiHead="'firstName'" tuiTh tuiSortable class="column-sm">
+        <th
+          *tuiHead="'firstName'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
           {{ 'FIRST_NAME' | translate }}
         </th>
-        <th *tuiHead="'lastName'" tuiTh tuiSortable class="column-sm">
+        <th
+          *tuiHead="'lastName'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
           {{ 'LAST_NAME' | translate }}
         </th>
-        <th *tuiHead="'accountType'" tuiTh tuiSortable class="column-sm">
+        <th
+          *tuiHead="'accountType'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
           {{ 'ROLE' | translate }}
           <reunice-table-filter></reunice-table-filter>
         </th>
-        <th *tuiHead="'enabled'" tuiTh tuiSortable class="column-xs">
-          {{ 'USER_ACTIVE' | translate }}
+        <th
+          *tuiHead="'enabled'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-xs"
+        >
+          {{ 'ENABLED' | translate }}
           <reunice-table-filter></reunice-table-filter>
         </th>
         <th

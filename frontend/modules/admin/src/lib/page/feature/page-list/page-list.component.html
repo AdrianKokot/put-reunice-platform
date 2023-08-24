@@ -25,7 +25,13 @@
   >
     <thead>
       <tr tuiThGroup>
-        <th *tuiHead="'title'" tuiTh tuiSortable class="column-rest">
+        <th
+          *tuiHead="'title'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
           {{ 'TITLE' | translate }}
         </th>
         <th
@@ -131,7 +137,7 @@
   </table>
 </tui-scrollbar>
 
-<tui-table-pagination class="tui-space_top-2"> </tui-table-pagination>
+<tui-table-pagination class="tui-space_top-2"></tui-table-pagination>
 
 <ng-template #emptyList>
   <tr>
