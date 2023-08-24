@@ -28,7 +28,9 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((search) =>
-      this._service.getAll({ [this.searchKey]: search }).pipe(startWith(null))
+      this._service
+        .getAll({ [this.searchKey]: search, size: 250 })
+        .pipe(startWith(null))
     ),
     shareReplay()
   );
