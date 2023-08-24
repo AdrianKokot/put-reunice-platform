@@ -20,18 +20,18 @@ public class UniversitySpecification implements Specification<University> {
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.like(
-                        root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+                        criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), criteria.getValue());
-            } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
+                        criteriaBuilder.lower(root.<String>get(criteria.getKey())), criteria.getValue().toString().toLowerCase());
+            } else if (root.get(criteria.getKey()).getJavaType() == boolean.class || root.get(criteria.getKey()).getJavaType() == Boolean.class) {
                 return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
+                        root.get(criteria.getKey()), Boolean.parseBoolean(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
+                        root.get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }
         }
         return criteriaBuilder.disjunction();
