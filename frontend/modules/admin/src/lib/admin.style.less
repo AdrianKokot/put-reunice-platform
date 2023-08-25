@@ -1,0 +1,119 @@
+@import '@taiga-ui/styles/taiga-ui-global.less';
+
+.reunice-table-wrapper {
+  --table-max-height: 65vh;
+  --table-row-height: var(--tui-height-m);
+  max-height: var(--table-max-height);
+  min-height: ~'calc(min(var(--table-row-height) * (var(--page-size) + 1), var(--table-max-height)))';
+
+  tui-scroll-controls {
+    .t-bar_vertical {
+      top: var(--table-row-height);
+    }
+  }
+
+  background-color: var(--tui-base-01);
+  border-radius: var(--tui-radius-l);
+  border: 1px solid var(--tui-base-03);
+
+  tui-loader {
+    height: ~'calc(min(var(--table-row-height) * var(--page-size) - 3px, var(--table-max-height) - var(--table-row-height)))';
+  }
+
+  table {
+    width: 100%;
+    table-layout: auto;
+
+    thead {
+      th._sticky:last-of-type {
+        &:after {
+          content: none;
+        }
+      }
+    }
+
+    th {
+      white-space: nowrap;
+    }
+
+    td,
+    th {
+      border: none;
+    }
+
+    tr th {
+      background: var(--tui-base-02);
+    }
+
+    tbody {
+      border-color: transparent;
+
+      tr {
+        td {
+          border-bottom: 1px solid var(--tui-base-03);
+        }
+
+        &:last-child td {
+          border-color: transparent;
+        }
+      }
+    }
+
+    .column-xs {
+      min-width: 120px;
+      max-width: 120px;
+    }
+
+    .column-sm {
+      min-width: 200px;
+      max-width: 200px;
+    }
+
+    .column-rest {
+      width: 100%;
+      min-width: 100%;
+    }
+
+    .column-actions {
+      white-space: nowrap;
+      text-align: right;
+      min-width: 88px;
+      max-width: 88px;
+
+      button,
+      a {
+        .transition(opacity);
+        opacity: 0;
+      }
+    }
+
+    .t-empty {
+      color: var(--tui-text-03);
+      text-align: center;
+    }
+
+    tr:hover .column-actions,
+    tr:focus-within {
+      button,
+      a {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.t-sort:not(.t-sort_sorted):hover:has(reunice-table-filter:hover) {
+  color: inherit;
+}
+
+reunice-table-filter._applied-filter .t-icon {
+  color: var(--tui-primary);
+}
+
+.details-skeleton .tui-form__row .t-content {
+  .tui-skeleton;
+
+  &::before {
+    content: 'SKELETON_TEXT';
+  }
+}
