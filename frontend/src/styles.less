@@ -3,9 +3,145 @@
 @import '@taiga-ui/styles/taiga-ui-global.less';
 @import '@taiga-ui/core/styles/taiga-ui-local.less';
 
-@import './styles/_reset';
-@import './styles/_tui';
-@import './styles/_utility';
+// Reset css
+* {
+  box-sizing: border-box;
+}
+
+// taiga-ui customization
+:root {
+  --top-bar-height: 3.9375rem;
+}
+
+.t-root-content {
+  min-height: 100vh;
+}
+
+tui-island {
+  &[data-appearance='textfield'] {
+    box-sizing: border-box;
+    border-radius: var(--tui-radius-m);
+    padding: 0.6rem var(--tui-padding-m);
+    min-height: var(--tui-height-m);
+    box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
+    .d-flex;
+    .items-center;
+  }
+}
+
+// Makes alerts appear below the top bar
+tui-alert-host > .t-wrapper {
+  margin-top: var(--top-bar-height);
+}
+
+form.form-skeleton [tuiWrapper],
+.details-skeleton [tuiWrapper] {
+  .tui-skeleton;
+
+  &:after {
+    border-radius: inherit;
+  }
+}
+
+.tui-form__row_multi-fields {
+  align-items: flex-start;
+}
+
+[tuiWrapper][data-appearance='textfield'] {
+  .no-shadow &,
+  &.no-shadow {
+    box-shadow: none !important;
+  }
+
+  .no-border &,
+  &.no-border {
+    &:after {
+      border: none !important;
+    }
+  }
+}
+
+.reunice-tree-item-option {
+  color: var(--tui-primary);
+  transition-property: color;
+  transition-duration: var(--tui-duration, 0.3s);
+  transition-timing-function: ease-in-out;
+
+  &:hover,
+  &._active,
+  &:focus {
+    color: var(--tui-primary-hover);
+  }
+
+  &._selected {
+    color: var(--tui-primary);
+    font-weight: bold;
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
+}
+
+.details-skeleton .tui-form__row .t-content {
+  .tui-skeleton;
+
+  &::before {
+    content: 'SKELETON_TEXT';
+  }
+}
+
+// Utility styles
+.d-flex {
+  display: flex;
+}
+
+.d-block {
+  display: block;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-self-end {
+  justify-self: end;
+}
+
+.justify-start {
+  justify-content: flex-start !important;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-xs {
+  max-width: 22rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-underline {
+  text-decoration: underline !important;
+}
+
+.text-02 {
+  color: var(--tui-text-02);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+// Language
 
 html {
   --reunice-optional-text: 'Optional';

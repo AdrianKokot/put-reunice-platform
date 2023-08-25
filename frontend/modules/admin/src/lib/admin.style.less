@@ -1,4 +1,4 @@
-@import '@taiga-ui/styles/taiga-ui-global.less';
+@import '@taiga-ui/core/styles/taiga-ui-local.less';
 
 .reunice-table-wrapper {
   --table-max-height: 65vh;
@@ -108,12 +108,4 @@
 
 reunice-table-filter._applied-filter .t-icon {
   color: var(--tui-primary);
-}
-
-.details-skeleton .tui-form__row .t-content {
-  .tui-skeleton;
-
-  &::before {
-    content: 'SKELETON_TEXT';
-  }
 }

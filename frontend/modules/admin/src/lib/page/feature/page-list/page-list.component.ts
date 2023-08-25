@@ -13,7 +13,6 @@ import { FormBuilder } from '@angular/forms';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
-import { TUI_NOTHING_FOUND_MESSAGE } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-page-list',
@@ -24,8 +23,6 @@ import { TUI_NOTHING_FOUND_MESSAGE } from '@taiga-ui/core';
   providers: [provideReuniceTable(PageService)],
 })
 export class PageListComponent extends ReuniceAbstractTable<Page> {
-  readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
-
   readonly columns: Array<keyof Page | string> = [
     'title',
     'createdOn',

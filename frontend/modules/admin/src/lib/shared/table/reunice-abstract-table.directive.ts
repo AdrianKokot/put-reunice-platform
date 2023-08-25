@@ -33,6 +33,7 @@ import {
   BaseResource,
 } from '@reunice/modules/shared/data-access';
 import { FormGroup } from '@angular/forms';
+import { TUI_NOTHING_FOUND_MESSAGE } from '@taiga-ui/core';
 
 export const REUNICE_TABLE_SERVICE = new InjectionToken<
   AbstractApiService<
@@ -79,6 +80,8 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
   protected readonly service = inject<AbstractApiService<T, unknown, unknown>>(
     REUNICE_TABLE_SERVICE
   );
+
+  protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
 
   @HostBinding('style.--page-size')
   private _pageSize = 10;
