@@ -27,7 +27,6 @@ import {
 } from 'rxjs';
 import {
   AbstractApiService,
-  ApiFilter,
   ApiPagination,
   ApiSort,
   BaseResource,
@@ -53,12 +52,8 @@ export const provideReuniceTable = <T extends { id: string | number }>(
   ];
 };
 
-export type ResourceFilterForm<T extends BaseResource> = {
-  [K in keyof ApiFilter<T>]?: unknown;
-};
-
 @Directive()
-export abstract class ReuniceAbstractTable<T extends { id: number | string }>
+export abstract class ReuniceAbstractTable<T extends BaseResource>
   implements OnInit
 {
   @ViewChild(TuiTablePaginationComponent, { static: true })
@@ -72,6 +67,9 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
 
   private readonly _items$ = new BehaviorSubject<T[] | null>(null);
   readonly items$ = this._items$.asObservable();
+
+  private readonly _total$ = new BehaviorSubject<number | null>(null);
+  readonly total$ = this._total$.asObservable();
 
   abstract readonly columns: Array<keyof T | string>;
   abstract readonly filtersForm: FormGroup;
@@ -123,6 +121,10 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
         tap(console.debug),
         switchMap((apiParams) =>
           this.service.getAll(apiParams).pipe(
+            map(({ items, totalItems }) => {
+              this._total$.next(totalItems);
+              return items;
+            }),
             startWith(null),
             catchError(() => of([]))
           )

@@ -20,7 +20,11 @@ export type ApiPagination = {
   size: number;
 };
 
-export type ApiParams<T = object> =
-  | Partial<ApiSort<T>>
-  | Partial<ApiPagination>
-  | ApiFilter<T>;
+export type ApiParams<T = object> = Partial<ApiSort<T>> &
+  Partial<ApiPagination> &
+  ApiFilter<T>;
+
+export type ApiPaginatedResponse<T> = {
+  totalItems: number;
+  items: T[];
+};

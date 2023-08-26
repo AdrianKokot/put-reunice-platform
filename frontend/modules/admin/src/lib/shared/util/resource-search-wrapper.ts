@@ -29,8 +29,13 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     distinctUntilChanged(),
     switchMap((search) =>
       this._service
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         .getAll({ [this.searchKey]: search, size: 250 })
-        .pipe(startWith(null))
+        .pipe(
+          map(({ items }) => items),
+          startWith(null)
+        )
     ),
     shareReplay()
   );
