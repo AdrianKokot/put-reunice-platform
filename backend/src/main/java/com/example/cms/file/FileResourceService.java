@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -75,7 +76,7 @@ public class FileResourceService {
         fileRepository.save(fileResource);
     }
 
-    public List<FileDtoSimple> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
+    public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
         Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
         if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
             throw new PageForbidden();
@@ -103,9 +104,7 @@ public class FileResourceService {
             }
         }
 
-        return fileRepository.findAll(combinedSpecification, pageable).stream()
-                .map(FileDtoSimple::of)
-                .collect(Collectors.toList());
+        return fileRepository.findAll(combinedSpecification, pageable);
     }
 
     @Transactional
