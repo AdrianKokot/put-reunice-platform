@@ -6,6 +6,7 @@ import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,9 +31,17 @@ public class PageController {
     @GetMapping
     ResponseEntity<List<PageDtoSimple>> readAllPages(Pageable pageable,
                                      @RequestParam Map<String, String> vars) {
-        return new ResponseEntity<>(service.getAllVisible(
+
+        org.springframework.data.domain.Page<Page> responsePage = service.getAllVisible(
                 pageable,
-                FilterPathVariableValidator.validate(vars, Page.class)),
+                FilterPathVariableValidator.validate(vars, Page.class));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+
+        return new ResponseEntity<>(
+                responsePage.stream().map(PageDtoSimple::of).collect(Collectors.toList()),
+                httpHeaders,
                 HttpStatus.OK) ;
     }
 

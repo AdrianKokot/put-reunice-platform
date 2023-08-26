@@ -50,7 +50,7 @@ public class PageService {
         }).orElseThrow(PageNotFound::new);
     }
 
-    public List<PageDtoSimple> getAllVisible(Pageable pageable,  Map<String, String> filterVars) {
+    public org.springframework.data.domain.Page<Page> getAllVisible(Pageable pageable, Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         String role;
         List<Long> universities;
@@ -92,9 +92,7 @@ public class PageService {
             }
         }
 
-        return pageRepository.findAll(combinedSpecification, pageable).stream()
-                .map(PageDtoSimple::of)
-                .collect(Collectors.toList());
+        return pageRepository.findAll(combinedSpecification, pageable);
     }
 
     public List<PageDtoSimple> searchPages(Pageable pageable, String text) {
