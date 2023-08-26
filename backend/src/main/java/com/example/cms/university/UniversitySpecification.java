@@ -16,22 +16,29 @@ public class UniversitySpecification implements Specification<University> {
 
     @Override
     public Predicate toPredicate(Root<University> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        Predicate predicates = criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("hidden"), false)
+                );
 
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.like(
-                        root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+                return criteriaBuilder.and(predicates,
+                        criteriaBuilder.like(
+                        root.get(criteria.getKey()), "%" + criteria.getValue() + "%"));
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), criteria.getValue());
+                return criteriaBuilder.and(predicates,
+                        criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), criteria.getValue()));
             } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
-                return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
+                return criteriaBuilder.and(predicates,
+                        criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString())));
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
-                return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
+                return criteriaBuilder.and(predicates,
+                        criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString())));
             }
         }
         return criteriaBuilder.disjunction();
