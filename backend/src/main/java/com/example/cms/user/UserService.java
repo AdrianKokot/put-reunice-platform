@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.example.cms.SearchCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
@@ -53,7 +55,7 @@ public class UserService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<UserDtoSimple> getUsers(Pageable pageable, Map<String, String> filterVars) {
+    public Page<User> getUsers(Pageable pageable, Map<String, String> filterVars) {
         Specification<User> combinedSpecification = null;
 
         if (!filterVars.isEmpty()) {
@@ -76,9 +78,7 @@ public class UserService {
             }
         }
 
-        return userRepository.findAll(combinedSpecification, pageable).stream()
-                .map(UserDtoSimple::of)
-                .collect(Collectors.toList());
+        return userRepository.findAll(combinedSpecification, pageable);
     }
 
     @Secured("ROLE_MODERATOR")
