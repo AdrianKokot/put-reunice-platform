@@ -23,58 +23,27 @@ import static java.lang.Integer.parseInt;
 public class PageSpecification implements Specification<Page> {
 
     private SearchCriteria criteria;
-    private String role;
-    private Collection<Long> universities;
-    private Long creator;
 
     @Override
     public Predicate toPredicate(Root<Page> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Predicate predicates = criteriaBuilder.and(criteriaBuilder.or(
-                criteriaBuilder.and(
-                        criteriaBuilder.equal(root.get("hidden"), false),
-                        criteriaBuilder.equal(root.get("university").get("hidden"), false)
-                )));
-
-        if (this.role != null) {
-            predicates = criteriaBuilder.and(predicates,
-                    criteriaBuilder.equal(criteriaBuilder.literal(role), "ADMIN"));
-
-            if (this.creator != null) {
-                predicates = criteriaBuilder.and(predicates,
-                        criteriaBuilder.and(
-                                criteriaBuilder.equal(criteriaBuilder.literal(role), "MODERATOR"),
-                                root.get("university").get("id").in(universities)));
-            }
-
-            if (this.universities != null) {
-                predicates = criteriaBuilder.and(predicates,
-                        criteriaBuilder.and(
-                                criteriaBuilder.equal(criteriaBuilder.literal(role), "USER"),
-                                criteriaBuilder.equal(root.get("creator").get("id"), creator)));
-            }
-        }
 
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.and(
-                        criteriaBuilder.like(
-                                root.get(criteria.getKey()), "%" + criteria.getValue() + "%"),
-                        predicates);
+                return criteriaBuilder.like(root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.and(
-                        criteriaBuilder.equal(
-                                root.<String>get(criteria.getKey()), criteria.getValue()),
-                        predicates);
+                return criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), criteria.getValue());
+
             } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
-                return criteriaBuilder.and(
-                        criteriaBuilder.equal(
-                                root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString())),
-                        predicates);
+                return criteriaBuilder.equal(
+                                root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
+
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
+
             }
         }
         return criteriaBuilder.disjunction();
