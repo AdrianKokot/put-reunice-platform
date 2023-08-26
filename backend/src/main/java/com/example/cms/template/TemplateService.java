@@ -44,7 +44,7 @@ public class TemplateService {
     }
 
     @Secured("ROLE_MODERATOR")
-    public List<TemplateDtoDetailed> getAll(Pageable pageable, Map<String, String> filterVars) {
+    public Page<Template> getAll(Pageable pageable, Map<String, String> filterVars) {
         Specification<Template> combinedSpecification = null;
 
         if (!filterVars.isEmpty()) {
@@ -67,9 +67,7 @@ public class TemplateService {
             }
         }
 
-        return templateRepository.findAll(combinedSpecification, pageable).stream()
-                .map(TemplateDtoDetailed::of)
-                .collect(Collectors.toList());
+        return templateRepository.findAll(combinedSpecification, pageable);
     }
 
     @Secured("ROLE_USER") //added by MSz
