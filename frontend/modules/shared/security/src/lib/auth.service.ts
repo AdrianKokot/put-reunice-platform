@@ -21,7 +21,7 @@ export class AuthService {
   private _userSnapshot: User | null = null;
   readonly user$ = this._user$.pipe(
     tap((user) => (this._userSnapshot = user)),
-    shareReplay()
+    shareReplay(),
   );
 
   get userSnapshot() {
@@ -41,7 +41,7 @@ export class AuthService {
   login(user: Pick<User, 'password' | 'username'>): Observable<User | null> {
     return this._http.post('/api/login', user).pipe(
       switchMap(() => this.getUser()),
-      tap((user) => this._user$.next(user))
+      tap((user) => this._user$.next(user)),
     );
   }
 

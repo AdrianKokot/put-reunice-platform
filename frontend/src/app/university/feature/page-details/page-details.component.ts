@@ -31,10 +31,10 @@ export class PageDetailsComponent {
   private readonly _pageId$ = resourceIdFromRoute('pageId');
 
   readonly page$ = this._pageId$.pipe(
-    switchMap((id) => this._pageService.get(id).pipe(startWith(null)))
+    switchMap((id) => this._pageService.get(id).pipe(startWith(null))),
   );
 
   readonly files$ = this._pageId$.pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null)))
+    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
   );
 }

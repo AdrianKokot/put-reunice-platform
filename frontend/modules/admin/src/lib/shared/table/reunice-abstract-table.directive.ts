@@ -41,7 +41,7 @@ export const REUNICE_TABLE_SERVICE = new InjectionToken<
 >('REUNICE_TABLE_SERVICE');
 
 export const provideReuniceTable = <T extends { id: string | number }>(
-  service: Type<AbstractApiService<T, unknown, unknown>>
+  service: Type<AbstractApiService<T, unknown, unknown>>,
 ): Provider[] => {
   return [
     {
@@ -71,7 +71,7 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
   abstract readonly filtersForm: FormGroup;
 
   protected readonly service = inject<AbstractApiService<T, unknown, unknown>>(
-    REUNICE_TABLE_SERVICE
+    REUNICE_TABLE_SERVICE,
   );
 
   @HostBinding('style.--page-size')
@@ -80,7 +80,7 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
       throw new Error(
-        ReuniceAbstractTable.name + ': missing required content child'
+        ReuniceAbstractTable.name + ': missing required content child',
       );
     }
 
@@ -90,7 +90,7 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
       this._sortBy.tuiSortByChange.pipe(startWith(this._sortBy.tuiSortBy)),
       this._table.directionChange.pipe(startWith(this._table.direction)),
       this._pagination.paginationChange.pipe(
-        startWith(this._pagination.pagination)
+        startWith(this._pagination.pagination),
       ),
     ])
       .pipe(
@@ -104,16 +104,16 @@ export abstract class ReuniceAbstractTable<T extends { id: number | string }>
               : undefined) as `${keyof T & string},${'asc' | 'desc'}`,
             page,
             size,
-          })
+          }),
         ),
         tap(({ size }) => (this._pageSize = size)),
         switchMap((apiParams) =>
           this.service.getAll(apiParams).pipe(
             startWith(null),
-            catchError(() => of([]))
-          )
+            catchError(() => of([])),
+          ),
         ),
-        shareReplay()
+        shareReplay(),
       )
       .subscribe((x) => this._items$.next(x));
   }

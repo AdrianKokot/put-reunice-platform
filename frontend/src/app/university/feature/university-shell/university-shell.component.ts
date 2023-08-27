@@ -58,7 +58,7 @@ export class UniversityShellComponent implements OnDestroy {
 
   public readonly pages$ = this._universityId$.pipe(
     switchMap((id) =>
-      this._pageService.getUniversityHierarchy(+id).pipe(startWith(null))
+      this._pageService.getUniversityHierarchy(+id).pipe(startWith(null)),
     ),
     map((pages) => {
       const addPageToMap = (page: Page, parentId: Page['id'] | null = null) => {
@@ -81,12 +81,12 @@ export class UniversityShellComponent implements OnDestroy {
                 useValue: pages,
               },
             ],
-          })
-        )
+          }),
+        ),
       );
 
       return pages;
-    })
+    }),
   );
 
   readonly breadcrumbs$ = combineLatest({
@@ -110,7 +110,7 @@ export class UniversityShellComponent implements OnDestroy {
 
       return breadcrumbs.length < 2 ? [] : breadcrumbs;
     }),
-    startWith(null)
+    startWith(null),
   );
 
   ngOnDestroy(): void {

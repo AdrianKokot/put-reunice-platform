@@ -23,6 +23,6 @@ import { TranslateModule } from '@ngx-translate/core';
 export class DashboardTilesComponent {
   private readonly _user = inject(AuthService).userSnapshot;
   readonly links = dashboardTiles.filter(
-    (tile) => !tile.role || isUserOfType(this._user, tile.role)
+    (tile) => !tile.role || isUserOfType(this._user, tile.role),
   );
 }

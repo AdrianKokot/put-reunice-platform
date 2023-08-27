@@ -13,7 +13,7 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
   }
 
   override update(
-    resource: Partial<Keyword> & Pick<Keyword, 'id'>
+    resource: Partial<Keyword> & Pick<Keyword, 'id'>,
   ): Observable<Keyword> {
     return this._http
       .post<void>(`${this._resourceUrl}/${resource.id}`, resource.word)
@@ -25,7 +25,7 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
   }
 
   override getAll(
-    params: ApiParams<Keyword> | ApiParams = {}
+    params: ApiParams<Keyword> | ApiParams = {},
   ): Observable<Keyword[]> {
     return this._http.get<Keyword[]>(this._resourceUrl + '/all', {
       params: toHttpParams(params),

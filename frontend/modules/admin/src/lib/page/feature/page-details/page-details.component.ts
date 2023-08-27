@@ -39,9 +39,9 @@ export class PageDetailsComponent {
     switchMap((page) =>
       this._service
         .getUniversityHierarchy(page.university.id)
-        .pipe(startWith(null))
+        .pipe(startWith(null)),
     ),
-    shareReplay()
+    shareReplay(),
   );
 
   readonly pagesTreeHandler: TuiHandler<Page, readonly Page[]> = (item) =>
