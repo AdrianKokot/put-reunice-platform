@@ -38,7 +38,7 @@ public class TemplateController {
                 FilterPathVariableValidator.validate(vars, Template.class));
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
 
         return new ResponseEntity<>(
                 responsePage.stream().map(TemplateDtoDetailed::of).collect(Collectors.toList()),
