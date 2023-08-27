@@ -9,6 +9,8 @@ import {
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
+import { TuiExpandModule } from '@taiga-ui/core';
+import { TuiElasticContainerModule } from '@taiga-ui/kit';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -18,6 +20,8 @@ import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-te
     BaseFormImportsModule,
     TuiEditorModule,
     LoadTemplateComponent,
+    TuiExpandModule,
+    TuiElasticContainerModule,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

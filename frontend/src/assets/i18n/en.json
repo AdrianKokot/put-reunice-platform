@@ -299,5 +299,9 @@
   "NEW_USER": "New user",
   "NEW_TEMPLATE": "New template",
   "NEW_KEYWORD": "New keyword",
-  "WORD": "Word"
+  "WORD": "Word",
+  "USER_DETAILS_TAB": "Details",
+  "PASSWORD_CHANGE_TAB": "Change password",
+  "CHANGES_SAVED_SUCCESS": "Changes saved successfully",
+  "USER_PASSWORD_CHANGE_SUCCESS": "Password changed successfully"
 }

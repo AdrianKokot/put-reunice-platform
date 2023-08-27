@@ -20,6 +20,12 @@ const routes: Routes = [
     loadChildren: () => AuthModule,
     path: 'auth',
   },
+  {
+    path: 'profile',
+    loadChildren: () =>
+      import('./profile/profile.module').then((m) => m.ProfileModule),
+    canMatch: [AuthGuard],
+  },
 ];
 
 @NgModule({

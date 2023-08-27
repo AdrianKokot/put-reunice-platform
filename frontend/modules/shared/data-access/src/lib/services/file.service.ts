@@ -8,9 +8,9 @@ import { BaseResource } from '../models/base-resource';
   providedIn: 'root',
 })
 export class FileService {
-  private server = '/api/file';
+  private readonly server = '/api/file';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getAll(pageID: BaseResource['id']): Observable<FileResource[]> {
     return this.http.get<FileResource[]>(`${this.server}/all/page/${pageID}`);

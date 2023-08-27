@@ -7,9 +7,9 @@ import { Backup } from '../models/backup';
   providedIn: 'root',
 })
 export class BackupService {
-  private backupUrl = '/api/backups';
+  private readonly backupUrl = '/api/backups';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getBackups(): Observable<Backup[]> {
     return this.http.get<Backup[]>(this.backupUrl);
