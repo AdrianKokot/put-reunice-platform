@@ -1,23 +1,16 @@
 package com.example.cms.page;
 
-import com.example.cms.SearchCriteria;
-import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
-import com.example.cms.security.SecurityService;
-import com.example.cms.university.University;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-
-import static java.lang.Boolean.parseBoolean;
-import static java.lang.Integer.parseInt;
 
 @AllArgsConstructor
 public class PageRoleSpecification implements Specification<Page> {
@@ -51,7 +44,7 @@ public class PageRoleSpecification implements Specification<Page> {
                 predicates.add(criteriaBuilder.equal(root.get("creator").get("id"), creator));
             }
         }
-        return criteriaBuilder.and(conjunctionPred,
+        return predicates.isEmpty() ? conjunctionPred : criteriaBuilder.and(conjunctionPred,
                 criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 }
