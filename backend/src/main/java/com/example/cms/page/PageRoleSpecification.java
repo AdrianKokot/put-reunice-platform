@@ -44,7 +44,7 @@ public class PageRoleSpecification implements Specification<Page> {
                 predicates.add(criteriaBuilder.equal(root.get("creator").get("id"), creator));
             }
         }
-        return predicates.isEmpty() ? conjunctionPred : criteriaBuilder.and(conjunctionPred,
+        return predicates.isEmpty() ? conjunctionPred :  criteriaBuilder.and(conjunctionPred,
                 criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 }
