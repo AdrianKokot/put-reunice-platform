@@ -4,7 +4,7 @@ import { map } from 'rxjs';
 import { ApiPaginatedResponse, ApiParams } from '../api.params';
 import { BaseResource } from '../models/base-resource';
 
-export const TOTAL_ITEMS_HEADER = 'Whole-Content-Length';
+export const TOTAL_ITEMS_HEADER = 'X-Whole-Content-Length';
 
 export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
   const fromObject = (Object.keys(params) as Array<keyof typeof params>).reduce(
