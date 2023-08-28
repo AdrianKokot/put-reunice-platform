@@ -1,0 +1,61 @@
+:host {
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  right: 0;
+  left: 0;
+  cursor: default;
+
+  opacity: 0;
+  transition: var(--tui-duration) opacity;
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &._open,
+  &._applied-filter {
+    opacity: 1 !important;
+  }
+}
+
+.t-hosted {
+  width: 100%;
+  justify-content: flex-end;
+
+  button {
+    margin-left: 100%;
+  }
+}
+
+:host-context(.t-sort:hover) {
+  :host {
+    opacity: 0;
+  }
+
+  :host:hover {
+    opacity: 1;
+  }
+}
+
+:host-context(th:hover) {
+  :host {
+    opacity: 1;
+  }
+}
+
+:host:focus-within {
+  opacity: 1;
+}
+
+.r-search {
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+
+.t-loader {
+  min-height: 2rem;
+  margin: 0.25rem 0;
+}

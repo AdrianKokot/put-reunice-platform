@@ -11,6 +11,7 @@ import {
   TuiTablePaginationModule,
 } from '@taiga-ui/addon-table';
 import { NgForTrackByIdDirective } from '@reunice/modules/shared/util';
+import { TableFilterComponent } from './table/table-filter/table-filter.component';
 
 const modules = [
   CommonModule,
@@ -22,6 +23,7 @@ const modules = [
   TuiTablePaginationModule,
   TuiScrollbarModule,
   TuiHintModule,
+  TableFilterComponent,
 ];
 
 @NgModule({

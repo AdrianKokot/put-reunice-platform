@@ -27,7 +27,8 @@ export class UniversityListComponent extends ReuniceAbstractTable<University> {
     'actions',
   ];
 
-  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+  readonly filtersForm = inject(FormBuilder).group({
     search: [''],
+    hidden_eq: [null as boolean | null],
   });
 }

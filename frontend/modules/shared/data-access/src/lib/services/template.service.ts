@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, switchMap } from 'rxjs';
+import { combineLatest, map, Observable, switchMap } from 'rxjs';
 import { Template, TemplateCreate } from '../models/template';
-import { AbstractApiService } from './abstract-api.service';
+import { AbstractApiService, TOTAL_ITEMS_HEADER } from './abstract-api.service';
 import { University } from '../models/university';
+import { ApiPaginatedResponse } from '../api.params';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +17,19 @@ export class TemplateService extends AbstractApiService<
     super('/api/templates');
   }
 
-  override getAll(): Observable<Template[]> {
-    return this._http.get<Template[]>(this._resourceUrl + '/all');
+  override getAll() {
+    return this._http
+      .get<Template[]>(this._resourceUrl + '/all', {
+        observe: 'response',
+      })
+      .pipe(
+        map(
+          ({ body, headers }): ApiPaginatedResponse<Template> => ({
+            totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
+            items: body ?? [],
+          }),
+        ),
+      );
   }
 
   override update(

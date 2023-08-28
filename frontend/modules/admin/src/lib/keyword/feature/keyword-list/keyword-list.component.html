@@ -5,6 +5,7 @@
       [tuiTextfieldLabelOutside]="true"
       class="no-shadow"
       tuiTextfieldSize="m"
+      [tuiTextfieldCleaner]="true"
     >
       {{ 'SEARCH' | translate }}
       <input tuiTextfield type="text" />
@@ -86,12 +87,15 @@
   </table>
 </tui-scrollbar>
 
-<tui-table-pagination class="tui-space_top-2"></tui-table-pagination>
+<tui-table-pagination
+  class="tui-space_top-2"
+  [total]="(total$ | async) ?? 0"
+></tui-table-pagination>
 
 <ng-template #emptyList>
   <tr>
-    <td [colSpan]="columns.length">
-      {{ 'NO_RECORDS_FOUND' | translate }}
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
+      {{ emptyMessage$ | async }}
     </td>
   </tr>
 </ng-template>

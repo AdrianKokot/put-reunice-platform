@@ -3,10 +3,12 @@
 @import '@taiga-ui/styles/taiga-ui-global.less';
 @import '@taiga-ui/core/styles/taiga-ui-local.less';
 
+// Reset css
 * {
   box-sizing: border-box;
 }
 
+// taiga-ui customization
 :root {
   --top-bar-height: 3.9375rem;
 }
@@ -15,9 +17,78 @@
   min-height: 100vh;
 }
 
+tui-island {
+  &[data-appearance='textfield'] {
+    box-sizing: border-box;
+    border-radius: var(--tui-radius-m);
+    padding: 0.6rem var(--tui-padding-m);
+    min-height: var(--tui-height-m);
+    box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
+    .d-flex;
+    .items-center;
+  }
+}
+
 // Makes alerts appear below the top bar
 tui-alert-host > .t-wrapper {
   margin-top: var(--top-bar-height);
+}
+
+form.form-skeleton [tuiWrapper],
+.details-skeleton [tuiWrapper] {
+  .tui-skeleton;
+
+  &:after {
+    border-radius: inherit;
+  }
+}
+
+.tui-form__row_multi-fields {
+  align-items: flex-start;
+}
+
+[tuiWrapper][data-appearance='textfield'] {
+  .no-shadow &,
+  &.no-shadow {
+    box-shadow: none !important;
+  }
+
+  .no-border &,
+  &.no-border {
+    &:after {
+      border: none !important;
+    }
+  }
+}
+
+.reunice-tree-item-option {
+  color: var(--tui-primary);
+  transition-property: color;
+  transition-duration: var(--tui-duration, 0.3s);
+  transition-timing-function: ease-in-out;
+
+  &:hover,
+  &._active,
+  &:focus {
+    color: var(--tui-primary-hover);
+  }
+
+  &._selected {
+    color: var(--tui-primary);
+    font-weight: bold;
+  }
+
+  input[type='radio'] {
+    display: none;
+  }
+}
+
+.details-skeleton .tui-form__row .t-content {
+  .tui-skeleton;
+
+  &::before {
+    content: 'SKELETON_TEXT';
+  }
 }
 
 // Utility styles
@@ -66,64 +137,15 @@ tui-alert-host > .t-wrapper {
   color: var(--tui-text-02);
 }
 
-.details-skeleton .tui-form__row .t-content {
-  .tui-skeleton;
-
-  &::before {
-    content: 'SKELETON_TEXT';
-  }
-}
-
-form.form-skeleton [tuiWrapper],
-.details-skeleton [tuiWrapper] {
-  .tui-skeleton;
-
-  &:after {
-    border-radius: inherit;
-  }
-}
-
-.tui-form__row_multi-fields {
-  align-items: flex-start;
-}
-
 .cursor-pointer {
   cursor: pointer;
 }
 
-.reunice-tree-item-option {
-  color: var(--tui-primary);
-  transition-property: color;
-  transition-duration: var(--tui-duration, 0.3s);
-  transition-timing-function: ease-in-out;
-
-  &:hover,
-  &._active,
-  &:focus {
-    color: var(--tui-primary-hover);
-  }
-
-  &._selected {
-    color: var(--tui-primary);
-    font-weight: bold;
-  }
-
-  input[type='radio'] {
-    display: none;
-  }
+.gap-4 {
+  gap: 1rem;
 }
 
-tui-island {
-  &[data-appearance='textfield'] {
-    box-sizing: border-box;
-    border-radius: var(--tui-radius-m);
-    padding: 0.6rem var(--tui-padding-m);
-    min-height: var(--tui-height-m);
-    box-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.1);
-    .d-flex;
-    .items-center;
-  }
-}
+// Language
 
 html {
   --reunice-optional-text: 'Optional';
@@ -138,112 +160,4 @@ label._optional .t-label .t-text {
     content: ' (' var(--reunice-optional-text) ')';
     color: var(--tui-text-02);
   }
-}
-
-.reunice-table-wrapper {
-  --table-max-height: 65vh;
-  --table-row-height: var(--tui-height-m);
-  max-height: var(--table-max-height);
-  min-height: ~'calc(min(var(--table-row-height) * (var(--page-size) + 1), var(--table-max-height)))';
-
-  tui-scroll-controls {
-    .t-bar_vertical {
-      top: var(--table-row-height);
-    }
-  }
-
-  background-color: var(--tui-base-01);
-  border-radius: var(--tui-radius-l);
-  border: 1px solid var(--tui-base-03);
-
-  tui-loader {
-    height: ~'calc(min(var(--table-row-height) * var(--page-size) - 3px, var(--table-max-height) - var(--table-row-height)))';
-  }
-
-  table {
-    width: 100%;
-    table-layout: auto;
-
-    thead {
-      th._sticky:last-of-type {
-        &:after {
-          content: none;
-        }
-      }
-    }
-
-    th {
-      white-space: nowrap;
-    }
-
-    td,
-    th {
-      border: none;
-    }
-
-    tr th {
-      background: var(--tui-base-02);
-    }
-
-    tbody {
-      border-color: transparent;
-
-      tr {
-        td {
-          border-bottom: 1px solid var(--tui-base-03);
-        }
-
-        &:last-child td {
-          border-color: transparent;
-        }
-      }
-    }
-
-    .column-xs {
-      min-width: 100px;
-      max-width: 100px;
-    }
-
-    .column-sm {
-      min-width: 200px;
-      max-width: 200px;
-    }
-
-    .column-rest {
-      width: 100%;
-      min-width: 100%;
-    }
-
-    .column-actions {
-      white-space: nowrap;
-      text-align: right;
-      min-width: 88px;
-      max-width: 88px;
-
-      button,
-      a {
-        .transition(opacity);
-        opacity: 0;
-      }
-    }
-
-    tr:hover .column-actions,
-    tr:focus-within {
-      button,
-      a {
-        opacity: 1;
-      }
-    }
-  }
-}
-
-[tuiWrapper][data-appearance='textfield'] {
-  .no-shadow &,
-  &.no-shadow {
-    box-shadow: none !important;
-  }
-}
-
-.gap-4 {
-  gap: 1rem;
 }

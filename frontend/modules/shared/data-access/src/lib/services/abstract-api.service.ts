@@ -1,22 +1,21 @@
 import { inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
-import { ApiParams } from '../api.params';
+import { ApiPaginatedResponse, ApiParams } from '../api.params';
 import { BaseResource } from '../models/base-resource';
+
+export const TOTAL_ITEMS_HEADER = 'X-Whole-Content-Length';
 
 export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
   const fromObject = (Object.keys(params) as Array<keyof typeof params>).reduce(
     (acc, key) => {
-      if (
-        params[key] !== '' &&
-        params[key] !== undefined &&
-        params[key] !== null
-      ) {
-        acc[key] = params[key];
+      const val = params[key];
+      if (val !== '' && val !== undefined && val !== null) {
+        acc[key] = val;
       }
       return acc;
     },
-    {},
+    {} as Record<string, string | number | boolean>,
   );
 
   return new HttpParams({ fromObject });
@@ -35,10 +34,20 @@ export abstract class AbstractApiService<
     return this._http.get<T>(`${this._resourceUrl}/${id}`);
   }
 
-  getAll(params: ApiParams<T> | ApiParams = {}) {
-    return this._http.get<T[]>(this._resourceUrl, {
-      params: toHttpParams(params),
-    });
+  getAll(params: ApiParams<T> = {}) {
+    return this._http
+      .get<T[]>(this._resourceUrl, {
+        params: toHttpParams(params),
+        observe: 'response',
+      })
+      .pipe(
+        map(
+          ({ body, headers }): ApiPaginatedResponse<T> => ({
+            totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
+            items: body ?? [],
+          }),
+        ),
+      );
   }
 
   create(resource: Partial<TCreatePayload>) {

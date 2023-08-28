@@ -13,7 +13,7 @@ export const provideAuthenticatedUser = (
     enrolledUniversities: [],
     username: 'test',
     enabled: true,
-  }
+  },
 ): Provider => ({
   provide: AuthService,
   useValue: {

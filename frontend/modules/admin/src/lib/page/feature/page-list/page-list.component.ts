@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Page, PageService } from '@reunice/modules/shared/data-access';
+import {
+  Page,
+  PageService,
+  UniversityService,
+  UserService,
+} from '@reunice/modules/shared/data-access';
 import {
   provideReuniceTable,
   ReuniceAbstractTable,
@@ -7,6 +12,7 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
 import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
+import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 
 @Component({
   selector: 'reunice-page-list',
@@ -26,7 +32,22 @@ export class PageListComponent extends ReuniceAbstractTable<Page> {
     'actions',
   ];
 
-  readonly filtersForm = inject(FormBuilder).nonNullable.group({
+  readonly filtersForm = inject(FormBuilder).group({
     search: [''],
+    hidden_eq: [null as boolean | null],
+    creator_eq: [null as number | null],
+    university_eq: [null as number | null],
   });
+
+  readonly universitySearch = new ResourceSearchWrapper(
+    inject(UniversityService),
+    'name_ct',
+    'shortName',
+  );
+
+  readonly userSearch = new ResourceSearchWrapper(
+    inject(UserService),
+    'email_ct',
+    ['firstName', 'lastName'],
+  );
 }
