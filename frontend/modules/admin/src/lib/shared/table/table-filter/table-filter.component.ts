@@ -137,7 +137,7 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
     @Self()
     @Inject(NgControl)
     control: NgControl | null,
-    @Inject(ChangeDetectorRef) cdr: ChangeDetectorRef
+    @Inject(ChangeDetectorRef) cdr: ChangeDetectorRef,
   ) {
     super(control, cdr);
   }

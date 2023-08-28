@@ -37,7 +37,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
         .getAll({ [this.searchKey]: search, size: 250 })
         .pipe(
           map(({ items }) => items),
-          startWith(null)
+          startWith(null),
         ),
     ),
     shareReplay(),
@@ -59,7 +59,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
           items.map<[T['id'], string]>((item) => [
             item.id,
             this.stringify(item),
-          ])
+          ]),
         ),
     ),
     startWith(new Map()),
@@ -67,7 +67,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
       (map) => (id: TuiContextWithImplicit<T['id']> | T['id']) =>
         (tuiIsString(id) || tuiIsNumber(id)
           ? map.get(id)
-          : map.get(id.$implicit)) || this._translate.instant('LOADING_DOTS')
+          : map.get(id.$implicit)) || this._translate.instant('LOADING_DOTS'),
     ),
   );
 
@@ -91,7 +91,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     } else {
       console.error(
         `[${ResourceSearchWrapper.name}]: Invalid stringify`,
-        stringify
+        stringify,
       );
       this.stringify = () => '';
     }

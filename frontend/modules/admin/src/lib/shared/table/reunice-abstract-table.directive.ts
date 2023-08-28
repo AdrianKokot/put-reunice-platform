@@ -102,7 +102,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
       this.filtersForm.valueChanges.pipe(
         startWith(null),
         debounceTime(300),
-        map(() => this.filtersForm.getRawValue())
+        map(() => this.filtersForm.getRawValue()),
       ),
     ])
       .pipe(

@@ -39,8 +39,8 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
           ({ body, headers }): ApiPaginatedResponse<Keyword> => ({
             totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
             items: body ?? [],
-          })
-        )
+          }),
+        ),
       );
   }
 }

@@ -45,8 +45,8 @@ export abstract class AbstractApiService<
           ({ body, headers }): ApiPaginatedResponse<T> => ({
             totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
             items: body ?? [],
-          })
-        )
+          }),
+        ),
       );
   }
 

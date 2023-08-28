@@ -45,12 +45,12 @@ export class SidebarComponent implements AfterViewInit {
     this.open$ = merge(
       this._button.tuiActiveZoneChange,
       fromEvent(this._button['el'].nativeElement, 'click').pipe(
-        map(() => true)
+        map(() => true),
       ),
       this._router.events.pipe(
         filter((e) => e instanceof NavigationEnd),
-        map(() => false)
-      )
+        map(() => false),
+      ),
     ).pipe(distinctUntilChanged());
   }
 }

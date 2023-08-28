@@ -27,8 +27,8 @@ export class TemplateService extends AbstractApiService<
           ({ body, headers }): ApiPaginatedResponse<Template> => ({
             totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
             items: body ?? [],
-          })
-        )
+          }),
+        ),
       );
   }
 
