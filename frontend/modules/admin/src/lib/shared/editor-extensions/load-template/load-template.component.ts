@@ -55,8 +55,8 @@ export class LoadTemplateComponent {
     switchMap((universityId) =>
       this._service
         .getTemplatesForUniversity(universityId)
-        .pipe(startWith(null))
-    )
+        .pipe(startWith(null)),
+    ),
   );
 
   loadTemplate(template: Template): void {

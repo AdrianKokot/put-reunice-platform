@@ -61,7 +61,7 @@ export class UserEditFormComponent {
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
     'name_ct',
-    'name'
+    'name',
   );
 
   readonly item$ = resourceFromRoute(this._service, (user) => {
@@ -88,7 +88,7 @@ export class UserEditFormComponent {
   readonly editingOwnAccount$ = this.item$.pipe(
     filter((user): user is User => user !== null),
     map((user) => user.id === this._user?.id),
-    startWith(false)
+    startWith(false),
   );
 
   readonly allFieldsReadonly$ = this.item$.pipe(
@@ -98,9 +98,9 @@ export class UserEditFormComponent {
         this._user?.accountType !== ExtendedAccountTypeEnum.ADMIN &&
         (user.accountType === ExtendedAccountTypeEnum.ADMIN ||
           !this._user?.enrolledUniversities.every((u) =>
-            user.enrolledUniversities.some((eu) => eu.id === u.id)
-          ))
+            user.enrolledUniversities.some((eu) => eu.id === u.id),
+          )),
     ),
-    startWith(true)
+    startWith(true),
   );
 }

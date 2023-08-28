@@ -21,22 +21,22 @@ export class TemplateService extends AbstractApiService<
   }
 
   override update(
-    resource: Partial<TemplateCreate> & Pick<Template, 'id'>
+    resource: Partial<TemplateCreate> & Pick<Template, 'id'>,
   ): Observable<Template> {
     return combineLatest([
       this._http.patch<Template>(
         `${this._resourceUrl}/${resource.id}/content`,
-        resource.content
+        resource.content,
       ),
       this._http.patch<Template>(
         `${this._resourceUrl}/${resource.id}/name`,
-        resource.name
+        resource.name,
       ),
       ...(resource.universities?.map((id) =>
         this._http.post<void>(
           `${this._resourceUrl}/${resource.id}/universities/${id}`,
-          ''
-        )
+          '',
+        ),
       ) ?? []),
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
@@ -45,15 +45,15 @@ export class TemplateService extends AbstractApiService<
     return this._http
       .post<Template>(`${this._resourceUrl}`, resource.name)
       .pipe(
-        switchMap((template) => this.update({ id: template.id, ...resource }))
+        switchMap((template) => this.update({ id: template.id, ...resource })),
       );
   }
 
   getTemplatesForUniversity(
-    universityId: University['id']
+    universityId: University['id'],
   ): Observable<Template[]> {
     return this._http.get<Template[]>(
-      `${this._resourceUrl}?universityID=${universityId}`
+      `${this._resourceUrl}?universityID=${universityId}`,
     );
   }
 }

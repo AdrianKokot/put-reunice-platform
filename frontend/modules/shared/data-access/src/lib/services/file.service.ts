@@ -18,14 +18,14 @@ export class FileService {
 
   deleteFile(filename: string, pageID: number): Observable<FileResource[]> {
     return this.http.delete<FileResource[]>(
-      `${this.server}/delete/page/${pageID}/${filename}`
+      `${this.server}/delete/page/${pageID}/${filename}`,
     );
   }
 
   upload(
     formData: FormData,
     pageId: number,
-    userId: number
+    userId: number,
   ): Observable<HttpEvent<string[]>> {
     return this.http.post<string[]>(
       `${this.server}/upload/page/${pageId}/user/${userId}`,
@@ -34,7 +34,7 @@ export class FileService {
         withCredentials: true,
         reportProgress: true,
         observe: 'events',
-      }
+      },
     );
   }
 

@@ -7,7 +7,7 @@ import { fromPromise } from 'rxjs/internal/observable/innerFrom';
  * @example new FormSubmitWrapper(..., { effect: navigateToResourceDetails() })
  */
 export const navigateToResourceDetails = (
-  additionalCommands: Parameters<Router['navigate']>[0] = []
+  additionalCommands: Parameters<Router['navigate']>[0] = [],
 ) => {
   const router = inject(Router);
   const route = inject(ActivatedRoute);
@@ -16,6 +16,6 @@ export const navigateToResourceDetails = (
     fromPromise(
       router.navigate(['..', result.id, ...additionalCommands], {
         relativeTo: route,
-      })
+      }),
     );
 };

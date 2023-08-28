@@ -20,8 +20,8 @@ export const RedirectToUniversityMainPage: CanActivateFn = (route) => {
     .get(id)
     .pipe(
       map((u) =>
-        router.createUrlTree(['universities', u.id, 'page', u.mainPage.id])
-      )
+        router.createUrlTree(['universities', u.id, 'page', u.mainPage.id]),
+      ),
     );
 };
 

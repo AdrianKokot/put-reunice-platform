@@ -24,7 +24,7 @@ export interface FormSubmitWrapperFunctions<
   TControl extends {
     [K in keyof TControl]: AbstractControl<unknown, unknown>;
   },
-  TResult
+  TResult,
 > {
   /**
    * Function called on valid form submit
@@ -32,7 +32,7 @@ export interface FormSubmitWrapperFunctions<
   submit: (
     formValue: ReturnType<
       InstanceType<typeof FormGroup<TControl>>['getRawValue']
-    >
+    >,
   ) => Observable<TResult>;
   /**
    * Function called after getting successful response from submit function
@@ -45,15 +45,15 @@ export interface FormSubmitWrapperFunctions<
 }
 
 const FORM_SUBMIT_WRAPPER_LOADING_VALUE = Symbol(
-  'FORM_SUBMIT_WRAPPER_LOADING_VALUE'
+  'FORM_SUBMIT_WRAPPER_LOADING_VALUE',
 );
 const FORM_SUBMIT_WRAPPER_ERROR_VALUE = Symbol(
-  'FORM_SUBMIT_WRAPPER_LOADING_VALUE'
+  'FORM_SUBMIT_WRAPPER_LOADING_VALUE',
 );
 
 export const handleValidationApiError = (
   form: FormGroup,
-  err: HttpErrorResponse
+  err: HttpErrorResponse,
 ) => {
   // TODO Handle validation errors
   console.log(err);
@@ -63,7 +63,7 @@ export class FormSubmitWrapper<
   TControl extends {
     [K in keyof TControl]: AbstractControl<unknown, unknown>;
   },
-  TResult
+  TResult,
 > {
   private readonly _submit$ = new Subject<void>();
   private readonly _translate = inject(TranslateService);
@@ -81,8 +81,8 @@ export class FormSubmitWrapper<
             handleValidationApiError(this.form, err);
 
           return of(FORM_SUBMIT_WRAPPER_ERROR_VALUE);
-        })
-      )
+        }),
+      ),
     ),
     tap((result) => {
       if (typeof result !== 'symbol' && this.functions.successAlertMessage) {
@@ -98,7 +98,7 @@ export class FormSubmitWrapper<
         return this.functions.effect(result).pipe(
           take(1),
           startWith(null),
-          map(() => result)
+          map(() => result),
         );
       }
 
@@ -106,7 +106,7 @@ export class FormSubmitWrapper<
     }),
     map((result) => result === FORM_SUBMIT_WRAPPER_LOADING_VALUE),
     startWith(false),
-    shareReplay()
+    shareReplay(),
   );
 
   public submit() {
@@ -115,7 +115,7 @@ export class FormSubmitWrapper<
 
   constructor(
     public readonly form: FormGroup<TControl>,
-    readonly functions: FormSubmitWrapperFunctions<TControl, TResult>
+    readonly functions: FormSubmitWrapperFunctions<TControl, TResult>,
   ) {
     this.loading$.subscribe();
   }

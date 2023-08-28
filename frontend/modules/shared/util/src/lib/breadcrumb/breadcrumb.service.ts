@@ -39,6 +39,6 @@ export class BreadcrumbService {
 
       return breadcrumbs;
     }),
-    shareReplay()
+    shareReplay(),
   );
 }
