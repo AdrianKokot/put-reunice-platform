@@ -7,7 +7,6 @@ import {
 } from '@reunice/modules/shared/data-access';
 import {
   provideReuniceTable,
-  ResourceFilterForm,
   ReuniceAbstractTable,
 } from '../../../shared/table/reunice-abstract-table.directive';
 import { FormBuilder } from '@angular/forms';
@@ -33,7 +32,7 @@ export class UserListComponent extends ReuniceAbstractTable<User> {
     'actions',
   ];
 
-  readonly filtersForm = inject(FormBuilder).group<ResourceFilterForm<User>>({
+  readonly filtersForm = inject(FormBuilder).group({
     search: [''],
     accountType_eq: [null as AccountType | null],
     enabled_eq: [null as boolean | null],
