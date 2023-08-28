@@ -161,7 +161,7 @@
 
 <ng-template #emptyList>
   <tr>
-    <td [colSpan]="columns.length">
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
       {{ emptyMessage$ | async }}
     </td>
   </tr>

@@ -94,8 +94,8 @@
 
 <ng-template #emptyList>
   <tr>
-    <td [colSpan]="columns.length">
-      {{ 'NO_RECORDS_FOUND' | translate }}
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
+      {{ emptyMessage$ | async }}
     </td>
   </tr>
 </ng-template>

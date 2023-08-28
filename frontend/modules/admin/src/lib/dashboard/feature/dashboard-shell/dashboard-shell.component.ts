@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  ViewEncapsulation,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BreadcrumbService } from '@reunice/modules/shared/util';
@@ -19,6 +24,8 @@ import { map } from 'rxjs';
   ],
   templateUrl: './dashboard-shell.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['../../../admin.style.less'],
 })
 export class DashboardShellComponent {
   private readonly _breadcrumbService = inject(BreadcrumbService);
