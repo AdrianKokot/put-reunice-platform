@@ -1,20 +1,13 @@
 package com.example.cms.page;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.security.LoggedUser;
-import com.example.cms.security.Role;
-import com.example.cms.security.SecurityService;
-import com.example.cms.university.University;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -29,16 +22,20 @@ public class PageSpecification implements Specification<Page> {
 
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.like(root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+                return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
-            if (root.get(criteria.getKey()).getJavaType() == String.class) {
+            if (criteria.getKey().equalsIgnoreCase("university")) {
+                return criteriaBuilder.equal(root.get("university").get("id"), criteria.getValue());
+            } else if (criteria.getKey().equalsIgnoreCase("creator")) {
+                return criteriaBuilder.equal(root.get("creator").get("id"), criteria.getValue());
+            } else if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), criteria.getValue());
 
             } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
                 return criteriaBuilder.equal(
-                                root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
+                        root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
 
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
