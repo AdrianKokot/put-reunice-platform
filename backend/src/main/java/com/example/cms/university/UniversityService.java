@@ -21,6 +21,7 @@ import com.example.cms.user.UserSpecification;
 import com.example.cms.user.exceptions.UserForbidden;
 import com.example.cms.user.exceptions.UserNotFound;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
@@ -51,7 +52,7 @@ public class UniversityService {
         }).orElseThrow(UniversityNotFound::new);
     }
 
-    public List<UniversityDtoSimple> getUniversities(Pageable pageable, Map<String, String> filterVars) {
+    public Page<University> getUniversities(Pageable pageable, Map<String, String> filterVars) {
         Specification<University> combinedSpecification = null;
 
         if (!filterVars.isEmpty()) {
@@ -74,10 +75,7 @@ public class UniversityService {
             }
         }
 
-        return universityRepository.findAll(combinedSpecification, pageable).stream()
-                .filter(this::isUniversityVisible)
-                .map(UniversityDtoSimple::of)
-                .collect(Collectors.toList());
+        return universityRepository.findAll(combinedSpecification, pageable);
     }
 
     public List<UniversityDtoSimple> searchUniversities(Pageable pageable, String text) {

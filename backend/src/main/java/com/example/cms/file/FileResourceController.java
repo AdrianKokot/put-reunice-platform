@@ -2,10 +2,13 @@ package com.example.cms.file;
 
 import com.example.cms.file.projections.FileDtoSimple;
 import com.example.cms.template.Template;
+import com.example.cms.user.User;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,11 +29,18 @@ public class FileResourceController {
 
     @GetMapping("/all/page/{pageId}")
     public ResponseEntity<List<FileDtoSimple>> getAll(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
+
+        Page<FileResource> responsePage = fileService.getAll(
+                pageable,
+                pageId,
+                FilterPathVariableValidator.validate(vars, FileResource.class));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+
         return new ResponseEntity<>(
-                fileService.getAll(
-                        pageable,
-                        pageId,
-                        FilterPathVariableValidator.validate(vars, FileResource.class)),
+                responsePage.stream().map(FileDtoSimple::of).collect(Collectors.toList()),
+                httpHeaders,
                 HttpStatus.OK);
     }
 
