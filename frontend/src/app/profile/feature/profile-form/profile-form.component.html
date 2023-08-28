@@ -1,0 +1,80 @@
+<form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'FIRST_NAME' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="firstName"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="firstName"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
+    <label [tuiLabel]="'LAST_NAME' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="lastName"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="lastName"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </div>
+
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'EMAIL' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="email"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="email" />
+      </tui-input>
+
+      <tui-error
+        formControlName="email"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
+    <label
+      [tuiLabel]="'PHONE_NUMBER' | translate"
+      class="tui-form__multi-field"
+    >
+      <tui-input
+        formControlName="phoneNumber"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="tel" />
+      </tui-input>
+
+      <tui-error
+        formControlName="phoneNumber"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </div>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      size="m"
+      type="submit"
+      class="tui-form__button"
+      [showLoader]="(handler.loading$ | async) ?? false"
+    >
+      {{ 'SAVE' | translate }}
+    </button>
+  </div>
+</form>

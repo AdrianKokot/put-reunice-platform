@@ -42,12 +42,7 @@
         <a href="/admin" tuiOption role="menuitem" (click)="close()">
           {{ user.accountType + '_CONSOLE' | translate }}
         </a>
-        <a
-          routerLink="/accounts/profile"
-          tuiOption
-          role="menuitem"
-          (click)="close()"
-        >
+        <a routerLink="/profile" tuiOption role="menuitem" (click)="close()">
           {{ 'PROFILE' | translate }}
         </a>
         <a
