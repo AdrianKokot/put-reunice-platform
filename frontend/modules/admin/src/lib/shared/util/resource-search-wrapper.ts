@@ -20,9 +20,12 @@ import {
   tuiIsNumber,
   tuiIsString,
 } from '@taiga-ui/cdk';
+import { TranslateService } from '@ngx-translate/core';
+import { inject } from '@angular/core';
 
 export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
   private readonly _search$ = new BehaviorSubject<string>('');
+  private readonly _translate = inject(TranslateService);
 
   readonly items$ = this._search$.pipe(
     debounceTime(300),
@@ -55,7 +58,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
         new Map(
           items.map<[T['id'], string]>((item) => [
             item.id,
-            item[this.stringifyKey]?.toString() ?? '',
+            this.stringify(item),
           ])
         )
     ),
@@ -64,15 +67,35 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
       (map) => (id: TuiContextWithImplicit<T['id']> | T['id']) =>
         (tuiIsString(id) || tuiIsNumber(id)
           ? map.get(id)
-          : map.get(id.$implicit)) || 'Loading...'
+          : map.get(id.$implicit)) || this._translate.instant('LOADING_DOTS')
     )
   );
+
+  private readonly stringify: (item: T) => string;
 
   constructor(
     private readonly _service: AbstractApiService<T, unknown, unknown>,
     readonly searchKey: keyof ApiFilter<T>,
-    readonly stringifyKey: OnlyKeysOfType<T, string> & string
-  ) {}
+    stringify:
+      | (OnlyKeysOfType<T, string> & string)
+      | Array<OnlyKeysOfType<T, string> & string>
+      | ((item: T) => string)
+  ) {
+    if (typeof stringify === 'function') {
+      this.stringify = stringify;
+    } else if (typeof stringify === 'string') {
+      this.stringify = (item: T) => item[stringify]?.toString() ?? '';
+    } else if (Array.isArray(stringify)) {
+      this.stringify = (item: T) =>
+        stringify.map((key) => item[key]?.toString() ?? '').join(' ');
+    } else {
+      console.error(
+        `[${ResourceSearchWrapper.name}]: Invalid stringify`,
+        stringify
+      );
+      this.stringify = () => '';
+    }
+  }
 
   search(text: string | null) {
     this._search$.next(text?.trim() ?? '');
