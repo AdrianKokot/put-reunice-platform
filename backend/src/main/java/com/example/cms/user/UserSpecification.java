@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-
 import java.util.Set;
 
 import static java.lang.Boolean.parseBoolean;
@@ -23,8 +22,7 @@ public class UserSpecification implements Specification<User> {
 
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.like(
-                        root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+                return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {

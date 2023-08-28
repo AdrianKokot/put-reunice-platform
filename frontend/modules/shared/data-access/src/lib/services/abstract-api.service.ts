@@ -15,7 +15,7 @@ export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
       }
       return acc;
     },
-    {} as Record<string, string | number | boolean>
+    {} as Record<string, string | number | boolean>,
   );
 
   return new HttpParams({ fromObject });
@@ -24,7 +24,7 @@ export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
 export abstract class AbstractApiService<
   T extends BaseResource = BaseResource,
   TCreatePayload = T,
-  TUpdatePayload = T
+  TUpdatePayload = T,
 > {
   protected readonly _http = inject(HttpClient);
 

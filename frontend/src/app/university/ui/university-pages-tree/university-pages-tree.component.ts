@@ -13,7 +13,7 @@ import { TuiTreeModule } from '@taiga-ui/kit';
 import { Page } from '@reunice/modules/shared/data-access';
 
 export const UNIVERSITY_PAGE_HIERARCHY = new InjectionToken<Page>(
-  'UNIVERSITY_PAGE_HIERARCHY'
+  'UNIVERSITY_PAGE_HIERARCHY',
 );
 
 @Component({

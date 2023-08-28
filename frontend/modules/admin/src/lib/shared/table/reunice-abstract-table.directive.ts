@@ -43,7 +43,7 @@ export const REUNICE_TABLE_SERVICE = new InjectionToken<
 >('REUNICE_TABLE_SERVICE');
 
 export const provideReuniceTable = <T extends { id: string | number }>(
-  service: Type<AbstractApiService<T, unknown, unknown>>
+  service: Type<AbstractApiService<T, unknown, unknown>>,
 ): Provider[] => {
   return [
     {
@@ -76,7 +76,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   abstract readonly filtersForm: FormGroup;
 
   protected readonly service = inject<AbstractApiService<T, unknown, unknown>>(
-    REUNICE_TABLE_SERVICE
+    REUNICE_TABLE_SERVICE,
   );
 
   protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
@@ -87,7 +87,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
       throw new Error(
-        ReuniceAbstractTable.name + ': missing required content child'
+        ReuniceAbstractTable.name + ': missing required content child',
       );
     }
 
@@ -97,7 +97,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
       this._sortBy.tuiSortByChange.pipe(startWith(this._sortBy.tuiSortBy)),
       this._table.directionChange.pipe(startWith(this._table.direction)),
       this._pagination.paginationChange.pipe(
-        startWith(this._pagination.pagination)
+        startWith(this._pagination.pagination),
       ),
       this.filtersForm.valueChanges.pipe(
         startWith(null),
@@ -118,7 +118,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
             page,
             size,
             ...filters,
-          })
+          }),
         ),
         tap(({ size }) => (this._pageSize = size)),
         tap(console.debug),
@@ -129,10 +129,10 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
               return items;
             }),
             startWith(null),
-            catchError(() => of([]))
-          )
+            catchError(() => of([])),
+          ),
         ),
-        shareReplay()
+        shareReplay(),
       )
       .subscribe((x) => this._items$.next(x));
   }

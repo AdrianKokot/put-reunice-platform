@@ -20,7 +20,7 @@ export class UserService extends AbstractApiService<
   }
 
   override update(
-    resource: Partial<UpdateUser> & Pick<User, 'id'>
+    resource: Partial<UpdateUser> & Pick<User, 'id'>,
   ): Observable<User> {
     return combineLatest([
       this._http.put<User>(`${this._resourceUrl}/${resource.id}`, resource),
@@ -28,7 +28,7 @@ export class UserService extends AbstractApiService<
         ? [
             this._http.put<User>(
               `${this._resourceUrl}/${resource.id}/universities`,
-              resource.enrolledUniversities
+              resource.enrolledUniversities,
             ),
           ]
         : []),
@@ -40,7 +40,7 @@ export class UserService extends AbstractApiService<
       this._http
         .patch(
           `${this._resourceUrl}/${resource.id}/username`,
-          resource.username
+          resource.username,
         )
         .pipe(catchError(() => of(true))),
     ]).pipe(switchMap(() => this.get(resource.id)));
@@ -51,10 +51,10 @@ export class UserService extends AbstractApiService<
       switchMap((user) =>
         this._http.put<User>(
           `${this._resourceUrl}/${user.id}/universities`,
-          resource.enrolledUniversities
-        )
+          resource.enrolledUniversities,
+        ),
       ),
-      switchMap((user) => this.get(user.id))
+      switchMap((user) => this.get(user.id)),
     );
   }
 }

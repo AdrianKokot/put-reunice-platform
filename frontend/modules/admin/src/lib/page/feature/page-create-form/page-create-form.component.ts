@@ -79,13 +79,13 @@ export class PageCreateFormComponent {
   readonly userSearch = new ResourceSearchWrapper(
     inject(UserService),
     'search',
-    'name'
+    'name',
   );
 
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
     'name_ct',
-    'name'
+    'name',
   );
 
   readonly pagesTree$ = this.form.controls.universityId.valueChanges.pipe(
@@ -96,10 +96,10 @@ export class PageCreateFormComponent {
     switchMap((id) =>
       this._service.getUniversityHierarchy(id).pipe(
         tap((page) => this.form.controls.parentId.setValue(page.id)),
-        startWith(null)
-      )
+        startWith(null),
+      ),
     ),
-    shareReplay()
+    shareReplay(),
   );
 
   readonly pagesTreeHandler = PAGE_TREE_HANDLER;

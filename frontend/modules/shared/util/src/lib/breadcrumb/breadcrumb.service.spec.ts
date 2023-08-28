@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { BreadcrumbService } from './breadcrumb.service';
-import { TestingModule } from '@reunice/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe(BreadcrumbService.name, () => {
   let service: BreadcrumbService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [TestingModule] });
+    TestBed.configureTestingModule({ imports: [RouterTestingModule] });
     service = TestBed.inject(BreadcrumbService);
   });
 

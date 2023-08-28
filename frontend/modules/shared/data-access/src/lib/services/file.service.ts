@@ -8,9 +8,9 @@ import { BaseResource } from '../models/base-resource';
   providedIn: 'root',
 })
 export class FileService {
-  private server = '/api/file';
+  private readonly server = '/api/file';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   getAll(pageID: BaseResource['id']): Observable<FileResource[]> {
     return this.http.get<FileResource[]>(`${this.server}/all/page/${pageID}`);
@@ -18,14 +18,14 @@ export class FileService {
 
   deleteFile(filename: string, pageID: number): Observable<FileResource[]> {
     return this.http.delete<FileResource[]>(
-      `${this.server}/delete/page/${pageID}/${filename}`
+      `${this.server}/delete/page/${pageID}/${filename}`,
     );
   }
 
   upload(
     formData: FormData,
     pageId: number,
-    userId: number
+    userId: number,
   ): Observable<HttpEvent<string[]>> {
     return this.http.post<string[]>(
       `${this.server}/upload/page/${pageId}/user/${userId}`,
@@ -34,7 +34,7 @@ export class FileService {
         withCredentials: true,
         reportProgress: true,
         observe: 'events',
-      }
+      },
     );
   }
 

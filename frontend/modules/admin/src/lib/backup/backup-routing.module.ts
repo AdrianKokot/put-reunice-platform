@@ -7,7 +7,7 @@ const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./feature/backup-list/backup-list.component').then(
-        (m) => m.BackupListComponent
+        (m) => m.BackupListComponent,
       ),
   },
 ];

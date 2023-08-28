@@ -52,7 +52,7 @@ export class TemplateEditFormComponent {
       ...v,
       universities: v.universities?.map((u) => u.id) ?? [],
       allUniversities: v.universities === null,
-    })
+    }),
   );
 
   readonly handler = new FormSubmitWrapper(this.form, {
@@ -63,6 +63,6 @@ export class TemplateEditFormComponent {
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
     'name_ct',
-    'name'
+    'name',
   );
 }

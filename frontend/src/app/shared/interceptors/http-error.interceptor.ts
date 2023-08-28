@@ -30,7 +30,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
   constructor(
     private readonly _router: Router,
-    @Inject(TuiAlertService) readonly alert: TuiAlertService
+    @Inject(TuiAlertService) readonly alert: TuiAlertService,
   ) {
     this._errorAlert$
       .pipe(
@@ -40,16 +40,16 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             label: title ?? 'Something went wrong',
             autoClose: true,
             hasCloseButton: true,
-          })
+          }),
         ),
-        takeUntilDestroyed()
+        takeUntilDestroyed(),
       )
       .subscribe();
   }
 
   intercept(
     request: HttpRequest<unknown>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
     if (
       !request.url.includes('/api/') ||
@@ -69,7 +69,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
         if (error.status === 401) {
           return from(this._router.navigate(['/auth/login'])).pipe(
-            switchMap(() => NEVER)
+            switchMap(() => NEVER),
           );
         }
 
@@ -88,7 +88,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
 
         return throwError(() => error);
-      })
+      }),
     );
   }
 }

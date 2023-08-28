@@ -35,14 +35,14 @@ export class LanguageSwitcherComponent {
     @Inject(DOCUMENT) document: Document,
     @Inject(LOCAL_STORAGE) localStorage: Storage,
     @Inject(TuiLanguageSwitcher) switcher: TuiLanguageSwitcher,
-    readonly translateService: TranslateService
+    readonly translateService: TranslateService,
   ) {
     this.translateService.onDefaultLangChange.subscribe(
       ({ lang }: LangChangeEvent) => {
         document.documentElement.lang = lang;
         localStorage.setItem('locale', lang);
         switcher.setLanguage(localeToTuiLanguage(lang));
-      }
+      },
     );
   }
 }

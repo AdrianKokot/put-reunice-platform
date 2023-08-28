@@ -7,10 +7,10 @@ import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 })
 export class SideService {
   private readonly _rightSide = new BehaviorSubject<PolymorpheusContent | null>(
-    null
+    null,
   );
   private readonly _leftSide = new BehaviorSubject<PolymorpheusContent | null>(
-    null
+    null,
   );
 
   readonly rightSide$ = this._rightSide.asObservable();

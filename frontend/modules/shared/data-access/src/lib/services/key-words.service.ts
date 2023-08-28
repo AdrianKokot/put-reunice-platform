@@ -17,7 +17,7 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
   }
 
   override update(
-    resource: Partial<Keyword> & Pick<Keyword, 'id'>
+    resource: Partial<Keyword> & Pick<Keyword, 'id'>,
   ): Observable<Keyword> {
     return this._http
       .post<void>(`${this._resourceUrl}/${resource.id}`, resource.word)

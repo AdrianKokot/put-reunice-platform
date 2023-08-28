@@ -61,7 +61,7 @@ export class UserDirective implements OnInit {
       type: user?.accountType ?? ExtendedAccountTypeEnum.GUEST,
       user,
     })),
-    shareReplay()
+    shareReplay(),
   );
 
   private readonly _context = new UserContext();
@@ -72,7 +72,7 @@ export class UserDirective implements OnInit {
     transform: (value: string) => {
       console.assert(
         value in ExtendedAccountTypeEnum,
-        `Passed invalid account type: ${value}`
+        `Passed invalid account type: ${value}`,
       );
       return value in ExtendedAccountTypeEnum ? value : null;
     },
@@ -86,7 +86,7 @@ export class UserDirective implements OnInit {
   constructor(
     private readonly templateRef: TemplateRef<UserContext>,
     private readonly viewContainer: ViewContainerRef,
-    private readonly _cdr: ChangeDetectorRef
+    private readonly _cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -101,12 +101,12 @@ export class UserDirective implements OnInit {
         ) {
           this.viewContainer.createEmbeddedView(
             this.templateRef,
-            this._context
+            this._context,
           );
         } else if (this.fallbackTemplate !== null) {
           this.viewContainer.createEmbeddedView(
             this.fallbackTemplate,
-            this._context
+            this._context,
           );
         }
 
@@ -117,7 +117,7 @@ export class UserDirective implements OnInit {
 
   static ngTemplateContextGuard(
     _dir: UserDirective,
-    _ctx: unknown
+    _ctx: unknown,
   ): _ctx is UserContext {
     return true;
   }

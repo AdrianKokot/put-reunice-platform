@@ -38,15 +38,15 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
         .pipe(
           map(({ items }) => items),
           startWith(null)
-        )
+        ),
     ),
-    shareReplay()
+    shareReplay(),
   );
 
   readonly itemIds$: Observable<ReadonlyArray<T['id']> | null> =
     this.items$.pipe(
       map((items) => (items !== null ? items.map((item) => item.id) : items)),
-      shareReplay()
+      shareReplay(),
     );
 
   readonly stringify$: Observable<
@@ -60,7 +60,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
             item.id,
             this.stringify(item),
           ])
-        )
+        ),
     ),
     startWith(new Map()),
     map(
@@ -68,7 +68,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
         (tuiIsString(id) || tuiIsNumber(id)
           ? map.get(id)
           : map.get(id.$implicit)) || this._translate.instant('LOADING_DOTS')
-    )
+    ),
   );
 
   private readonly stringify: (item: T) => string;
@@ -79,7 +79,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     stringify:
       | (OnlyKeysOfType<T, string> & string)
       | Array<OnlyKeysOfType<T, string> & string>
-      | ((item: T) => string)
+      | ((item: T) => string),
   ) {
     if (typeof stringify === 'function') {
       this.stringify = stringify;

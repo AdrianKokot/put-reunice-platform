@@ -7,14 +7,19 @@ import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.user.projections.UserDtoSimple;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,10 +43,16 @@ public class UserController {
             Pageable pageable,
             @RequestParam Map<String, String> vars) {
 
+        Page<User> responsePage = service.getUsers(
+                pageable,
+                FilterPathVariableValidator.validate(vars, User.class));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+
         return new ResponseEntity<>(
-                service.getUsers(
-                        pageable,
-                        FilterPathVariableValidator.validate(vars, User.class)),
+                responsePage.stream().map(UserDtoSimple::of).collect(Collectors.toList()),
+                httpHeaders,
                 HttpStatus.OK);
     }
 

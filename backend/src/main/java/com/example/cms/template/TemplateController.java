@@ -4,7 +4,9 @@ import com.example.cms.template.projections.TemplateDtoDetailed;
 import com.example.cms.template.projections.TemplateDtoSimple;
 import com.example.cms.user.User;
 import com.example.cms.validation.FilterPathVariableValidator;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "templates")
@@ -30,10 +33,16 @@ public class TemplateController {
     @GetMapping("/all")
     ResponseEntity<List<TemplateDtoDetailed>> readAllTemplates(Pageable pageable, @RequestParam Map<String, String> vars) {
 
+        Page<Template> responsePage = service.getAll(
+                pageable,
+                FilterPathVariableValidator.validate(vars, Template.class));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+
         return new ResponseEntity<>(
-                service.getAll(
-                        pageable,
-                        FilterPathVariableValidator.validate(vars, Template.class)),
+                responsePage.stream().map(TemplateDtoDetailed::of).collect(Collectors.toList()),
+                httpHeaders,
                 HttpStatus.OK);
     }
 

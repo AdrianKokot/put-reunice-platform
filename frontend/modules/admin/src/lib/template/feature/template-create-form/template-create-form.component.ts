@@ -57,6 +57,6 @@ export class TemplateCreateFormComponent {
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
     'name_ct',
-    'name'
+    'name',
   );
 }

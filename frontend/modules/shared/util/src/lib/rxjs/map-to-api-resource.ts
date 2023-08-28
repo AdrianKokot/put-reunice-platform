@@ -24,7 +24,7 @@ export const nestedRouteParamMap = (paramKey: string) => {
       return route.paramMap.get(paramKey);
     }),
     filter((id): id is string => id !== null),
-    share()
+    share(),
   );
 };
 
@@ -32,31 +32,31 @@ export const resourceIdFromRoute = (paramKey = 'id') => {
   return inject(ActivatedRoute).paramMap.pipe(
     map((params) => params.get(paramKey)),
     filter((id): id is string => id !== null),
-    shareReplay()
+    shareReplay(),
   );
 };
 
 export const resourceFromRoute = <
   TResult extends {
     id: string | number;
-  }
+  },
 >(
   service: AbstractApiService<TResult, unknown, unknown>,
   tapFn?: (item: TResult) => void,
-  paramKey = 'id'
+  paramKey = 'id',
 ) => {
   return resourceIdFromRoute(paramKey).pipe(
     switchMap((id) => service.get(id).pipe(tap(tapFn), startWith(null))),
-    shareReplay()
+    shareReplay(),
   );
 };
 
 export const formResourceFromRoute = <
   TResult extends {
     id: string | number;
-  }
+  },
 >(
   service: AbstractApiService<TResult, unknown, unknown>,
   form: FormGroup,
-  paramKey: keyof TResult & string = 'id'
+  paramKey: keyof TResult & string = 'id',
 ) => resourceFromRoute(service, (item) => form.patchValue(item), paramKey);

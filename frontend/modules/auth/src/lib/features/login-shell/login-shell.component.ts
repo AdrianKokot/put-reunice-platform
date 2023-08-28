@@ -45,8 +45,8 @@ export class LoginShellComponent {
           console.log(err);
           return of(false);
         }),
-        startWith(true)
-      )
-    )
+        startWith(true),
+      ),
+    ),
   );
 }

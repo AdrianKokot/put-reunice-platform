@@ -10,7 +10,7 @@ import {
 
 export const isUserOfType = (
   user: User | null,
-  accountType: ExtendedAccountType
+  accountType: ExtendedAccountType,
 ): boolean => {
   if (accountType === ExtendedAccountTypeEnum.GUEST) {
     return user === null;
@@ -32,7 +32,7 @@ export const isUserOfType = (
 
 export const AuthorizedOfTypeGuard = (
   accountType: ExtendedAccountType,
-  redirectCommands: Parameters<Router['createUrlTree']>[0] = ['/']
+  redirectCommands: Parameters<Router['createUrlTree']>[0] = ['/'],
 ): CanMatchFn => {
   return () => {
     const authService = inject(AuthService);
@@ -42,14 +42,14 @@ export const AuthorizedOfTypeGuard = (
       map((user) =>
         isUserOfType(user, accountType)
           ? true
-          : router.createUrlTree(redirectCommands)
-      )
+          : router.createUrlTree(redirectCommands),
+      ),
     );
   };
 };
 
 export const AuthGuard = AuthorizedOfTypeGuard(
-  ExtendedAccountTypeEnum.AUTHORIZED
+  ExtendedAccountTypeEnum.AUTHORIZED,
 );
 
 export const GuestGuard = AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.GUEST);

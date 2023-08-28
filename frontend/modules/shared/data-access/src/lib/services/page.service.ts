@@ -24,28 +24,28 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
           combineLatest([
             this._http.patch<Page>(
               `${this._resourceUrl}/${page.id}/content`,
-              resource.content
+              resource.content,
             ),
             this._http.patch<Page>(
               `${this._resourceUrl}/${page.id}/hidden`,
-              resource.hidden
+              resource.hidden,
             ),
-          ]).pipe(switchMap(() => this.get(page.id)))
-        )
+          ]).pipe(switchMap(() => this.get(page.id))),
+        ),
       );
   }
 
   override update(
-    resource: Partial<Page> & Pick<Page, 'id'>
+    resource: Partial<Page> & Pick<Page, 'id'>,
   ): Observable<Page> {
     return combineLatest([
       this._http.patch<Page>(
         `${this._resourceUrl}/${resource.id}/content`,
-        resource.content
+        resource.content,
       ),
       this._http.patch<Page>(
         `${this._resourceUrl}/${resource.id}/hidden`,
-        resource.hidden
+        resource.hidden,
       ),
       this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
     ]).pipe(switchMap(() => this.get(resource.id)));
@@ -53,7 +53,7 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
 
   getUniversityHierarchy(universityId: University['id']): Observable<Page> {
     return this._http.get<Page>(
-      `${this._resourceUrl}/hierarchy/${universityId}`
+      `${this._resourceUrl}/hierarchy/${universityId}`,
     );
   }
 }

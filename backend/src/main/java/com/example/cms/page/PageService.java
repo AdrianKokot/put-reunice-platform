@@ -7,6 +7,7 @@ import com.example.cms.page.exceptions.PageForbidden;
 import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.page.projections.*;
 import com.example.cms.security.LoggedUser;
+import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
@@ -50,15 +51,15 @@ public class PageService {
         }).orElseThrow(PageNotFound::new);
     }
 
-    public List<PageDtoSimple> getAllVisible(Pageable pageable,  Map<String, String> filterVars) {
+    public org.springframework.data.domain.Page<Page> getAllVisible(Pageable pageable, Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        String role;
+        Role role;
         List<Long> universities;
         Long creator;
 
         if (loggedUserOptional.isPresent()) {
             LoggedUser loggedUser = loggedUserOptional.get();
-            role = String.valueOf(loggedUserOptional);
+            role = loggedUser.getAccountType();
             universities = loggedUser.getUniversities();
             creator = loggedUser.getId();
         } else {
@@ -67,8 +68,10 @@ public class PageService {
             creator = null;
         }
 
-
-        Specification<Page> combinedSpecification = null;
+        Specification<Page> combinedSpecification = Specification.where(
+                new PageRoleSpecification(role,
+                        universities,
+                        creator));
 
         if (!filterVars.isEmpty()) {
             List<PageSpecification> specifications = filterVars.entrySet().stream()
@@ -78,23 +81,15 @@ public class PageService {
                         return new PageSpecification(new SearchCriteria(
                                 filterBy[0],
                                 filterBy[filterBy.length - 1],
-                                entries.getValue()),
-                                role,
-                                universities,
-                                creator);
+                                entries.getValue()));
                     }).collect(Collectors.toList());
 
             for (Specification<Page> spec : specifications) {
-                if (combinedSpecification == null) {
-                    combinedSpecification = Specification.where(spec);
-                }
                 combinedSpecification = combinedSpecification.and(spec);
             }
         }
 
-        return pageRepository.findAll(combinedSpecification, pageable).stream()
-                .map(PageDtoSimple::of)
-                .collect(Collectors.toList());
+        return pageRepository.findAll(combinedSpecification, pageable);
     }
 
     public List<PageDtoSimple> searchPages(Pageable pageable, String text) {
