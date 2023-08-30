@@ -25,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -139,7 +138,7 @@ public class FileResourceService {
         fileResource.setUploadedBy(user.getUsername());
         fileResource.setPage(page);
         fileResource.setFilename(StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())));
-        fileResource.setFileSize(FileUtils.humanReadableByteCountSI(multipartFile.getSize()));
+        fileResource.setFileSize(multipartFile.getSize());
         fileResource.setFileType(multipartFile.getContentType());
         fileResource.setData(multipartFile.getBytes());
 
@@ -150,7 +149,7 @@ public class FileResourceService {
         List<FileDtoSimple> output = new ArrayList<>();
         for (Object[] object : objects) {
             output.add(new FileDtoSimple(object[0].toString(), object[1].toString(),
-                    object[2].toString(), object[3].toString(), object[4].toString()));
+                    Long.parseLong(object[2].toString()), object[3].toString(), object[4].toString()));
         }
         return output;
     }

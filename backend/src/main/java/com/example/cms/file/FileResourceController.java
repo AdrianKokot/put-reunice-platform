@@ -1,8 +1,8 @@
 package com.example.cms.file;
 
 import com.example.cms.file.projections.FileDtoSimple;
-import com.example.cms.template.Template;
-import com.example.cms.user.User;
+import com.example.cms.security.SecurityService;
+import com.example.cms.user.exceptions.UserNotFound;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class FileResourceController {
 
     private final FileResourceService fileService;
+    private final SecurityService securityService;
 
     @GetMapping("/all/page/{pageId}")
     public ResponseEntity<List<FileDtoSimple>> getAll(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
@@ -49,13 +50,18 @@ public class FileResourceController {
         return fileService.downloadFiles(pageId, filename);
     }
 
-    @PostMapping("upload/page/{pageId}/user/{userId}")
-    public ResponseEntity<List<String>> uploadFiles(@PathVariable("pageId") Long pageId, @PathVariable("userId") Long userId, @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
+    @PostMapping("upload")
+    public ResponseEntity<List<String>> uploadFiles(
+            @RequestParam("pageId") Long pageId,
+            @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
+        Long userId = securityService.getPrincipal().orElseThrow(UserNotFound::new).getId();
+
         List<String> filenames = new ArrayList<>();
         for (MultipartFile file : multipartFiles) {
             filenames.add(file.getOriginalFilename());
             fileService.uploadFile(pageId, userId, file);
         }
+
         return ResponseEntity.ok().body(filenames);
     }
 
