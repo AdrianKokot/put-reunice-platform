@@ -27,10 +27,10 @@ export class ConfirmDirective {
   promptContent: PolymorpheusContent = '';
 
   @Input()
-  confirmText: string = 'CONFIRM';
+  confirmText = 'CONFIRM';
 
   @Input()
-  cancelText: string = 'CANCEL';
+  cancelText = 'CANCEL';
 
   @Input()
   size: TuiDialogSize = 's';

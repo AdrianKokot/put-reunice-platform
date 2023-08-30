@@ -19,3 +19,17 @@ export const navigateToResourceDetails = (
       }),
     );
 };
+
+export const navigateToResourceList = (
+  additionalCommands: Parameters<Router['navigate']>[0] = [],
+) => {
+  const router = inject(Router);
+  const route = inject(ActivatedRoute);
+
+  return () =>
+    fromPromise(
+      router.navigate(['..', ...additionalCommands], {
+        relativeTo: route,
+      }),
+    );
+};

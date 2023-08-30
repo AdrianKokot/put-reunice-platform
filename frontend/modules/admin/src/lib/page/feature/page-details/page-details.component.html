@@ -70,11 +70,41 @@
   ></tui-editor-socket>
 
   <div class="tui-form__buttons tui-form__buttons_align_end">
+    <ng-container
+      *ngIf="
+        item?.creator?.id === user.id ||
+        user.accountType === 'ADMIN' ||
+        (user.accountType === 'MODERATOR' &&
+          item?.university?.id === user.enrolledUniversities[0]?.id)
+      "
+    >
+      <button
+        tuiButton
+        type="button"
+        appearance="flat-destructive"
+        class="tui-form__button"
+        reuniceConfirm
+        [showLoader]="(deleteHandler.loading$ | async) ?? false"
+        [disabled]="!item?.hidden || (item?.children?.length ?? 0) > 0"
+        [tuiHint]="
+          (!item?.hidden
+            ? 'CANNOT_DELETE_VISIBLE_PAGE'
+            : (item?.children?.length ?? 0) > 0
+            ? 'CANNOT_DELETE_PAGE_WITH_CHILDREN'
+            : ''
+          ) | translate
+        "
+        (confirm)="item ? deleteHandler.delete(item.id) : null"
+      >
+        {{ 'DELETE' | translate }}
+      </button>
+    </ng-container>
+
     <a
       [routerLink]="['edit']"
       tuiButton
       type="button"
-      appearance="flat"
+      appearance="secondary"
       class="tui-form__button"
     >
       {{ 'EDIT' | translate }}
