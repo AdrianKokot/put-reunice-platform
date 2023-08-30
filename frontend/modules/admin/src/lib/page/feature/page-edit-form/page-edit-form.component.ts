@@ -10,7 +10,11 @@ import { BaseFormImportsModule } from '../../../shared/base-form-imports.module'
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
 import { TuiExpandModule } from '@taiga-ui/core';
-import { TuiElasticContainerModule } from '@taiga-ui/kit';
+import {
+  TuiElasticContainerModule,
+  TuiFileLike,
+  TuiInputFilesModule,
+} from '@taiga-ui/kit';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -22,6 +26,7 @@ import { TuiElasticContainerModule } from '@taiga-ui/kit';
     LoadTemplateComponent,
     TuiExpandModule,
     TuiElasticContainerModule,
+    TuiInputFilesModule,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +41,7 @@ export class PageEditFormComponent {
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
+    files: [[] as TuiFileLike[]],
   });
 
   readonly item$ = resourceFromRoute(this._service, (item) => {
@@ -49,4 +55,24 @@ export class PageEditFormComponent {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'PAGE_UPDATE_SUCCESS',
   });
+
+  rejectedFiles: readonly TuiFileLike[] = [];
+
+  onReject(files: TuiFileLike | readonly TuiFileLike[]): void {
+    this.rejectedFiles = [...this.rejectedFiles, ...(files as TuiFileLike[])];
+  }
+
+  removeFile({ name }: TuiFileLike): void {
+    this.handler.form.controls.files.setValue(
+      this.handler.form.controls.files.value?.filter(
+        (current: TuiFileLike) => current.name !== name,
+      ) ?? [],
+    );
+  }
+
+  clearRejected({ name }: TuiFileLike): void {
+    this.rejectedFiles = this.rejectedFiles.filter(
+      (rejected) => rejected.name !== name,
+    );
+  }
 }

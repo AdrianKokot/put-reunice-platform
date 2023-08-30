@@ -306,5 +306,7 @@
   "USER_DETAILS_TAB": "Details",
   "PASSWORD_CHANGE_TAB": "Change password",
   "CHANGES_SAVED_SUCCESS": "Changes saved successfully",
-  "USER_PASSWORD_CHANGE_SUCCESS": "Password changed successfully"
+  "USER_PASSWORD_CHANGE_SUCCESS": "Password changed successfully",
+  "FILES": "Files",
+  "PAGE_FILES": "Page files"
 }

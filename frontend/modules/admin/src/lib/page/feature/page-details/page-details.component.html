@@ -69,6 +69,23 @@
     [content]="item?.content ?? ''"
   ></tui-editor-socket>
 
+  <ng-container *tuiLet="files$ | async as files">
+    <div class="tui-form__row">
+      <div class="tui-space_bottom-1 text-02">
+        {{ 'FILES' | translate }}
+      </div>
+
+      <tui-files [max]="3">
+        <ng-container *ngFor="let file of files">
+          <tui-file *tuiItem [file]="file" [showDelete]="false"> </tui-file>
+        </ng-container>
+        <ng-container *ngIf="files === null">
+          <tui-file class="tui-skeleton"></tui-file>
+        </ng-container>
+      </tui-files>
+    </div>
+  </ng-container>
+
   <div class="tui-form__buttons tui-form__buttons_align_end">
     <a
       [routerLink]="['edit']"

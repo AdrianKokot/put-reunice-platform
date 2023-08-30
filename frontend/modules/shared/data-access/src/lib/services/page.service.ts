@@ -3,6 +3,7 @@ import { combineLatest, Observable, switchMap } from 'rxjs';
 import { Page, PageForm } from '../models/page';
 import { AbstractApiService } from './abstract-api.service';
 import { University } from '../models/university';
+import { TuiFileLike } from '@taiga-ui/kit';
 
 @Injectable({
   providedIn: 'root',
@@ -36,8 +37,19 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
   }
 
   override update(
-    resource: Partial<Page> & Pick<Page, 'id'>,
+    resource: (Partial<Page> & Pick<Page, 'id'>) &
+      Partial<{ files: TuiFileLike[] }>,
   ): Observable<Page> {
+    const formData = new FormData();
+
+    console.log({ resource });
+    resource?.files?.forEach((file) => {
+      formData.append('files', file as File, file.name);
+    });
+
+    formData.append('pageId', resource.id.toString());
+    console.log({ formData });
+
     return combineLatest([
       this._http.patch<Page>(
         `${this._resourceUrl}/${resource.id}/content`,
@@ -48,6 +60,7 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
         resource.hidden,
       ),
       this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
+      this._http.post<void>('/api/file/upload', formData),
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
 

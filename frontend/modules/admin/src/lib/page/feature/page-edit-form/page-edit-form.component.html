@@ -106,6 +106,50 @@
       ></tui-error>
     </label>
 
+    <h3 class="tui-form__header">{{ 'PAGE_FILES' | translate }}</h3>
+
+    <div class="tui-form__row">
+      <div class="tui-space_bottom-1">
+        {{ 'FILES' | translate }}
+      </div>
+
+      <ng-container *tuiLet="handler.form.controls.files as filesControl">
+        <tui-input-files
+          [multiple]="true"
+          (ngModelChange)="filesControl.markAsTouched()"
+          [formControl]="filesControl"
+          (reject)="onReject($event)"
+        >
+        </tui-input-files>
+
+        <tui-files class="tui-space_top-1" [max]="5">
+          <ng-container *ngFor="let file of filesControl.valueChanges | async">
+            <tui-file
+              *tuiItem
+              [file]="file"
+              [showDelete]="filesControl.enabled"
+              (removed)="removeFile(file)"
+            ></tui-file>
+          </ng-container>
+
+          <ng-container *ngFor="let file of rejectedFiles">
+            <tui-file
+              *tuiItem
+              state="error"
+              [file]="file"
+              [showDelete]="filesControl.enabled"
+              (removed)="clearRejected(file)"
+            ></tui-file>
+          </ng-container>
+        </tui-files>
+
+        <tui-error
+          [error]="['maxLength'] | tuiFieldError | async"
+          [formControl]="filesControl"
+        ></tui-error>
+      </ng-container>
+    </div>
+
     <div class="tui-form__buttons tui-form__buttons_align_end">
       <a
         [routerLink]="['..']"

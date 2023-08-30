@@ -1,11 +1,3 @@
-export interface FileResource {
-  filename: string;
-
-  fileType: string;
-
-  fileSize: string;
-
-  uploadDate: string;
-
+export interface FileResource extends File {
   uploadedBy: string;
 }
