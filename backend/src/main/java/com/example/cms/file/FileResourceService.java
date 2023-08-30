@@ -1,6 +1,7 @@
 package com.example.cms.file;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.file.exceptions.FileNotFound;
 import com.example.cms.file.projections.FileDtoSimple;
 import com.example.cms.page.Page;
 import com.example.cms.page.PageRepository;
@@ -91,8 +92,7 @@ public class FileResourceService {
                         return new FileSpecification(new SearchCriteria(
                                 filterBy[0],
                                 filterBy[filterBy.length - 1],
-                                entries.getValue()),
-                                pageId);
+                                entries.getValue()));
                     }).collect(Collectors.toList());
 
             for (Specification<FileResource> spec : specifications) {
@@ -103,17 +103,22 @@ public class FileResourceService {
             }
         }
 
+        if (combinedSpecification == null)
+            combinedSpecification = Specification.where(new FileSpecification(new SearchCriteria("page", "eq", pageId)));
+
         return fileRepository.findAll(combinedSpecification, pageable);
     }
 
     @Transactional
     @Secured("ROLE_USER")
-    public void deleteFile(Long pageId, String filename) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
-        if (securityService.isForbiddenPage(page)) {
+    public void deleteFile(Long fileId) {
+        FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
+
+        if (securityService.isForbiddenPage(file.getPage())) {
             throw new PageForbidden();
         }
-        fileRepository.deleteFileResourceByFilenameAndAndPage(filename, page);
+
+        fileRepository.deleteById(fileId);
     }
 
     @Transactional

@@ -28,7 +28,7 @@ public class FileResourceController {
     private final FileResourceService fileService;
     private final SecurityService securityService;
 
-    @GetMapping("/all/page/{pageId}")
+    @GetMapping("page/{pageId}")
     public ResponseEntity<List<FileDtoSimple>> getAll(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<FileResource> responsePage = fileService.getAll(
@@ -65,9 +65,15 @@ public class FileResourceController {
         return ResponseEntity.ok().body(filenames);
     }
 
-    @DeleteMapping("delete/page/{pageId}/{filename}")
-    public ResponseEntity<Void> deleteFile(@PathVariable("pageId") Long pageId, @PathVariable("filename") String filename) {
-        fileService.deleteFile(pageId, filename);
+    @DeleteMapping("delete/{fileId}")
+    public ResponseEntity<Void> deleteFile(@PathVariable("fileId") Long fileId) {
+        fileService.deleteFile(fileId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("delete")
+    public ResponseEntity<Void> deleteFileBulk(@RequestBody List<Long> ids) {
+        ids.forEach(fileService::deleteFile);
         return ResponseEntity.noContent().build();
     }
 }
