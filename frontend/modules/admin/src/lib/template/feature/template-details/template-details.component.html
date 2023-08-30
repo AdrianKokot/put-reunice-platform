@@ -34,7 +34,10 @@
   >
   </tui-editor-socket>
 
-  <div class="tui-form__buttons tui-form__buttons_align_end">
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
     <a
       [routerLink]="['edit']"
       tuiButton

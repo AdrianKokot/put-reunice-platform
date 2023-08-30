@@ -69,13 +69,16 @@
     [content]="item?.content ?? ''"
   ></tui-editor-socket>
 
-  <div class="tui-form__buttons tui-form__buttons_align_end">
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
     <ng-container
       *ngIf="
-        item?.creator?.id === user.id ||
+        item.creator.id === user.id ||
         user.accountType === 'ADMIN' ||
         (user.accountType === 'MODERATOR' &&
-          item?.university?.id === user.enrolledUniversities[0]?.id)
+          item.university.id === user.enrolledUniversities[0]?.id)
       "
     >
       <button
@@ -85,16 +88,16 @@
         class="tui-form__button"
         reuniceConfirm
         [showLoader]="(deleteHandler.loading$ | async) ?? false"
-        [disabled]="!item?.hidden || (item?.children?.length ?? 0) > 0"
+        [disabled]="!item.hidden || item.children.length > 0"
         [tuiHint]="
-          (!item?.hidden
+          (!item.hidden
             ? 'CANNOT_DELETE_VISIBLE_PAGE'
-            : (item?.children?.length ?? 0) > 0
+            : item.children.length > 0
             ? 'CANNOT_DELETE_PAGE_WITH_CHILDREN'
             : ''
           ) | translate
         "
-        (confirm)="item ? deleteHandler.delete(item.id) : null"
+        (confirm)="deleteHandler.delete(item.id)"
       >
         {{ 'DELETE' | translate }}
       </button>
