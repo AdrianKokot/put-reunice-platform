@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, switchMap } from 'rxjs';
+import { combineLatest, Observable, of, switchMap } from 'rxjs';
 import { Page, PageForm } from '../models/page';
 import { AbstractApiService } from './abstract-api.service';
 import { University } from '../models/university';
 import { TuiFileLike } from '@taiga-ui/kit';
+import { FileResource } from '../models/file';
 
 @Injectable({
   providedIn: 'root',
@@ -38,11 +39,13 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
 
   override update(
     resource: (Partial<Page> & Pick<Page, 'id'>) &
-      Partial<{ files: TuiFileLike[] }>,
+      Partial<{
+        files: TuiFileLike[];
+        filesToRemove: Array<FileResource['id']>;
+      }>,
   ): Observable<Page> {
     const formData = new FormData();
 
-    console.log({ resource });
     resource?.files?.forEach((file) => {
       formData.append('files', file as File, file.name);
     });
@@ -60,7 +63,15 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
         resource.hidden,
       ),
       this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
-      this._http.post<void>('/api/file/upload', formData),
+      (resource.files ?? []).length > 0
+        ? this._http.post<void>('/api/file/upload', formData)
+        : of(null),
+      (resource.filesToRemove ?? []).length > 0
+        ? this._http.post<void>(
+            '/api/file/delete',
+            resource.filesToRemove ?? [],
+          )
+        : of(null),
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
 

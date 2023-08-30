@@ -308,5 +308,6 @@
   "CHANGES_SAVED_SUCCESS": "Changes saved successfully",
   "USER_PASSWORD_CHANGE_SUCCESS": "Password changed successfully",
   "FILES": "Files",
-  "PAGE_FILES": "Page files"
+  "PAGE_FILES": "Page files",
+  "UPLOADED_AT_BY": "Uploaded at {{at}} by {{by}}"
 }

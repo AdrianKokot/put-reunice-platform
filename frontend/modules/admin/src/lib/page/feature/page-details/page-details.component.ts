@@ -8,10 +8,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiHandler, TuiLetModule } from '@taiga-ui/cdk';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
-import {
-  resourceFromRoute,
-  resourceIdFromRoute,
-} from '@reunice/modules/shared/util';
+import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import {
   FileService,
   Page,
@@ -21,6 +18,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
 import { filter, shareReplay, startWith, switchMap } from 'rxjs';
+import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-page-details',
@@ -39,6 +37,7 @@ import { filter, shareReplay, startWith, switchMap } from 'rxjs';
     TuiTreeModule,
     TuiErrorModule,
     TuiFilesModule,
+    LocalizedPipeModule,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +45,13 @@ import { filter, shareReplay, startWith, switchMap } from 'rxjs';
 export class PageDetailsComponent {
   private readonly _service = inject(PageService);
   private readonly _fileService = inject(FileService);
-  readonly item$ = resourceFromRoute(this._service);
+
+  private readonly _id$ = resourceIdFromRoute();
+
+  readonly item$ = this._id$.pipe(
+    switchMap((id) => this._service.get(id).pipe(startWith(null))),
+    shareReplay(),
+  );
 
   readonly pagesTree$ = this.item$.pipe(
     filter((page): page is Page => page !== null),
@@ -58,7 +63,7 @@ export class PageDetailsComponent {
     shareReplay(),
   );
 
-  readonly files$ = resourceIdFromRoute().pipe(
+  readonly files$ = this._id$.pipe(
     switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
     shareReplay(),
   );
