@@ -38,6 +38,19 @@
     class="tui-form__buttons tui-form__buttons_align_end"
     *ngIf="item !== null"
   >
+    <button
+      *reuniceUserControlsResource="item"
+      tuiButton
+      type="button"
+      appearance="flat-destructive"
+      class="tui-form__button"
+      reuniceConfirm
+      [showLoader]="(deleteHandler.loading$ | async) ?? false"
+      (confirm)="deleteHandler.delete(item.id)"
+    >
+      {{ 'DELETE' | translate }}
+    </button>
+
     <a
       [routerLink]="['edit']"
       tuiButton
