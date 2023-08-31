@@ -19,6 +19,7 @@ import {
   TuiDataListWrapperModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
+import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-template-edit-form',
@@ -58,6 +59,7 @@ export class TemplateEditFormComponent {
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'TEMPLATE_UPDATE_SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 
   readonly universitySearch = new ResourceSearchWrapper(
