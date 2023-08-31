@@ -15,7 +15,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
 import { filter, shareReplay, startWith, switchMap } from 'rxjs';
 import { ConfirmDirective } from '@reunice/modules/shared/ui';
-import { AuthService } from '@reunice/modules/shared/security';
+import {
+  AuthService,
+  UserControlsResourceDirective,
+} from '@reunice/modules/shared/security';
 import { navigateToResourceList } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
@@ -35,6 +38,7 @@ import { navigateToResourceList } from '../../../shared/util/navigate-to-resourc
     TuiTreeModule,
     ConfirmDirective,
     TuiHintModule,
+    UserControlsResourceDirective,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
