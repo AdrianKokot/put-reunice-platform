@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ExtendedAccountTypeEnum,
+  Keyword,
   Page,
   Template,
   University,
@@ -43,7 +44,8 @@ export class UserControlsResourceDirective implements OnInit {
   @Input({
     alias: 'reuniceUserControlsResource',
   })
-  controlledResource: User | Page | University | Template | null = null;
+  controlledResource: User | Page | University | Template | Keyword | null =
+    null;
 
   constructor(
     private readonly templateRef: TemplateRef<unknown>,
@@ -68,7 +70,7 @@ export class UserControlsResourceDirective implements OnInit {
 
   private isUserAuthorizedToControlResource(
     user: User,
-    resource: User | Page | University | Template | null,
+    resource: User | Page | University | Template | Keyword | null,
   ): boolean {
     if (resource === null) {
       return false;
@@ -95,7 +97,7 @@ export class UserControlsResourceDirective implements OnInit {
   }
 
   private getUniversityIdFromResource(
-    resource: User | Page | University | Template,
+    resource: User | Page | University | Template | Keyword,
   ) {
     if ('university' in resource) {
       return new Set([resource.university.id]);
