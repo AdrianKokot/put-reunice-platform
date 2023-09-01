@@ -31,7 +31,7 @@
           tuiTh
           tuiSortable
           [sticky]="true"
-          class="column-rest"
+          class="column-sm"
         >
           {{ 'USERNAME' | translate }}
         </th>
@@ -40,18 +40,18 @@
           tuiTh
           tuiSortable
           [sticky]="true"
-          class="column-sm"
+          class="column-rest"
         >
-          {{ 'FIRST_NAME' | translate }}
+          {{ 'NAME' | translate }}
         </th>
         <th
-          *tuiHead="'lastName'"
+          *tuiHead="'email'"
           tuiTh
           tuiSortable
           [sticky]="true"
-          class="column-sm"
+          class="column-md"
         >
-          {{ 'LAST_NAME' | translate }}
+          {{ 'EMAIL' | translate }}
         </th>
         <th
           *tuiHead="'accountType'"
@@ -122,10 +122,15 @@
           {{ item.username }}
         </td>
         <td *tuiCell="'firstName'" tuiTd>
-          {{ item.firstName }}
+          {{ item.firstName }} {{ item.lastName }}
         </td>
-        <td *tuiCell="'lastName'" tuiTd>
-          {{ item.lastName }}
+        <td
+          *tuiCell="'email'"
+          tuiTd
+          class="text-ellipsis column-md"
+          [title]="item.email"
+        >
+          {{ item.email }}
         </td>
         <td *tuiCell="'accountType'" tuiTd>
           {{ 'ACCOUNT_TYPE_' + item.accountType | translate }}
