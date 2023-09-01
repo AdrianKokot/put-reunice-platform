@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -19,8 +20,8 @@ public class PageDtoSimple {
     private UserDtoSimple creator;
     private UniversityDtoSimple university;
     private boolean hidden;
-    private String createdOn;
-    private String updatedOn;
+    private Instant createdOn;
+    private Instant updatedOn;
     private String keyWords;
 
     public static PageDtoSimple of(Page page) {
@@ -37,9 +38,8 @@ public class PageDtoSimple {
         creator = UserDtoSimple.of(page.getCreator());
         university = UniversityDtoSimple.of(page.getUniversity());
         hidden = page.isHidden();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        createdOn = page.getCreatedOn().toLocalDateTime().format(formatter);
-        updatedOn = page.getUpdatedOn().toLocalDateTime().format(formatter);
+        createdOn = page.getCreatedOn().toInstant();
+        updatedOn = page.getUpdatedOn().toInstant();
         keyWords = page.getKeyWords();
     }
 }
