@@ -40,6 +40,9 @@ public class University {
     @NotBlank(message = "Short name must not be empty")
     private String shortName;
 
+    private String address;
+    private String website;
+
     @NotBlank(message = "Description must not be empty")
     private String description;
     private boolean hidden;

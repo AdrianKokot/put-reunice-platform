@@ -15,6 +15,7 @@ public class UniversityDtoSimple implements Serializable {
     private String name;
     private String shortName;
     private boolean hidden;
+    private String address;
 
     public static UniversityDtoSimple of(University university) {
         if (university == null) {
@@ -28,5 +29,6 @@ public class UniversityDtoSimple implements Serializable {
         name = university.getName();
         shortName = university.getShortName();
         hidden = university.isHidden();
+        address = university.getAddress();
     }
 }
