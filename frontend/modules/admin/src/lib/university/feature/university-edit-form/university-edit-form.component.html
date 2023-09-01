@@ -67,6 +67,44 @@
       </label>
     </div>
 
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label
+        [tuiLabel]="'ADDRESS' | translate"
+        class="tui-form__multi-field _optional"
+      >
+        <tui-input
+          formControlName="address"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+        >
+          <input tuiTextfield type="text" />
+        </tui-input>
+
+        <tui-error
+          formControlName="address"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </label>
+
+      <label
+        [tuiLabel]="'WEBSITE' | translate"
+        class="tui-form__multi-field _optional"
+      >
+        <tui-input
+          formControlName="website"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+        >
+          <input tuiTextfield type="text" />
+        </tui-input>
+
+        <tui-error
+          formControlName="website"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </label>
+    </div>
+
     <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
       <tui-text-area
         formControlName="description"

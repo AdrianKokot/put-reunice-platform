@@ -24,6 +24,8 @@ export class UniversityEditFormComponent {
     shortName: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
+    address: ['', [Validators.maxLength(255)]],
+    website: ['', [Validators.maxLength(255)]],
   });
 
   readonly item$ = formResourceFromRoute(this._service, this.form);
