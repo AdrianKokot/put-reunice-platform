@@ -78,13 +78,6 @@ public class UniversityService {
         return universityRepository.findAll(combinedSpecification, pageable);
     }
 
-    public List<UniversityDtoSimple> searchUniversities(Pageable pageable, String text) {
-        return universityRepository.searchUniversities(pageable, text).stream()
-                .filter(this::isUniversityVisible)
-                .map(UniversityDtoSimple::of)
-                .collect(Collectors.toList());
-    }
-
     private boolean isUniversityVisible(University university) {
         return university != null && !(university.isHidden() && securityService.isForbiddenUniversity(university));
     }

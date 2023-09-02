@@ -49,11 +49,6 @@ public class UniversityController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/search/{text}")
-    List<UniversityDtoSimple> searchUniversities(Pageable pageable, @PathVariable String text) {
-        return service.searchUniversities(pageable, "%".concat(text.toLowerCase().concat("%")));
-    }
-
     @PostMapping
     public ResponseEntity<UniversityDtoDetailed> registerNewUniversity(@RequestBody UniversityDtoFormCreate form) {
         UniversityDtoDetailed result = service.addNewUniversity(new UniversityDtoFormCreate(form.getName(), form.getShortName(), form.getDescription(), securityService.getPrincipal().get().getId()));

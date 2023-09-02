@@ -11,11 +11,5 @@ import java.util.List;
 
 @Repository
 public interface UniversityRepository extends JpaRepository<University, Long>, JpaSpecificationExecutor<University> {
-    @Query("from University where " +
-            "LOWER(name) LIKE :text " +
-            "OR LOWER(shortName) LIKE :text " +
-            "OR LOWER(description) LIKE :text")
-    List<University> searchUniversities(Pageable pageable, @Param("text") String text);
-
     boolean existsByNameOrShortName(String name, String shortName);
 }

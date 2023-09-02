@@ -239,10 +239,4 @@ public class UserService {
             throw new UserException(UserExceptionType.USER_IS_ENABLED);
         }
     }
-
-    public List<UserDtoSimple> searchUser(Pageable pageable, String text) {
-        return userRepository.searchUser(pageable, text).stream()
-                .map(UserDtoSimple::of)
-                .collect(Collectors.toList());
-    }
 }
