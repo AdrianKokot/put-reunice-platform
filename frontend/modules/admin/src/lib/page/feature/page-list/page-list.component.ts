@@ -6,13 +6,13 @@ import {
   UserService,
 } from '@reunice/modules/shared/data-access';
 import {
+  BaseFormImportsModule,
+  BaseTableImportsModule,
   provideReuniceTable,
+  ResourceSearchWrapper,
   ReuniceAbstractTable,
-} from '../../../shared/table/reunice-abstract-table.directive';
+} from '../../../shared';
 import { FormBuilder } from '@angular/forms';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
-import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 
 @Component({
   selector: 'reunice-page-list',
