@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class UserDtoDetailed {
     private String description;
     private Role accountType;
     private boolean enabled;
+    private Instant lastLoginDate;
     private Set<UniversityDtoSimple> enrolledUniversities;
 
     public static UserDtoDetailed of(User user) {
@@ -43,5 +45,6 @@ public class UserDtoDetailed {
         description = user.getDescription();
         enabled = user.isEnabled();
         enrolledUniversities = user.getEnrolledUniversities().stream().map(UniversityDtoSimple::of).collect(Collectors.toSet());
+        lastLoginDate = user.getLastLoginDate();
     }
 }

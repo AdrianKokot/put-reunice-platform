@@ -32,7 +32,12 @@
       {{ 'ACCOUNT_TYPE_' + item?.accountType | translate }}
     </label>
 
-    <div class="tui-form__multi-field"></div>
+    <label
+      [tuiLabel]="'LAST_LOGIN_DATE' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ item?.lastLoginDate ? (item?.lastLoginDate | date) : '-' }}
+    </label>
   </div>
 
   <label

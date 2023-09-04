@@ -5,11 +5,11 @@ import {
 } from '@reunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
 import {
+  BaseFormImportsModule,
+  BaseTableImportsModule,
   provideReuniceTable,
   ReuniceAbstractTable,
-} from '../../../shared/table/reunice-abstract-table.directive';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
+} from '../../../shared';
 
 @Component({
   selector: 'reunice-university-list',
