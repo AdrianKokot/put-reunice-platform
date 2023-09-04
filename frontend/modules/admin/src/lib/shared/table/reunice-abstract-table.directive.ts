@@ -2,10 +2,7 @@ import {
   Directive,
   HostBinding,
   inject,
-  InjectionToken,
   OnInit,
-  Provider,
-  Type,
   ViewChild,
 } from '@angular/core';
 import {
@@ -25,33 +22,18 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { REUNICE_TABLE_SERVICE } from './table.provider';
+import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import {
   AbstractApiService,
   ApiPagination,
   ApiSort,
   BaseResource,
 } from '@reunice/modules/shared/data-access';
-import { FormGroup } from '@angular/forms';
 import { TUI_NOTHING_FOUND_MESSAGE } from '@taiga-ui/core';
-
-export const REUNICE_TABLE_SERVICE = new InjectionToken<
-  AbstractApiService<
-    object & {
-      id: number | string;
-    }
-  >
->('REUNICE_TABLE_SERVICE');
-
-export const provideReuniceTable = <T extends { id: string | number }>(
-  service: Type<AbstractApiService<T, unknown, unknown>>,
-): Provider[] => {
-  return [
-    {
-      provide: REUNICE_TABLE_SERVICE,
-      useExisting: service,
-    },
-  ];
-};
+import { TableStorageKeys } from '../storage';
+import { tuiIsNumber } from '@taiga-ui/cdk';
 
 @Directive()
 export abstract class ReuniceAbstractTable<T extends BaseResource>
@@ -79,6 +61,8 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
     REUNICE_TABLE_SERVICE,
   );
 
+  private readonly _storage = inject(LOCAL_STORAGE);
+
   protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
 
   @HostBinding('style.--page-size')
@@ -87,9 +71,14 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
       throw new Error(
-        ReuniceAbstractTable.name + ': missing required content child',
+        ReuniceAbstractTable.name + ': missing required content child.',
       );
     }
+
+    const pageSize = parseInt(
+      this._storage.getItem(TableStorageKeys.PageSize) ?? '0',
+    );
+    if (tuiIsNumber(pageSize) && pageSize > 0) this._pagination.size = pageSize;
 
     this._pageSize = this._pagination.size;
 
@@ -97,6 +86,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
       this._sortBy.tuiSortByChange.pipe(startWith(this._sortBy.tuiSortBy)),
       this._table.directionChange.pipe(startWith(this._table.direction)),
       this._pagination.paginationChange.pipe(
+        tap(({ size }) =>
+          this._storage.setItem(TableStorageKeys.PageSize, size.toString()),
+        ),
         startWith(this._pagination.pagination),
       ),
       this.filtersForm.valueChanges.pipe(
