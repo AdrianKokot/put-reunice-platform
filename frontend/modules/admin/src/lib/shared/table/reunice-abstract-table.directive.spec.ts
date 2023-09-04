@@ -1,17 +1,13 @@
-import {
-  provideReuniceTable,
-  ReuniceAbstractTable,
-} from './reunice-abstract-table.directive';
-import { BaseResource, PageService } from '@reunice/modules/shared/data-access';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormGroup } from '@angular/forms';
-import { Component } from '@angular/core';
-import { TestingModule } from '@reunice/testing';
-import { expect } from '@jest/globals';
-import { BaseTableImportsModule } from '../base-table-imports.module';
-import { TableStorageKeys } from '../constants';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
+import { provideReuniceTable } from './table.provider';
+import { Component } from '@angular/core';
+import { BaseResource, PageService } from '@reunice/modules/shared/data-access';
+import { ReuniceAbstractTable } from './reunice-abstract-table.directive';
+import { FormGroup } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestingModule } from '@reunice/testing';
+import { BaseTableImportsModule } from '../base-table-imports.module';
+import { TableStorageKeys } from '../storage';
 
 // eslint-disable-next-line @angular-eslint/use-component-selector,@angular-eslint/prefer-on-push-component-change-detection
 @Component({
@@ -55,7 +51,7 @@ describe(ReuniceAbstractTable.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, TestingModule, BaseTableImportsModule],
+      imports: [TestingModule, BaseTableImportsModule],
       declarations: [TestComponent],
       providers: [
         {

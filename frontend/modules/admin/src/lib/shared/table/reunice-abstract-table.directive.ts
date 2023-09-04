@@ -2,10 +2,7 @@ import {
   Directive,
   HostBinding,
   inject,
-  InjectionToken,
   OnInit,
-  Provider,
-  Type,
   ViewChild,
 } from '@angular/core';
 import {
@@ -25,36 +22,18 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { REUNICE_TABLE_SERVICE } from './table.provider';
+import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import {
   AbstractApiService,
   ApiPagination,
   ApiSort,
   BaseResource,
 } from '@reunice/modules/shared/data-access';
-import { FormGroup } from '@angular/forms';
 import { TUI_NOTHING_FOUND_MESSAGE } from '@taiga-ui/core';
-import { LOCAL_STORAGE } from '@ng-web-apis/common';
+import { TableStorageKeys } from '../storage';
 import { tuiIsNumber } from '@taiga-ui/cdk';
-import { TableStorageKeys } from '../constants';
-
-export const REUNICE_TABLE_SERVICE = new InjectionToken<
-  AbstractApiService<
-    object & {
-      id: number | string;
-    }
-  >
->('REUNICE_TABLE_SERVICE');
-
-export const provideReuniceTable = <T extends { id: string | number }>(
-  service: Type<AbstractApiService<T, unknown, unknown>>,
-): Provider[] => {
-  return [
-    {
-      provide: REUNICE_TABLE_SERVICE,
-      useExisting: service,
-    },
-  ];
-};
 
 @Directive()
 export abstract class ReuniceAbstractTable<T extends BaseResource>
@@ -92,8 +71,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
       throw new Error(
-        ReuniceAbstractTable.name +
-          `: missing required content child. SortBy: ${this._sortBy}, Table: ${this._table}, Pagination: ${this._pagination}`,
+        ReuniceAbstractTable.name + ': missing required content child.',
       );
     }
 
