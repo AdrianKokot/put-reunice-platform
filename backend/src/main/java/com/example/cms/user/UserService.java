@@ -1,5 +1,6 @@
 package com.example.cms.user;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.security.LoggedUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -244,5 +246,11 @@ public class UserService {
         return userRepository.searchUser(pageable, text).stream()
                 .map(UserDtoSimple::of)
                 .collect(Collectors.toList());
+    }
+
+    public void updateLastLoginDate(Long id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        user.setLastLoginDate(Instant.now());
+        userRepository.save(user);
     }
 }

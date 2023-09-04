@@ -26,7 +26,7 @@ export class UserListComponent extends ReuniceAbstractTable<User> {
   readonly columns: Array<keyof User | string> = [
     'username',
     'firstName',
-    'lastName',
+    'email',
     'accountType',
     'enabled',
     'actions',
