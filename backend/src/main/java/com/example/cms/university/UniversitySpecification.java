@@ -22,27 +22,20 @@ public class UniversitySpecification extends SearchSpecification implements Spec
 
     @Override
     public Predicate toPredicate(Root<University> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Predicate predicates = criteriaBuilder.and(
-                        criteriaBuilder.equal(root.get("hidden"), false)
-                );
-
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.and(predicates,
-                        criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), criteria.getValue()));
+                return criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), criteria.getValue());
             } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
-                return criteriaBuilder.and(predicates,
-                        criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString())));
+                return criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
-                return criteriaBuilder.and(predicates,
-                        criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString())));
+                return criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
             return this.searchPredicate(root, query, criteriaBuilder);
