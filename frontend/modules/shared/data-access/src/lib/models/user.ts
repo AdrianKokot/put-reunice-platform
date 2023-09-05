@@ -14,4 +14,5 @@ export interface User {
   password: string;
   phoneNumber: string;
   username: string;
+  lastLoginDate: string | null;
 }
