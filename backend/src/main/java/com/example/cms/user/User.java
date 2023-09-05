@@ -11,8 +11,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -38,6 +40,7 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+    private Instant lastLoginDate;
     @Email(message = "Email must be valid")
     private String email;
     @Pattern(message = "PhoneNumber must be valid", regexp = "^(\\+?\\d{3,12})?$")
