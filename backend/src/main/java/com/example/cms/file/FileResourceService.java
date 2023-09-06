@@ -1,6 +1,7 @@
 package com.example.cms.file;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.file.exceptions.FileNotFound;
 import com.example.cms.file.projections.FileDtoSimple;
 import com.example.cms.page.Page;
 import com.example.cms.page.PageRepository;
@@ -25,7 +26,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -92,8 +92,7 @@ public class FileResourceService {
                         return new FileSpecification(new SearchCriteria(
                                 filterBy[0],
                                 filterBy[filterBy.length - 1],
-                                entries.getValue()),
-                                pageId);
+                                entries.getValue()));
                     }).collect(Collectors.toList());
 
             for (Specification<FileResource> spec : specifications) {
@@ -104,17 +103,22 @@ public class FileResourceService {
             }
         }
 
+        if (combinedSpecification == null)
+            combinedSpecification = Specification.where(new FileSpecification(new SearchCriteria("page", "eq", pageId)));
+
         return fileRepository.findAll(combinedSpecification, pageable);
     }
 
     @Transactional
     @Secured("ROLE_USER")
-    public void deleteFile(Long pageId, String filename) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
-        if (securityService.isForbiddenPage(page)) {
+    public void deleteFile(Long fileId) {
+        FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
+
+        if (securityService.isForbiddenPage(file.getPage())) {
             throw new PageForbidden();
         }
-        fileRepository.deleteFileResourceByFilenameAndAndPage(filename, page);
+
+        fileRepository.deleteById(fileId);
     }
 
     @Transactional
@@ -139,7 +143,7 @@ public class FileResourceService {
         fileResource.setUploadedBy(user.getUsername());
         fileResource.setPage(page);
         fileResource.setFilename(StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())));
-        fileResource.setFileSize(FileUtils.humanReadableByteCountSI(multipartFile.getSize()));
+        fileResource.setFileSize(multipartFile.getSize());
         fileResource.setFileType(multipartFile.getContentType());
         fileResource.setData(multipartFile.getBytes());
 
@@ -150,7 +154,7 @@ public class FileResourceService {
         List<FileDtoSimple> output = new ArrayList<>();
         for (Object[] object : objects) {
             output.add(new FileDtoSimple(object[0].toString(), object[1].toString(),
-                    object[2].toString(), object[3].toString(), object[4].toString()));
+                    Long.parseLong(object[2].toString()), object[3].toString(), object[4].toString()));
         }
         return output;
     }

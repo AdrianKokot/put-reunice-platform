@@ -18,7 +18,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
+import { TuiAlertService } from '@taiga-ui/core';
+import { ERROR_SYMBOL_VALUE, LOADING_SYMBOL_VALUE } from './wrapper.symbols';
 
 export interface FormSubmitWrapperFunctions<
   TControl extends {
@@ -44,13 +45,6 @@ export interface FormSubmitWrapperFunctions<
   successAlertMessage?: string;
 }
 
-const FORM_SUBMIT_WRAPPER_LOADING_VALUE = Symbol(
-  'FORM_SUBMIT_WRAPPER_LOADING_VALUE',
-);
-const FORM_SUBMIT_WRAPPER_ERROR_VALUE = Symbol(
-  'FORM_SUBMIT_WRAPPER_LOADING_VALUE',
-);
-
 export const handleValidationApiError = (
   form: FormGroup,
   err: HttpErrorResponse,
@@ -75,12 +69,12 @@ export class FormSubmitWrapper<
     filter(() => this.form.valid),
     exhaustMap(() =>
       this.functions.submit(this.form.getRawValue()).pipe(
-        startWith(FORM_SUBMIT_WRAPPER_LOADING_VALUE),
+        startWith(LOADING_SYMBOL_VALUE),
         catchError((err) => {
           if (err instanceof HttpErrorResponse)
             handleValidationApiError(this.form, err);
 
-          return of(FORM_SUBMIT_WRAPPER_ERROR_VALUE);
+          return of(ERROR_SYMBOL_VALUE);
         }),
       ),
     ),
@@ -88,7 +82,7 @@ export class FormSubmitWrapper<
       if (typeof result !== 'symbol' && this.functions.successAlertMessage) {
         this._alert
           .open(this._translate.instant(this.functions.successAlertMessage), {
-            status: TuiNotification.Success,
+            status: 'success',
           })
           .subscribe();
       }
@@ -104,7 +98,7 @@ export class FormSubmitWrapper<
 
       return of(result);
     }),
-    map((result) => result === FORM_SUBMIT_WRAPPER_LOADING_VALUE),
+    map((result) => result === LOADING_SYMBOL_VALUE),
     startWith(false),
     shareReplay(),
   );

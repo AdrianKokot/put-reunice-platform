@@ -4,35 +4,33 @@ import com.example.cms.SearchCriteria;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 
 @AllArgsConstructor
 public class FileSpecification implements Specification<FileResource> {
     private SearchCriteria criteria;
-    private Long pageId;
 
     @Override
     public Predicate toPredicate(Root<FileResource> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Predicate pageIdPredicate = criteriaBuilder.equal(root.get("page").get("id"), pageId);
-
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.and(pageIdPredicate,
-                        criteriaBuilder.like(
-                        root.get(criteria.getKey()), "%" + criteria.getValue() + "%"));
+                return criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
+            if (criteria.getKey().equalsIgnoreCase("page")) {
+                return criteriaBuilder.equal(root.get("page").get("id"), parseInt(criteria.getValue().toString()));
+            }
+
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.and(pageIdPredicate,
-                        criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), criteria.getValue()));
+                return criteriaBuilder.equal(root.<String>get(criteria.getKey()), criteria.getValue());
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
-                return criteriaBuilder.and(pageIdPredicate,
-                        criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString())));
+                return criteriaBuilder.equal(root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }
         }
         return criteriaBuilder.disjunction();

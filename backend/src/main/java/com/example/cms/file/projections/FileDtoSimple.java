@@ -5,19 +5,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 
 @Data
 @NoArgsConstructor
 public class FileDtoSimple {
-    private String filename;
+    private String name;
 
-    private String fileType;
+    private String type;
 
-    private String fileSize;
-    private String uploadDate;
+    private Long size;
+    private Instant lastModified;
 
     private String uploadedBy;
+
+    private Long id;
 
 
     public static FileDtoSimple of(FileResource fileResource) {
@@ -28,20 +30,20 @@ public class FileDtoSimple {
     }
 
     public FileDtoSimple(FileResource fileResource) {
-        this.filename = fileResource.getFilename();
-        this.fileType = fileResource.getFileType();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        this.uploadDate = fileResource.getUploadDate().toLocalDateTime().format(formatter);
+        this.name = fileResource.getFilename();
+        this.type = fileResource.getFileType();
+        this.lastModified = fileResource.getUploadDate().toInstant();
         this.uploadedBy = fileResource.getUploadedBy();
-        this.fileSize = fileResource.getFileSize();
+        this.size = fileResource.getFileSize();
+        this.id = fileResource.getId();
     }
 
-    public FileDtoSimple(String filename, String fileType, String fileSize, String uploadedDate, String uploadedBy) {
-        this.filename = filename;
-        this.fileType = fileType;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        this.uploadDate = Timestamp.valueOf(uploadedDate).toLocalDateTime().format(formatter);
+    public FileDtoSimple(String filename, String fileType, Long fileSize, String uploadedDate, String uploadedBy) {
+        this.name = filename;
+        this.type = fileType;
+        this.lastModified = Timestamp.valueOf(uploadedDate).toInstant();
         this.uploadedBy = uploadedBy;
-        this.fileSize = fileSize;
+        this.size = fileSize;
+        this.id = -1L;
     }
 }

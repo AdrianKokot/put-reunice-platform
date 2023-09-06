@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserDetailsComponent } from './user-details.component';
-import { TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
 
 describe(UserDetailsComponent.name, () => {
   let component: UserDetailsComponent;
@@ -8,6 +8,7 @@ describe(UserDetailsComponent.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideAuthenticatedUser()],
       imports: [TestingModule, UserDetailsComponent],
     }).compileComponents();
 

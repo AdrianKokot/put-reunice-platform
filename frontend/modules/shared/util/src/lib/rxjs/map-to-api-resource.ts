@@ -1,6 +1,7 @@
 import {
   filter,
   map,
+  Observable,
   share,
   shareReplay,
   startWith,
@@ -8,7 +9,10 @@ import {
   tap,
 } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AbstractApiService } from '@reunice/modules/shared/data-access';
+import {
+  AbstractApiService,
+  BaseResource,
+} from '@reunice/modules/shared/data-access';
 import { inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -36,26 +40,28 @@ export const resourceIdFromRoute = (paramKey = 'id') => {
   );
 };
 
-export const resourceFromRoute = <
-  TResult extends {
-    id: string | number;
-  },
->(
+export const toResourceFromId = <TResult extends BaseResource>(
+  service: AbstractApiService<TResult, unknown, unknown>,
+  tapFn?: (item: TResult) => void,
+) => {
+  return <T extends BaseResource['id']>(
+    input: Observable<T>,
+  ): Observable<TResult | null> =>
+    input.pipe(
+      switchMap((id) => service.get(id).pipe(tap(tapFn), startWith(null))),
+      shareReplay(),
+    );
+};
+
+export const resourceFromRoute = <TResult extends BaseResource>(
   service: AbstractApiService<TResult, unknown, unknown>,
   tapFn?: (item: TResult) => void,
   paramKey = 'id',
 ) => {
-  return resourceIdFromRoute(paramKey).pipe(
-    switchMap((id) => service.get(id).pipe(tap(tapFn), startWith(null))),
-    shareReplay(),
-  );
+  return resourceIdFromRoute(paramKey).pipe(toResourceFromId(service, tapFn));
 };
 
-export const formResourceFromRoute = <
-  TResult extends {
-    id: string | number;
-  },
->(
+export const formResourceFromRoute = <TResult extends BaseResource>(
   service: AbstractApiService<TResult, unknown, unknown>,
   form: FormGroup,
   paramKey: keyof TResult & string = 'id',
