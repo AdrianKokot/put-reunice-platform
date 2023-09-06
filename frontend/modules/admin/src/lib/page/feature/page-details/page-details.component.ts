@@ -1,15 +1,25 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonModule, TuiLabelModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiHintModule, TuiLabelModule } from '@taiga-ui/core';
 import { TuiHandler, TuiLetModule } from '@taiga-ui/cdk';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
-import { resourceFromRoute } from '@reunice/modules/shared/util';
-import { Page, PageService } from '@reunice/modules/shared/data-access';
+import {
+  DeleteResourceWrapper,
+  resourceFromRoute,
+  throwError,
+} from '@reunice/modules/shared/util';
+import { Page, PageService, User } from '@reunice/modules/shared/data-access';
 import { RouterLink } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
 import { filter, shareReplay, startWith, switchMap } from 'rxjs';
+import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import {
+  AuthService,
+  UserControlsResourceDirective,
+} from '@reunice/modules/shared/security';
+import { navigateToResourceList } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-page-details',
@@ -26,6 +36,9 @@ import { filter, shareReplay, startWith, switchMap } from 'rxjs';
     ReactiveFormsModule,
     TuiIslandModule,
     TuiTreeModule,
+    ConfirmDirective,
+    TuiHintModule,
+    UserControlsResourceDirective,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +46,8 @@ import { filter, shareReplay, startWith, switchMap } from 'rxjs';
 export class PageDetailsComponent {
   private readonly _service = inject(PageService);
   readonly item$ = resourceFromRoute(this._service);
+  readonly user: User =
+    inject(AuthService).userSnapshot ?? throwError('User is null');
 
   readonly pagesTree$ = this.item$.pipe(
     filter((page): page is Page => page !== null),
@@ -46,4 +61,9 @@ export class PageDetailsComponent {
 
   readonly pagesTreeHandler: TuiHandler<Page, readonly Page[]> = (item) =>
     item?.children ?? [];
+
+  readonly deleteHandler = new DeleteResourceWrapper(this._service, {
+    successAlertMessage: 'PAGE_DELETED_SUCCESS',
+    effect: navigateToResourceList(),
+  });
 }

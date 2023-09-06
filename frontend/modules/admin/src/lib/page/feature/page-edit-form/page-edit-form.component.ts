@@ -11,6 +11,7 @@ import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
 import { TuiExpandModule } from '@taiga-ui/core';
 import { TuiElasticContainerModule } from '@taiga-ui/kit';
+import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -48,5 +49,6 @@ export class PageEditFormComponent {
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'PAGE_UPDATE_SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 }

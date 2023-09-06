@@ -22,6 +22,7 @@ import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrap
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import { filter, map, startWith } from 'rxjs';
 import { TuiHintModule } from '@taiga-ui/core';
+import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-user-edit-form',
@@ -81,6 +82,7 @@ export class UserEditFormComponent {
             : [],
       }),
     successAlertMessage: 'USER_UPDATE_SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 
   readonly accountType = AccountTypeEnum;
