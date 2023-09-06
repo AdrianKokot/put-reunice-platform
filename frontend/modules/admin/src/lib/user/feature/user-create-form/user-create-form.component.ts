@@ -6,16 +6,17 @@ import {
 } from '@reunice/modules/shared/data-access';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormSubmitWrapper } from '@reunice/modules/shared/util';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+  ResourceSearchWrapper,
+} from '../../../shared';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiInputPasswordModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 
 @Component({
@@ -24,7 +25,6 @@ import { AuthService, UserDirective } from '@reunice/modules/shared/security';
   imports: [
     BaseFormImportsModule,
     TuiMultiSelectModule,
-    TuiLetModule,
     TuiDataListWrapperModule,
     TuiInputPasswordModule,
     UserDirective,

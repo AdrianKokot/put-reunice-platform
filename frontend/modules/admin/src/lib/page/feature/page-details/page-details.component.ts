@@ -12,34 +12,23 @@ import {
   throwError,
 } from '@reunice/modules/shared/util';
 import { filter, shareReplay, startWith, switchMap } from 'rxjs';
+import { AuthService } from '@reunice/modules/shared/security';
 import {
-  AuthService,
-  UserControlsResourceDirective,
-} from '@reunice/modules/shared/security';
-import { BaseFormImportsModule, navigateToResourceList } from '../../../shared';
+  BaseDetailsImportsModule,
+  navigateToResourceList,
+} from '../../../shared';
 import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
-import {
-  ConfirmDirective,
-  LocalizedPipeModule,
-} from '@reunice/modules/shared/ui';
-import { TuiHintModule } from '@taiga-ui/core';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
-import { TuiLetModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'reunice-page-details',
   standalone: true,
   imports: [
-    BaseFormImportsModule,
+    BaseDetailsImportsModule,
     TuiFilesModule,
-    ConfirmDirective,
-    TuiHintModule,
-    UserControlsResourceDirective,
     TuiEditorSocketModule,
     TuiIslandModule,
     TuiTreeModule,
-    LocalizedPipeModule,
-    TuiLetModule,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

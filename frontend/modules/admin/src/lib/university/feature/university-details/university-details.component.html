@@ -13,6 +13,23 @@
     </label>
   </div>
 
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'ADDRESS' | translate" class="tui-form__multi-field">
+      {{ item?.address ? item?.address : '-' }}
+    </label>
+
+    <label [tuiLabel]="'WEBSITE' | translate" class="tui-form__multi-field">
+      <a
+        [href]="item?.website"
+        target="_blank"
+        *ngIf="item?.website; else dash"
+        >{{ item?.website }}</a
+      >
+    </label>
+
+    <label class="tui-form__multi-field"> </label>
+  </div>
+
   <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
     {{ item?.description ?? '—' }}
   </label>
@@ -68,3 +85,5 @@
     </a>
   </div>
 </div>
+
+<ng-template #dash>-</ng-template>

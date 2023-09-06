@@ -9,17 +9,18 @@ import {
   FormSubmitWrapper,
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+  ResourceSearchWrapper,
+} from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
-import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import {
   TuiCheckboxLabeledModule,
   TuiDataListWrapperModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-template-edit-form',
@@ -27,7 +28,6 @@ import { navigateToResourceDetails } from '../../../shared/util/navigate-to-reso
   standalone: true,
   imports: [
     BaseFormImportsModule,
-    TuiLetModule,
     TuiEditorModule,
     TuiCheckboxLabeledModule,
     TuiDataListWrapperModule,

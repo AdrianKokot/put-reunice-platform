@@ -16,12 +16,14 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 const modules = [
   CommonModule,
   ReactiveFormsModule,
   TuiFieldErrorPipeModule,
   TuiErrorModule,
+  TuiLetModule,
   TuiTextfieldControllerModule,
   TuiInputModule,
   TuiLabelModule,

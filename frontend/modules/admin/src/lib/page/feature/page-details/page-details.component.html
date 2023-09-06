@@ -19,11 +19,11 @@
     </label>
 
     <label [tuiLabel]="'CREATED_AT' | translate" class="tui-form__multi-field">
-      {{ item?.createdOn }}
+      {{ item?.createdOn | localizedDate }}
     </label>
 
     <label [tuiLabel]="'UPDATED_AT' | translate" class="tui-form__multi-field">
-      {{ item?.updatedOn }}
+      {{ item?.updatedOn | localizedDate }}
     </label>
   </div>
 

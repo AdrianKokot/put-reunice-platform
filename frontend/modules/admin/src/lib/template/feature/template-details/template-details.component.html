@@ -16,7 +16,7 @@
     <ng-template #universityTags>
       <div class="tag-list tui-space_top-1">
         <tui-tag
-          *ngFor="let university of item?.universities ?? []"
+          *ngFor="let university of item?.universities ?? []; trackById"
           status="primary"
           [hoverable]="false"
           [value]="university.name"
