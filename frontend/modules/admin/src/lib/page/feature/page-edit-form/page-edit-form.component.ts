@@ -27,9 +27,6 @@ import { navigateToResourceDetails } from '../../../shared/util/navigate-to-reso
 import { AuthService } from '@reunice/modules/shared/security';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 
-import '@angular/common/locales/global/pl';
-import '@angular/common/locales/global/en-GB';
-
 @Component({
   selector: 'reunice-page-edit-form',
   standalone: true,

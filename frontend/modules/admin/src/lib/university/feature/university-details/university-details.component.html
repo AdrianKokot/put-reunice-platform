@@ -25,12 +25,43 @@
     [content]="item?.mainPage?.content ?? ''"
   ></tui-editor-socket>
 
-  <div class="tui-form__buttons tui-form__buttons_align_end">
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
+    <button
+      *reuniceUserControlsResource="item"
+      tuiButton
+      type="button"
+      appearance="flat-destructive"
+      class="tui-form__button"
+      reuniceConfirm
+      [showLoader]="(deleteHandler.loading$ | async) ?? false"
+      [disabled]="
+        !item.hidden ||
+        item.mainPage.children.length > 0 ||
+        item.enrolledUsers.length > 0
+      "
+      [tuiHint]="
+        (!item.hidden
+          ? 'CANNOT_DELETE_VISIBLE_UNIVERSITY'
+          : item.mainPage.children.length > 0
+          ? 'CANNOT_DELETE_UNIVERSITY_WITH_PAGES'
+          : item.enrolledUsers.length > 0
+          ? 'CANNOT_DELETE_UNIVERSITY_WITH_ENROLLED_USERS'
+          : ''
+        ) | translate
+      "
+      (confirm)="deleteHandler.delete(item.id)"
+    >
+      {{ 'DELETE' | translate }}
+    </button>
+
     <a
       [routerLink]="['edit']"
       tuiButton
       type="button"
-      appearance="flat"
+      appearance="secondary"
       class="tui-form__button"
     >
       {{ 'EDIT' | translate }}

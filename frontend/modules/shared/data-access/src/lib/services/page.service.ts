@@ -1,8 +1,8 @@
+import { BaseResource } from '../models/base-resource';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, of, switchMap } from 'rxjs';
-import { Page, PageForm } from '../models/page';
 import { AbstractApiService } from './abstract-api.service';
-import { University } from '../models/university';
+import { Page, PageForm } from '../models/page';
+import { combineLatest, Observable, of, switchMap } from 'rxjs';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { FileResource } from '../models/file';
 
@@ -75,7 +75,7 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     ]).pipe(switchMap(() => this.get(resource.id)));
   }
 
-  getUniversityHierarchy(universityId: University['id']): Observable<Page> {
+  getUniversityHierarchy(universityId: BaseResource['id']): Observable<Page> {
     return this._http.get<Page>(
       `${this._resourceUrl}/hierarchy/${universityId}`,
     );

@@ -29,6 +29,18 @@ tui-island {
   }
 }
 
+// Flat destructive appearance
+
+[tuiWrapper][data-appearance='flat-destructive'] {
+  background: transparent;
+  color: var(--tui-negative);
+
+  &:hover:not(._no-hover),
+  &:active:not(._no-active) {
+    background: var(--tui-error-bg-hover);
+  }
+}
+
 // Makes alerts appear below the top bar
 tui-alert-host > .t-wrapper {
   margin-top: var(--top-bar-height);

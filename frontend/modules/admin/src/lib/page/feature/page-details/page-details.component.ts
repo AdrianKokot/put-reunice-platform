@@ -1,43 +1,45 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import {
-  TuiButtonModule,
-  TuiErrorModule,
-  TuiLabelModule,
-} from '@taiga-ui/core';
-import { TuiHandler, TuiLetModule } from '@taiga-ui/cdk';
-import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
-import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import {
   FileService,
   Page,
   PageService,
+  User,
 } from '@reunice/modules/shared/data-access';
-import { RouterLink } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  DeleteResourceWrapper,
+  PAGE_TREE_HANDLER,
+  resourceIdFromRoute,
+  throwError,
+} from '@reunice/modules/shared/util';
 import { filter, shareReplay, startWith, switchMap } from 'rxjs';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import {
+  AuthService,
+  UserControlsResourceDirective,
+} from '@reunice/modules/shared/security';
+import { BaseFormImportsModule, navigateToResourceList } from '../../../shared';
+import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import {
+  ConfirmDirective,
+  LocalizedPipeModule,
+} from '@reunice/modules/shared/ui';
+import { TuiHintModule } from '@taiga-ui/core';
+import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
+import { TuiLetModule } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'reunice-page-details',
   standalone: true,
   imports: [
-    CommonModule,
-    TranslateModule,
-    TuiLabelModule,
-    TuiLetModule,
-    TuiButtonModule,
+    BaseFormImportsModule,
+    TuiFilesModule,
+    ConfirmDirective,
+    TuiHintModule,
+    UserControlsResourceDirective,
     TuiEditorSocketModule,
-    RouterLink,
-    FormsModule,
-    ReactiveFormsModule,
     TuiIslandModule,
     TuiTreeModule,
-    TuiErrorModule,
-    TuiFilesModule,
     LocalizedPipeModule,
+    TuiLetModule,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,6 +54,8 @@ export class PageDetailsComponent {
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
     shareReplay(),
   );
+  readonly user: User =
+    inject(AuthService).userSnapshot ?? throwError('User is null');
 
   readonly pagesTree$ = this.item$.pipe(
     filter((page): page is Page => page !== null),
@@ -68,6 +72,10 @@ export class PageDetailsComponent {
     shareReplay(),
   );
 
-  readonly pagesTreeHandler: TuiHandler<Page, readonly Page[]> = (item) =>
-    item?.children ?? [];
+  readonly pagesTreeHandler = PAGE_TREE_HANDLER;
+
+  readonly deleteHandler = new DeleteResourceWrapper(this._service, {
+    successAlertMessage: 'PAGE_DELETED_SUCCESS',
+    effect: navigateToResourceList(),
+  });
 }

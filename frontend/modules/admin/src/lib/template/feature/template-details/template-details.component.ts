@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  DeleteResourceWrapper,
   NgForTrackByIdDirective,
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
@@ -11,7 +12,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TuiTagModule } from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { RouterLink } from '@angular/router';
-import { UserDirective } from '@reunice/modules/shared/security';
+import {
+  UserControlsResourceDirective,
+  UserDirective,
+} from '@reunice/modules/shared/security';
+import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { navigateToResourceList } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-template-details',
@@ -27,11 +33,19 @@ import { UserDirective } from '@reunice/modules/shared/security';
     TuiButtonModule,
     UserDirective,
     NgForTrackByIdDirective,
+    ConfirmDirective,
+    UserControlsResourceDirective,
   ],
   templateUrl: './template-details.component.html',
   styleUrls: ['./template-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplateDetailsComponent {
-  readonly item$ = resourceFromRoute(inject(TemplateService));
+  private readonly _service = inject(TemplateService);
+  readonly item$ = resourceFromRoute(this._service);
+
+  readonly deleteHandler = new DeleteResourceWrapper(this._service, {
+    successAlertMessage: 'TEMPLATE_DELETED_SUCCESS',
+    effect: navigateToResourceList(),
+  });
 }
