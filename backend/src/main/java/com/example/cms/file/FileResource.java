@@ -30,8 +30,8 @@ public class FileResource {
     @NotBlank(message = "File type name must not be empty")
     private String fileType;
 
-    @NotBlank(message = "File size name must not be empty")
-    private String fileSize;
+    @NotNull(message = "File size must not be null")
+    private Long fileSize;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
