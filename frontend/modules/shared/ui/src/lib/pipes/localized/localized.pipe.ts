@@ -23,7 +23,7 @@ export class LocalizedDatePipe implements PipeTransform, OnDestroy {
   ) {}
 
   transform(
-    value: Date | string | number,
+    value: Date | string | number | undefined | null,
     format = 'medium',
     timezone?: string,
   ): string | null {

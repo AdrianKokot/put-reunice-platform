@@ -5,9 +5,11 @@ import {
   formResourceFromRoute,
   FormSubmitWrapper,
 } from '@reunice/modules/shared/util';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+} from '../../../shared';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 
 @Component({
   selector: 'reunice-university-edit-form',

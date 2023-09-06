@@ -5,14 +5,15 @@ import {
   FormSubmitWrapper,
 } from '@reunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+} from '../../../shared';
 
 @Component({
   selector: 'reunice-keyword-edit-form',
   standalone: true,
-  imports: [BaseFormImportsModule, TuiLetModule],
+  imports: [BaseFormImportsModule],
   templateUrl: './keyword-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

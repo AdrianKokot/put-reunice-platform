@@ -36,7 +36,7 @@
       [tuiLabel]="'LAST_LOGIN_DATE' | translate"
       class="tui-form__multi-field"
     >
-      {{ item?.lastLoginDate ? (item?.lastLoginDate | date) : '-' }}
+      {{ item?.lastLoginDate ? (item?.lastLoginDate | localizedDate) : '-' }}
     </label>
   </div>
 

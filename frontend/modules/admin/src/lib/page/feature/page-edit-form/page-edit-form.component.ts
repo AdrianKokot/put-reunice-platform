@@ -13,17 +13,14 @@ import {
   throwError,
   toResourceFromId,
 } from '@reunice/modules/shared/util';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+} from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
-import { TuiExpandModule, TuiFormatDatePipeModule } from '@taiga-ui/core';
-import {
-  TuiElasticContainerModule,
-  TuiFileLike,
-  TuiInputFilesModule,
-} from '@taiga-ui/kit';
+import { TuiFileLike, TuiInputFilesModule } from '@taiga-ui/kit';
 import { shareReplay, startWith, switchMap } from 'rxjs';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
 import { AuthService } from '@reunice/modules/shared/security';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 
@@ -35,10 +32,7 @@ import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
     BaseFormImportsModule,
     TuiEditorModule,
     LoadTemplateComponent,
-    TuiExpandModule,
-    TuiElasticContainerModule,
     TuiInputFilesModule,
-    TuiFormatDatePipeModule,
     LocalizedPipeModule,
   ],
   templateUrl: './page-edit-form.component.html',
