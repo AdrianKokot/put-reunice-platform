@@ -11,13 +11,13 @@
   <ng-container>
     <tui-data-list *tuiDataList>
       <a
-          *ngFor="let result of results"
+          *ngFor="let page of results"
           tuiOption
-          [href]="result.link"
+          [routerLink]="['universities', page.university.id, 'page', page.id]"
       >
       <div>
-          {{ result.university.name }}
-          <h4 class="tui-space_vertical-0">{{ result.title }}</h4>
+          {{ page.university.name }}
+          <h4 class="tui-space_vertical-0">{{ page.title }}</h4>
       </div>
       </a>
     </tui-data-list>

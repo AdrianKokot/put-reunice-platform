@@ -8,9 +8,10 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {TuiInputModule} from '@taiga-ui/kit';
 import {TuiDataListModule, TuiTextfieldControllerModule} from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged, switchMap, map, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
 import { PageService } from '@reunice/modules/shared/data-access';
 import { TuiLetModule, TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'reunice-search',
@@ -22,7 +23,8 @@ import { TuiLetModule, TuiActiveZoneModule } from '@taiga-ui/cdk';
     TuiTextfieldControllerModule,
     TuiDataListModule,
     TuiLetModule,
-    TuiActiveZoneModule
+    TuiActiveZoneModule,
+    RouterLink,
   ],
   templateUrl: './search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +37,5 @@ export class SearchComponent {
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((query) => query ? this.pageService.search(query) : of([])),
-    map(pages => pages.map(page => ({...page, link: `/universities/${page.university.id}/page/${page.id}`})))
   );
 }
