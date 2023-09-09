@@ -1,12 +1,11 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TuiInputModule } from '@taiga-ui/kit';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TuiInputModule} from '@taiga-ui/kit';
-import {TuiDataListModule, TuiTextfieldControllerModule} from '@taiga-ui/core';
+  TuiDataListModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
 import { PageService } from '@reunice/modules/shared/data-access';
@@ -36,6 +35,6 @@ export class SearchComponent {
   readonly results$ = this.search.valueChanges.pipe(
     debounceTime(300),
     distinctUntilChanged(),
-    switchMap((query) => query ? this.pageService.search(query) : of([])),
+    switchMap((query) => (query ? this.pageService.search(query) : of([]))),
   );
 }
