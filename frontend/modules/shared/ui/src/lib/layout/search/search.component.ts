@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TuiInputModule } from '@taiga-ui/kit';
 import {
   TuiDataListModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { PageService } from '@reunice/modules/shared/data-access';
-import { TuiLetModule, TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { TuiLetModule } from '@taiga-ui/cdk';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -22,7 +21,6 @@ import { RouterLink } from '@angular/router';
     TuiTextfieldControllerModule,
     TuiDataListModule,
     TuiLetModule,
-    TuiActiveZoneModule,
     RouterLink,
   ],
   templateUrl: './search.component.html',

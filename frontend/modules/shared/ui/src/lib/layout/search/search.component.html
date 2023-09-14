@@ -1,25 +1,24 @@
 <tui-input
   *tuiLet="results$ | async as results"
   tuiTextfieldSize="m"
-  tuiTextfieldIconLeft="tuiIconSearch"
+  [tuiTextfieldIconLeft]="'tuiIconSearch'"
   [formControl]="search"
   [tuiTextfieldCleaner]="true"
   [tuiTextfieldLabelOutside]="true"
 >
   Search
   <input tuiTextfield />
-  <ng-container>
-    <tui-data-list *tuiDataList>
-      <a
-        *ngFor="let page of results"
-        tuiOption
-        [routerLink]="['universities', page.university.id, 'page', page.id]"
-      >
-        <div>
-          {{ page.university.name }}
-          <h4 class="tui-space_vertical-0">{{ page.title }}</h4>
-        </div>
-      </a>
-    </tui-data-list>
-  </ng-container>
+
+  <tui-data-list *tuiDataList>
+    <a
+      *ngFor="let page of results"
+      tuiOption
+      [routerLink]="['universities', page.university.id, 'page', page.id]"
+    >
+      <div>
+        {{ page.university.name }}
+        <h4 class="tui-space_vertical-0">{{ page.title }}</h4>
+      </div>
+    </a>
+  </tui-data-list>
 </tui-input>
