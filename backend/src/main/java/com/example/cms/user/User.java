@@ -1,5 +1,7 @@
 package com.example.cms.user;
 
+import com.example.cms.contentRequestTicket.ContentRequestTicket;
+import com.example.cms.page.Page;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
 import lombok.Getter;
@@ -30,6 +32,22 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "university_id")
     )
     private Set<University> enrolledUniversities = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "CRHandlerPages",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "page_id")
+    )
+    private Set<Page> CRHandlersPages = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "CRHandlerTickets",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id")
+    )
+    private Set<ContentRequestTicket> CRHandlersTickets = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

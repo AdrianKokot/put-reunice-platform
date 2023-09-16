@@ -20,6 +20,13 @@ import java.util.Set;
 @Entity
 @Table(name = "pages")
 public class Page {
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "CRHandlerPages",
+            joinColumns = @JoinColumn(name = "page_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> CRHandlers = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
