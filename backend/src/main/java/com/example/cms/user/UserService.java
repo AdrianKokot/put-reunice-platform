@@ -10,7 +10,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.security.LoggedUser;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
