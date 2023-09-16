@@ -1,0 +1,25 @@
+<tui-input
+  #input
+  tuiTextfieldSize="m"
+  [tuiTextfieldIconLeft]="'tuiIconSearch'"
+  [formControl]="search"
+  [tuiTextfieldCleaner]="true"
+  [tuiTextfieldLabelOutside]="true"
+>
+  {{ 'SEARCH' | translate }}
+  <input tuiTextfield />
+
+  <tui-data-list *tuiDataList>
+    <a
+      tuiOption
+      (click)="input.open = false"
+      *ngFor="let page of results$ | async"
+      [routerLink]="['universities', page.university.id, 'page', page.id]"
+    >
+      <div>
+        {{ page.university.name }}
+        <h4 class="tui-space_vertical-0">{{ page.title }}</h4>
+      </div>
+    </a>
+  </tui-data-list>
+</tui-input>

@@ -1,8 +1,18 @@
 <tui-root *tuiLet="side.leftSide$ | async as leftSide">
   <reunice-ui-top-bar>
-    <reunice-sidebar menu *ngIf="leftSide !== null" class="sidebar-mobile">
+    <reunice-sidebar
+      menu
+      class="sidebar-mobile"
+      #parent="tuiActiveZone"
+      tuiActiveZone
+    >
+      <reunice-search
+        class="search-mobile"
+        [tuiActiveZoneParent]="parent"
+      ></reunice-search>
       <ng-container *polymorpheusOutlet="leftSide"></ng-container>
     </reunice-sidebar>
+    <reunice-search left class="search-desktop"></reunice-search>
   </reunice-ui-top-bar>
 
   <div class="d-flex">
