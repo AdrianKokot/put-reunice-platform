@@ -1,5 +1,4 @@
 <tui-input
-  *tuiLet="results$ | async as results"
   tuiTextfieldSize="m"
   [tuiTextfieldIconLeft]="'tuiIconSearch'"
   [formControl]="search"
@@ -11,7 +10,7 @@
 
   <tui-data-list *tuiDataList>
     <a
-      *ngFor="let page of results"
+      *ngFor="let page of results$ | async"
       tuiOption
       [routerLink]="['universities', page.university.id, 'page', page.id]"
     >
