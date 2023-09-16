@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { UniversityService } from '@reunice/modules/shared/data-access';
 import { FormSubmitWrapper } from '@reunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+} from '../../../shared';
 
 @Component({
   selector: 'reunice-university-create-form',

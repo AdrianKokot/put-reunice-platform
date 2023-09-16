@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,8 +25,8 @@ public class PageDtoDetailed {
     private boolean hidden;
     private String content;
     private List<PageDtoSimple> children;
-    private String createdOn;
-    private String updatedOn;
+    private Instant createdOn;
+    private Instant updatedOn;
     private String keyWords;
 
     public static PageDtoDetailed of(Page page) {
@@ -52,8 +53,7 @@ public class PageDtoDetailed {
 
         this.children = children.stream().map(PageDtoSimple::of).collect(Collectors.toList());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd-MM-yyy");
-        createdOn = page.getCreatedOn().toLocalDateTime().format(formatter);
-        updatedOn = page.getUpdatedOn().toLocalDateTime().format(formatter);
+        createdOn = page.getCreatedOn().toInstant();
+        updatedOn = page.getUpdatedOn().toInstant();
     }
 }

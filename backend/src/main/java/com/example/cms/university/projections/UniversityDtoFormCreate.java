@@ -15,12 +15,17 @@ public class UniversityDtoFormCreate {
     String description;
     Long creatorId;
 
+    String address;
+    String website;
+
     public University toUniversity(User creator, String content) {
         University university = new University();
         university.setName(name);
         university.setShortName(shortName);
         university.setDescription(description);
         university.setHidden(true);
+        university.setAddress(address);
+        university.setWebsite(website);
 
         Page page = new Page();
         page.setTitle(university.getName());

@@ -69,6 +69,17 @@
       max-width: 200px;
     }
 
+    .column-md {
+      min-width: 250px;
+      max-width: 250px;
+    }
+
+    .text-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .column-rest {
       width: 100%;
       min-width: 100%;
@@ -108,4 +119,8 @@
 
 reunice-table-filter._applied-filter .t-icon {
   color: var(--tui-primary);
+}
+
+.tui-form__row tui-editor {
+  max-height: 83vh;
 }

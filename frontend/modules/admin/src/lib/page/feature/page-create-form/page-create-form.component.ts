@@ -9,8 +9,11 @@ import {
   FormSubmitWrapper,
   PAGE_TREE_HANDLER,
 } from '@reunice/modules/shared/util';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+  ResourceSearchWrapper,
+} from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import {
@@ -21,7 +24,6 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
@@ -29,8 +31,7 @@ import {
   TuiRadioLabeledModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
-import { TuiLetModule, TuiValueChangesModule } from '@taiga-ui/cdk';
-import { RouterLinkActive } from '@angular/router';
+import { TuiValueChangesModule } from '@taiga-ui/cdk';
 import { TuiLinkModule } from '@taiga-ui/core';
 
 @Component({
@@ -40,11 +41,9 @@ import { TuiLinkModule } from '@taiga-ui/core';
     BaseFormImportsModule,
     TuiEditorModule,
     TuiDataListWrapperModule,
-    TuiLetModule,
     TuiComboBoxModule,
     TuiValueChangesModule,
     TuiTreeModule,
-    RouterLinkActive,
     TuiLinkModule,
     TuiRadioLabeledModule,
     TuiIslandModule,

@@ -13,7 +13,7 @@ export class FileService {
   constructor(private readonly http: HttpClient) {}
 
   getAll(pageID: BaseResource['id']): Observable<FileResource[]> {
-    return this.http.get<FileResource[]>(`${this.server}/all/page/${pageID}`);
+    return this.http.get<FileResource[]>(`${this.server}/page/${pageID}`);
   }
 
   deleteFile(filename: string, pageID: number): Observable<FileResource[]> {

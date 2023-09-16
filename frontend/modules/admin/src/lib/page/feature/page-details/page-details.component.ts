@@ -1,29 +1,32 @@
+import {
+  FileService,
+  Page,
+  PageService,
+  User,
+} from '@reunice/modules/shared/data-access';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonModule, TuiLabelModule } from '@taiga-ui/core';
-import { TuiHandler, TuiLetModule } from '@taiga-ui/cdk';
-import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
-import { resourceFromRoute } from '@reunice/modules/shared/util';
-import { Page, PageService } from '@reunice/modules/shared/data-access';
-import { RouterLink } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import {
+  DeleteResourceWrapper,
+  PAGE_TREE_HANDLER,
+  resourceIdFromRoute,
+  throwError,
+} from '@reunice/modules/shared/util';
 import { filter, shareReplay, startWith, switchMap } from 'rxjs';
+import { AuthService } from '@reunice/modules/shared/security';
+import {
+  BaseDetailsImportsModule,
+  navigateToResourceList,
+} from '../../../shared';
+import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 
 @Component({
   selector: 'reunice-page-details',
   standalone: true,
   imports: [
-    CommonModule,
-    TranslateModule,
-    TuiLabelModule,
-    TuiLetModule,
-    TuiButtonModule,
+    BaseDetailsImportsModule,
+    TuiFilesModule,
     TuiEditorSocketModule,
-    RouterLink,
-    FormsModule,
-    ReactiveFormsModule,
     TuiIslandModule,
     TuiTreeModule,
   ],
@@ -32,7 +35,16 @@ import { filter, shareReplay, startWith, switchMap } from 'rxjs';
 })
 export class PageDetailsComponent {
   private readonly _service = inject(PageService);
-  readonly item$ = resourceFromRoute(this._service);
+  private readonly _fileService = inject(FileService);
+
+  private readonly _id$ = resourceIdFromRoute();
+
+  readonly item$ = this._id$.pipe(
+    switchMap((id) => this._service.get(id).pipe(startWith(null))),
+    shareReplay(),
+  );
+  readonly user: User =
+    inject(AuthService).userSnapshot ?? throwError('User is null');
 
   readonly pagesTree$ = this.item$.pipe(
     filter((page): page is Page => page !== null),
@@ -44,6 +56,15 @@ export class PageDetailsComponent {
     shareReplay(),
   );
 
-  readonly pagesTreeHandler: TuiHandler<Page, readonly Page[]> = (item) =>
-    item?.children ?? [];
+  readonly files$ = this._id$.pipe(
+    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    shareReplay(),
+  );
+
+  readonly pagesTreeHandler = PAGE_TREE_HANDLER;
+
+  readonly deleteHandler = new DeleteResourceWrapper(this._service, {
+    successAlertMessage: 'PAGE_DELETED_SUCCESS',
+    effect: navigateToResourceList(),
+  });
 }

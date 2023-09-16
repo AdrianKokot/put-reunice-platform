@@ -1,26 +1,27 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { TuiButtonModule, TuiLabelModule } from '@taiga-ui/core';
-import { TuiLetModule } from '@taiga-ui/cdk';
-import { resourceFromRoute } from '@reunice/modules/shared/util';
+import {
+  DeleteResourceWrapper,
+  resourceFromRoute,
+} from '@reunice/modules/shared/util';
 import { KeyWordsService } from '@reunice/modules/shared/data-access';
-import { RouterLink } from '@angular/router';
+import {
+  BaseDetailsImportsModule,
+  navigateToResourceList,
+} from '../../../shared';
 
 @Component({
   selector: 'reunice-keyword-details',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    TuiLabelModule,
-    TuiLetModule,
-    TuiButtonModule,
-    RouterLink,
-  ],
+  imports: [BaseDetailsImportsModule],
   templateUrl: './keyword-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KeywordDetailsComponent {
-  readonly item$ = resourceFromRoute(inject(KeyWordsService));
+  private readonly _service = inject(KeyWordsService);
+  readonly item$ = resourceFromRoute(this._service);
+
+  readonly deleteHandler = new DeleteResourceWrapper(this._service, {
+    successAlertMessage: 'KEYWORD_DELETED_SUCCESS',
+    effect: navigateToResourceList(),
+  });
 }

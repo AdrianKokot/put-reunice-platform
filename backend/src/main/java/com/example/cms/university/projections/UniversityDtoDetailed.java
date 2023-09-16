@@ -22,6 +22,8 @@ public class UniversityDtoDetailed {
     private boolean hidden;
     private PageDtoDetailed mainPage;
     private Set<UserDtoSimple> enrolledUsers;
+    private String address;
+    private String website;
 
     public static UniversityDtoDetailed of(University university) {
         if (university == null) {
@@ -38,5 +40,7 @@ public class UniversityDtoDetailed {
         hidden = university.isHidden();
         enrolledUsers = university.getEnrolledUsers().stream().map(UserDtoSimple::of).collect(Collectors.toSet());
         mainPage = PageDtoDetailed.of(university.getMainPage());
+        address = university.getAddress();
+        website = university.getWebsite();
     }
 }

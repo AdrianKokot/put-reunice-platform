@@ -51,7 +51,14 @@ public class UniversityController {
 
     @PostMapping
     public ResponseEntity<UniversityDtoDetailed> registerNewUniversity(@RequestBody UniversityDtoFormCreate form) {
-        UniversityDtoDetailed result = service.addNewUniversity(new UniversityDtoFormCreate(form.getName(), form.getShortName(), form.getDescription(), securityService.getPrincipal().get().getId()));
+        UniversityDtoDetailed result = service.addNewUniversity(new UniversityDtoFormCreate(
+                form.getName(),
+                form.getShortName(),
+                form.getDescription(),
+                securityService.getPrincipal().get().getId(),
+                form.getAddress(),
+                form.getWebsite()
+        ));
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 

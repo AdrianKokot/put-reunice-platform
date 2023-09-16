@@ -9,4 +9,6 @@ export interface University {
   mainPage: Page;
   enrolledUsers: User[];
   hidden: boolean;
+  address: string;
+  website: string;
 }

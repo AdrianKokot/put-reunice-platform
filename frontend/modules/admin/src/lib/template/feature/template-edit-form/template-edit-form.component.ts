@@ -9,10 +9,12 @@ import {
   FormSubmitWrapper,
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+  ResourceSearchWrapper,
+} from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
-import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import {
   TuiCheckboxLabeledModule,
@@ -26,7 +28,6 @@ import {
   standalone: true,
   imports: [
     BaseFormImportsModule,
-    TuiLetModule,
     TuiEditorModule,
     TuiCheckboxLabeledModule,
     TuiDataListWrapperModule,
@@ -58,6 +59,7 @@ export class TemplateEditFormComponent {
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'TEMPLATE_UPDATE_SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 
   readonly universitySearch = new ResourceSearchWrapper(

@@ -11,14 +11,16 @@ import {
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+  ResourceSearchWrapper,
+} from '../../../shared';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiInputPasswordModule,
 } from '@taiga-ui/kit';
-import { ResourceSearchWrapper } from '../../../shared/util/resource-search-wrapper';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import { filter, map, startWith } from 'rxjs';
 import { TuiHintModule } from '@taiga-ui/core';
@@ -28,7 +30,6 @@ import { TuiHintModule } from '@taiga-ui/core';
   standalone: true,
   imports: [
     BaseFormImportsModule,
-    TuiLetModule,
     TuiDataListWrapperModule,
     TuiHintModule,
     UserDirective,
@@ -81,6 +82,7 @@ export class UserEditFormComponent {
             : [],
       }),
     successAlertMessage: 'USER_UPDATE_SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 
   readonly accountType = AccountTypeEnum;

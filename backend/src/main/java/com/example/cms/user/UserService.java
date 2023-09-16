@@ -1,5 +1,6 @@
 package com.example.cms.user;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 import com.example.cms.SearchCriteria;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
@@ -238,5 +238,11 @@ public class UserService {
         if (user.isEnabled()) {
             throw new UserException(UserExceptionType.USER_IS_ENABLED);
         }
+    }
+
+    public void updateLastLoginDate(Long id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        user.setLastLoginDate(Instant.now());
+        userRepository.save(user);
     }
 }

@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KeyWordsService } from '@reunice/modules/shared/data-access';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormSubmitWrapper } from '@reunice/modules/shared/util';
-import { navigateToResourceDetails } from '../../../shared/util/navigate-to-resource-details';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+} from '../../../shared';
 
 @Component({
   selector: 'reunice-keyword-create-form',

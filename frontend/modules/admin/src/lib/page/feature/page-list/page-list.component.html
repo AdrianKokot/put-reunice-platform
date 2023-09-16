@@ -114,7 +114,7 @@
           {{ item.title }}
         </td>
         <td *tuiCell="'createdOn'" tuiTd>
-          {{ item.createdOn }}
+          {{ item.createdOn | localizedDate }}
         </td>
         <td *tuiCell="'university'" tuiTd>
           {{ item.university.name }}

@@ -5,13 +5,15 @@ import {
   FormSubmitWrapper,
 } from '@reunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+} from '../../../shared';
 
 @Component({
   selector: 'reunice-keyword-edit-form',
   standalone: true,
-  imports: [BaseFormImportsModule, TuiLetModule],
+  imports: [BaseFormImportsModule],
   templateUrl: './keyword-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,5 +30,6 @@ export class KeywordEditFormComponent {
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'KEYWORD_UPDATE_SUCCESS',
+    effect: navigateToResourceDetails(),
   });
 }

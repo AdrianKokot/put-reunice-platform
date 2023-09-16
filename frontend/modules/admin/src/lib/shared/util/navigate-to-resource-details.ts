@@ -14,7 +14,28 @@ export const navigateToResourceDetails = (
 
   return (result: { id: number | string }) =>
     fromPromise(
-      router.navigate(['..', result.id, ...additionalCommands], {
+      router.navigate(
+        [
+          '..',
+          ...(route.snapshot.url.toString() === 'edit' ? [] : [result.id]),
+          ...additionalCommands,
+        ],
+        {
+          relativeTo: route,
+        },
+      ),
+    );
+};
+
+export const navigateToResourceList = (
+  additionalCommands: Parameters<Router['navigate']>[0] = [],
+) => {
+  const router = inject(Router);
+  const route = inject(ActivatedRoute);
+
+  return () =>
+    fromPromise(
+      router.navigate(['..', ...additionalCommands], {
         relativeTo: route,
       }),
     );

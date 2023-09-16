@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Keyword, KeyWordsService } from '@reunice/modules/shared/data-access';
 import {
+  BaseFormImportsModule,
+  BaseTableImportsModule,
   provideReuniceTable,
   ReuniceAbstractTable,
-} from '../../../shared/table/reunice-abstract-table.directive';
+} from '../../../shared';
 import { FormBuilder } from '@angular/forms';
-import { BaseFormImportsModule } from '../../../shared/base-form-imports.module';
-import { BaseTableImportsModule } from '../../../shared/base-table-imports.module';
 
 @Component({
   selector: 'reunice-keyword-list',
