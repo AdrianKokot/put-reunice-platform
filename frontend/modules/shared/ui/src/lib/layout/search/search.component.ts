@@ -10,6 +10,7 @@ import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { PageService } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'reunice-search',
@@ -22,6 +23,7 @@ import { RouterLink } from '@angular/router';
     TuiDataListModule,
     TuiLetModule,
     RouterLink,
+    TranslateModule,
   ],
   templateUrl: './search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
