@@ -6,7 +6,13 @@ import {
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  of,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { PageService } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { RouterLink } from '@angular/router';
@@ -33,6 +39,7 @@ export class SearchComponent {
   readonly pageService = inject(PageService);
 
   readonly results$ = this.search.valueChanges.pipe(
+    startWith(''),
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((query) => (query ? this.pageService.search(query) : of([]))),
