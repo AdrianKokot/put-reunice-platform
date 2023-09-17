@@ -28,7 +28,7 @@ public abstract class FullTextSearchService {
         List<Node> nodes = new ArrayList<>();
 
         nodes.add(
-                new Node("http", "localhost", "8108")
+                new Node("http", applicationConfigurationProvider.getTypesenseHost(), "8108")
         );
 
         Configuration configuration = new Configuration(nodes, Duration.ofSeconds(2), applicationConfigurationProvider.getTypesenseApiKey());

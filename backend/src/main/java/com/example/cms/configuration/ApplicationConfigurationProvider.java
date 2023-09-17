@@ -18,6 +18,7 @@ public class ApplicationConfigurationProvider {
     private final String databaseSchemaHandlingOnStartup;
     private final String databaseSchemaCreateType;
     private final String typesenseApiKey;
+    private final String typesenseHost;
 
     /**
      * Constructs this application configuration provider.
@@ -29,11 +30,13 @@ public class ApplicationConfigurationProvider {
     public ApplicationConfigurationProvider(@Value("${applicationServer}") String applicationServer,
                                             @Value("${databaseSchemaHandlingOnStartup}") String databaseSchemaHandlingOnStartup,
                                             @Value("${databaseSchemaCreateType}") String databaseSchemaCreateType,
-                                            @Value("${typesenseApiKey}") String typesenseApiKey) {
+                                            @Value("${typesenseApiKey}") String typesenseApiKey,
+                                            @Value("${typesenseHost}") String typesenseHost) {
         this.applicationServer = applicationServer;
         this.databaseSchemaHandlingOnStartup = databaseSchemaHandlingOnStartup;
         this.databaseSchemaCreateType = databaseSchemaCreateType;
         this.typesenseApiKey = typesenseApiKey;
+        this.typesenseHost = typesenseHost;
 
         System.out.println("** Properties read:");
         System.out.println("** --");

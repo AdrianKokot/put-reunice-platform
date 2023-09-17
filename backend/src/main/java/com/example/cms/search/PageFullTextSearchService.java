@@ -80,7 +80,6 @@ public class PageFullTextSearchService extends FullTextSearchService {
 
                 client.collections(COLLECTION_NAME).delete();
             }
-
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while retrieving collection", e);
         }

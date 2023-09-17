@@ -3,6 +3,7 @@ applicationServer: ${APPLICATION_SERVER:http://localhost}
 databaseSchemaHandlingOnStartup: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP:create} #none|validate|update|create
 databaseSchemaCreateType: ${DATABASE_SCHEMA_CREATE_TYPE:populate} #populate|initialize
 typesenseApiKey: ${TYPESENSE_API_KEY:devapikey}
+typesenseHost: ${TYPESENSE_HOST:localhost}
 
 server:
   servlet:
