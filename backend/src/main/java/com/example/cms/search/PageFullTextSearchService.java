@@ -1,9 +1,11 @@
 package com.example.cms.search;
 
+import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.page.Page;
 import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.university.University;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.typesense.api.FieldTypes;
 import org.typesense.api.exceptions.RequestMalformed;
@@ -15,14 +17,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Log
 @Service
+@Log
 public class PageFullTextSearchService extends FullTextSearchService {
+
     private static final String COLLECTION_NAME = "pages";
 
-    public PageFullTextSearchService() {
+    public PageFullTextSearchService(@Autowired ApplicationConfigurationProvider applicationConfigurationProvider) {
+        super(applicationConfigurationProvider);
         createCollection();
     }
+
 
     public void upsert(Page page) {
         try {
@@ -69,8 +74,12 @@ public class PageFullTextSearchService extends FullTextSearchService {
 
     private void createCollection() {
         try {
-            if (client.collections(COLLECTION_NAME).retrieve() != null)
-                return;
+            if (client.collections(COLLECTION_NAME).retrieve() != null) {
+                if (!this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup().equalsIgnoreCase("create"))
+                    return;
+
+                client.collections(COLLECTION_NAME).delete();
+            }
 
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while retrieving collection", e);
