@@ -46,7 +46,10 @@ public class PageFullTextSearchService extends FullTextSearchService {
         SearchParameters searchParameters = new SearchParameters()
                 .q(query)
                 .queryBy("title,description,content,creator,university")
-                .maxCandidates(10)
+                .queryByWeights("1,2,2,1,1")
+                .perPage(10)
+                .highlightFields("title,description")
+                .useCache(true)
                 .filterBy("hidden:=false");
 
         List<SearchResultHit> list = List.of();
@@ -101,6 +104,7 @@ public class PageFullTextSearchService extends FullTextSearchService {
 
         University university = page.getUniversity();
 
+        map.put("id", page.getId().toString());
         map.put("pageId", page.getId());
         map.put("universityId", page.getUniversity().getId());
         map.put("title", page.getTitle());
