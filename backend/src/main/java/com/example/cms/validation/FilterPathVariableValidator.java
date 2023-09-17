@@ -16,16 +16,25 @@ public class FilterPathVariableValidator {
             FileResource.class, Set.of("page")
     );
 
-    public static Map<String, String> validate(Map<String, String> vars, Class klass) {
+    private static final Set<String> extraFields = Set.of("search");
 
-        Set<String> klassFields = Stream.of(klass.getDeclaredFields())
+    public static Set<String> classPossibleFields(Class klass) {
+        Set<String> classFields = Stream.of(klass.getDeclaredFields())
                 .map(Field::getName)
                 .collect(Collectors.toSet());
 
+        classFields.removeAll(forbiddenFields.getOrDefault(klass, Set.of()));
+
+        return classFields;
+    }
+
+    public static Map<String, String> validate(Map<String, String> vars, Class klass) {
+        Set<String> validFields = classPossibleFields(klass);
+        validFields.addAll(extraFields);
+
         return vars.entrySet().stream()
                 .filter(entry ->
-                        klassFields.contains(entry.getKey().split("_")[0]) &&
-                                !forbiddenFields.getOrDefault(klass, Set.of()).contains(entry.getKey().split("_")[0]))
+                        validFields.contains(entry.getKey().split("_")[0]))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

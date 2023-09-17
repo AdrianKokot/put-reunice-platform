@@ -1,6 +1,7 @@
 package com.example.cms.page;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.SearchSpecification;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -12,10 +13,11 @@ import javax.persistence.criteria.Root;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
 
-@AllArgsConstructor
-public class PageSpecification implements Specification<Page> {
+public class PageSpecification extends SearchSpecification implements Specification<Page> {
 
-    private SearchCriteria criteria;
+    public PageSpecification(SearchCriteria criteria) {
+        super(criteria);
+    }
 
     @Override
     public Predicate toPredicate(Root<Page> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -40,8 +42,9 @@ public class PageSpecification implements Specification<Page> {
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
-
             }
+        } else if (criteria.getOperation().equalsIgnoreCase("search")) {
+            return this.searchPredicate(root, query, criteriaBuilder);
         }
         return criteriaBuilder.disjunction();
     }

@@ -65,11 +65,6 @@ public class PageController {
         return service.getHierarchy(universityId);
     }
 
-    @GetMapping("/search/{text}")
-    List<PageDtoSimple> searchPages(Pageable pageable, @PathVariable String text) {
-        return service.searchPages(pageable, "%".concat(text.toLowerCase().concat("%")));
-    }
-
     @PostMapping
     ResponseEntity<PageDtoDetailed> createPage(@RequestBody PageDtoFormCreate form) {
         PageDtoDetailed result = service.save(form);
