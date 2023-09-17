@@ -129,4 +129,4 @@ jobs:
             docker kill "$(docker ps -aq --filter ancestor=ghcr.io/adriankokot/put-reunice-platform)"
             docker system prune -f
             docker pull ${{ steps.meta.outputs.tags }}
-            docker run --env-file .env -p 80:8080 --memory="800m" -p 443:8080 -d ${{ steps.meta.outputs.tags }}
+            docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -d ${{ steps.meta.outputs.tags }}
