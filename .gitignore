@@ -1,6 +1,7 @@
 db-resources/
 db
 .env
+typesense-data
 
 .vscode/
 .idea
