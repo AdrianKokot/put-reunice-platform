@@ -242,12 +242,6 @@ public class UserService {
         }
     }
 
-    public List<UserDtoSimple> searchUser(Pageable pageable, String text) {
-        return userRepository.searchUser(pageable, text).stream()
-                .map(UserDtoSimple::of)
-                .collect(Collectors.toList());
-    }
-
     public void updateLastLoginDate(Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
         user.setLastLoginDate(Instant.now());

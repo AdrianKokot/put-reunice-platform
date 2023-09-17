@@ -2,6 +2,7 @@ package com.example.cms.university;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
+import com.example.cms.page.PageRoleSpecification;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,7 +55,23 @@ public class UniversityService {
     }
 
     public Page<University> getUniversities(Pageable pageable, Map<String, String> filterVars) {
-        Specification<University> combinedSpecification = null;
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        Role role;
+        List<Long> universities;
+
+        if (loggedUserOptional.isPresent()) {
+            LoggedUser loggedUser = loggedUserOptional.get();
+            role = loggedUser.getAccountType();
+            universities = loggedUser.getUniversities();
+        } else {
+            role = null;
+            universities = null;
+        }
+
+        Specification<University> combinedSpecification = Specification.where(
+                new UniversityRoleSpecification(role,
+                        universities));
+
 
         if (!filterVars.isEmpty()) {
             List<UniversitySpecification> specifications = filterVars.entrySet().stream()
@@ -68,21 +86,11 @@ public class UniversityService {
                     }).collect(Collectors.toList());
 
             for (Specification<University> spec : specifications) {
-                if (combinedSpecification == null) {
-                    combinedSpecification = Specification.where(spec);
-                }
                 combinedSpecification = combinedSpecification.and(spec);
             }
         }
 
         return universityRepository.findAll(combinedSpecification, pageable);
-    }
-
-    public List<UniversityDtoSimple> searchUniversities(Pageable pageable, String text) {
-        return universityRepository.searchUniversities(pageable, text).stream()
-                .filter(this::isUniversityVisible)
-                .map(UniversityDtoSimple::of)
-                .collect(Collectors.toList());
     }
 
     private boolean isUniversityVisible(University university) {

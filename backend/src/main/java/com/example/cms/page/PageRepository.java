@@ -16,27 +16,6 @@ public interface PageRepository extends JpaRepository<Page, Long>, JpaSpecificat
 
     List<Page> findAllByParent(Pageable pageable, Page parent);
 
-    @Query("from Page where " +
-            "(LOWER(title) LIKE :text " +
-            "OR LOWER(description) LIKE :text " +
-            "OR LOWER(keyWords) LIKE :text) and " +
-            "(hidden = false and university.hidden = false)")
-    List<Page> searchPages(Pageable pageable, @Param("text") String text);
-
-    @Query("from Page where " +
-            "(LOWER(title) LIKE :text " +
-            "OR LOWER(description) LIKE :text " +
-            "OR LOWER(keyWords) LIKE :text) and " +
-            "((hidden = false and university.hidden = false) or " +
-            "(:role = 'ADMIN') or" +
-            "(:role= 'MODERATOR' and university.id in :universities) or " +
-            "(:role = 'USER' and creator.id = :creator))")
-    List<Page> searchPages(Pageable pageable,
-                           @Param("text") String text,
-                           @Param("role") String accountType,
-                           @Param("universities") List<Long> universities,
-                           @Param("creator") Long creator);
-
     boolean existsByCreator(User creator);
 
     List<Page> findByCreator(Pageable pageable, User creator);

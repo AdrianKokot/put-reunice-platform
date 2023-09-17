@@ -92,24 +92,6 @@ public class PageService {
         return pageRepository.findAll(combinedSpecification, pageable);
     }
 
-    public List<PageDtoSimple> searchPages(Pageable pageable, String text) {
-        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        List<Page> pages;
-        if (loggedUserOptional.isEmpty()) {
-            pages = pageRepository.searchPages(pageable, text);
-        } else {
-            LoggedUser loggedUser = loggedUserOptional.get();
-            pages = pageRepository.searchPages(
-                    pageable, text,
-                    String.valueOf(loggedUser.getAccountType()),
-                    loggedUser.getUniversities(),
-                    loggedUser.getId());
-        }
-        return pages.stream()
-                .map(PageDtoSimple::of)
-                .collect(Collectors.toList());
-    }
-
     public List<PageDtoSimple> getCreatorPages(Pageable pageable, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFound::new);
 
