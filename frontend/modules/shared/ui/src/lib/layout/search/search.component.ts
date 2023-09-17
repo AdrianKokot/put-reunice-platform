@@ -1,38 +1,37 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TuiDataListWrapperModule, TuiInputModule } from '@taiga-ui/kit';
+import { CommonModule } from '@angular/common';
 import {
-  TuiButtonModule,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  startWith,
+  switchMap,
+} from 'rxjs';
+import { SearchService } from '@reunice/modules/shared/data-access';
+import {
   TuiDataListModule,
   TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { CommonModule } from '@angular/common';
-import { debounceTime, startWith, switchMap } from 'rxjs';
-import { SearchService } from '@reunice/modules/shared/data-access';
-import { TuiElementModule, TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
+import { TuiInputModule } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
+import { TuiElementModule } from '@taiga-ui/cdk';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgForTrackByIdDirective } from '@reunice/modules/shared/util';
 
 @Component({
   selector: 'reunice-search',
   standalone: true,
   imports: [
     CommonModule,
+    TuiTextfieldControllerModule,
     ReactiveFormsModule,
     TuiInputModule,
-    TuiTextfieldControllerModule,
     TuiDataListModule,
-    TuiLetModule,
     RouterLink,
-    TranslateModule,
-    NgForTrackByIdDirective,
-    TuiDataListWrapperModule,
-    TuiForModule,
-    TuiLoaderModule,
-    TuiButtonModule,
     TuiElementModule,
+    TuiLoaderModule,
+    TranslateModule,
   ],
   templateUrl: './search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +47,8 @@ export class SearchComponent {
   readonly results$ = this.search.valueChanges.pipe(
     startWith(this.search.value),
     debounceTime(300),
+    distinctUntilChanged(),
+    filter(() => this.canOpen),
     switchMap((query) => this.service.searchPages(query).pipe(startWith(null))),
   );
 }
