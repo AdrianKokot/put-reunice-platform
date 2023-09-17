@@ -9,17 +9,26 @@
   {{ 'SEARCH' | translate }}
   <input tuiTextfield />
 
-  <tui-data-list *tuiDataList>
-    <a
-      tuiOption
-      (click)="input.open = false"
-      *ngFor="let page of results$ | async"
-      [routerLink]="['universities', page.university.id, 'page', page.id]"
-    >
-      <div>
-        {{ page.university.name }}
-        <h4 class="tui-space_vertical-0">{{ page.title }}</h4>
-      </div>
-    </a>
-  </tui-data-list>
+  <ng-container *ngIf="canOpen">
+    <ng-container *tuiDataList>
+      <tui-data-list *ngIf="results$ | async as results; else loading">
+        <a
+          *ngFor="let hit of results; trackById"
+          tuiOption
+          tuiElement
+          [routerLink]="['universities', hit.universityId, 'page', hit.pageId]"
+          (click)="input.open = false"
+        >
+          <div>
+            {{ hit.universityName }}
+            <h4 class="tui-space_vertical-0">{{ hit.title }}</h4>
+          </div>
+        </a>
+      </tui-data-list>
+    </ng-container>
+  </ng-container>
 </tui-input>
+
+<ng-template #loading>
+  <tui-loader size="s" class="t-loader"></tui-loader>
+</ng-template>

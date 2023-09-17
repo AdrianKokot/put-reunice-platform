@@ -80,8 +80,4 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
       `${this._resourceUrl}/hierarchy/${universityId}`,
     );
   }
-
-  search(text: string): Observable<Page[]> {
-    return this._http.get<Page[]>(`${this._resourceUrl}/search/${text}`);
-  }
 }

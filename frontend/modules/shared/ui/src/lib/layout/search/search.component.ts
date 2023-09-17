@@ -1,16 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TuiInputModule } from '@taiga-ui/kit';
+import { TuiDataListWrapperModule, TuiInputModule } from '@taiga-ui/kit';
 import {
+  TuiButtonModule,
   TuiDataListModule,
+  TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
-import { PageService } from '@reunice/modules/shared/data-access';
-import { TuiLetModule } from '@taiga-ui/cdk';
+import { debounceTime, startWith, switchMap } from 'rxjs';
+import { SearchService } from '@reunice/modules/shared/data-access';
+import { TuiElementModule, TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgForTrackByIdDirective } from '@reunice/modules/shared/util';
 
 @Component({
   selector: 'reunice-search',
@@ -24,17 +27,27 @@ import { TranslateModule } from '@ngx-translate/core';
     TuiLetModule,
     RouterLink,
     TranslateModule,
+    NgForTrackByIdDirective,
+    TuiDataListWrapperModule,
+    TuiForModule,
+    TuiLoaderModule,
+    TuiButtonModule,
+    TuiElementModule,
   ],
   templateUrl: './search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent {
-  readonly search = new FormControl('');
-  readonly pageService = inject(PageService);
+  private readonly service = inject(SearchService);
+  readonly search = new FormControl('', { nonNullable: true });
+
+  get canOpen(): boolean {
+    return this.search.value.length > 2;
+  }
 
   readonly results$ = this.search.valueChanges.pipe(
+    startWith(this.search.value),
     debounceTime(300),
-    distinctUntilChanged(),
-    switchMap((query) => (query ? this.pageService.search(query) : of([]))),
+    switchMap((query) => this.service.searchPages(query).pipe(startWith(null))),
   );
 }
