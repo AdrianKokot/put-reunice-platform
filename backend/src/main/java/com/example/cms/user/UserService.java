@@ -253,4 +253,22 @@ public class UserService {
         user.setLastLoginDate(Instant.now());
         userRepository.save(user);
     }
+
+    @Secured("ROLE_ADMIN")
+    public void assignUserToPage(Long userId, Long pageId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
+            throw new UserForbidden();
+        }
+        com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
+
+
+        if (user != null && page != null) {
+            user.getCRHandlersPages().add(page);
+            page.getCRHandlers().add(user);
+
+            userRepository.save(user);
+            pageRepository.save(page);
+        }
+    }
 }
