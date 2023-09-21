@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@Table(name="responses")
 public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
