@@ -40,7 +40,7 @@ public class ContentRequestTicket {
     private TicketStatus status;
     private String title;
     private String description;
-    @OneToMany(mappedBy = "contentRequestTicket", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "contentRequestTicket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Response> responses = new ArrayList<>();
     private String requestedToken;
     private String contentRequestHandlerToken;
