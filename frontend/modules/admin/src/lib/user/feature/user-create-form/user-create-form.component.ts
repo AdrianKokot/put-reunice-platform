@@ -71,7 +71,7 @@ export class UserCreateFormComponent {
 
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
-    'name_ct',
+    'search',
     'name',
   );
 }

@@ -41,13 +41,13 @@ export class PageListComponent extends ReuniceAbstractTable<Page> {
 
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
-    'name_ct',
+    'search',
     'shortName',
   );
 
   readonly userSearch = new ResourceSearchWrapper(
     inject(UserService),
-    'email_ct',
+    'search',
     ['firstName', 'lastName'],
   );
 }
