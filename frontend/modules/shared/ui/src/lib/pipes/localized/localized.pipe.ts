@@ -4,9 +4,16 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
-import { map, merge, startWith, Subscription } from 'rxjs';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  map,
+  startWith,
+  Subject,
+  Subscription,
+} from 'rxjs';
+import { LangService, langToLocale } from '@reunice/modules/shared/util';
 
 @Pipe({
   name: 'localizedDate',
@@ -15,9 +22,12 @@ import { map, merge, startWith, Subscription } from 'rxjs';
 export class LocalizedDatePipe implements PipeTransform, OnDestroy {
   private _value: string | null = null;
   private _subscription: Subscription | null = null;
+  private readonly _pipedValue = new Subject<
+    Date | string | number | undefined | null
+  >();
 
   constructor(
-    private readonly _translate: TranslateService,
+    private readonly _lang: LangService,
     private readonly _datePipe: DatePipe,
     private readonly _cdr: ChangeDetectorRef,
   ) {}
@@ -28,14 +38,12 @@ export class LocalizedDatePipe implements PipeTransform, OnDestroy {
     timezone?: string,
   ): string | null {
     if (this._subscription === null) {
-      this._subscription = merge(
-        this._translate.onDefaultLangChange,
-        this._translate.onLangChange,
-      )
+      this._subscription = combineLatest({
+        locale: this._lang.lang$.pipe(map(langToLocale)),
+        value: this._pipedValue.pipe(startWith(value), distinctUntilChanged()),
+      })
         .pipe(
-          map(({ lang }) => lang),
-          startWith(this._translate.currentLang ?? this._translate.defaultLang),
-          map((locale) =>
+          map(({ value, locale }) =>
             this._datePipe.transform(value, format, timezone, locale),
           ),
         )
@@ -45,6 +53,7 @@ export class LocalizedDatePipe implements PipeTransform, OnDestroy {
         });
     }
 
+    this._pipedValue.next(value);
     return this._value;
   }
 
