@@ -1,5 +1,29 @@
 package com.example.cms.development;
 
+import com.example.cms.backup.BackupService;
+import com.example.cms.backup.exceptions.BackupException;
+import com.example.cms.configuration.ApplicationConfigurationProvider;
+import com.example.cms.keywords.KeyWordsService;
+import com.example.cms.page.PageService;
+import com.example.cms.page.projections.PageDtoFormCreate;
+import com.example.cms.page.projections.PageDtoFormUpdate;
+import com.example.cms.security.Role;
+import com.example.cms.template.TemplateService;
+import com.example.cms.university.UniversityService;
+import com.example.cms.university.projections.UniversityDtoFormCreate;
+import com.example.cms.user.UserService;
+import com.example.cms.user.projections.UserDtoFormCreate;
+import com.example.cms.validation.exceptions.WrongParameterException;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,40 +32,15 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-
-import com.example.cms.backup.BackupService;
-import com.example.cms.backup.exceptions.BackupException;
-import com.example.cms.configuration.ApplicationConfigurationProvider;
-import com.example.cms.keywords.KeyWordsService;
-import com.example.cms.page.PageService;
-import com.example.cms.page.projections.PageDtoFormCreate;
-import com.example.cms.security.Role;
-import com.example.cms.template.TemplateService;
-import com.example.cms.university.UniversityService;
-import com.example.cms.university.projections.UniversityDtoFormCreate;
-import com.example.cms.user.UserService;
-import com.example.cms.user.projections.UserDtoFormCreate;
-import com.example.cms.validation.exceptions.WrongParameterException;
-
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
-	
-	private enum DatabaseSchemaCreateType {
-		INITIALIZE, //create only main admin so the data can be added manually (e.g., using a frontend application)
-		POPULATE    //insert dummy data to demonstrate the application
-	}
+
+    private enum DatabaseSchemaCreateType {
+        INITIALIZE, //create only main admin so the data can be added manually (e.g., using a frontend application)
+        POPULATE    //insert dummy data to demonstrate the application
+    }
 
     private final PageService pageService;
     private final UserService userService;
@@ -49,9 +48,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final TemplateService templateService;
     private final BackupService backupService;
     private final KeyWordsService keyWordsService;
-    
+
     @Autowired
-	private ApplicationConfigurationProvider applicationConfigurationProvider;
+    private ApplicationConfigurationProvider applicationConfigurationProvider;
 
     @Override
     public void onApplicationEvent(@NonNull final ContextRefreshedEvent event) {
@@ -66,15 +65,15 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
             //MSz extended
             log.info(String.format("** databaseSchemaHandlingOnStartup read from properties file: %s", applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()));
             if (applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup().equals("create")) {
-            	if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("populate")) {
-            		tryToRestoreDatabase(DatabaseSchemaCreateType.POPULATE);
-            	} else if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("initialize")) {
-            		tryToRestoreDatabase(DatabaseSchemaCreateType.INITIALIZE);
-            	} else {
-            		throw new WrongParameterException("Invalid value of parameter databaseSchemaCreateType.");
-            	}
+                if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("populate")) {
+                    tryToRestoreDatabase(DatabaseSchemaCreateType.POPULATE);
+                } else if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("initialize")) {
+                    tryToRestoreDatabase(DatabaseSchemaCreateType.INITIALIZE);
+                } else {
+                    throw new WrongParameterException("Invalid value of parameter databaseSchemaCreateType.");
+                }
             } else {
-            	log.info("** Using encountered database schema.");
+                log.info("** Using encountered database schema.");
             }
         } catch (IOException e) {
             throw new BackupException();
@@ -87,7 +86,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
      * Checks if there is at least one zip file in the path returned by {@link BackupService#getRestoreMainPath()},
      * and if so, then takes randomly one of available zip files and tries to restore all tables in the database from that backup file.
      * If there is not a zip file in the path returned by {@link BackupService#getRestoreMainPath()}, then inserts data into the database based on the value of the parameter.
-     * 
+     *
      * @param databaseSchemaCreateType type of database schema create to perform on application startup if a backup is not available
      */
     private void tryToRestoreDatabase(DatabaseSchemaCreateType databaseSchemaCreateType) {
@@ -107,20 +106,20 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                     }
                     log.info(String.format("** Imported %s backup.", backupName));
                 }, () -> {
-                	switch (databaseSchemaCreateType) {
-                	case POPULATE:
-                		createDummyData();
-                        log.info("** Created dummy data.");
-                		break;
-                	case INITIALIZE:
-                		createInitialData();
-                		log.info("** Database schema initialized with a main administrator account.");
-                		break;
-                	}
-                    
+                    switch (databaseSchemaCreateType) {
+                        case POPULATE:
+                            createDummyData();
+                            log.info("** Created dummy data.");
+                            break;
+                        case INITIALIZE:
+                            createInitialData();
+                            log.info("** Database schema initialized with a main administrator account.");
+                            break;
+                    }
+
                 });
     }
-    
+
     /**
      * Creates minimum data for the application to be functional, i.e., only the main administrator account.
      */
@@ -666,79 +665,220 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.save(new PageDtoFormCreate(
                 "Education",
                 "The list of courses we offer.",
-                "",
+                "<section>\n" +
+                "        <h2>Undergraduate Programs</h2>\n" +
+                "        <p>Discover our range of undergraduate programs in engineering and technology fields.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Computer Science</li>\n" +
+                "            <li>Electrical Engineering</li>\n" +
+                "            <li>Civil Engineering</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Graduate Programs</h2>\n" +
+                "        <p>Explore advanced studies in various engineering disciplines.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Mechanical Engineering</li>\n" +
+                "            <li>Chemical Engineering</li>\n" +
+                "            <li>Architecture</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 1L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
                 "Computer Science",
-                "Computers, math, programming...",
-                "",
+                "The Bachelor of Science in Computer Science program at Poznań University of Technology provides a comprehensive foundation in computer science theory and practical programming skills.",
+                " <section>\n" +
+                "        <h2>Program Overview</h2>\n" +
+                "        <p>Students will study a range of subjects including algorithms, data structures, software engineering, and database systems. The program also emphasizes hands-on projects and collaborative learning.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Key Courses</h2>\n" +
+                "        <ul>\n" +
+                "            <li>Introduction to Algorithms</li>\n" +
+                "            <li>Object-Oriented Programming</li>\n" +
+                "            <li>Database Systems</li>\n" +
+                "            <li>Software Engineering</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Career Opportunities</h2>\n" +
+                "        <p>Graduates of this program are well-equipped for roles in software development, web development, database administration, and more.</p>\n" +
+                "    </section>",
                 4L,
                 11L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
-                "First degree",
-                "First degree",
-                "",
+                "Undergraduate Programs",
+                "Undergraduate Programs",
+                "    <section>\n" +
+                "        <h2>Bachelor of Science in Computer Science</h2>\n" +
+                "        <p>Explore the foundational principles of computer science and gain practical programming skills.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Introduction to Algorithms</li>\n" +
+                "            <li>Object-Oriented Programming</li>\n" +
+                "            <li>Database Systems</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Bachelor of Engineering in Electrical Engineering</h2>\n" +
+                "        <p>Study the core concepts of electrical engineering and specialize in areas like power systems or electronics.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Electric Circuits</li>\n" +
+                "            <li>Signals and Systems</li>\n" +
+                "            <li>Power Electronics</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 12L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
-                "Second degree",
-                "Second degree",
-                "",
+                "Graduate Programs",
+                "Graduate Programs",
+                " <section>\n" +
+                "        <h2>Master of Science in Mechanical Engineering</h2>\n" +
+                "        <p>Deepen your knowledge in mechanical engineering with advanced coursework and research opportunities.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Finite Element Analysis</li>\n" +
+                "            <li>Advanced Thermodynamics</li>\n" +
+                "            <li>Robotics and Automation</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Master of Engineering in Chemical Engineering</h2>\n" +
+                "        <p>Specialize in chemical process engineering or materials engineering with advanced coursework and projects.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Chemical Reactor Design</li>\n" +
+                "            <li>Polymer Science</li>\n" +
+                "            <li>Process Safety</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 12L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
-                "Telecommunication",
-                "Computer networks, communication...",
-                "",
+                "Engineering in Electrical Engineering",
+                "The Bachelor of Engineering in Electrical Engineering program at Poznań University of Technology offers a solid foundation in electrical engineering principles and specialized knowledge in areas like power systems or electronics.",
+                "<section>\n" +
+                "        <h2>Program Overview</h2>\n" +
+                "        <p>Students will study subjects including electric circuits, signals and systems, and power electronics. The program also includes hands-on labs and practical projects.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Specializations</h2>\n" +
+                "        <ul>\n" +
+                "            <li>Power Systems</li>\n" +
+                "            <li>Electronics</li>\n" +
+                "            <li>Control Systems</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Career Paths</h2>\n" +
+                "        <p>Graduates are prepared for careers in power generation and distribution, electronics design, control systems engineering, and more.</p>\n" +
+                "    </section>",
                 4L,
                 11L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
-                "The list of research papers and other academic studies.",
-                "",
+                "At Poznań University of Technology, we're dedicated to cutting-edge research that drives innovation.",
+                "<section>\n" +
+                "        <h2>Research Areas</h2>\n" +
+                "        <ul>\n" +
+                "            <li>Artificial Intelligence</li>\n" +
+                "            <li>Green Energy Technologies</li>\n" +
+                "            <li>Advanced Materials</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Research Facilities</h2>\n" +
+                "        <p>Explore our state-of-the-art labs and centers for scientific discovery.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Robotics Lab</li>\n" +
+                "            <li>Nanotechnology Center</li>\n" +
+                "            <li>Environmental Engineering Lab</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 1L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
-                "Business",
-                "Services and experts",
-                "",
+                "International Programs",
+                "Explore opportunities for international students to study at Poznań University of Technology.",
+                "<section>\n" +
+                "        <h2>Exchange Programs</h2>\n" +
+                "        <p>Information on exchange partnerships and study abroad opportunities.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>English-Taught Programs</h2>\n" +
+                "        <p>Discover programs offered in English for international students.</p>\n" +
+                "    </section>",
                 17L,
                 1L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
-                "Staff",
-                "The list of our staff.",
-                "",
+                "Facilities",
+                "Facilities",
+                "    <section>\n" +
+                "        <h2>Libraries</h2>\n" +
+                "        <p>Explore our well-equipped libraries with extensive collections of engineering and technology resources.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Laboratories</h2>\n" +
+                "        <p>Information about specialized labs supporting hands-on learning and research.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Advanced Materials Lab</li>\n" +
+                "            <li>Robotics and Automation Lab</li>\n" +
+                "            <li>Fluid Dynamics Lab</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 17L,
                 1L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
-                "This page contains contact information.",
-                "",
+                "Get in touch with us for inquiries, admissions, and general information about Poznań University of Technology.",
+                "<section>\n" +
+                "        <h2>Admissions Office</h2>\n" +
+                "        <p>Contact details for the admissions office for prospective students.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>General Inquiries</h2>\n" +
+                "        <p>For any other questions or information, feel free to reach out to our main office.</p>\n" +
+                "    </section>",
                 18L,
                 1L,
                 ""
         ));
         pageService.save(new PageDtoFormCreate(
-                "History",
-                "The history of our university.",
-                "",
+                "Student Life",
+                "Discover the vibrant campus life and opportunities for personal growth at Poznań University of Technology.",
+                "    <section>\n" +
+                "        <h2>Clubs and Organizations</h2>\n" +
+                "        <p>Get involved in student-led clubs and organizations covering various interests.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Engineering Society</li>\n" +
+                "            <li>Debating Club</li>\n" +
+                "            <li>Chess Club</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Student Services</h2>\n" +
+                "        <p>Find resources and support services to help you succeed academically and personally.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Academic Advising</li>\n" +
+                "            <li>Counseling Services</li>\n" +
+                "            <li>Career Development</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 18L,
                 1L,
                 ""
@@ -1273,17 +1413,5 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
 
         templateService.save("UniversityTemplate");
         templateService.modifyContentField(1L, "Template used for university main page.");
-
-        templateService.save("UniversityTemplate2");
-        templateService.modifyContentField(2L, "Second template used for university main page.");
-
-        keyWordsService.save("sztuczna inteligencja");
-        keyWordsService.save("si");
-        keyWordsService.save("artificial intelligence");
-        keyWordsService.save("ai");
-        keyWordsService.save("politechnika");
-        keyWordsService.save("uniwersytet");
-        keyWordsService.save("university");
-        keyWordsService.save("machine learning");
     }
 }
