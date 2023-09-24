@@ -1,56 +1,56 @@
-<div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
-  <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
+<div *tuiLet='item$ | async as item' [class.details-skeleton]='item === null'>
+  <div class='tui-form__row tui-form__row_multi-fields'>
+    <label [tuiLabel]="'TITLE' | translate" class='tui-form__multi-field'>
       {{ item?.title ?? '—' }}
     </label>
 
-    <label [tuiLabel]="'VISIBILITY' | translate" class="tui-form__multi-field">
+    <label [tuiLabel]="'VISIBILITY' | translate" class='tui-form__multi-field'>
       {{ (item?.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
     </label>
 
-    <label [tuiLabel]="'UNIVERSITY' | translate" class="tui-form__multi-field">
+    <label [tuiLabel]="'UNIVERSITY' | translate" class='tui-form__multi-field'>
       {{ item?.university?.name ?? '-' }}
     </label>
   </div>
 
-  <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
+  <div class='tui-form__row tui-form__row_multi-fields'>
+    <label [tuiLabel]="'AUTHOR' | translate" class='tui-form__multi-field'>
       {{ item?.creator?.firstName ?? '-' }} {{ item?.creator?.lastName }}
     </label>
 
-    <label [tuiLabel]="'CREATED_AT' | translate" class="tui-form__multi-field">
+    <label [tuiLabel]="'CREATED_AT' | translate" class='tui-form__multi-field'>
       {{ item?.createdOn | localizedDate }}
     </label>
 
-    <label [tuiLabel]="'UPDATED_AT' | translate" class="tui-form__multi-field">
+    <label [tuiLabel]="'UPDATED_AT' | translate" class='tui-form__multi-field'>
       {{ item?.updatedOn | localizedDate }}
     </label>
   </div>
 
-  <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+  <label [tuiLabel]="'DESCRIPTION' | translate" class='tui-form__row'>
     {{ item?.description ?? '-' }}
   </label>
 
-  <div class="tui-form__row">
-    <p class="tui-space_top-0 tui-space_bottom-1 text-02">
+  <div class='tui-form__row'>
+    <p class='tui-space_top-0 tui-space_bottom-1 text-02'>
       {{ 'PAGE_LOCATION' | translate }}
     </p>
 
-    <tui-island size="s" *tuiLet="pagesTree$ | async as items">
-      <div class="tui-island__content">
+    <tui-island size='s' *tuiLet='pagesTree$ | async as items'>
+      <div class='tui-island__content'>
         <tui-tree
-          class="tui-island__paragraph"
-          *ngIf="items"
-          [tuiTreeController]="true"
-          [value]="items"
-          [content]="treeContent"
-          [childrenHandler]="pagesTreeHandler"
+          class='tui-island__paragraph'
+          *ngIf='items'
+          [tuiTreeController]='true'
+          [value]='items'
+          [content]='treeContent'
+          [childrenHandler]='pagesTreeHandler'
         ></tui-tree>
 
         <ng-template #treeContent let-page>
           <label
-            [class._selected]="page.id === item?.id"
-            class="reunice-tree-item-option"
+            [class._selected]='page.id === item?.id'
+            class='reunice-tree-item-option'
           >
             <span>
               {{ page.title }}
@@ -61,55 +61,70 @@
     </tui-island>
   </div>
 
-  <div class="tui-form__row tui-space_bottom-1 text-02">
+  <div class='tui-form__row tui-space_bottom-1 text-02'>
     {{ 'CONTENT' | translate }}
   </div>
   <tui-editor-socket
-    class="tui-island tui-island_size_s"
+    class='tui-island tui-island_size_s'
     [content]="item?.content ?? ''"
   ></tui-editor-socket>
 
-  <ng-container *tuiLet="files$ | async as files">
-    <div class="tui-form__row" *ngIf="files === null || files.length > 0">
-      <div class="tui-space_bottom-1 text-02">
+  <ng-container *tuiLet='files$ | async as files'>
+    <div class='tui-form__row' *ngIf='files === null || files.length > 0'>
+      <div class='tui-space_bottom-1 text-02'>
         {{ 'FILES' | translate }}
       </div>
 
-      <tui-files [max]="3">
-        <ng-container *ngFor="let file of files">
-          <tui-file *tuiItem [file]="file" [showDelete]="false">
-            <div class="text-02 tui-text_body-s">
+      <tui-files [max]='3'>
+        <ng-container *ngFor='let file of files'>
+          <tui-file *tuiItem [file]='file' [showDelete]='false'>
+            <div class='text-02 tui-text_body-s'>
               {{
-                'UPLOADED_AT_BY'
-                  | translate
-                    : {
-                        at: file.lastModified | localizedDate,
-                        by: file.uploadedBy
-                      }
+              'UPLOADED_AT_BY'
+                | translate
+                : {
+                  at: file.lastModified | localizedDate,
+                  by: file.uploadedBy
+                }
               }}
             </div>
           </tui-file>
         </ng-container>
-        <ng-container *ngIf="files === null">
-          <tui-file class="tui-skeleton"></tui-file>
+        <ng-container *ngIf='files === null'>
+          <tui-file class='tui-skeleton'></tui-file>
         </ng-container>
       </tui-files>
     </div>
   </ng-container>
 
+  <label
+    [tuiLabel]="'PAGE_CONTACT_REQUEST_HANDLERS' | translate"
+    class='tui-form__row'
+    *ngIf='(item?.contactRequestHandlers?.length ?? 0) !== 0'
+  >
+    <div class='tag-list tui-space_top-1'>
+      <tui-tag
+        *ngFor='let handler of item?.contactRequestHandlers ?? []; trackById'
+        status='primary'
+        [hoverable]='false'
+        [value]="handler.firstName + ' ' + handler.lastName + ' (' + handler.email + ')'"
+      ></tui-tag>
+    </div>
+  </label>
+
   <div
-    class="tui-form__buttons tui-form__buttons_align_end"
-    *ngIf="item !== null"
+    class='tui-form__buttons tui-form__buttons_align_end'
+    *ngIf='item !== null'
   >
     <button
-      *reuniceUserControlsResource="item"
+      *reuniceUserControlsResource='item'
       tuiButton
-      type="button"
-      appearance="flat-destructive"
-      class="tui-form__button"
+      type='button'
+      appearance='flat-destructive'
+      class='tui-form__button'
       reuniceConfirm
-      [showLoader]="(deleteHandler.loading$ | async) ?? false"
-      [disabled]="!item.hidden || item.children.length > 0"
+      [showLoader]='(deleteHandler.loading$ | async) ?? false'
+      [disabled]='!item.hidden || item.children.length > 0'
       [tuiHint]="
         (!item.hidden
           ? 'CANNOT_DELETE_VISIBLE_PAGE'
@@ -118,7 +133,7 @@
           : ''
         ) | translate
       "
-      (confirm)="deleteHandler.delete(item.id)"
+      (confirm)='deleteHandler.delete(item.id)'
     >
       {{ 'DELETE' | translate }}
     </button>
@@ -126,9 +141,9 @@
     <a
       [routerLink]="['edit']"
       tuiButton
-      type="button"
-      appearance="secondary"
-      class="tui-form__button"
+      type='button'
+      appearance='secondary'
+      class='tui-form__button'
     >
       {{ 'EDIT' | translate }}
     </a>

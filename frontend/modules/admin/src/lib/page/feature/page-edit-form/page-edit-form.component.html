@@ -186,6 +186,33 @@
       </ng-container>
     </div>
 
+    <h3 class="tui-form__header">{{ 'PAGE_CONTACT_REQUEST_HANDLERS' | translate }}</h3>
+
+    <label
+      [tuiLabel]="'CONTACT_REQUEST_HANDLERS' | translate"
+      class="tui-form__row"
+    >
+      <tui-multi-select
+        tuiTextfieldSize="m"
+        formControlName="contactRequestHandlers"
+        [tuiTextfieldLabelOutside]="true"
+        (searchChange)="userSearch.search($event)"
+        [stringify]="(userSearch.stringify$ | async)!"
+      >
+        <tui-data-list-wrapper
+          *tuiDataList
+          tuiMultiSelectGroup
+          [items]="userSearch.itemIds$ | async"
+          [itemContent]="(userSearch.stringify$ | async)!"
+        ></tui-data-list-wrapper>
+      </tui-multi-select>
+
+      <tui-error
+        formControlName="contactRequestHandlers"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
     <div
       class="tui-form__buttons tui-form__buttons_align_end"
       *ngIf="item !== null"

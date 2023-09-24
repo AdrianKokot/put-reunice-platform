@@ -17,7 +17,12 @@ import {
   BaseDetailsImportsModule,
   navigateToResourceList,
 } from '../../../shared';
-import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import {
+  TuiFilesModule,
+  TuiIslandModule,
+  TuiTagModule,
+  TuiTreeModule,
+} from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 
 @Component({
@@ -29,6 +34,7 @@ import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
     TuiEditorSocketModule,
     TuiIslandModule,
     TuiTreeModule,
+    TuiTagModule,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
