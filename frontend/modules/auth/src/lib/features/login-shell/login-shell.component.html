@@ -11,6 +11,12 @@
       [tuiTextfieldLabelOutside]="true"
     >
       {{ 'USERNAME_PLACEHOLDER' | translate }}
+
+      <input
+        tuiTextfield
+        type="text"
+        autocomplete="username"
+      />
     </tui-input>
 
     <tui-error
@@ -27,6 +33,12 @@
       class="mt-1"
     >
       ••••••••
+
+      <input
+        tuiTextfield
+        type="password"
+        autocomplete="current-password"
+      />
     </tui-input-password>
 
     <tui-error
