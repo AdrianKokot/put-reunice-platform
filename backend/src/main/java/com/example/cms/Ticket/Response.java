@@ -1,9 +1,11 @@
-package com.example.cms.contentRequestTicket;
+package com.example.cms.Ticket;
 
-import com.example.cms.contentRequestTicket.ContentRequestTicket;
+import com.example.cms.Ticket.Ticket;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 public class Response {
@@ -12,12 +14,13 @@ public class Response {
     private Long id;
 
     private String author;
-    private Timestamp responseTime;
+    @CreationTimestamp
+    private Instant responseTime;
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_request_ticket_id")
-    private ContentRequestTicket contentRequestTicket;
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
     // Constructors, getters, and setters
 }

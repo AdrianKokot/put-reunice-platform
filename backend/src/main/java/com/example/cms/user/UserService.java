@@ -263,9 +263,9 @@ public class UserService {
         com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
 
 
-        if (user != null && page != null) {
-            user.getCRHandlersPages().add(page);
-            page.getCRHandlers().add(user);
+        if (page != null) {
+            user.getHandlersPages().add(page);
+            page.getHandlers().add(user);
 
             userRepository.save(user);
             pageRepository.save(page);

@@ -1,6 +1,6 @@
 package com.example.cms.user;
 
-import com.example.cms.contentRequestTicket.ContentRequestTicket;
+import com.example.cms.Ticket.Ticket;
 import com.example.cms.page.Page;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
@@ -16,7 +16,6 @@ import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -35,19 +34,19 @@ public class User {
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(
-            name = "CRHandlerPages",
+            name = "handler_page",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "page_id")
     )
-    private Set<Page> CRHandlersPages = new HashSet<>();
+    private Set<Page> handlersPages = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
-            name = "CRHandlerTickets",
+            name = "handler_ticket",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "ticket_id")
     )
-    private Set<ContentRequestTicket> CRHandlersTickets = new HashSet<>();
+    private Set<Ticket> tickets = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
