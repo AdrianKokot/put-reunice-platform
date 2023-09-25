@@ -1,14 +1,21 @@
 package com.example.cms.Ticket;
 
-import com.example.cms.Ticket.Ticket;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
+@Getter
 public class Response {
+    public Response() {};
+    public Response(String author, String content) {
+        this.author = author;
+        this.content = content;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,9 +25,8 @@ public class Response {
     private Instant responseTime;
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Setter
+    @ManyToOne
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
-
-    // Constructors, getters, and setters
 }

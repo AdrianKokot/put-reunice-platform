@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+import com.example.cms.Ticket.Response;
+import com.example.cms.Ticket.Ticket;
+import com.example.cms.Ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -49,6 +52,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final TemplateService templateService;
     private final BackupService backupService;
     private final KeyWordsService keyWordsService;
+    private final TicketService ticketService;
     
     @Autowired
 	private ApplicationConfigurationProvider applicationConfigurationProvider;
@@ -1285,5 +1289,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         keyWordsService.save("uniwersytet");
         keyWordsService.save("university");
         keyWordsService.save("machine learning");
+
+        ticketService.createTicket(new Ticket("requesterEmail", 1L, "title", "description"));
+        ticketService.addResponse(1L, new Response("author", "message content"));
     }
 }

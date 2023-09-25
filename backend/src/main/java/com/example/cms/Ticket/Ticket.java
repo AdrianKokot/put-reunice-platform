@@ -1,10 +1,13 @@
 package com.example.cms.Ticket;
 
 import com.example.cms.user.User;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +24,17 @@ public class Ticket {
         DISCARDED,
         CANCELED
     }
+
+    public Ticket() {}
+
+    public Ticket(String requesterEmail, Long page_id, String title, String description) {
+        this.requesterEmail = requesterEmail;
+        this.page_id = page_id;
+        this.title = title;
+        this.description = description;
+
+        this.responses = new ArrayList<>();
+    }
     @ManyToMany(mappedBy = "tickets", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private Set<User> handlers = new HashSet<>();
     @Id
@@ -30,13 +44,15 @@ public class Ticket {
     @NotEmpty(message = "Requester email must not be empty")
     private String requesterEmail;
     private Long page_id;
-    private Timestamp requestedTime;
+    @CreationTimestamp
+    private Instant requestedTime;
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
     private String title;
     private String description;
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Response> responses = new ArrayList<>();
+    @Getter
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Response> responses;
     private String requestedToken;
     private String contentRequestHandlerToken;
 
@@ -54,8 +70,9 @@ public class Ticket {
                 ", contentRequestHandlerToken='" + contentRequestHandlerToken +
                 '}';
     }
-//    public List<Response> getResponses() {
-//        return responses;
-//    }
 
+    public void addResponse(Response response) {
+        response.setTicket(this);
+        this.responses.add(response);
+    }
 }
