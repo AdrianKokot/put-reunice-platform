@@ -1,4 +1,4 @@
-package com.example.cms.Ticket;
+package com.example.cms.ticket;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

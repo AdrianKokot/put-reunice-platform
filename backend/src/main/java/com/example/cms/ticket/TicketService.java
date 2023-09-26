@@ -1,4 +1,4 @@
-package com.example.cms.Ticket;
+package com.example.cms.ticket;
 
 import com.example.cms.template.exceptions.TemplateNotFound;
 import lombok.RequiredArgsConstructor;

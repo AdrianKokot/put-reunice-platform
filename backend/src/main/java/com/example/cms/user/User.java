@@ -1,6 +1,6 @@
 package com.example.cms.user;
 
-import com.example.cms.Ticket.Ticket;
+import com.example.cms.ticket.Ticket;
 import com.example.cms.page.Page;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;

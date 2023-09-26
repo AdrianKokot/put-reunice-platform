@@ -1,4 +1,4 @@
-package com.example.cms.Ticket;
+package com.example.cms.ticket;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
+@Table(name="responses")
 @Getter
 public class Response {
     public Response() {};

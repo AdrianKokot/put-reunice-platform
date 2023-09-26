@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
-import com.example.cms.Ticket.Response;
-import com.example.cms.Ticket.Ticket;
-import com.example.cms.Ticket.TicketService;
+import com.example.cms.ticket.Response;
+import com.example.cms.ticket.Ticket;
+import com.example.cms.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

@@ -1,4 +1,4 @@
-package com.example.cms.Ticket;
+package com.example.cms.ticket;
 
 import com.example.cms.user.User;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
