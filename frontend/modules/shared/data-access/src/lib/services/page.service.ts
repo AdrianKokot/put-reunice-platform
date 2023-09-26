@@ -32,7 +32,6 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     });
 
     formData.append('pageId', resource.id.toString());
-    console.log({ formData });
 
     return combineLatest([
       this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
