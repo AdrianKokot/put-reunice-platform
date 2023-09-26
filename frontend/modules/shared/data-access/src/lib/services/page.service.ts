@@ -18,25 +18,6 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     return this._http.get<Page[]>(this._resourceUrl + '/main?sort=title');
   }
 
-  override create(resource: PageForm & Partial<Page>): Observable<Page> {
-    return this._http
-      .post<Page>(this._resourceUrl, resource)
-      .pipe(
-        switchMap((page) =>
-          combineLatest([
-            this._http.patch<Page>(
-              `${this._resourceUrl}/${page.id}/content`,
-              resource.content,
-            ),
-            this._http.patch<Page>(
-              `${this._resourceUrl}/${page.id}/hidden`,
-              resource.hidden,
-            ),
-          ]).pipe(switchMap(() => this.get(page.id))),
-        ),
-      );
-  }
-
   override update(
     resource: (Partial<Page> & Pick<Page, 'id'>) &
       Partial<{
@@ -54,14 +35,6 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     console.log({ formData });
 
     return combineLatest([
-      this._http.patch<Page>(
-        `${this._resourceUrl}/${resource.id}/content`,
-        resource.content,
-      ),
-      this._http.patch<Page>(
-        `${this._resourceUrl}/${resource.id}/hidden`,
-        resource.hidden,
-      ),
       this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
       (resource.files ?? []).length > 0
         ? this._http.post<void>('/api/file/upload', formData)
