@@ -12,3 +12,4 @@ export * from './lib/throw-error';
 
 export * from './lib/lang/lang.service';
 export * from './lib/lang/language.constant';
+export * from './lib/lang/translated-title.resolve';
