@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 type ApiFilterOperator<T, TOperator extends string> = {
-  [K in keyof T as `${K & string}_${TOperator}`]?: T[K];
+  [K in keyof T as `${K & string}_${TOperator}`]?: T[K] | string | ApiFilterValue;
 };
+
+type ApiFilterValue = string | number | boolean | null | undefined;
 
 type OnlyKeysOfType<T, TProp> = {
   [K in keyof T as T[K] extends TProp ? K : never]: T[K];

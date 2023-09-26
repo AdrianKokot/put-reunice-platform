@@ -1303,6 +1303,14 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 false
         ));
 
+        pageService.modifyHiddenField(1L, false);
+        pageService.modifyHiddenField(2L, false);
+        pageService.modifyHiddenField(3L, false);
+        pageService.modifyHiddenField(5L, false);
+        pageService.modifyHiddenField(6L, false);
+        pageService.modifyHiddenField(8L, false);
+        pageService.modifyHiddenField(10L, false);
+
         templateService.save("UniversityTemplate");
         templateService.modifyContentField(1L, "Template used for university main page.");
 
