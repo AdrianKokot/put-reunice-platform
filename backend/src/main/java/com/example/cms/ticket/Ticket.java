@@ -16,14 +16,6 @@ import java.util.Set;
 @Entity
 @Table(name = "tickets")
 public class Ticket {
-    public enum TicketStatus {
-        NEW,
-        OPEN,
-        RESOLVED,
-        DISCARDED,
-        CANCELED
-    }
-
     public Ticket() {}
 
     public Ticket(String requesterEmail, Long page_id, String title, String description) {
@@ -33,6 +25,7 @@ public class Ticket {
         this.description = description;
 
         this.responses = new ArrayList<>();
+        this.status = TicketStatus.NEW;
     }
     @ManyToMany(mappedBy = "tickets", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private Set<User> handlers = new HashSet<>();
