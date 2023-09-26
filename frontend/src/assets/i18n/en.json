@@ -313,5 +313,6 @@
   "LAST_LOGIN_DATE": "Last login date",
   "DASHBOARD": "Dashboard",
   "ALL_UNIVERSITIES": "All universities",
-  "DELETE": "Delete"
+  "DELETE": "Delete",
+  "UNIVERSITY_DETAILS": "University details"
 }
