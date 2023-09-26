@@ -28,6 +28,9 @@ import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
 
+import '@angular/common/locales/global/pl';
+import '@angular/common/locales/global/en-GB';
+
 @NgModule({
   declarations: [RootComponent],
   imports: [
