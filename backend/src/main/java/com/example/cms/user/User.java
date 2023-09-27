@@ -32,7 +32,7 @@ public class User {
     )
     private Set<University> enrolledUniversities = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "handler_page",
             joinColumns = @JoinColumn(name = "user_id"),

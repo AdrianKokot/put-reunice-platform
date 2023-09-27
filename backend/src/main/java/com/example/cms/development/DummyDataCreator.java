@@ -8,12 +8,15 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+import com.example.cms.security.authentication.RestAuthenticationProvider;
 import com.example.cms.ticket.Response;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -53,7 +56,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final BackupService backupService;
     private final KeyWordsService keyWordsService;
     private final TicketService ticketService;
-    
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
     @Autowired
 	private ApplicationConfigurationProvider applicationConfigurationProvider;
 
@@ -1306,5 +1311,21 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         ticketService.addResponse(3L, new Response("author5", "another message content to ticket 3 from author5"));
         ticketService.addResponse(4L, new Response("author1", "message content to ticket 4 from author1"));
         ticketService.addResponse(4L, new Response("author7", "message content to ticket 4 from author7"));
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                "admin",
+                "51D7k4F8"));
+
+        userService.assignUserToPage(1L, 1L);
+        userService.assignUserToPage(1L, 2L);
+        userService.assignUserToPage(2L, 4L);
+        userService.assignUserToPage(2L, 2L);
+        userService.assignUserToPage(3L, 1L);
+        userService.assignUserToPage(3L, 1L);
+        userService.assignUserToPage(3L, 3L);
+        userService.assignUserToPage(3L, 2L);
+        userService.assignUserToPage(4L, 3L);
+        userService.assignUserToPage(4L, 4L);
+        userService.assignUserToPage(5L, 5L);
     }
 }

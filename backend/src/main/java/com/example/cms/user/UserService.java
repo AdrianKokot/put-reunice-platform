@@ -257,18 +257,16 @@ public class UserService {
     @Secured("ROLE_ADMIN")
     public void assignUserToPage(Long userId, Long pageId) {
         User user = userRepository.findById(userId).orElse(null);
-        if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
+//        TODO: Jakiś warunek tu jest no clue co to
+//        if (!securityService.hasHigherRoleThan(user.getAccountType()) || !user.getAccountType().equals(Role.ADMIN)) {
+        if (user == null) {
             throw new UserForbidden();
         }
         com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
 
-
         if (page != null) {
             user.getHandlersPages().add(page);
-            page.getHandlers().add(user);
-
             userRepository.save(user);
-            pageRepository.save(page);
         }
     }
 }

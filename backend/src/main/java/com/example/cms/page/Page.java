@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "pages")
 public class Page {
-    @ManyToMany(mappedBy = "handlersPages", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "handlersPages", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private Set<User> handlers = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
