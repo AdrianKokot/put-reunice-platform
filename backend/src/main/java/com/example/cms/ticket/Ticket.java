@@ -16,6 +16,7 @@ import java.util.Set;
 
 
 @Entity
+@Getter
 @Table(name = "tickets")
 public class Ticket {
     public Ticket() {}
@@ -29,7 +30,6 @@ public class Ticket {
         this.status = TicketStatus.NEW;
     }
     @Setter
-    @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "page_id", nullable = false)
     private Page page;
@@ -45,7 +45,6 @@ public class Ticket {
     private TicketStatus status;
     private String title;
     private String description;
-    @Getter
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Response> responses;
     private String requestedToken;
