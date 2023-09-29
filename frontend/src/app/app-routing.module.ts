@@ -26,6 +26,11 @@ const routes: Routes = [
       import('./profile/profile.module').then((m) => m.ProfileModule),
     canMatch: [AuthGuard],
   },
+  {
+    path: 'ticket/:id',
+    loadChildren: () =>
+      import('./ticket/ticket.module').then((m) => m.TicketModule),
+  },
 ];
 
 @NgModule({
