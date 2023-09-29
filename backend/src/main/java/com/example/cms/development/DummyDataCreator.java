@@ -1295,23 +1295,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         keyWordsService.save("university");
         keyWordsService.save("machine learning");
 
-        ticketService.createTicket(new Ticket("requester1@email.com", 1L, "Problem to page 1", "This is description to my ticket. I have a problem with page 1"));
-        ticketService.createTicket(new Ticket("requester2@email.com", 2L, "Problem to page 2", "This is description to my ticket. I have a problem with page 2"));
-        ticketService.createTicket(new Ticket("requester3@email.com", 3L, "Problem to page 3", "This is description to my ticket. I have a problem with page 3"));
-        ticketService.createTicket(new Ticket("requester4@email.com", 4L, "Problem to page 4", "This is description to my ticket. I have a problem with page 4"));
-        ticketService.createTicket(new Ticket("requester5@email.com", 5L, "Problem to page 5", "This is description to my ticket. I have a problem with page 5"));
-
-        ticketService.addResponse(1L, new Response("author1", "message content to ticket 1 from author1"));
-        ticketService.addResponse(1L, new Response("author1", "another message content to ticket 1 from author1"));
-        ticketService.addResponse(1L, new Response("author2", "message content to ticket 1 from author2"));
-        ticketService.addResponse(2L, new Response("author3", "message content to ticket 2 from author3"));
-        ticketService.addResponse(2L, new Response("author4", "message content to ticket 2 from author4"));
-        ticketService.addResponse(3L, new Response("author5", "message content to ticket 3 from author5"));
-        ticketService.addResponse(3L, new Response("author6", "message content to ticket 3 from author6"));
-        ticketService.addResponse(3L, new Response("author5", "another message content to ticket 3 from author5"));
-        ticketService.addResponse(4L, new Response("author1", "message content to ticket 4 from author1"));
-        ticketService.addResponse(4L, new Response("author7", "message content to ticket 4 from author7"));
-
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 "admin",
                 "51D7k4F8"));
@@ -1327,5 +1310,22 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         userService.assignUserToPage(4L, 3L);
         userService.assignUserToPage(4L, 4L);
         userService.assignUserToPage(5L, 5L);
+
+        pageService.createTicket("requester1@email.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
+        pageService.createTicket("requester2@email.com","Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
+        pageService.createTicket("requester3@email.com","Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
+        pageService.createTicket("requester4@email.com","Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
+        pageService.createTicket("requester5@email.com","Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
+
+        ticketService.addResponse(1L, new Response("author1", "message content to ticket 1 from author1"));
+        ticketService.addResponse(1L, new Response("author1", "another message content to ticket 1 from author1"));
+        ticketService.addResponse(1L, new Response("author2", "message content to ticket 1 from author2"));
+        ticketService.addResponse(2L, new Response("author3", "message content to ticket 2 from author3"));
+        ticketService.addResponse(2L, new Response("author4", "message content to ticket 2 from author4"));
+        ticketService.addResponse(3L, new Response("author5", "message content to ticket 3 from author5"));
+        ticketService.addResponse(3L, new Response("author6", "message content to ticket 3 from author6"));
+        ticketService.addResponse(3L, new Response("author5", "another message content to ticket 3 from author5"));
+        ticketService.addResponse(4L, new Response("author1", "message content to ticket 4 from author1"));
+        ticketService.addResponse(4L, new Response("author7", "message content to ticket 4 from author7"));
     }
 }

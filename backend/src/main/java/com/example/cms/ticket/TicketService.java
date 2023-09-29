@@ -8,11 +8,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TicketService {
     private final TicketRepository ticketRepository;
-
-    public Ticket createTicket(Ticket ticket) {
-        return ticketRepository.save(ticket);
-    }
-
     public void addResponse(Long ticketId, Response response) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TemplateNotFound::new);
 

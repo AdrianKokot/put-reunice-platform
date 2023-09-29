@@ -1,7 +1,9 @@
 package com.example.cms.ticket;
 
+import com.example.cms.page.Page;
 import com.example.cms.user.User;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -18,24 +20,25 @@ import java.util.Set;
 public class Ticket {
     public Ticket() {}
 
-    public Ticket(String requesterEmail, Long page_id, String title, String description) {
+    public Ticket(String requesterEmail, String title, String description) {
         this.requesterEmail = requesterEmail;
-        this.page_id = page_id;
         this.title = title;
         this.description = description;
 
         this.responses = new ArrayList<>();
         this.status = TicketStatus.NEW;
     }
-    @ManyToMany(mappedBy = "tickets", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    private Set<User> handlers = new HashSet<>();
+    @Setter
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "page_id", nullable = false)
+    private Page page;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "sha256-generator")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
     @NotEmpty(message = "Requester email must not be empty")
     private String requesterEmail;
-    private Long page_id;
     @CreationTimestamp
     private Instant requestedTime;
     @Enumerated(EnumType.STRING)
@@ -53,7 +56,7 @@ public class Ticket {
         return "User{" +
                 "id=" + id +
                 ", requesterEmail='" + requesterEmail + '\'' +
-                ", pageId='" + page_id + '\'' +
+                ", pageId='" + this.page.getId() + '\'' +
                 ", requestedTime='" + requestedTime + '\'' +
                 ", status='" + status + '\'' +
                 ", title='" + title + '\'' +
