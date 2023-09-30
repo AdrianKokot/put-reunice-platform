@@ -8,9 +8,15 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+import com.example.cms.security.authentication.RestAuthenticationProvider;
+import com.example.cms.ticket.Response;
+import com.example.cms.ticket.Ticket;
+import com.example.cms.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -49,7 +55,10 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final TemplateService templateService;
     private final BackupService backupService;
     private final KeyWordsService keyWordsService;
-    
+    private final TicketService ticketService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
     @Autowired
 	private ApplicationConfigurationProvider applicationConfigurationProvider;
 
@@ -1285,5 +1294,38 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         keyWordsService.save("uniwersytet");
         keyWordsService.save("university");
         keyWordsService.save("machine learning");
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                "admin",
+                "51D7k4F8"));
+
+        userService.assignUserToPage(5L, 1L);
+        userService.assignUserToPage(5L, 2L);
+        userService.assignUserToPage(6L, 4L);
+        userService.assignUserToPage(6L, 2L);
+        userService.assignUserToPage(7L, 1L);
+        userService.assignUserToPage(7L, 1L);
+        userService.assignUserToPage(7L, 3L);
+        userService.assignUserToPage(7L, 2L);
+        userService.assignUserToPage(4L, 3L);
+        userService.assignUserToPage(4L, 4L);
+        userService.assignUserToPage(22L, 5L);
+
+        pageService.createTicket("michal.wazowski9020@gmail.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
+        pageService.createTicket("requester2@email.com","Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
+        pageService.createTicket("requester3@email.com","Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
+        pageService.createTicket("requester4@email.com","Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
+        pageService.createTicket("requester5@email.com","Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
+
+        ticketService.addResponse(1L, new Response("michal", "message content to ticket 1 from author1"));
+        ticketService.addResponse(1L, new Response("author1", "another message content to ticket 1 from author1"));
+        ticketService.addResponse(1L, new Response("author2", "message content to ticket 1 from author2"));
+        ticketService.addResponse(2L, new Response("author3", "message content to ticket 2 from author3"));
+        ticketService.addResponse(2L, new Response("author4", "message content to ticket 2 from author4"));
+        ticketService.addResponse(3L, new Response("author5", "message content to ticket 3 from author5"));
+        ticketService.addResponse(3L, new Response("author6", "message content to ticket 3 from author6"));
+        ticketService.addResponse(3L, new Response("author5", "another message content to ticket 3 from author5"));
+        ticketService.addResponse(4L, new Response("author1", "message content to ticket 4 from author1"));
+        ticketService.addResponse(4L, new Response("author7", "message content to ticket 4 from author7"));
     }
 }

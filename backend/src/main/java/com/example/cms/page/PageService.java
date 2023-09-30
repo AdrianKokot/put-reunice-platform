@@ -10,6 +10,7 @@ import com.example.cms.search.PageFullTextSearchService;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
+import com.example.cms.ticket.Ticket;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
@@ -236,4 +237,15 @@ public class PageService {
         University university = universityRepository.findById(universityId).orElseThrow(PageNotFound::new);
         return PageDtoHierarchy.of(university.getMainPage(), securityService);
     }
+
+    public void createTicket(String requesterEmail, String title, String description, Long pageId) {
+        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        if (securityService.isForbiddenPage(page)) {
+            throw new PageForbidden();
+        }
+
+        page.addTicket(new Ticket(requesterEmail, title, description));
+        pageRepository.save(page);
+    }
+
 }
