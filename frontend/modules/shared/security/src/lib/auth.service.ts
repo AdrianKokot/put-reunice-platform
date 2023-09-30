@@ -23,7 +23,7 @@ export class AuthService {
   private _userSnapshot: User | null = null;
   readonly user$ = this._user$.pipe(
     tap((user) => (this._userSnapshot = user)),
-    shareReplay(),
+    shareReplay(1),
   );
 
   get userSnapshot() {

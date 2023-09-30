@@ -1,5 +1,10 @@
-<button menu tuiIconButton icon="tuiIconMenu" type="button" tuiActiveZone>
-  <div *tuiSidebar="(open$ | async) ?? false">
-    <ng-content></ng-content>
-  </div>
-</button>
+<button
+  tuiIconButton
+  [icon]="'tuiIconMenu'"
+  type="button"
+  (click)="click$.next()"
+></button>
+
+<div *tuiSidebar="(open$ | async) ?? false">
+  <ng-content></ng-content>
+</div>

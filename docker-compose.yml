@@ -34,6 +34,7 @@ services:
     depends_on:
       - postgres
       - mailpit
+      - typesense
 
   frontend:
     build: ./frontend
@@ -54,3 +55,14 @@ services:
       MP_SMTP_AUTH_FILE: /etc/.mailpitpsswd
     volumes:
       - ./.dev/.mailpitpsswd:/etc/.mailpitpsswd
+
+  typesense:
+    image: typesense/typesense:0.25.1
+    restart: on-failure
+    env_file:
+      - ./.env
+    ports:
+      - "8108:8108"
+    volumes:
+      - ./typesense-data:/data
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY}'

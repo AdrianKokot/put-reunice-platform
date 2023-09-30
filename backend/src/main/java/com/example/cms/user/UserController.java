@@ -56,11 +56,6 @@ public class UserController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/search/{text}")
-    List<UserDtoSimple> searchUser(Pageable pageable, @PathVariable String text) {
-        return service.searchUser(pageable, "%".concat(text.toLowerCase().concat("%")));
-    }
-
     @PostMapping
     public ResponseEntity<UserDtoDetailed> createUser(@RequestBody UserDtoFormCreate form) {
         UserDtoDetailed result = service.createUser(form);
