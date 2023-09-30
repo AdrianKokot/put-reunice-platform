@@ -27,7 +27,7 @@ public class TicketController {
     private final TicketService service;
 
     @GetMapping
-    public ResponseEntity<List<TicketDto>> getUsers(
+    public ResponseEntity<List<TicketDto>> getTickets(
             Pageable pageable,
             @RequestParam Map<String, String> vars) {
 
