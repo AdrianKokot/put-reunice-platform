@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.example.cms.security.authentication.RestAuthenticationProvider;
 import com.example.cms.ticket.Response;
-import com.example.cms.ticket.Ticket;
 import com.example.cms.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -1299,17 +1298,11 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "admin",
                 "51D7k4F8"));
 
-        userService.assignUserToPage(5L, 1L);
-        userService.assignUserToPage(5L, 2L);
-        userService.assignUserToPage(6L, 4L);
-        userService.assignUserToPage(6L, 2L);
-        userService.assignUserToPage(7L, 1L);
-        userService.assignUserToPage(7L, 1L);
-        userService.assignUserToPage(7L, 3L);
-        userService.assignUserToPage(7L, 2L);
-        userService.assignUserToPage(4L, 3L);
-        userService.assignUserToPage(4L, 4L);
-        userService.assignUserToPage(22L, 5L);
+        pageService.assignUsersToPage(List.of(5L, 7L), 1L);
+        pageService.assignUsersToPage(List.of(5L, 6L, 7L), 2L);
+        pageService.assignUsersToPage(List.of(5L, 7L, 4L), 3L);
+        pageService.assignUsersToPage(List.of(5L, 6L, 4L), 4L);
+        pageService.assignUsersToPage(List.of(5L, 22L), 5L);
 
         pageService.createTicket("michal.wazowski9020@gmail.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
         pageService.createTicket("requester2@email.com","Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);

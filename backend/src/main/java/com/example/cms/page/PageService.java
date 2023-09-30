@@ -248,4 +248,24 @@ public class PageService {
         pageRepository.save(page);
     }
 
+    private void assignUserToPage(Long userId, Long pageId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new UserNotFound();
+        }
+        if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
+            throw new UserForbidden();
+        }
+        com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
+
+        if (page != null) {
+            user.getHandlersPages().add(page);
+            userRepository.save(user);
+        }
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public void assignUsersToPage(List<Long> userIds, Long pageId) {
+        userIds.forEach(id -> assignUserToPage(id, pageId));
+    }
 }
