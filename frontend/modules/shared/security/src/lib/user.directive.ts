@@ -14,9 +14,8 @@ import {
   ExtendedAccountTypeEnum,
   User,
 } from '@reunice/modules/shared/data-access';
-import { distinctUntilKeyChanged, map, shareReplay, takeUntil } from 'rxjs';
+import { distinctUntilKeyChanged, map, shareReplay, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TuiDestroyService } from '@taiga-ui/cdk';
 
 class UserContext {
   get $implicit(): User | null {
@@ -52,20 +51,20 @@ class UserContext {
 @Directive({
   selector: '[reuniceUser]',
   standalone: true,
-  providers: [TuiDestroyService],
 })
 export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(
+    startWith(null),
     takeUntilDestroyed(),
     map((user) => ({
       type: user?.accountType ?? ExtendedAccountTypeEnum.GUEST,
       user,
     })),
-    shareReplay(),
+    distinctUntilKeyChanged('type'),
+    shareReplay(1),
   );
 
   private readonly _context = new UserContext();
-  private readonly _destroy$ = inject(TuiDestroyService);
 
   @Input({
     alias: 'reuniceUser',
@@ -90,29 +89,24 @@ export class UserDirective implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._userType$
-      .pipe(takeUntil(this._destroy$), distinctUntilKeyChanged('type'))
-      .subscribe(({ type, user }) => {
-        this.viewContainer.clear();
+    this._userType$.subscribe(({ type, user }) => {
+      this.viewContainer.clear();
 
-        if (
-          type === this.requiredAccountType ||
-          this.requiredAccountType === null
-        ) {
-          this.viewContainer.createEmbeddedView(
-            this.templateRef,
-            this._context,
-          );
-        } else if (this.fallbackTemplate !== null) {
-          this.viewContainer.createEmbeddedView(
-            this.fallbackTemplate,
-            this._context,
-          );
-        }
+      if (
+        type === this.requiredAccountType ||
+        this.requiredAccountType === null
+      ) {
+        this.viewContainer.createEmbeddedView(this.templateRef, this._context);
+      } else if (this.fallbackTemplate !== null) {
+        this.viewContainer.createEmbeddedView(
+          this.fallbackTemplate,
+          this._context,
+        );
+      }
 
-        this._context.user = user;
-        this._cdr.markForCheck();
-      });
+      this._context.user = user;
+      this._cdr.markForCheck();
+    });
   }
 
   static ngTemplateContextGuard(

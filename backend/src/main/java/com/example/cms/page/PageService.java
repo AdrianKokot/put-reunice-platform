@@ -6,6 +6,7 @@ import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbidden;
 import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.page.projections.*;
+import com.example.cms.search.PageFullTextSearchService;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -14,10 +15,8 @@ import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.UserSpecification;
 import com.example.cms.user.exceptions.UserForbidden;
 import com.example.cms.user.exceptions.UserNotFound;
-import com.example.cms.user.projections.UserDtoSimple;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +34,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PageService {
+    private final PageFullTextSearchService searchService;
     private final PageRepository pageRepository;
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
@@ -93,24 +93,6 @@ public class PageService {
         return pageRepository.findAll(combinedSpecification, pageable);
     }
 
-    public List<PageDtoSimple> searchPages(Pageable pageable, String text) {
-        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        List<Page> pages;
-        if (loggedUserOptional.isEmpty()) {
-            pages = pageRepository.searchPages(pageable, text);
-        } else {
-            LoggedUser loggedUser = loggedUserOptional.get();
-            pages = pageRepository.searchPages(
-                    pageable, text,
-                    String.valueOf(loggedUser.getAccountType()),
-                    loggedUser.getUniversities(),
-                    loggedUser.getId());
-        }
-        return pages.stream()
-                .map(PageDtoSimple::of)
-                .collect(Collectors.toList());
-    }
-
     public List<PageDtoSimple> getCreatorPages(Pageable pageable, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFound::new);
 
@@ -141,6 +123,17 @@ public class PageService {
                 securityService.isForbiddenPage(page));
     }
 
+    private Page save(Page page) {
+        Page saved = pageRepository.save(page);
+        searchService.upsert(saved);
+        return saved;
+    }
+
+    private void delete(Page page) {
+        pageRepository.delete(page);
+        searchService.delete(page);
+    }
+
     @Secured("ROLE_USER")
     public PageDtoDetailed save(PageDtoFormCreate form) {
         if (form.getParentId() == null) {
@@ -162,7 +155,7 @@ public class PageService {
             throw new PageForbidden();
         }
 
-        return PageDtoDetailed.of(pageRepository.save(newPage));
+        return PageDtoDetailed.of(save(newPage));
     }
 
     @Secured("ROLE_USER")
@@ -173,7 +166,7 @@ public class PageService {
         }
 
         form.updatePage(page);
-        pageRepository.save(page);
+        save(page);
     }
 
     @Secured("ROLE_USER")
@@ -184,7 +177,7 @@ public class PageService {
         }
 
         page.setHidden(hidden);
-        pageRepository.save(page);
+        save(page);
     }
 
     @Secured("ROLE_USER")
@@ -195,7 +188,7 @@ public class PageService {
         }
 
         page.getContent().setPageContent(Optional.ofNullable(content).orElse(""));
-        pageRepository.save(page);
+        save(page);
     }
 
     @Secured("ROLE_MODERATOR")
@@ -212,8 +205,9 @@ public class PageService {
         }
 
         page.setCreator(creator);
-        pageRepository.save(page);
+        save(page);
     }
+
     @Secured("ROLE_USER")
     public void modifyKeyWordsField(Long id, String keyWords) {
         Page page = pageRepository.findById(id).orElseThrow(PageNotFound::new);
@@ -222,7 +216,7 @@ public class PageService {
         }
 
         page.setKeyWords(keyWords);
-        pageRepository.save(page);
+        save(page);
     }
 
     @Secured("ROLE_USER")
@@ -236,7 +230,7 @@ public class PageService {
             throw new PageException(PageExceptionType.DELETING_WITH_CHILD);
         }
 
-        pageRepository.delete(page);
+        delete(page);
     }
 
     public PageDtoHierarchy getHierarchy(long universityId) {

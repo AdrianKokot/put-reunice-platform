@@ -1,11 +1,9 @@
 package com.example.cms.page;
 
 import com.example.cms.page.projections.*;
-import com.example.cms.user.User;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,7 @@ public class PageController {
 
     @GetMapping
     ResponseEntity<List<PageDtoSimple>> readAllPages(Pageable pageable,
-                                     @RequestParam Map<String, String> vars) {
+                                                     @RequestParam Map<String, String> vars) {
 
         org.springframework.data.domain.Page<Page> responsePage = service.getAllVisible(
                 pageable,
@@ -42,7 +40,7 @@ public class PageController {
         return new ResponseEntity<>(
                 responsePage.stream().map(PageDtoSimple::of).collect(Collectors.toList()),
                 httpHeaders,
-                HttpStatus.OK) ;
+                HttpStatus.OK);
     }
 
     @GetMapping("/creator/{userId}")
@@ -63,11 +61,6 @@ public class PageController {
     @GetMapping("/hierarchy/{universityId}")
     PageDtoHierarchy readUniversityHierarchy(@PathVariable long universityId) {
         return service.getHierarchy(universityId);
-    }
-
-    @GetMapping("/search/{text}")
-    List<PageDtoSimple> searchPages(Pageable pageable, @PathVariable String text) {
-        return service.searchPages(pageable, "%".concat(text.toLowerCase().concat("%")));
     }
 
     @PostMapping

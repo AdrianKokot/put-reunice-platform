@@ -237,12 +237,12 @@
     "EDIT": "Edytuj",
     "EDIT_MANY": "Edytuj słowa klucze",
     "ADD": "Dodaj",
-    "DELETE": "Usuń",
     "AVAILABLE": "Dostępne słowa klucze",
     "EDIT_MODE": "Tryb edycji",
     "CLOSE": "Zamknij",
     "VIEW_MODE": "Tryb widoku"
   },
+  "DELETE": "Usuń",
   "NO_FILES": "Nie dodano jeszcze żadnego pliku.",
   "DELETE_FILE_CONFIRMATION": "Usuwanie pliku powiodło sie.",
   "DELETE_FILE_DESCRIPTION": "Czy na pewno chcesz usunąć ten plik? Ta operacja jest nieodwracalna.",

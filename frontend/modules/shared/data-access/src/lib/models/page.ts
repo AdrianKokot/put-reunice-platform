@@ -15,6 +15,7 @@ export interface Page {
   updatedOn: string;
   keyWords: string;
 }
+
 export interface PageForm {
   title: string;
   description: string;
@@ -26,4 +27,13 @@ export interface PageForm {
 export interface PageUpdateForm {
   title: string;
   description: string;
+}
+
+export interface PageSearchHitDto {
+  id: number;
+  pageId: number;
+  universityId: number;
+  title: string;
+  universityName: string;
+  highlight: Record<'title' | 'description', string>;
 }
