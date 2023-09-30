@@ -257,9 +257,10 @@ public class UserService {
     @Secured("ROLE_ADMIN")
     public void assignUserToPage(Long userId, Long pageId) {
         User user = userRepository.findById(userId).orElse(null);
-//        TODO: Jakiś warunek tu jest no clue co to
-//        if (!securityService.hasHigherRoleThan(user.getAccountType()) || !user.getAccountType().equals(Role.ADMIN)) {
         if (user == null) {
+            throw new UserNotFound();
+        }
+        if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
             throw new UserForbidden();
         }
         com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);

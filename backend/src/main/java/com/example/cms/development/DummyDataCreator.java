@@ -1299,14 +1299,14 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "admin",
                 "51D7k4F8"));
 
-        userService.assignUserToPage(1L, 1L);
-        userService.assignUserToPage(1L, 2L);
-        userService.assignUserToPage(2L, 4L);
-        userService.assignUserToPage(2L, 2L);
-        userService.assignUserToPage(3L, 1L);
-        userService.assignUserToPage(3L, 1L);
-        userService.assignUserToPage(3L, 3L);
-        userService.assignUserToPage(3L, 2L);
+        userService.assignUserToPage(5L, 1L);
+        userService.assignUserToPage(5L, 2L);
+        userService.assignUserToPage(6L, 4L);
+        userService.assignUserToPage(6L, 2L);
+        userService.assignUserToPage(7L, 1L);
+        userService.assignUserToPage(7L, 1L);
+        userService.assignUserToPage(7L, 3L);
+        userService.assignUserToPage(7L, 2L);
         userService.assignUserToPage(4L, 3L);
         userService.assignUserToPage(4L, 4L);
         userService.assignUserToPage(22L, 5L);
