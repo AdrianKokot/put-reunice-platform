@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AbstractApiService } from './abstract-api.service';
-import { Ticket } from '../models/ticket';
+import { Ticket, TicketMessage } from '../models/ticket';
 import { User } from '../models/user';
-import { Page } from '../models/page';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 
 const mockUser = {
   id: 1,
@@ -21,39 +20,34 @@ const mockUser = {
   phoneNumber: '1234567890',
 } satisfies User;
 
-const mockPage = {
-  id: 4,
-  title: 'Page title - this could be breadcrumbs?',
-  content: 'Page content',
-  hidden: false,
-  children: [],
-  createdOn: '2021-08-02T12:00:00.000Z',
-  creator: mockUser,
-  description: 'Page description',
-  keyWords: 'key words',
-  parent: null,
-  updatedOn: '2021-08-02T12:00:00.000Z',
-} satisfies Omit<Page, 'university'>;
-
-const mockTicket = {
+const mockTicket: Ticket = {
   id: '24439',
   status: 'IN-PROGRESS',
-  page: mockPage,
+  page: {
+    title: 'Page title',
+  },
   messages: [
     {
       author: mockUser,
       content: 'Ticket message',
-      isRead: false,
-      createdAtDate: '2021-08-02 12:00:00',
+      createdAtDate: '2021-08-02T12:00:00.000Z',
+      seenBy: [mockUser],
     },
     {
       author: mockUser,
       content: 'Ticket message',
-      isRead: false,
-      createdAtDate: '2021-08-02 12:00:00',
+      createdAtDate: '2021-08-02T12:00:00.000Z',
+      seenBy: [mockUser],
     },
   ],
-} satisfies Ticket;
+};
+
+interface Reply {
+  id: Ticket['id'];
+  content: TicketMessage['content'];
+}
+
+const ticketSubject = new BehaviorSubject<Ticket>(mockTicket);
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +59,53 @@ export class TicketService extends AbstractApiService<Ticket, Ticket, unknown> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override get(id: Ticket['id']) {
-    return of(mockTicket);
+    return ticketSubject.asObservable();
+  }
+
+  send(reply: Reply) {
+    const ticket = ticketSubject.getValue();
+    ticketSubject.next({
+      ...ticket,
+      messages: [
+        ...ticket.messages,
+        {
+          author: mockUser,
+          content: reply.content,
+          createdAtDate: '2021-08-02 12:00:00',
+          seenBy: [],
+        },
+      ],
+    });
+    return of(ticket);
+  }
+
+  sendAndResolve(reply: Reply) {
+    const ticket = ticketSubject.getValue();
+    ticketSubject.next({
+      ...ticket,
+      status: 'RESOLVED',
+      resolvedBy: mockUser,
+      messages: [
+        ...ticket.messages,
+        {
+          author: mockUser,
+          content: reply.content,
+          createdAtDate: '2021-08-02 12:00:00',
+          seenBy: [],
+        },
+      ],
+    });
+    return of(ticket);
+  }
+
+  markAsIrrelevant(id: Ticket['id']) {
+    console.log(id);
+    const ticket = ticketSubject.getValue();
+    ticketSubject.next({
+      ...ticket,
+      status: 'IRRELEVANT',
+      markedIrrelevantBy: mockUser,
+    });
+    return of(ticket);
   }
 }

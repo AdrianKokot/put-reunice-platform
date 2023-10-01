@@ -2,20 +2,31 @@ import { User } from './user';
 import { Page } from './page';
 
 export type TicketStatus =
-  | 'IN-PROGRESS'
-  | 'RESOLVED'
-  | 'IRRELEVANT'
-  | 'DELETED';
+  | {
+      status: 'IN-PROGRESS';
+    }
+  | {
+      status: 'RESOLVED';
+      resolvedBy: User;
+    }
+  | {
+      status: 'IRRELEVANT';
+      markedIrrelevantBy: User;
+    }
+  | {
+      status: 'DELETED';
+      deletedBy: User;
+    };
 
 export interface TicketMessage {
   author: User;
   content: string;
-  isRead: boolean;
   createdAtDate: string;
+  seenBy: User[];
 }
-export interface Ticket {
+
+export type Ticket = {
   id: string;
-  status: TicketStatus;
-  page: Omit<Page, 'university'>;
+  page: Pick<Page, 'title'>;
   messages: TicketMessage[];
-}
+} & TicketStatus;

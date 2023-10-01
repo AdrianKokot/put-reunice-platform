@@ -1,11 +1,30 @@
 <ng-container *tuiLet="ticket$ | async as ticket">
   <h3 class="tui-text_h3 tui-space_top-4 tui-space_bottom-2">
     Ticket #{{ ticket?.id }}
+    <tui-badge
+      *ngIf="ticket?.status === 'IN-PROGRESS'"
+      status="info"
+      value="In progress"
+      class="tui-space_right-2 tui-space_bottom-2"
+    ></tui-badge>
+    <tui-badge
+      *ngIf="ticket?.status === 'RESOLVED'"
+      status="success"
+      value="Resolved"
+      class="tui-space_right-2 tui-space_bottom-2"
+    ></tui-badge>
+    <tui-badge
+      *ngIf="ticket?.status === 'IRRELEVANT'"
+      status="error"
+      value="Marked as irrelevant"
+      class="tui-space_right-2 tui-space_bottom-2"
+    ></tui-badge>
   </h3>
 
   <p class="text-02">{{ ticket?.page?.title }}</p>
 
   <hr />
+
   <ng-container *ngFor="let message of ticket?.messages">
     <div class="d-flex gap-4 tui-space_top-4">
       <tui-avatar
@@ -13,19 +32,31 @@
         class="tui-space_top-1"
       ></tui-avatar>
       <tui-island class="w-full">
-        <div class="tui-text_body-s">{{ message?.createdAtDate }}</div>
+        <div class="tui-text_body-s message-info">
+          {{ message?.createdAtDate | localizedDate }}
+          <span *ngIf="message.seenBy.length > 0">- Seen</span>
+        </div>
         {{ message?.content }}
       </tui-island>
     </div>
   </ng-container>
 
-  <form [formGroup]="testForm" class="tui-space_top-4">
-    <tui-textarea formControlName="testValue2" [expandable]="true">
-      Write a message
+  <form
+    [formGroup]="form"
+    class="tui-space_top-4"
+    (ngSubmit)="sendAndResolveHandler.submit()"
+  >
+    <tui-textarea formControlName="content" [expandable]="true">
+      Leave a reply
     </tui-textarea>
 
     <div class="tui-form__buttons tui-form__buttons_align_end gap-4">
-      <button tuiButton type="button" appearance="secondary-destructive">
+      <button
+        tuiButton
+        type="button"
+        appearance="secondary-destructive"
+        (click)="markAsIrrelevantHandler.submit()"
+      >
         Mark as irrelevant
       </button>
       <div class="group" tuiGroup>
@@ -34,10 +65,14 @@
           type="button"
           appearance="secondary"
           class="tui-group__auto-width-item"
+          [disabled]="!form.valid"
+          (click)="sendHandler.submit()"
         >
           Send
         </button>
-        <button tuiButton type="button">Send & resolve</button>
+        <button tuiButton type="submit" [disabled]="!form.valid">
+          Send & resolve
+        </button>
       </div>
     </div>
   </form>
