@@ -21,7 +21,12 @@ import java.util.Set;
 @Entity
 @Table(name = "pages")
 public class Page {
-    @ManyToMany(mappedBy = "handlersPages", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "page_handlers",
+            joinColumns = @JoinColumn(name = "page_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<User> handlers = new HashSet<>();
     @OneToMany(mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Ticket> tickets = new HashSet<>();

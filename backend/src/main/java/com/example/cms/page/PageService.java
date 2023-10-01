@@ -26,9 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -256,16 +254,28 @@ public class PageService {
         if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
             throw new UserForbidden();
         }
-        com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
-
-        if (page != null) {
-            user.getHandlersPages().add(page);
-            userRepository.save(user);
-        }
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public void assignUsersToPage(List<Long> userIds, Long pageId) {
-        userIds.forEach(id -> assignUserToPage(id, pageId));
+        com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
+
+        if (page == null) {
+            throw new PageNotFound();
+        }
+
+        Set<User> usersToAssign = new HashSet<>();
+
+        userIds.forEach(id -> {
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                throw new UserNotFound(id);
+            }
+
+            usersToAssign.add(user);
+        });
+
+        page.setHandlers(usersToAssign);
+        pageRepository.save(page);
     }
 }
