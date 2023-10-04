@@ -1,5 +1,7 @@
 package com.example.cms.user;
 
+import com.example.cms.ticket.Ticket;
+import com.example.cms.page.Page;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
 import lombok.Getter;
@@ -14,7 +16,6 @@ import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -30,6 +31,15 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "university_id")
     )
     private Set<University> enrolledUniversities = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "handler_page",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "page_id")
+    )
+    private Set<Page> handlersPages = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -75,5 +85,9 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public boolean handlesPage(Page page) {
+        return this.handlersPages.contains(page);
     }
 }

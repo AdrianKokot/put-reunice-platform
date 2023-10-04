@@ -10,7 +10,11 @@ import {
 import { TuiSelectModule } from '@taiga-ui/kit';
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import { TuiLanguageSwitcher } from '@taiga-ui/i18n';
-import { LOCALE_FLAGS, localeToTuiLanguage } from './language.constant';
+import {
+  LOCALE_FLAGS,
+  localeToTuiLanguage,
+} from '@reunice/modules/shared/util';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'reunice-language-switcher',
@@ -36,12 +40,20 @@ export class LanguageSwitcherComponent {
     @Inject(LOCAL_STORAGE) localStorage: Storage,
     @Inject(TuiLanguageSwitcher) switcher: TuiLanguageSwitcher,
     readonly translateService: TranslateService,
+    router: Router,
   ) {
     this.translateService.onDefaultLangChange.subscribe(
       ({ lang }: LangChangeEvent) => {
         document.documentElement.lang = lang;
         localStorage.setItem('locale', lang);
         switcher.setLanguage(localeToTuiLanguage(lang));
+
+        const url = router.url;
+
+        router
+          .navigate(['/'])
+          .then(() => router.navigate([url]))
+          .then();
       },
     );
   }

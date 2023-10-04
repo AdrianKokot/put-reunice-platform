@@ -9,3 +9,7 @@ export * from './lib/rxjs/map-to-api-resource';
 export * from './lib/ng-for/ng-for-track-by-id.directive';
 
 export * from './lib/throw-error';
+
+export * from './lib/lang/lang.service';
+export * from './lib/lang/language.constant';
+export * from './lib/lang/translated-title.resolve';

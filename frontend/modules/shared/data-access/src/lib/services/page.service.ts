@@ -5,6 +5,7 @@ import { Page, PageForm } from '../models/page';
 import { combineLatest, Observable, of, switchMap } from 'rxjs';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { FileResource } from '../models/file';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,9 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     return this._http.get<Page[]>(this._resourceUrl + '/main?sort=title');
   }
 
-  override create(resource: PageForm & Partial<Page>): Observable<Page> {
+  override create(
+    resource: Partial<Page> & Partial<PageForm>,
+  ): Observable<Page> {
     return this._http
       .post<Page>(this._resourceUrl, resource)
       .pipe(
@@ -38,10 +41,12 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
   }
 
   override update(
-    resource: (Partial<Page> & Pick<Page, 'id'>) &
+    resource: (Partial<Omit<Page, 'contactRequestHandlers'>> &
+      Pick<Page, 'id'>) &
       Partial<{
         files: TuiFileLike[];
         filesToRemove: Array<FileResource['id']>;
+        contactRequestHandlers: Array<User['id']>;
       }>,
   ): Observable<Page> {
     const formData = new FormData();

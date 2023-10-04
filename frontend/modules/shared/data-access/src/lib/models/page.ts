@@ -14,6 +14,7 @@ export interface Page {
   createdOn: string;
   updatedOn: string;
   keyWords: string;
+  contactRequestHandlers: User[];
 }
 
 export interface PageForm {
@@ -22,11 +23,7 @@ export interface PageForm {
   content?: string;
   creatorId: number;
   parentId: number;
-}
-
-export interface PageUpdateForm {
-  title: string;
-  description: string;
+  contactRequestHandlers: Array<User['id']>;
 }
 
 export interface PageSearchHitDto {

@@ -11,13 +11,18 @@ import {
   resourceIdFromRoute,
   throwError,
 } from '@reunice/modules/shared/util';
-import { filter, shareReplay, startWith, switchMap } from 'rxjs';
+import { filter, shareReplay, startWith, switchMap, tap } from 'rxjs';
 import { AuthService } from '@reunice/modules/shared/security';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
 } from '../../../shared';
-import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import {
+  TuiFilesModule,
+  TuiIslandModule,
+  TuiTagModule,
+  TuiTreeModule,
+} from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 
 @Component({
@@ -29,6 +34,7 @@ import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
     TuiEditorSocketModule,
     TuiIslandModule,
     TuiTreeModule,
+    TuiTagModule,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +47,7 @@ export class PageDetailsComponent {
 
   readonly item$ = this._id$.pipe(
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
+    tap(console.log),
     shareReplay(),
   );
   readonly user: User =

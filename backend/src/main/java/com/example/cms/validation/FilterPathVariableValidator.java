@@ -7,13 +7,15 @@ import java.util.stream.Stream;
 
 import com.example.cms.file.FileResource;
 import com.example.cms.template.Template;
+import com.example.cms.ticket.Ticket;
 import com.example.cms.user.User;
 
 public class FilterPathVariableValidator {
     private static final Map<Class, Set<String>> forbiddenFields = Map.of(
             User.class, Set.of("password"),
             Template.class, Set.of("content"),
-            FileResource.class, Set.of("page")
+            FileResource.class, Set.of("page"),
+            Ticket.class, Set.of("page")
     );
 
     private static final Set<String> extraFields = Set.of("search");

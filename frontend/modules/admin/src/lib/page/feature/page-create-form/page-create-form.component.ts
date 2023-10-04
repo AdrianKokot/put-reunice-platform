@@ -78,12 +78,12 @@ export class PageCreateFormComponent {
   readonly userSearch = new ResourceSearchWrapper(
     inject(UserService),
     'search',
-    'name',
+    (item) => `${item.firstName} ${item.lastName} (${item.email})`,
   );
 
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
-    'name_ct',
+    'search',
     'name',
   );
 

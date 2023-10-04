@@ -1,5 +1,6 @@
 package com.example.cms.page;
 
+import com.example.cms.ticket.Ticket;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import lombok.Getter;
@@ -20,6 +21,10 @@ import java.util.Set;
 @Entity
 @Table(name = "pages")
 public class Page {
+    @ManyToMany(mappedBy = "handlersPages", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    private Set<User> handlers = new HashSet<>();
+    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Ticket> tickets = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,6 +51,11 @@ public class Page {
     private Timestamp createdOn;
     private Timestamp updatedOn;
     private String keyWords;
+
+    public void addTicket(Ticket ticket) {
+        ticket.setPage(this);
+        this.tickets.add(ticket);
+    }
 
     @PrePersist
     private void prePersist() {

@@ -16,9 +16,9 @@ export const localeToTuiLanguage = (locale: ReuniceLocale): TuiLanguageName =>
   localeToTuiLanguageMap.get(locale) ?? 'english';
 
 const languageToLocaleMap = new Map<ReuniceLocale, string>([
-  ['pl', 'pl'],
+  ['pl', 'pl-PL'],
   ['en', 'en-GB'],
 ]);
 
 export const langToLocale = (lang: TuiLanguageName): string =>
-  languageToLocaleMap.get(lang) ?? 'en-UK';
+  languageToLocaleMap.get(lang) ?? 'en-GB';
