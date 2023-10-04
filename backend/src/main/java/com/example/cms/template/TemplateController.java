@@ -1,6 +1,9 @@
 package com.example.cms.template;
 
+import com.example.cms.page.projections.PageDtoFormUpdate;
 import com.example.cms.template.projections.TemplateDtoDetailed;
+import com.example.cms.template.projections.TemplateDtoFormCreate;
+import com.example.cms.template.projections.TemplateDtoFormUpdate;
 import com.example.cms.template.projections.TemplateDtoSimple;
 import com.example.cms.user.User;
 import com.example.cms.validation.FilterPathVariableValidator;
@@ -30,7 +33,7 @@ public class TemplateController {
         return service.get(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     ResponseEntity<List<TemplateDtoDetailed>> readAllTemplates(Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<Template> responsePage = service.getAll(
@@ -46,15 +49,16 @@ public class TemplateController {
                 HttpStatus.OK);
     }
 
-    @GetMapping
-    List<TemplateDtoSimple> readAllTemplatesByUniversity(Pageable pageable, @RequestParam long universityID) {
-        return service.getAllByUniversity(pageable, universityID);
+    @PostMapping
+    ResponseEntity<TemplateDtoDetailed> createTemplate(@RequestBody TemplateDtoFormCreate form) {
+        TemplateDtoDetailed result = service.save(form);
+        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 
-    @PostMapping
-    ResponseEntity<TemplateDtoDetailed> createTemplate(@RequestBody String name) {
-        TemplateDtoDetailed result = service.save(name);
-        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+    @PutMapping("/{id}")
+    ResponseEntity<Void> updateTemplate(@PathVariable long id, @RequestBody TemplateDtoFormUpdate form) {
+        service.update(id, form);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{templateID}/universities/{universityID}")

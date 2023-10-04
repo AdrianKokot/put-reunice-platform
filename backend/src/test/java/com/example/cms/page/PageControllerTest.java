@@ -54,7 +54,7 @@ class PageControllerTest {
     void succeed() throws Exception {
         ctx.setAuthentication(CustomAuthenticationToken.create(Role.ADMIN, Set.of()));
 
-        var result = mvc.perform(get("/api/templates/all").contentType(MediaType.APPLICATION_JSON))
+        var result = mvc.perform(get("/api/templates").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -66,13 +66,13 @@ class PageControllerTest {
     void forbidden() throws Exception {
         ctx.setAuthentication(CustomAuthenticationToken.create(Role.USER, Set.of()));
 
-        mvc.perform(get("/api/templates/all").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/api/templates").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void unauthorized() throws Exception {
-        mvc.perform(get("/api/templates/all").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get("/api/templates").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 }

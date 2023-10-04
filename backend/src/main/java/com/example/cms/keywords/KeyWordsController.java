@@ -21,7 +21,7 @@ public class KeyWordsController {
         return service.get(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     List<KeyWordsDtoDetailed> readAllKeyWords() {
         return service.getAll();
     }
