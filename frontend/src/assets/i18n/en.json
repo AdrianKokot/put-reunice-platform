@@ -310,5 +310,9 @@
   "FILES": "Files",
   "PAGE_FILES": "Page files",
   "UPLOADED_AT_BY": "Uploaded at {{at}} by {{by}}",
-  "LAST_LOGIN_DATE": "Last login date"
+  "LAST_LOGIN_DATE": "Last login date",
+  "DASHBOARD": "Dashboard",
+  "ALL_UNIVERSITIES": "All universities",
+  "DELETE": "Delete",
+  "UNIVERSITY_DETAILS": "University details"
 }

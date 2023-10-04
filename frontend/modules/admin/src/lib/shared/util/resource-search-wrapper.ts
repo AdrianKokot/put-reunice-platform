@@ -5,6 +5,7 @@ import {
   filter,
   map,
   Observable,
+  scan,
   shareReplay,
   startWith,
   switchMap,
@@ -53,6 +54,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     TuiHandler<TuiContextWithImplicit<T['id']> | T['id'], string>
   > = this.items$.pipe(
     filter((items): items is T[] => items !== null),
+    scan((acc, value) => acc.concat(value), [] as T[]),
     map(
       (items) =>
         new Map(

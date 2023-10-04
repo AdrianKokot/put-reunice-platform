@@ -1,5 +1,6 @@
 package com.example.cms.security;
 
+import com.example.cms.page.Page;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class LoggedUser implements UserDetails {
@@ -19,17 +21,23 @@ public class LoggedUser implements UserDetails {
     private final Role accountType;
     @Getter
     private final List<Long> universities;
+    @Getter
+    private final Set<Long> handlesPages;
     private final String username;
     private final String password;
+    @Getter
+    private final String email;
     private final boolean enabled;
 
     public LoggedUser(User user) {
         id = user.getId();
         username = user.getUsername();
         password = user.getPassword();
+        email = user.getEmail();
         accountType = user.getAccountType();
         enabled = user.isEnabled();
         universities = user.getEnrolledUniversities().stream().map(University::getId).collect(Collectors.toList());
+        handlesPages = user.getHandlersPages().stream().map(Page::getId).collect(Collectors.toSet());
     }
 
     @Override
