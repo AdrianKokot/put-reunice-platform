@@ -5,6 +5,7 @@ import { UniversityShellComponent } from './feature/university-shell/university-
 import { PageDetailsComponent } from './feature/page-details/page-details.component';
 import { UniversityService } from '@reunice/modules/shared/data-access';
 import { map } from 'rxjs';
+import { translatedTitle } from '@reunice/modules/shared/util';
 
 export const RedirectToUniversityMainPage: CanActivateFn = (route) => {
   const id = route.paramMap.get('id');
@@ -29,12 +30,12 @@ const routes: Routes = [
   {
     path: '',
     component: UniversityListComponent,
-    title: 'Uniwersytety',
+    title: translatedTitle('UNIVERSITIES'),
   },
   {
     path: ':id',
     component: UniversityShellComponent,
-    title: 'Szczegóły uniwersytetu',
+    title: translatedTitle('UNIVERSITY_DETAILS'),
     children: [
       {
         path: 'page/:pageId',

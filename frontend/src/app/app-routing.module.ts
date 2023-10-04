@@ -1,8 +1,24 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Injectable, NgModule } from '@angular/core';
+import {
+  DefaultTitleStrategy,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes,
+  TitleStrategy,
+} from '@angular/router';
 import { AuthGuard } from '@reunice/modules/shared/security';
 import { AuthModule } from '@reunice/modules/auth';
 import { UniversityModule } from './university/university.module';
+
+@Injectable({ providedIn: 'root' })
+class ReuniceTitleStrategy extends DefaultTitleStrategy {
+  override updateTitle(snapshot: RouterStateSnapshot) {
+    const title = this.buildTitle(snapshot);
+    if (title !== undefined) {
+      this.title.setTitle(`Reunice | ${title}`);
+    }
+  }
+}
 
 const routes: Routes = [
   {
@@ -33,6 +49,12 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       bindToComponentInputs: true,
     }),
+  ],
+  providers: [
+    {
+      provide: TitleStrategy,
+      useClass: ReuniceTitleStrategy,
+    },
   ],
   exports: [RouterModule],
 })
