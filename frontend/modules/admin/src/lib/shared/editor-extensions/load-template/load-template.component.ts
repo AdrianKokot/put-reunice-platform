@@ -11,7 +11,7 @@ import {
   TemplateService,
   University,
 } from '@reunice/modules/shared/data-access';
-import { startWith, Subject, switchMap } from 'rxjs';
+import { map, startWith, Subject, switchMap } from 'rxjs';
 import {
   TuiButtonModule,
   TuiDataListModule,
@@ -53,9 +53,10 @@ export class LoadTemplateComponent {
 
   readonly templates$ = this._universityId$.pipe(
     switchMap((universityId) =>
-      this._service
-        .getTemplatesForUniversity(universityId)
-        .pipe(startWith(null)),
+      this._service.getAll({ universities_eq: universityId }).pipe(
+        map((response) => response.items),
+        startWith(null),
+      ),
     ),
   );
 

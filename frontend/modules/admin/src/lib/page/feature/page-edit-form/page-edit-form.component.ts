@@ -4,6 +4,7 @@ import {
   FileService,
   PageService,
   User,
+  UserService,
 } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -16,10 +17,17 @@ import {
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
+  ResourceSearchWrapper,
 } from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
-import { TuiFileLike, TuiInputFilesModule } from '@taiga-ui/kit';
+import {
+  TuiCheckboxLabeledModule,
+  TuiDataListWrapperModule,
+  TuiFileLike,
+  TuiInputFilesModule,
+  TuiMultiSelectModule,
+} from '@taiga-ui/kit';
 import { shareReplay, startWith, switchMap } from 'rxjs';
 import { AuthService } from '@reunice/modules/shared/security';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
@@ -34,6 +42,9 @@ import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
     LoadTemplateComponent,
     TuiInputFilesModule,
     LocalizedPipeModule,
+    TuiCheckboxLabeledModule,
+    TuiMultiSelectModule,
+    TuiDataListWrapperModule,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +65,7 @@ export class PageEditFormComponent {
     content: [''],
     files: [[] as TuiFileLike[]],
     filesToRemove: [[] as Array<FileResource['id']>],
+    contactRequestHandlers: [[] as Array<User['id']>],
   });
 
   private readonly _id$ = resourceIdFromRoute();
@@ -64,6 +76,8 @@ export class PageEditFormComponent {
         ...item,
         universityId: item.university.id,
         author: item.creator.firstName + ' ' + item.creator.lastName,
+        contactRequestHandlers:
+          item.contactRequestHandlers?.map((x) => x.id) ?? [],
       });
     }),
   );
@@ -80,6 +94,12 @@ export class PageEditFormComponent {
   });
 
   rejectedFiles: readonly TuiFileLike[] = [];
+
+  readonly userSearch = new ResourceSearchWrapper(
+    inject(UserService),
+    'search',
+    (item) => `${item.firstName} ${item.lastName} (${item.email})`,
+  );
 
   onReject(files: TuiFileLike | readonly TuiFileLike[]): void {
     this.rejectedFiles = [...this.rejectedFiles, ...(files as TuiFileLike[])];

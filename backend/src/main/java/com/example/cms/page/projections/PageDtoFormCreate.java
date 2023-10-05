@@ -13,17 +13,18 @@ public class PageDtoFormCreate {
     Long creatorId;
     Long parentId;
     String keyWords;
+    Boolean hidden;
 
     public Page toPage(Page parent, User creator) {
         Page page = new Page();
         page.setTitle(title);
         page.setDescription(description);
         page.setContent(Content.of(content));
-        page.setHidden(true);
         page.setParent(parent);
         page.setUniversity(parent.getUniversity());
         page.setCreator(creator);
         page.setKeyWords(keyWords);
+        page.setHidden(hidden);
         return page;
     }
 }

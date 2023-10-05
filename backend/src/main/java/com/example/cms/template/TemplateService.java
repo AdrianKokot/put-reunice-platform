@@ -1,12 +1,16 @@
 package com.example.cms.template;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.example.cms.SearchCriteria;
-import com.example.cms.user.User;
-import com.example.cms.user.UserSpecification;
+import com.example.cms.security.SecurityService;
+import com.example.cms.template.exceptions.TemplateNotFound;
+import com.example.cms.template.projections.TemplateDtoDetailed;
+import com.example.cms.template.projections.TemplateDtoFormCreate;
+import com.example.cms.template.projections.TemplateDtoFormUpdate;
+import com.example.cms.template.projections.TemplateDtoSimple;
+import com.example.cms.university.University;
+import com.example.cms.university.UniversityRepository;
+import com.example.cms.university.exceptions.UniversityForbidden;
+import com.example.cms.university.exceptions.UniversityNotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,14 +18,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.cms.security.SecurityService;
-import com.example.cms.template.exceptions.TemplateNotFound;
-import com.example.cms.template.projections.TemplateDtoDetailed;
-import com.example.cms.template.projections.TemplateDtoSimple;
-import com.example.cms.university.University;
-import com.example.cms.university.UniversityRepository;
-import com.example.cms.university.exceptions.UniversityForbidden;
-import com.example.cms.university.exceptions.UniversityNotFound;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TemplateService {
@@ -92,6 +92,14 @@ public class TemplateService {
     }
 
     @Secured("ROLE_MODERATOR")
+    public TemplateDtoDetailed save(TemplateDtoFormCreate form) {
+        Template template = form.toTemplate();
+        attachUniversities(template, form.getUniversities());
+
+        return TemplateDtoDetailed.of(templateRepository.save(template));
+    }
+
+    @Secured("ROLE_MODERATOR")
     @Transactional
     public TemplateDtoDetailed addUniversity(Long templateID, Long universityID) {
         Template template = templateRepository.findById(templateID).orElseThrow(TemplateNotFound::new);
@@ -139,5 +147,28 @@ public class TemplateService {
     public void delete(Long id) {
         Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
         templateRepository.delete(template);
+    }
+
+    @Secured("ROLE_MODERATOR")
+    public void update(long id, TemplateDtoFormUpdate form) {
+        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
+
+        form.updateTemplate(template);
+        attachUniversities(template, form.getUniversities());
+
+        templateRepository.save(template);
+    }
+
+    private void attachUniversities(Template template, Set<Long> universityIds) {
+        universityIds.addAll(
+                securityService.getPrincipal().get().getUniversities()
+        );
+
+        Set<University> universities = universityRepository.findAllById(universityIds)
+                .stream()
+                .filter(university -> !securityService.isForbiddenUniversity(university))
+                .collect(Collectors.toSet());
+
+        template.setUniversities(universities);
     }
 }

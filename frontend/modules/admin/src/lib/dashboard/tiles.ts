@@ -41,13 +41,6 @@ export const dashboardTiles: DashboardTile[] = [
     role: ExtendedAccountTypeEnum.ADMINISTRATIVE,
   },
   {
-    title: 'KEYWORDS',
-    url: ['keywords'],
-    icon: 'tuiIconTag',
-    description: '',
-    role: ExtendedAccountTypeEnum.ADMIN,
-  },
-  {
     title: 'BACKUPS',
     url: ['backups'],
     icon: 'tuiIconPackage',

@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Keyword } from '../models/keyword';
-import {
-  AbstractApiService,
-  toHttpParams,
-  TOTAL_ITEMS_HEADER,
-} from './abstract-api.service';
-import { ApiPaginatedResponse, ApiParams } from '../api.params';
+import { AbstractApiService } from './abstract-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class KeyWordsService extends AbstractApiService<Keyword> {
+export class KeyWordsService extends AbstractApiService<Keyword, string> {
   constructor() {
     super('/api/keyWords');
   }
@@ -22,25 +17,5 @@ export class KeyWordsService extends AbstractApiService<Keyword> {
     return this._http
       .post<void>(`${this._resourceUrl}/${resource.id}`, resource.word)
       .pipe(switchMap(() => this.get(resource.id)));
-  }
-
-  override create(resource: Partial<Keyword>): Observable<Keyword> {
-    return super.create(resource.word as unknown as Keyword);
-  }
-
-  override getAll(params: ApiParams<Keyword> = {}) {
-    return this._http
-      .get<Keyword[]>(this._resourceUrl + '/all', {
-        params: toHttpParams(params),
-        observe: 'response',
-      })
-      .pipe(
-        map(
-          ({ body, headers }): ApiPaginatedResponse<Keyword> => ({
-            totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
-            items: body ?? [],
-          }),
-        ),
-      );
   }
 }

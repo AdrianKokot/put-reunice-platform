@@ -10,6 +10,7 @@ public class UniversityDtoFormUpdate {
     String description;
     String address;
     String website;
+    Boolean hidden;
 
     public void updateUniversity(University university) {
         university.setName(name);
@@ -17,5 +18,6 @@ public class UniversityDtoFormUpdate {
         university.setDescription(description);
         university.setAddress(address);
         university.setWebsite(website);
+        university.setHidden(hidden);
     }
 }
