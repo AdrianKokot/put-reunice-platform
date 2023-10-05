@@ -1,37 +1,44 @@
 package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.page.PageRoleSpecification;
+import com.example.cms.page.PageRepository;
+import com.example.cms.page.exceptions.PageForbidden;
+import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketNotFound;
-import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TicketService {
     private final TicketRepository ticketRepository;
-    private final UserRepository userRepository;
+    private final PageRepository pageRepository;
     private final SecurityService securityService;
-    public void addResponse(Long ticketId, Response response) {
+    public void addResponse(UUID ticketId, Response response) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
 
         ticket.addResponse(response);
         ticketRepository.save(ticket);
+    }
+
+    public UUID createTicket(String requesterEmail, String title, String description, Long pageId) {
+        com.example.cms.page.Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        if (securityService.isForbiddenPage(page)) {
+            throw new PageForbidden();
+        }
+
+        var ticket = new Ticket(requesterEmail, title, description, page);
+        return ticketRepository.save(ticket).getId();
     }
 
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {

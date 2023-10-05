@@ -10,7 +10,6 @@ import com.example.cms.search.PageFullTextSearchService;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
-import com.example.cms.ticket.Ticket;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
@@ -234,26 +233,6 @@ public class PageService {
     public PageDtoHierarchy getHierarchy(long universityId) {
         University university = universityRepository.findById(universityId).orElseThrow(PageNotFound::new);
         return PageDtoHierarchy.of(university.getMainPage(), securityService);
-    }
-
-    public void createTicket(String requesterEmail, String title, String description, Long pageId) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
-        }
-
-        page.addTicket(new Ticket(requesterEmail, title, description));
-        pageRepository.save(page);
-    }
-
-    private void assignUserToPage(Long userId, Long pageId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            throw new UserNotFound();
-        }
-        if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
-            throw new UserForbidden();
-        }
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})

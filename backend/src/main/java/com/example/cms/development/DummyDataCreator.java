@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import com.example.cms.ticket.Response;
 import com.example.cms.ticket.TicketService;
@@ -1304,21 +1305,21 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.assignUsersToPage(List.of(5L, 6L, 4L), 4L);
         pageService.assignUsersToPage(List.of(5L, 22L), 5L);
 
-        pageService.createTicket("michal.wazowski9020@gmail.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
-        pageService.createTicket("requester2@email.com","Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
-        pageService.createTicket("requester3@email.com","Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
-        pageService.createTicket("requester4@email.com","Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
-        pageService.createTicket("requester5@email.com","Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
+        UUID ticketId1 = ticketService.createTicket("michal.wazowski9020@gmail.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
+        UUID ticketId2 = ticketService.createTicket("requester2@email.com","Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
+        UUID ticketId3 = ticketService.createTicket("requester3@email.com","Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
+        UUID ticketId4 = ticketService.createTicket("requester4@email.com","Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
+        UUID ticketId5 = ticketService.createTicket("requester5@email.com","Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
 
-        ticketService.addResponse(1L, new Response("michal", "message content to ticket 1 from author1"));
-        ticketService.addResponse(1L, new Response("author1", "another message content to ticket 1 from author1"));
-        ticketService.addResponse(1L, new Response("author2", "message content to ticket 1 from author2"));
-        ticketService.addResponse(2L, new Response("author3", "message content to ticket 2 from author3"));
-        ticketService.addResponse(2L, new Response("author4", "message content to ticket 2 from author4"));
-        ticketService.addResponse(3L, new Response("author5", "message content to ticket 3 from author5"));
-        ticketService.addResponse(3L, new Response("author6", "message content to ticket 3 from author6"));
-        ticketService.addResponse(3L, new Response("author5", "another message content to ticket 3 from author5"));
-        ticketService.addResponse(4L, new Response("author1", "message content to ticket 4 from author1"));
-        ticketService.addResponse(4L, new Response("author7", "message content to ticket 4 from author7"));
+        ticketService.addResponse(ticketId1, new Response("michal", "message content to ticket 1 from author1"));
+        ticketService.addResponse(ticketId1, new Response("author1", "another message content to ticket 1 from author1"));
+        ticketService.addResponse(ticketId1, new Response("author2", "message content to ticket 1 from author2"));
+        ticketService.addResponse(ticketId2, new Response("author3", "message content to ticket 2 from author3"));
+        ticketService.addResponse(ticketId2, new Response("author4", "message content to ticket 2 from author4"));
+        ticketService.addResponse(ticketId3, new Response("author5", "message content to ticket 3 from author5"));
+        ticketService.addResponse(ticketId3, new Response("author6", "message content to ticket 3 from author6"));
+        ticketService.addResponse(ticketId3, new Response("author5", "another message content to ticket 3 from author5"));
+        ticketService.addResponse(ticketId4, new Response("author1", "message content to ticket 4 from author1"));
+        ticketService.addResponse(ticketId4, new Response("author7", "message content to ticket 4 from author7"));
     }
 }

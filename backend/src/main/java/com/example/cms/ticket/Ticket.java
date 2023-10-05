@@ -1,7 +1,6 @@
 package com.example.cms.ticket;
 
 import com.example.cms.page.Page;
-import com.example.cms.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,10 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -21,22 +17,21 @@ import java.util.Set;
 public class Ticket {
     public Ticket() {}
 
-    public Ticket(String requesterEmail, String title, String description) {
+    public Ticket(String requesterEmail, String title, String description, Page page) {
         this.requesterEmail = requesterEmail;
         this.title = title;
         this.description = description;
+        this.page = page;
 
         this.responses = new ArrayList<>();
         this.status = TicketStatus.NEW;
     }
     @Setter
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "page_id", nullable = false)
+    @ManyToOne
     private Page page;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "sha256-generator")
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     @NotEmpty(message = "Requester email must not be empty")
     private String requesterEmail;
     @CreationTimestamp

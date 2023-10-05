@@ -1,6 +1,5 @@
 package com.example.cms.page;
 
-import com.example.cms.ticket.Ticket;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import lombok.Getter;
@@ -28,8 +27,6 @@ public class Page {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> handlers = new HashSet<>();
-    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<Ticket> tickets = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,11 +53,6 @@ public class Page {
     private Timestamp createdOn;
     private Timestamp updatedOn;
     private String keyWords;
-
-    public void addTicket(Ticket ticket) {
-        ticket.setPage(this);
-        this.tickets.add(ticket);
-    }
 
     @PrePersist
     private void prePersist() {
