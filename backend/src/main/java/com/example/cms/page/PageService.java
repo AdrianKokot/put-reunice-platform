@@ -162,7 +162,23 @@ public class PageService {
             throw new PageForbidden();
         }
 
-        form.updatePage(page);
+        page.setTitle(form.getTitle());
+        page.setDescription(form.getDescription());
+        page.setHidden(form.getHidden());
+        page.setContent(Content.of(form.getContent()));
+
+        Set<User> usersToAssign = new HashSet<>();
+
+        form.getContactRequestHandlers().forEach(userId -> {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                throw new UserNotFound(userId);
+            }
+
+            usersToAssign.add(user);
+        });
+
+        page.setHandlers(usersToAssign);
         save(page);
     }
 
