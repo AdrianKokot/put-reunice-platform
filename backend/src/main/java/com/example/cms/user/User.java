@@ -1,6 +1,5 @@
 package com.example.cms.user;
 
-import com.example.cms.ticket.Ticket;
 import com.example.cms.page.Page;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
@@ -32,12 +31,7 @@ public class User {
     )
     private Set<University> enrolledUniversities = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "handler_page",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "page_id")
-    )
+    @ManyToMany(mappedBy = "handlers", fetch = FetchType.EAGER)
     private Set<Page> handlersPages = new HashSet<>();
 
     @Id

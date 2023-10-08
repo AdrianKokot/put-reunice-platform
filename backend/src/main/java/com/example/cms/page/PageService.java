@@ -10,7 +10,6 @@ import com.example.cms.search.PageFullTextSearchService;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
-import com.example.cms.ticket.Ticket;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
@@ -26,9 +25,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -165,7 +162,23 @@ public class PageService {
             throw new PageForbidden();
         }
 
-        form.updatePage(page);
+        page.setTitle(form.getTitle());
+        page.setDescription(form.getDescription());
+        page.setHidden(form.getHidden());
+        page.setContent(Content.of(form.getContent()));
+
+        Set<User> usersToAssign = new HashSet<>();
+
+        form.getContactRequestHandlers().forEach(userId -> {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                throw new UserNotFound(userId);
+            }
+
+            usersToAssign.add(user);
+        });
+
+        page.setHandlers(usersToAssign);
         save(page);
     }
 
@@ -238,14 +251,26 @@ public class PageService {
         return PageDtoHierarchy.of(university.getMainPage(), securityService);
     }
 
-    public void createTicket(String requesterEmail, String title, String description, Long pageId) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public void assignUsersToPage(List<Long> userIds, Long pageId) {
+        com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
+
+        if (page == null) {
+            throw new PageNotFound();
         }
 
-        page.addTicket(new Ticket(requesterEmail, title, description));
+        Set<User> usersToAssign = new HashSet<>();
+
+        userIds.forEach(id -> {
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                throw new UserNotFound(id);
+            }
+
+            usersToAssign.add(user);
+        });
+
+        page.setHandlers(usersToAssign);
         pageRepository.save(page);
     }
-
 }

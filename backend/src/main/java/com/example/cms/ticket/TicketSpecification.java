@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Set;
+import java.util.UUID;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -34,6 +35,9 @@ public class TicketSpecification implements Specification<Ticket> {
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
+            } else if (root.get(criteria.getKey()).getJavaType() == UUID.class) {
+                return criteriaBuilder.equal(
+                        root.<String>get(criteria.getKey()), criteria.getValue().toString());
             }
         }
         return criteriaBuilder.disjunction();

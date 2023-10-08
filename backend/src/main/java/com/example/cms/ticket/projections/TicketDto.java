@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketDto {
-    private Long id;
+    private UUID id;
     private Long pageId;
     private String requesterEmail;
     private Instant requestedTime;

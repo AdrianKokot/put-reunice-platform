@@ -2,7 +2,16 @@ package com.example.cms.page.projections;
 
 import com.example.cms.page.Content;
 import com.example.cms.page.Page;
+import com.example.cms.page.PageService;
+import com.example.cms.user.User;
+import com.example.cms.user.UserRepository;
+import com.example.cms.user.exceptions.UserNotFound;
 import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Value
 public class PageDtoFormUpdate {
@@ -10,11 +19,5 @@ public class PageDtoFormUpdate {
     String description;
     String content;
     Boolean hidden;
-
-    public void updatePage(Page page) {
-        page.setTitle(title);
-        page.setDescription(description);
-        page.setHidden(hidden);
-        page.setContent(Content.of(content));
-    }
+    Set<Long> contactRequestHandlers;
 }
