@@ -8,13 +8,17 @@ import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketNotFound;
-import com.example.cms.user.UserRepository;
+import com.example.cms.ticketUserStatus.TicketUserStatus;
+import com.example.cms.ticketUserStatus.TicketUserStatusEnum;
+import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +28,8 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final PageRepository pageRepository;
     private final SecurityService securityService;
+    private final TicketUserStatusRepository ticketUserStatusRepository;
+
     public void addResponse(UUID ticketId, Response response) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
 
@@ -37,8 +43,18 @@ public class TicketService {
             throw new PageForbidden();
         }
 
-        var ticket = new Ticket(requesterEmail, title, description, page);
-        return ticketRepository.save(ticket).getId();
+        Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
+        ticket.setTicketHandlers(
+                page.getHandlers().stream().map(handler -> {
+                    TicketUserStatus ticketUserStatus = new TicketUserStatus();
+                    ticketUserStatus.setStatus(TicketUserStatusEnum.UNREAD);
+                    ticketUserStatus.setUser(handler);
+                    ticketUserStatus.setTicket(ticket);
+                    ticketUserStatusRepository.save(ticketUserStatus);
+                    return ticketUserStatus;
+                }).collect(Collectors.toSet()));
+
+        return ticket.getId();
     }
 
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {
