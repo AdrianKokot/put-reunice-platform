@@ -10,7 +10,6 @@ export class NgForTrackByIdDirective<T extends { id: string | number }> {
 
   constructor(@Self() ngFor: NgForOf<T>) {
     if (ngFor.ngForTrackBy === undefined) {
-      console.debug(NgForTrackByIdDirective.name);
       ngFor.ngForTrackBy = (_: number, item: T) => item.id;
     }
   }

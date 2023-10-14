@@ -11,7 +11,7 @@ import {
   resourceIdFromRoute,
   throwError,
 } from '@reunice/modules/shared/util';
-import { filter, shareReplay, startWith, switchMap, tap } from 'rxjs';
+import { filter, shareReplay, startWith, switchMap } from 'rxjs';
 import { AuthService } from '@reunice/modules/shared/security';
 import {
   BaseDetailsImportsModule,
@@ -47,7 +47,6 @@ export class PageDetailsComponent {
 
   readonly item$ = this._id$.pipe(
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
-    tap(console.log),
     shareReplay(),
   );
   readonly user: User =

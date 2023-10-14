@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 import { DashboardShellComponent } from './dashboard/feature/dashboard-shell/dashboard-shell.component';
 import { DashboardTilesComponent } from './dashboard/ui/dashboard-tiles/dashboard-tiles.component';
-import { AuthorizedOfTypeGuard } from '@reunice/modules/shared/security';
-import { ExtendedAccountTypeEnum } from '@reunice/modules/shared/data-access';
 import { translatedTitle } from '@reunice/modules/shared/util';
+import { ExtendedAccountTypeEnum } from '@reunice/modules/shared/data-access';
+import { AuthorizedOfTypeGuard } from '@reunice/modules/shared/security';
 
 export const adminRoutes: Route[] = [
   {
@@ -18,7 +18,7 @@ export const adminRoutes: Route[] = [
       {
         title: translatedTitle('UNIVERSITIES'),
         path: 'universities',
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./university/university.module'),
       },
       {
@@ -39,13 +39,13 @@ export const adminRoutes: Route[] = [
       {
         title: translatedTitle('KEYWORDS'),
         path: 'keywords',
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./keyword/keyword.module'),
       },
       {
         title: translatedTitle('BACKUPS'),
         path: 'backups',
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./backup/backup.module'),
       },
     ],

@@ -42,11 +42,17 @@ export class LanguageSwitcherComponent {
     readonly translateService: TranslateService,
     router: Router,
   ) {
+    let firstLoad = true;
     this.translateService.onDefaultLangChange.subscribe(
       ({ lang }: LangChangeEvent) => {
         document.documentElement.lang = lang;
         localStorage.setItem('locale', lang);
         switcher.setLanguage(localeToTuiLanguage(lang));
+
+        if (firstLoad) {
+          firstLoad = false;
+          return;
+        }
 
         const url = router.url;
 
