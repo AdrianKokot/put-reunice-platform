@@ -7,11 +7,16 @@ import {
   provideReuniceTable,
   ReuniceAbstractTable,
 } from '../../../shared';
+import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-template-list',
   templateUrl: './template-list.component.html',
-  imports: [BaseFormImportsModule, BaseTableImportsModule],
+  imports: [
+    BaseFormImportsModule,
+    BaseTableImportsModule,
+    FormNotEmptyValuesPipeModule,
+  ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideReuniceTable(TemplateService)],

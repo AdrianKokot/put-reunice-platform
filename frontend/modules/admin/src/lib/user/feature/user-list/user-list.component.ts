@@ -13,12 +13,18 @@ import {
   provideReuniceTable,
   ReuniceAbstractTable,
 } from '../../../shared';
+import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-user-list',
   templateUrl: './user-list.component.html',
   standalone: true,
-  imports: [BaseFormImportsModule, BaseTableImportsModule, UserDirective],
+  imports: [
+    BaseFormImportsModule,
+    BaseTableImportsModule,
+    UserDirective,
+    FormNotEmptyValuesPipeModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideReuniceTable(UserService)],
 })
