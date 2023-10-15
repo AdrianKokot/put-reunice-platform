@@ -31,8 +31,9 @@ import {
   TuiRadioLabeledModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
-import { TuiValueChangesModule } from '@taiga-ui/cdk';
+import { TuiCheckedModule, TuiValueChangesModule } from '@taiga-ui/cdk';
 import { TuiLinkModule } from '@taiga-ui/core';
+import { ConfirmDirective } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-page-create-form',
@@ -48,6 +49,8 @@ import { TuiLinkModule } from '@taiga-ui/core';
     TuiRadioLabeledModule,
     TuiIslandModule,
     UserDirective,
+    ConfirmDirective,
+    TuiCheckedModule,
   ],
   templateUrl: './page-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,6 +66,7 @@ export class PageCreateFormComponent {
     content: [''],
     creatorId: [this._user?.id ?? -1, [Validators.required]],
     parentId: [-1, [Validators.required]],
+    parentName: ['test'],
     universityId: [
       this._user?.enrolledUniversities?.at(0)?.id ?? null,
       [Validators.required],
