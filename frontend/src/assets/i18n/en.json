@@ -320,5 +320,7 @@
   "UNIVERSITY_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION": "You have changed the visibility of the university to <strong>hidden</strong>. The university and its pages will not be visible to other users. Are you sure you want to do this?",
   "UNIVERSITY_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION": "You have changed the visibility of the university to <strong>visible</strong>. The university and its visible pages will be visible to other users. Are you sure you want to do this?",
   "CANNOT_DELETE_PAGE_WITH_CHILDREN": "Cannot delete page with subpages",
-  "CANNOT_DELETE_VISIBLE_PAGE": "Cannot delete visible page"
+  "CANNOT_DELETE_VISIBLE_PAGE": "Cannot delete visible page",
+  "USER_CHANGE_TO_ENABLED_CONFIRMATION": "You have changed the state of the user to <strong>enabled</strong>. The user will be able to log in to the system. Are you sure you want to do this?",
+  "USER_CHANGE_TO_DISABLED_CONFIRMATION": "You have changed the state of the user to <strong>disabled</strong>. The user will not be able to log in to the system. Are you sure you want to do this?"
 }

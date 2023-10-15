@@ -22,8 +22,17 @@ import {
   TuiInputPasswordModule,
 } from '@taiga-ui/kit';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
-import { filter, map, startWith } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  share,
+  startWith,
+} from 'rxjs';
 import { TuiHintModule } from '@taiga-ui/core';
+import { ConfirmDirective } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-user-edit-form',
@@ -35,6 +44,7 @@ import { TuiHintModule } from '@taiga-ui/core';
     UserDirective,
     TuiInputPasswordModule,
     TuiComboBoxModule,
+    ConfirmDirective,
   ],
   templateUrl: './user-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,6 +101,24 @@ export class UserEditFormComponent {
     filter((user): user is User => user !== null),
     map((user) => user.id === this._user?.id),
     startWith(false),
+  );
+
+  readonly confirmText$ = combineLatest([
+    this.item$,
+    this.form.valueChanges,
+  ]).pipe(
+    debounceTime(100),
+    map(([item, formValue]) => {
+      if (item?.enabled !== formValue.enabled) {
+        return formValue.enabled
+          ? 'USER_CHANGE_TO_ENABLED_CONFIRMATION'
+          : 'USER_CHANGE_TO_DISABLED_CONFIRMATION';
+      }
+
+      return null;
+    }),
+    distinctUntilChanged(),
+    share(),
   );
 
   readonly allFieldsReadonly$ = this.item$.pipe(

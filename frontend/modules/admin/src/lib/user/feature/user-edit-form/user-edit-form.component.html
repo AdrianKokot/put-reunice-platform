@@ -253,6 +253,8 @@
           size="m"
           type="submit"
           class="tui-form__button"
+          *tuiLet="confirmText$ | async as confirmText"
+          [reuniceConfirm]="confirmText !== null ? (confirmText | translate) : null"
           [disabled]="readOnly"
           [showLoader]="(handler.loading$ | async) ?? false"
         >
