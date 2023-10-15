@@ -12,6 +12,7 @@ import { TuiDestroyService } from '@taiga-ui/cdk';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TranslateService } from '@ngx-translate/core';
 import { TUI_PROMPT } from '@taiga-ui/kit';
+import { FormGroupDirective } from '@angular/forms';
 
 @Directive({
   selector: '[reuniceConfirm]',
@@ -22,9 +23,10 @@ export class ConfirmDirective {
   private readonly _dialog = inject(TuiDialogService);
   private readonly _destroy$ = inject(TuiDestroyService);
   private readonly _translate = inject(TranslateService);
+  private readonly _form = inject(FormGroupDirective, { optional: true });
 
   @Input('reuniceConfirm')
-  promptContent: PolymorpheusContent = '';
+  promptContent: PolymorpheusContent | null = '';
 
   @Input()
   confirmText = 'CONFIRM';
@@ -46,6 +48,8 @@ export class ConfirmDirective {
 
   @HostListener('click', ['$event'])
   onClick(event: Event): void {
+    if (this.promptContent === null) return;
+
     event.preventDefault();
     event.stopPropagation();
 
@@ -66,6 +70,7 @@ export class ConfirmDirective {
       .subscribe((response) => {
         if (response) {
           this.confirm.emit();
+          this._form?.onSubmit(new Event('submit'));
         } else {
           this.cancel.emit();
         }

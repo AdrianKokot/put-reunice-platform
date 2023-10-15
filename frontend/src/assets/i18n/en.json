@@ -314,5 +314,11 @@
   "DASHBOARD": "Dashboard",
   "ALL_UNIVERSITIES": "All universities",
   "DELETE": "Delete",
-  "UNIVERSITY_DETAILS": "University details"
+  "UNIVERSITY_DETAILS": "University details",
+  "PAGE_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION": "You have changed the visibility of the page to <strong>hidden</strong>. The page will not be visible to other users. Are you sure you want to do this?",
+  "PAGE_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION": "You have changed the visibility of the page to <strong>visible</strong>. The page will be visible to other users. Are you sure you want to do this?",
+  "UNIVERSITY_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION": "You have changed the visibility of the university to <strong>hidden</strong>. The university and its pages will not be visible to other users. Are you sure you want to do this?",
+  "UNIVERSITY_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION": "You have changed the visibility of the university to <strong>visible</strong>. The university and its visible pages will be visible to other users. Are you sure you want to do this?",
+  "CANNOT_DELETE_PAGE_WITH_CHILDREN": "Cannot delete page with subpages",
+  "CANNOT_DELETE_VISIBLE_PAGE": "Cannot delete visible page"
 }
