@@ -1,70 +1,70 @@
-<form [formGroup]='handler.form' (ngSubmit)='handler.submit()'>
-  <h3 class='tui-form__header'>
+<form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
+  <h3 class="tui-form__header">
     {{ 'PAGE_LOCATION' | translate }}
   </h3>
 
   <label
     [tuiLabel]="'UNIVERSITY' | translate"
-    class='tui-form__row'
+    class="tui-form__row"
     *reuniceUser="'ADMIN'"
   >
     <tui-combo-box
-      tuiTextfieldSize='m'
-      *tuiLet='universitySearch.itemIds$ | async as items'
-      formControlName='universityId'
-      [tuiTextfieldLabelOutside]='true'
-      (searchChange)='universitySearch.search($event)'
-      [stringify]='(universitySearch.stringify$ | async)!'
+      tuiTextfieldSize="m"
+      *tuiLet="universitySearch.itemIds$ | async as items"
+      formControlName="universityId"
+      [tuiTextfieldLabelOutside]="true"
+      (searchChange)="universitySearch.search($event)"
+      [stringify]="(universitySearch.stringify$ | async)!"
     >
       <tui-data-list-wrapper
         *tuiDataList
-        [items]='items'
-        [itemContent]='(universitySearch.stringify$ | async)!'
+        [items]="items"
+        [itemContent]="(universitySearch.stringify$ | async)!"
       ></tui-data-list-wrapper>
     </tui-combo-box>
 
     <tui-error
-      formControlName='universityId'
-      [error]='[] | tuiFieldError | async'
+      formControlName="universityId"
+      [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>
 
-  <div class='tui-form__row'>
-    <p class='t-label tui-space_top-0 tui-space_bottom-1'>
+  <div class="tui-form__row">
+    <p class="t-label tui-space_top-0 tui-space_bottom-1">
       {{ 'PARENT_PAGE' | translate }}
     </p>
 
     <tui-island
-      size='s'
-      data-appearance='textfield'
-      *tuiLet='pagesTree$ | async as items'
+      size="s"
+      data-appearance="textfield"
+      *tuiLet="pagesTree$ | async as items"
     >
-      <div class='tui-island__content'>
+      <div class="tui-island__content">
         <tui-tree
-          class='tui-island__paragraph'
-          *ngIf='items; else loading'
-          [tuiTreeController]='true'
-          [value]='items'
-          [content]='treeContent'
-          [childrenHandler]='pagesTreeHandler'
+          class="tui-island__paragraph"
+          *ngIf="items; else loading"
+          [tuiTreeController]="true"
+          [value]="items"
+          [content]="treeContent"
+          [childrenHandler]="pagesTreeHandler"
         ></tui-tree>
         <ng-template #loading>
           <span
-            [class.tui-skeleton]='form.controls.universityId.value !== null'
-            class='text-02'
+            [class.tui-skeleton]="form.controls.universityId.value !== null"
+            class="text-02"
           >
             {{ 'NO_UNIVERSITY_SELECTED' | translate }}
           </span>
         </ng-template>
         <ng-template #treeContent let-page>
           <label
-            [class._selected]='inputElement.checked'
-            class='cursor-pointer reunice-tree-item-option'
+            [class._selected]="inputElement.checked"
+            class="cursor-pointer reunice-tree-item-option"
           >
             <input
-              type='radio'
-              formControlName='parentId'
-              [value]='page.id'
+              type="radio"
+              formControlName="parentId"
+              [value]="page.id"
               (tuiCheckedChange)="form.controls.parentName.setValue(page.title)"
               #inputElement
             />
@@ -78,38 +78,38 @@
     </tui-island>
   </div>
 
-  <h3 class='tui-form__header'>
+  <h3 class="tui-form__header">
     {{ 'BASIC_INFORMATION' | translate }}
   </h3>
 
-  <div class='tui-form__row tui-form__row_multi-fields'>
-    <label [tuiLabel]="'TITLE' | translate" class='tui-form__multi-field'>
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
       <tui-input
-        formControlName='title'
-        tuiTextfieldSize='m'
-        [tuiTextfieldLabelOutside]='true'
+        formControlName="title"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type='text' />
+        <input tuiTextfield type="text" />
       </tui-input>
 
       <tui-error
-        formControlName='title'
-        [error]='[] | tuiFieldError | async'
+        formControlName="title"
+        [error]="[] | tuiFieldError | async"
       ></tui-error>
     </label>
 
-    <label [tuiLabel]="'VISIBILITY' | translate" class='tui-form__multi-field'>
+    <label [tuiLabel]="'VISIBILITY' | translate" class="tui-form__multi-field">
       <tui-select
-        formControlName='hidden'
-        tuiTextfieldSize='m'
-        [valueContent]='valueContent'
-        [tuiTextfieldLabelOutside]='true'
+        formControlName="hidden"
+        tuiTextfieldSize="m"
+        [valueContent]="valueContent"
+        [tuiTextfieldLabelOutside]="true"
       >
         <tui-data-list *tuiDataList>
-          <button tuiOption [value]='false'>
+          <button tuiOption [value]="false">
             {{ 'VISIBLE' | translate }}
           </button>
-          <button tuiOption [value]='true'>{{ 'HIDDEN' | translate }}</button>
+          <button tuiOption [value]="true">{{ 'HIDDEN' | translate }}</button>
         </tui-data-list>
       </tui-select>
 
@@ -118,68 +118,78 @@
       </ng-template>
 
       <tui-error
-        formControlName='hidden'
-        [error]='[] | tuiFieldError | async'
+        formControlName="hidden"
+        [error]="[] | tuiFieldError | async"
       ></tui-error>
     </label>
 
-    <label [tuiLabel]="'AUTHOR' | translate" class='tui-form__multi-field'>
+    <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
       <tui-combo-box
-        tuiTextfieldSize='m'
-        *tuiLet='userSearch.itemIds$ | async as items'
-        formControlName='creatorId'
-        [tuiTextfieldLabelOutside]='true'
-        (searchChange)='userSearch.search($event)'
-        [stringify]='(userSearch.stringify$ | async)!'
+        tuiTextfieldSize="m"
+        *tuiLet="userSearch.itemIds$ | async as items"
+        formControlName="creatorId"
+        [tuiTextfieldLabelOutside]="true"
+        (searchChange)="userSearch.search($event)"
+        [stringify]="(userSearch.stringify$ | async)!"
       >
         <tui-data-list-wrapper
           *tuiDataList
-          [items]='items'
-          [itemContent]='(userSearch.stringify$ | async)!'
+          [items]="items"
+          [itemContent]="(userSearch.stringify$ | async)!"
         ></tui-data-list-wrapper>
       </tui-combo-box>
 
       <tui-error
-        formControlName='creatorId'
-        [error]='[] | tuiFieldError | async'
+        formControlName="creatorId"
+        [error]="[] | tuiFieldError | async"
       ></tui-error>
     </label>
   </div>
 
-  <label [tuiLabel]="'DESCRIPTION' | translate" class='tui-form__row'>
+  <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
     <tui-text-area
-      formControlName='description'
-      tuiTextfieldSize='m'
-      [tuiTextfieldLabelOutside]='true'
-      [maxLength]='255'
-      [expandable]='true'
+      formControlName="description"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      [maxLength]="255"
+      [expandable]="true"
     >
     </tui-text-area>
 
     <tui-error
-      formControlName='description'
-      [error]='[] | tuiFieldError | async'
+      formControlName="description"
+      [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>
 
-  <div class='tui-form__buttons tui-form__buttons_align_end'>
+  <div class="tui-form__buttons tui-form__buttons_align_end">
     <a
       [routerLink]="['..']"
       tuiButton
-      type='button'
-      appearance='flat'
-      size='m'
-      class='tui-form__button'
+      type="button"
+      appearance="flat"
+      size="m"
+      class="tui-form__button"
     >
       {{ 'CANCEL' | translate }}
     </a>
     <button
       tuiButton
-      size='m'
-      type='submit'
-      [reuniceConfirm]="'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION' | translate:{location: form.controls.parentName.value, state: (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE') | translate | lowercase}"
-      class='tui-form__button'
-      [showLoader]='(handler.loading$ | async) ?? false'
+      size="m"
+      type="submit"
+      [reuniceConfirm]="
+        'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION'
+          | translate
+            : {
+                location: form.controls.parentName.value,
+                state:
+                  (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE')
+                  | translate
+                  | lowercase
+              }
+      "
+      class="tui-form__button"
+      [showLoader]="(handler.loading$ | async) ?? false"
     >
       {{ 'SAVE' | translate }}
     </button>

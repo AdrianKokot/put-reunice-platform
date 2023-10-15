@@ -139,7 +139,9 @@
         tuiButton
         size="m"
         *tuiLet="confirmText$ | async as confirmText"
-        [reuniceConfirm]="confirmText !== null ? (confirmText | translate) : null"
+        [reuniceConfirm]="
+          confirmText !== null ? (confirmText | translate) : null
+        "
         type="submit"
         class="tui-form__button"
         [showLoader]="(handler.loading$ | async) ?? false"
