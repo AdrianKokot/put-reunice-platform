@@ -65,6 +65,7 @@
               type="radio"
               formControlName="parentId"
               [value]="page.id"
+              (tuiCheckedChange)="form.controls.parentName.setValue(page.title)"
               #inputElement
             />
 
@@ -176,6 +177,17 @@
       tuiButton
       size="m"
       type="submit"
+      [reuniceConfirm]="
+        'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION'
+          | translate
+            : {
+                location: form.controls.parentName.value,
+                state:
+                  (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE')
+                  | translate
+                  | lowercase
+              }
+      "
       class="tui-form__button"
       [showLoader]="(handler.loading$ | async) ?? false"
     >

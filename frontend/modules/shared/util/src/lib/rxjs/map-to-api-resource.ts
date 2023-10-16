@@ -36,7 +36,7 @@ export const resourceIdFromRoute = (paramKey = 'id') => {
   return inject(ActivatedRoute).paramMap.pipe(
     map((params) => params.get(paramKey)),
     filter((id): id is string => id !== null),
-    shareReplay(),
+    shareReplay(1),
   );
 };
 
@@ -49,7 +49,7 @@ export const toResourceFromId = <TResult extends BaseResource>(
   ): Observable<TResult | null> =>
     input.pipe(
       switchMap((id) => service.get(id).pipe(tap(tapFn), startWith(null))),
-      shareReplay(),
+      shareReplay(1),
     );
 };
 

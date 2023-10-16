@@ -28,9 +28,21 @@ import {
   TuiInputFilesModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
-import { shareReplay, startWith, switchMap } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  share,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { AuthService } from '@reunice/modules/shared/security';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import {
+  ConfirmDirective,
+  LocalizedPipeModule,
+} from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -45,6 +57,7 @@ import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
     TuiCheckboxLabeledModule,
     TuiMultiSelectModule,
     TuiDataListWrapperModule,
+    ConfirmDirective,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,6 +98,24 @@ export class PageEditFormComponent {
   readonly files$ = this._id$.pipe(
     switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
     shareReplay(),
+  );
+
+  readonly confirmText$ = combineLatest([
+    this.item$,
+    this.form.valueChanges,
+  ]).pipe(
+    debounceTime(100),
+    map(([item, formValue]) => {
+      if (item?.hidden !== formValue.hidden) {
+        return formValue.hidden
+          ? 'PAGE_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
+          : 'PAGE_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
+      }
+
+      return null;
+    }),
+    distinctUntilChanged(),
+    share(),
   );
 
   handler = new FormSubmitWrapper(this.form, {

@@ -52,9 +52,9 @@
             [class._selected]="page.id === item?.id"
             class="reunice-tree-item-option"
           >
-            <span>
+            <a tuiLink [routerLink]="['../', page.id]">
               {{ page.title }}
-            </span>
+            </a>
           </label>
         </ng-template>
       </div>
