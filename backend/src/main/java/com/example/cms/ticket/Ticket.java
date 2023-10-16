@@ -45,6 +45,7 @@ public class Ticket {
     private TicketStatus status;
     private String title;
     private String description;
+    @Getter
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Response> responses;
     private String requestedToken;

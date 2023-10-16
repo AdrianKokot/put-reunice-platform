@@ -1,5 +1,6 @@
 package com.example.cms.ticket;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,7 @@ public class Response {
     private String content;
 
     @Setter
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;

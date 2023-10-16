@@ -37,7 +37,7 @@ public class TicketSpecification implements Specification<Ticket> {
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == UUID.class) {
                 return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), criteria.getValue().toString());
+                        root.<String>get(criteria.getKey()), UUID.fromString(criteria.getValue().toString()));
             }
         }
         return criteriaBuilder.disjunction();
