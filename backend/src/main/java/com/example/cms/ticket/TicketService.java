@@ -9,7 +9,6 @@ import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketNotFound;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
-import com.example.cms.ticketUserStatus.TicketUserStatusEnum;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,8 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,7 +45,7 @@ public class TicketService {
         ticket.setTicketHandlers(
                 page.getHandlers().stream().map(handler -> {
                     TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                    ticketUserStatus.setStatus(TicketUserStatusEnum.UNREAD);
+                    ticketUserStatus.setLastSeenOn(null);
                     ticketUserStatus.setUser(handler);
                     ticketUserStatus.setTicket(ticket);
                     ticketUserStatusRepository.save(ticketUserStatus);
@@ -55,6 +53,28 @@ public class TicketService {
                 }).collect(Collectors.toSet()));
 
         return ticket.getId();
+    }
+
+    public Ticket getTicketDetailed(UUID ticketId) {
+        Ticket ticket = this.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
+                .get().collect(Collectors.toList()).get(0);
+
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        if (loggedUserOptional.isPresent()) {
+            Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
+                    .filter(item -> item.getUser()
+                            .getId()
+                            .equals(loggedUserOptional.get().getId()))
+                    .findFirst();
+
+            if (userStatusOptional.isPresent()) {
+                TicketUserStatus userStatus = userStatusOptional.get();
+                userStatus.setLastSeenOn(Instant.now());
+                ticketUserStatusRepository.save(userStatus);
+            }
+        }
+
+        return ticket;
     }
 
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {

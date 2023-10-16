@@ -42,8 +42,7 @@ public class TicketController {
     public ResponseEntity<TicketDtoDetailed> getTicketDetailed(
             @PathVariable UUID ticketId
     ) {
-        Ticket ticket = service.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
-                .get().collect(Collectors.toList()).get(0);
+        Ticket ticket = service.getTicketDetailed(ticketId);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));

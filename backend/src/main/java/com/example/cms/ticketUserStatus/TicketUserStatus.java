@@ -6,6 +6,7 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -23,5 +24,5 @@ public class TicketUserStatus {
     @JoinColumn(name = "ticket_id")
     Ticket ticket;
 
-    TicketUserStatusEnum status;
+    Instant lastSeenOn;
 }
