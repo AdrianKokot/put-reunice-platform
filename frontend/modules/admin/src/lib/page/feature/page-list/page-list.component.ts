@@ -13,11 +13,16 @@ import {
   ReuniceAbstractTable,
 } from '../../../shared';
 import { FormBuilder } from '@angular/forms';
+import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-page-list',
   standalone: true,
-  imports: [BaseFormImportsModule, BaseTableImportsModule],
+  imports: [
+    BaseFormImportsModule,
+    BaseTableImportsModule,
+    FormNotEmptyValuesPipeModule,
+  ],
   templateUrl: './page-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideReuniceTable(PageService)],

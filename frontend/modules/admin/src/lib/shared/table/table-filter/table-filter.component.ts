@@ -128,6 +128,7 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
   appliedFilter = false;
 
   focused = false;
+
   get nativeFocusableElement(): TuiNativeFocusableElement | null {
     return this.button?.nativeFocusableElement ?? null;
   }
@@ -167,5 +168,6 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
     this.hostedDropdown?.nativeFocusableElement?.focus();
     this.hostedDropdown?.nativeFocusableElement?.blur();
     this.hostedDropdown?.updateOpen(false);
+    this.cdr.markForCheck();
   }
 }

@@ -28,6 +28,7 @@ import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import {
   AbstractApiService,
   ApiPagination,
+  ApiParams,
   ApiSort,
   BaseResource,
 } from '@reunice/modules/shared/data-access';
@@ -101,7 +102,8 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         debounceTime(200),
         map(
           ([sort, direction, { page, size }, filters]): ApiPagination &
-            ApiSort<T> => ({
+            ApiSort<T> &
+            ApiParams => ({
             sort: (typeof sort === 'string' && sort.length > 0
               ? (sort as keyof T).toString() +
                 ',' +
@@ -113,7 +115,6 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
           }),
         ),
         tap(({ size }) => (this._pageSize = size)),
-        tap(console.debug),
         switchMap((apiParams) =>
           this.service.getAll(apiParams).pipe(
             map(({ items, totalItems }) => {

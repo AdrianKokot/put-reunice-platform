@@ -12,6 +12,15 @@
     </tui-input>
   </label>
 
+  <button
+    tuiIconButton
+    [tuiHint]="'CLEAR_FILTERS' | translate"
+    [icon]="'tuiIconXCircle'"
+    appearance="outline"
+    (click)="filtersForm.reset()"
+    *ngIf="((filtersForm | notEmptyValues | async) ?? 0) > 0"
+  ></button>
+
   <a [routerLink]="['new']" appearance="primary" tuiButton type="button">
     {{ 'NEW_USER' | translate }}
   </a>

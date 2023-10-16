@@ -7,12 +7,17 @@ import {
   ReuniceAbstractTable,
 } from '../../../shared';
 import { FormBuilder } from '@angular/forms';
+import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-keyword-list',
   templateUrl: './keyword-list.component.html',
   standalone: true,
-  imports: [BaseFormImportsModule, BaseTableImportsModule],
+  imports: [
+    BaseFormImportsModule,
+    BaseTableImportsModule,
+    FormNotEmptyValuesPipeModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideReuniceTable(KeyWordsService)],
 })

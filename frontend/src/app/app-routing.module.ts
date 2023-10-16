@@ -6,9 +6,9 @@ import {
   Routes,
   TitleStrategy,
 } from '@angular/router';
-import { AuthGuard } from '@reunice/modules/shared/security';
 import { AuthModule } from '@reunice/modules/auth';
 import { UniversityModule } from './university/university.module';
+import { AuthGuard } from '@reunice/modules/shared/security';
 
 @Injectable({ providedIn: 'root' })
 class ReuniceTitleStrategy extends DefaultTitleStrategy {
@@ -27,7 +27,6 @@ const routes: Routes = [
       import('@reunice/modules/admin').then((m) => m.AdminModule),
     canMatch: [AuthGuard],
   },
-  { path: '', redirectTo: 'universities', pathMatch: 'full' },
   {
     path: 'universities',
     loadChildren: () => UniversityModule,
@@ -41,6 +40,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./profile/profile.module').then((m) => m.ProfileModule),
     canMatch: [AuthGuard],
+  },
+  {
+    path: '',
+    redirectTo: 'universities',
+    pathMatch: 'full',
   },
 ];
 
