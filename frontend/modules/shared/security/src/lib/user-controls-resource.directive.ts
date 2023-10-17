@@ -71,7 +71,10 @@ export class UserControlsResourceDirective<
         if (
           user !== null &&
           this.controlledResource !== null &&
-          UserControlsResourceDirective.isUserAuthorizedToControlResource(user, this.controlledResource)
+          UserControlsResourceDirective.isUserAuthorizedToControlResource(
+            user,
+            this.controlledResource,
+          )
         ) {
           this.viewContainer.createEmbeddedView(
             this.templateRef,
