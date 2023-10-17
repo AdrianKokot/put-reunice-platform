@@ -1,27 +1,29 @@
-<ng-container *tuiLet="page$ | async as page">
+<ng-container *tuiLet='page$ | async as page'>
   <h3
-    class="tui-text_h3 tui-space_top-0 tui-space_bottom-2"
-    [class.tui-skeleton]="page === null"
+    class='tui-text_h3 tui-space_top-0 tui-space_bottom-2 d-flex items-center gap-4'
+    [class.tui-skeleton]='page === null'
   >
-    {{ page?.title ?? '-' }}
+    <span>
+      {{ page?.title ?? '-' }}
+    </span>
+    <span *reuniceUserControlsResource='page' class='tui-space_left-auto'>
+      <a tuiIconButton [icon]="'tuiIconEdit'" [routerLink]="['/admin/pages', page!.id, 'edit']" appearance='secondary'
+         [tuiHint]="'EDIT_PAGE' | translate"></a>
+    </span>
   </h3>
 
-  <p class="text-02" [class.tui-skeleton]="page === null">
+  <p class='text-02' [class.tui-skeleton]='page === null'>
     {{ page?.description ?? '-' }}
   </p>
 
   <hr />
 
-  <div class="d-block tui-space_vertical-3">
+  <div class='d-block tui-space_vertical-3'>
     <tui-editor-socket
       [content]="page?.content ?? '-'"
-      [class.tui-skeleton]="page === null"
+      [class.tui-skeleton]='page === null'
     ></tui-editor-socket>
   </div>
 
-  <hr class="tui-space_top-14" />
-
-  <div class="tui-space_vertical-3">
-    <reunice-page-files-list></reunice-page-files-list>
-  </div>
+  <reunice-page-files-list></reunice-page-files-list>
 </ng-container>

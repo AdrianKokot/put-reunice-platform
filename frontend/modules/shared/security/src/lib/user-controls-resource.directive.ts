@@ -3,11 +3,10 @@ import {
   Directive,
   inject,
   Input,
-  OnInit,
+  OnChanges,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import { TuiDestroyService } from '@taiga-ui/cdk';
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -18,6 +17,19 @@ import {
   University,
   User,
 } from '@reunice/modules/shared/data-access';
+import { combineLatest, Subject } from 'rxjs';
+
+class UserControlsResourceContext<T = unknown> {
+  public $implicit: T;
+  public reuniceUserControlsResource: T;
+  public controlledResource: T;
+
+  constructor(value: T) {
+    this.$implicit = value;
+    this.reuniceUserControlsResource = value;
+    this.controlledResource = value;
+  }
+}
 
 /**
  * @description This directive is used to show or hide content based on the user's
@@ -34,41 +46,48 @@ import {
 @Directive({
   selector: '[reuniceUserControlsResource]',
   standalone: true,
-  providers: [TuiDestroyService],
 })
-export class UserControlsResourceDirective implements OnInit {
-  private readonly _user$ = inject(AuthService).user$.pipe(
-    takeUntilDestroyed(),
-  );
+export class UserControlsResourceDirective<
+  T extends User | Page | University | Template | Keyword,
+> implements OnChanges
+{
+  private readonly _trigger$ = new Subject<void>();
 
   @Input({
     alias: 'reuniceUserControlsResource',
   })
-  controlledResource: User | Page | University | Template | Keyword | null =
-    null;
+  controlledResource: T | null = null;
 
   constructor(
-    private readonly templateRef: TemplateRef<unknown>,
+    private readonly templateRef: TemplateRef<UserControlsResourceContext<T>>,
     private readonly viewContainer: ViewContainerRef,
-    private readonly _cdr: ChangeDetectorRef,
-  ) {}
+    cdr: ChangeDetectorRef,
+  ) {
+    combineLatest([inject(AuthService).user$, this._trigger$])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([user]) => {
+        this.viewContainer.clear();
 
-  ngOnInit(): void {
-    this._user$.subscribe((user) => {
-      this.viewContainer.clear();
+        if (
+          user !== null &&
+          this.controlledResource !== null &&
+          UserControlsResourceDirective.isUserAuthorizedToControlResource(user, this.controlledResource)
+        ) {
+          this.viewContainer.createEmbeddedView(
+            this.templateRef,
+            new UserControlsResourceContext<T>(this.controlledResource),
+          );
+        }
 
-      if (
-        user !== null &&
-        this.isUserAuthorizedToControlResource(user, this.controlledResource)
-      ) {
-        this.viewContainer.createEmbeddedView(this.templateRef);
-      }
-
-      this._cdr.markForCheck();
-    });
+        cdr.markForCheck();
+      });
   }
 
-  private isUserAuthorizedToControlResource(
+  ngOnChanges(): void {
+    this._trigger$.next();
+  }
+
+  private static isUserAuthorizedToControlResource(
     user: User,
     resource: User | Page | University | Template | Keyword | null,
   ): boolean {
@@ -96,7 +115,7 @@ export class UserControlsResourceDirective implements OnInit {
     );
   }
 
-  private getUniversityIdFromResource(
+  private static getUniversityIdFromResource(
     resource: User | Page | University | Template | Keyword,
   ) {
     if ('university' in resource) {
@@ -111,5 +130,16 @@ export class UserControlsResourceDirective implements OnInit {
       return new Set(resource.universities.map((x) => x.id));
 
     return new Set([resource.id]);
+  }
+
+  static ngTemplateContextGuard<
+    T extends User | Page | University | Template | Keyword,
+  >(
+    dir: UserControlsResourceDirective<T>,
+    ctx: unknown,
+  ): ctx is UserControlsResourceContext<
+    Exclude<T, false | 0 | '' | null | undefined>
+  > {
+    return true;
   }
 }
