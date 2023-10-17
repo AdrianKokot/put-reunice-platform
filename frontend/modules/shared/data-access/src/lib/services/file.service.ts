@@ -38,11 +38,11 @@ export class FileService {
     );
   }
 
-  download(filename: string, pageId: number): Observable<HttpEvent<Blob>> {
-    return this.http.get(`${this.server}/download/page/${pageId}/${filename}`, {
-      reportProgress: true,
+  download(fileId: FileResource['id']): Observable<Blob> {
+    return this.http.get(`${this.server}/${fileId}/download`, {
+      // reportProgress: true,
       withCredentials: true,
-      observe: 'events',
+      // observe: 'events',
       responseType: 'blob',
     });
   }

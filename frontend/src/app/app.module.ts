@@ -10,7 +10,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +34,8 @@ import { TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
 
 import '@angular/common/locales/global/pl';
 import '@angular/common/locales/global/en-GB';
+import { TuiPreviewModule } from '@taiga-ui/addon-preview';
+import { TUI_HIDE_TEXT, TUI_SHOW_ALL_TEXT } from '@taiga-ui/kit';
 
 @NgModule({
   declarations: [RootComponent],
@@ -51,6 +57,7 @@ import '@angular/common/locales/global/en-GB';
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
+    TuiPreviewModule,
     TuiLetModule,
     UiModule,
     PolymorpheusModule,
@@ -76,6 +83,16 @@ import '@angular/common/locales/global/en-GB';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
       multi: true,
+    },
+    {
+      provide: TUI_HIDE_TEXT,
+      useFactory: (translate: TranslateService) => translate.get('HIDE'),
+      deps: [TranslateService],
+    },
+    {
+      provide: TUI_SHOW_ALL_TEXT,
+      useFactory: (translate: TranslateService) => translate.get('SHOW_ALL'),
+      deps: [TranslateService],
     },
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   ],

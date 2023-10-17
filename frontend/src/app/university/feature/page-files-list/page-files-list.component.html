@@ -1,0 +1,117 @@
+<ng-container *tuiLet="files$ | async as files">
+  <h4
+    class="tui-text_h5 tui-space_top-6 tui-space_bottom-4"
+    [class.tui-skeleton]="files === null"
+  >
+    {{ 'PAGE_FILES_LIST_TITLE' | translate }}
+  </h4>
+
+  <tui-files [max]="5">
+    <ng-container *ngFor="let file of files; let index = index">
+      <tui-file
+        *tuiItem
+        class="tui-file_with-right-icon"
+        [leftContent]="icon"
+        [file]="file"
+        (click)="showFile({ file, index, length: files?.length ?? 0 }, true)"
+      >
+        <a
+          tuiIconButton
+          [icon]="'tuiIconDownload'"
+          target="_blank"
+          rel="nofollow"
+          (click)="$event.stopPropagation()"
+          [href]="'/api/file/' + file.id + '/download'"
+          appearance="flat"
+          shape="rounded"
+          size="s"
+        ></a>
+      </tui-file>
+      <ng-template #icon>
+        <tui-marker-icon
+          mode="link"
+          new
+          size="xs"
+          [src]="file | fileIcon"
+        ></tui-marker-icon>
+      </ng-template>
+    </ng-container>
+  </tui-files>
+
+  <ng-template #preview let-preview *tuiLet="previewUIState$ | async as state">
+    <tui-preview [rotatable]="false" [zoomable]="false" *ngIf="state !== null">
+      <tui-preview-title>{{ state.title }}</tui-preview-title>
+      <tui-preview-pagination
+        [length]="state.pagination.size"
+        [index]="state.pagination.index"
+        (indexChange)="
+          showFile({
+            file: files ? files[$event] : undefined,
+            index: $event,
+            length: files?.length ?? 0
+          })
+        "
+      ></tui-preview-pagination>
+
+      <a
+        tuiIconButton
+        tuiPreviewAction
+        [icon]="'tuiIconDownload'"
+        target="_blank"
+        rel="nofollow"
+        [href]="'/api/file/' + state.fileId + '/download'"
+      ></a>
+
+      <button
+        [icon]="'tuiIconClose'"
+        title="Close"
+        tuiIconButton
+        tuiPreviewAction
+        type="button"
+        (click)="preview.complete()"
+      ></button>
+
+      <img
+        *ngIf="!state.loading && state.type === 'url'"
+        alt="preview"
+        [src]="state.content"
+      />
+
+      <ng-container *ngIf="!state.loading && state.type === 'html'">
+        <ng-container
+          *ngTemplateOutlet="
+            previewContent;
+            context: { $implicit: state.content }
+          "
+        ></ng-container>
+      </ng-container>
+
+      <div
+        *ngIf="!state.loading && state.type === 'unsupported'"
+        class="preview-unavailable-container"
+      >
+        <tui-svg [src]="'tuiIconFileLarge'" class="t-icon"></tui-svg>
+        <div>{{ 'PREVIEW_UNAVAILABLE' | translate }}</div>
+      </div>
+
+      <tui-loader
+        *ngIf="state.loading"
+        size="xl"
+        class="preview-loader"
+      ></tui-loader>
+    </tui-preview>
+  </ng-template>
+</ng-container>
+
+<ng-template #previewContent let-content>
+  <div
+    (touchstart)="$event.stopPropagation()"
+    (wheel)="$event.stopPropagation()"
+  >
+    <tui-scrollbar class="html-content-background">
+      <div class="html-content-wrapper">
+        <div class="html-content" [innerHTML]="content"></div>
+      </div>
+    </tui-scrollbar>
+  </div>
+</ng-template>

@@ -325,5 +325,10 @@
   "USER_CHANGE_TO_DISABLED_CONFIRMATION": "You have changed the state of the user to <strong>disabled</strong>. The user will not be able to log in to the system. Are you sure you want to do this?",
   "PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION": "The page will be created as a <strong>{{location}}</strong> subpage with <strong>{{state}}</strong> state. Are you sure you want to do this?",
   "PAGE_CONTACT_REQUEST_HANDLERS": "Contact request handlers",
-  "CONTACT_REQUEST_HANDLERS": "Contact request handlers"
+  "CONTACT_REQUEST_HANDLERS": "Contact request handlers",
+  "VIEW_PAGE": "View page",
+  "PAGE_FILES_LIST_TITLE": "Attached files",
+  "PREVIEW_UNAVAILABLE": "Preview unavailable",
+  "HIDE": "Hide",
+  "SHOW_ALL": "Show all"
 }

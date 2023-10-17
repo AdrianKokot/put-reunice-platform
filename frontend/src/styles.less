@@ -178,3 +178,17 @@ label._optional .t-label .t-text {
     color: var(--tui-text-02);
   }
 }
+
+tui-file.tui-file_with-right-icon {
+  > .t-wrapper {
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    > .t-text {
+      margin-right: auto;
+      max-width: ~'calc(100% - 2.75rem)';
+    }
+  }
+  padding-right: 0.5625rem !important;
+}
