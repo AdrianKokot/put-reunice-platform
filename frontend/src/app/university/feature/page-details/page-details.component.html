@@ -25,5 +25,9 @@
     ></tui-editor-socket>
   </div>
 
+  <hr class='tui-space_top-14'>
+
   <reunice-page-files-list></reunice-page-files-list>
+  <reunice-page-contact-form *ngIf='page && page.hasContactRequestHandler'></reunice-page-contact-form>
+
 </ng-container>

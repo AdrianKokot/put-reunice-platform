@@ -331,5 +331,9 @@
   "PREVIEW_UNAVAILABLE": "Preview unavailable",
   "HIDE": "Hide",
   "SHOW_ALL": "Show all",
-  "EDIT_PAGE": "Edit page"
+  "EDIT_PAGE": "Edit page",
+  "PAGE_CONTACT_FORM_TITLE": "Do you have any questions?",
+  "SEND": "Send",
+  "SEND_QUESTION_SUCCESS": "Question sent successfully",
+  "YOUR_QUESTION": "Your question"
 }

@@ -63,7 +63,7 @@ export class FormSubmitWrapper<
   private readonly _translate = inject(TranslateService);
   private readonly _alert = inject(TuiAlertService);
 
-  public readonly loading$ = this._submit$.pipe(
+  public readonly loading$: Observable<boolean> = this._submit$.pipe(
     takeUntilDestroyed(),
     tap(() => tuiMarkControlAsTouchedAndValidate(this.form)),
     filter(() => this.form.valid),
@@ -100,7 +100,7 @@ export class FormSubmitWrapper<
     }),
     map((result) => result === LOADING_SYMBOL_VALUE),
     startWith(false),
-    shareReplay(),
+    shareReplay(1),
   );
 
   public submit() {

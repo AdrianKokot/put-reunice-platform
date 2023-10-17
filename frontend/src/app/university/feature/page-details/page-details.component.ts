@@ -11,6 +11,7 @@ import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import { PageFilesListComponent } from '../page-files-list/page-files-list.component';
 import { UserControlsResourceDirective } from '@reunice/modules/shared/security';
 import { TranslateModule } from '@ngx-translate/core';
+import { PageContactFormComponent } from '../page-contact-form/page-contact-form.component';
 
 @Component({
   selector: 'reunice-page-details',
@@ -29,7 +30,9 @@ import { TranslateModule } from '@ngx-translate/core';
     UserControlsResourceDirective,
     TuiHintModule,
     TranslateModule,
+    PageContactFormComponent,
   ],
+  styleUrls: ['./page-details.component.less'],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

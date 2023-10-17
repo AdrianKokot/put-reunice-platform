@@ -15,6 +15,7 @@ export interface Page {
   updatedOn: string;
   keyWords: string;
   contactRequestHandlers: User[];
+  hasContactRequestHandler: boolean;
 }
 
 export interface PageForm {
