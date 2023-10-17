@@ -40,19 +40,12 @@ public class FileResourceService {
     private final PageRepository pageRepository;
     private final SecurityService securityService;
 
-    public ResponseEntity<Resource> downloadFiles(Long pageId, String filename) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+    public ResponseEntity<Resource> downloadFiles(Long fileId) {
+        FileResource fileResource = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
+        Page page = fileResource.getPage();
         if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
             throw new PageForbidden();
         }
-
-        FileResource fileResource = new FileResource();
-
-        Optional<FileResource> optionalFileResource = fileRepository.findFileResourceByFilenameAndPage(filename, page);
-        if (optionalFileResource.isPresent()) {
-            fileResource = optionalFileResource.get();
-        }
-
 
         HttpHeaders httpHeaders = prepareHeaders(fileResource.getFilename(), fileResource.getFileType(), fileResource.getData().length);
 
