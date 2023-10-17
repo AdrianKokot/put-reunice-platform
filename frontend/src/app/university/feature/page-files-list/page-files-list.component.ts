@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import {
   filter,
@@ -18,15 +18,8 @@ import {
   takeUntil,
 } from 'rxjs';
 import { FileResource, FileService } from '@reunice/modules/shared/data-access';
-import { TranslateModule } from '@ngx-translate/core';
+import { TuiDestroyService, TuiLetModule } from '@taiga-ui/cdk';
 import {
-  TuiDestroyService,
-  TuiLetModule,
-  TuiOverscrollModule,
-  TuiZoomModule,
-} from '@taiga-ui/cdk';
-import {
-  TuiPreviewActionModule,
   TuiPreviewDialogService,
   TuiPreviewModule,
 } from '@taiga-ui/addon-preview';
@@ -37,13 +30,10 @@ import {
   TuiScrollbarModule,
   TuiSvgModule,
 } from '@taiga-ui/core';
+import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
+import { TranslateModule } from '@ngx-translate/core';
 import { TuiFilesModule, TuiMarkerIconModule } from '@taiga-ui/kit';
-import { RouterLink } from '@angular/router';
 import { FileIconPipeModule } from '@reunice/modules/shared/ui';
-import {
-  PolymorpheusContent,
-  PolymorpheusModule,
-} from '@tinkoff/ng-polymorpheus';
 
 type FilePreviewUIState = {
   pagination: {
@@ -63,22 +53,16 @@ type FilePreviewUIState = {
   standalone: true,
   imports: [
     CommonModule,
-    TranslateModule,
     TuiLetModule,
-    TuiSvgModule,
+    TranslateModule,
+    TuiFilesModule,
     TuiButtonModule,
-    TuiPreviewActionModule,
+    TuiMarkerIconModule,
     TuiPreviewModule,
     TuiLoaderModule,
-    TuiFilesModule,
-    RouterLink,
+    TuiSvgModule,
     FileIconPipeModule,
-    PolymorpheusModule,
-    TuiOverscrollModule,
     TuiScrollbarModule,
-    TuiZoomModule,
-    NgOptimizedImage,
-    TuiMarkerIconModule,
   ],
   templateUrl: './page-files-list.component.html',
   styleUrls: ['./page-files-list.component.less'],

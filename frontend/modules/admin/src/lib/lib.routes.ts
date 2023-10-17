@@ -18,7 +18,7 @@ export const adminRoutes: Route[] = [
       {
         title: translatedTitle('UNIVERSITIES'),
         path: 'universities',
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./university/university.module'),
       },
       {
@@ -39,13 +39,13 @@ export const adminRoutes: Route[] = [
       {
         title: translatedTitle('KEYWORDS'),
         path: 'keywords',
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./keyword/keyword.module'),
       },
       {
         title: translatedTitle('BACKUPS'),
         path: 'backups',
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./backup/backup.module'),
       },
     ],

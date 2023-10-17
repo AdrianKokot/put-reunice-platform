@@ -2,6 +2,7 @@
   <h4
     class="tui-text_h5 tui-space_top-6 tui-space_bottom-4"
     [class.tui-skeleton]="files === null"
+    [hidden]="files && files.length === 0"
   >
     {{ 'PAGE_FILES_LIST_TITLE' | translate }}
   </h4>
