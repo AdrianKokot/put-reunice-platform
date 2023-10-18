@@ -45,9 +45,9 @@ public class FileResourceController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("download/page/{pageId}/{filename}")
-    public ResponseEntity<Resource> downloadFiles(@PathVariable("pageId") Long pageId, @PathVariable("filename") String filename) {
-        return fileService.downloadFiles(pageId, filename);
+    @GetMapping("{id}/download")
+    public ResponseEntity<Resource> downloadFiles(@PathVariable("id") Long fileId) {
+        return fileService.downloadFiles(fileId);
     }
 
     @PostMapping("upload")

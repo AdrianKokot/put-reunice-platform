@@ -45,7 +45,14 @@ public class PageService {
             if (!isPageVisible(page.getParent())) {
                 page.setParent(null);
             }
-            return PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
+
+            PageDtoDetailed pageDto = PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
+
+            if (securityService.isForbiddenPage(page)) {
+                pageDto.setContactRequestHandlers(null);
+            }
+
+            return pageDto;
         }).orElseThrow(PageNotFound::new);
     }
 
@@ -117,7 +124,7 @@ public class PageService {
 
     private boolean isPageVisible(Page page) {
         return page != null && !((page.isHidden() || page.getUniversity().isHidden()) &&
-                securityService.isForbiddenPage(page));
+                                 securityService.isForbiddenPage(page));
     }
 
     private Page save(Page page) {
@@ -253,7 +260,7 @@ public class PageService {
 
     @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public void assignUsersToPage(List<Long> userIds, Long pageId) {
-        com.example.cms.page.Page page =  pageRepository.findById(pageId).orElse(null);
+        com.example.cms.page.Page page = pageRepository.findById(pageId).orElse(null);
 
         if (page == null) {
             throw new PageNotFound();

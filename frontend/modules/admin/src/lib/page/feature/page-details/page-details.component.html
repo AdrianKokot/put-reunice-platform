@@ -123,6 +123,14 @@
     class="tui-form__buttons tui-form__buttons_align_end"
     *ngIf="item !== null"
   >
+    <div class="d-flex items-center">
+      <a
+        tuiLink
+        [routerLink]="['/universities', item.university.id, 'page', item.id]"
+      >
+        {{ 'VIEW_PAGE' | translate }}
+      </a>
+    </div>
     <button
       *reuniceUserControlsResource="item"
       tuiButton

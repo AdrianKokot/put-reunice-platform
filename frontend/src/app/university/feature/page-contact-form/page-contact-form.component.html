@@ -1,0 +1,65 @@
+<h4 class="tui-text_h5 tui-space_top-4 tui-space_bottom-4">
+  {{ 'PAGE_CONTACT_FORM_TITLE' | translate }}
+</h4>
+
+<form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="name"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="name"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
+    <label [tuiLabel]="'EMAIL' | translate" class="tui-form__multi-field">
+      <tui-input
+        formControlName="email"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="email" />
+      </tui-input>
+
+      <tui-error
+        formControlName="email"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </div>
+
+  <label [tuiLabel]="'YOUR_QUESTION' | translate" class="tui-form__row">
+    <tui-textarea
+      formControlName="content"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      [maxLength]="255"
+      [expandable]="true"
+    >
+    </tui-textarea>
+
+    <tui-error
+      formControlName="content"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <button
+      tuiButton
+      size="m"
+      type="submit"
+      class="tui-form__button"
+      [showLoader]="(handler.loading$ | async) ?? false"
+    >
+      {{ 'SEND' | translate }}
+    </button>
+  </div>
+</form>

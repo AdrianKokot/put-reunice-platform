@@ -2,7 +2,7 @@ import { BaseResource } from '../models/base-resource';
 import { Injectable } from '@angular/core';
 import { AbstractApiService } from './abstract-api.service';
 import { Page, PageForm } from '../models/page';
-import { combineLatest, Observable, of, switchMap } from 'rxjs';
+import { combineLatest, delay, Observable, of, switchMap } from 'rxjs';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { FileResource } from '../models/file';
 import { User } from '../models/user';
@@ -54,5 +54,13 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     return this._http.get<Page>(
       `${this._resourceUrl}/hierarchy/${universityId}`,
     );
+  }
+
+  sendQuestion(
+    pageId: BaseResource['id'],
+    form: { name: string; content: string; email: string },
+  ) {
+    console.log({ pageId, form });
+    return of(true).pipe(delay(1000));
   }
 }
