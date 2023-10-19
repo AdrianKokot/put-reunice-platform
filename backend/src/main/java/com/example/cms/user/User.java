@@ -2,6 +2,7 @@ package com.example.cms.user;
 
 import com.example.cms.page.Page;
 import com.example.cms.security.Role;
+import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.university.University;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "university_id")
     )
     private Set<University> enrolledUniversities = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+    private Set<TicketUserStatus> ticketsToHandle = new HashSet<>();
 
     @ManyToMany(mappedBy = "handlers", fetch = FetchType.EAGER)
     private Set<Page> handlersPages = new HashSet<>();

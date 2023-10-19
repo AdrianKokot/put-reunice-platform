@@ -1,6 +1,7 @@
 package com.example.cms.ticket;
 
 import com.example.cms.page.Page;
+import com.example.cms.ticketUserStatus.TicketUserStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,12 +24,16 @@ public class Ticket {
         this.description = description;
         this.page = page;
 
+        this.ticketHandlers = new HashSet<>();
         this.responses = new ArrayList<>();
         this.status = TicketStatus.NEW;
     }
     @Setter
     @ManyToOne
     private Page page;
+    @Setter
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private Set<TicketUserStatus> ticketHandlers;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -40,6 +45,7 @@ public class Ticket {
     private TicketStatus status;
     private String title;
     private String description;
+    @Getter
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Response> responses;
     private String requestedToken;
