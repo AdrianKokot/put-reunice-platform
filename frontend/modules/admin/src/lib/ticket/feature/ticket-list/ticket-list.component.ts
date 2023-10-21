@@ -5,9 +5,13 @@ import {
   provideReuniceTable,
   ReuniceAbstractTable,
 } from '../../../shared';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import {
+  FormNotEmptyValuesPipeModule,
+  TicketToBadgeStatusModule,
+} from '@reunice/modules/shared/ui';
 import { FormBuilder } from '@angular/forms';
 import { Ticket, TicketService } from '@reunice/modules/shared/data-access';
+import { TuiBadgeModule } from '@taiga-ui/kit';
 
 @Component({
   selector: 'reunice-ticket-list',
@@ -16,6 +20,8 @@ import { Ticket, TicketService } from '@reunice/modules/shared/data-access';
     BaseFormImportsModule,
     BaseTableImportsModule,
     FormNotEmptyValuesPipeModule,
+    TuiBadgeModule,
+    TicketToBadgeStatusModule,
   ],
   templateUrl: './ticket-list.component.html',
   providers: [provideReuniceTable(TicketService)],

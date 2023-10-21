@@ -116,7 +116,10 @@
 
       <td *tuiCell="'status'" tuiTd
           class='column-sm'>
-        {{ ('TICKET_STATUS_' + item.status) | translate }}
+        <tui-badge
+          [status]="item | ticketToBadgeStatus"
+          [value]="('TICKET_STATUS_' + item.status) | translate"
+        ></tui-badge>
       </td>
 
       <td class='column-actions' *tuiCell="'actions'" tuiTd>
