@@ -17,7 +17,7 @@ import java.util.List;
 public class BackupController {
     private final BackupService backupService;
 
-    @PostMapping("/export")
+    @PostMapping()
     public void exportDatabaseBackup() throws SQLException, IOException {
         backupService.exportBackup(String.valueOf(Timestamp.valueOf(LocalDateTime.now()).getTime()));
     }
@@ -32,12 +32,12 @@ public class BackupController {
         return backupService.getBackups();
     }
 
-    @GetMapping(value = "/download/{backupName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/{backupName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public FileSystemResource downloadBackup(@PathVariable String backupName) {
         return backupService.getBackupFile(backupName);
     }
 
-    @DeleteMapping(value = "/delete/{backupName}")
+    @DeleteMapping(value = "/{backupName}")
     public void deleteBackup(@PathVariable String backupName) {
         backupService.deleteBackupFile(backupName);
     }
