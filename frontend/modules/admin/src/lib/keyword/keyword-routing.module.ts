@@ -4,6 +4,7 @@ import { KeywordListComponent } from './feature/keyword-list/keyword-list.compon
 import { KeywordEditFormComponent } from './feature/keyword-edit-form/keyword-edit-form.component';
 import { KeywordCreateFormComponent } from './feature/keyword-create-form/keyword-create-form.component';
 import { KeywordDetailsComponent } from './feature/keyword-details/keyword-details.component';
+import { translatedTitle } from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -12,20 +13,20 @@ const routes: Routes = [
   },
   {
     path: 'new',
-    title: 'New keyword',
+    title: translatedTitle('NEW_KEYWORD'),
     component: KeywordCreateFormComponent,
   },
   {
-    title: 'Keyword details',
+    title: translatedTitle('KEYWORD_DETAILS'),
     path: ':id',
     children: [
       {
-        title: 'Keyword details',
+        title: translatedTitle('KEYWORD_DETAILS'),
         path: '',
         component: KeywordDetailsComponent,
       },
       {
-        title: 'Edit keyword',
+        title: translatedTitle('EDIT_KEYWORD'),
         path: 'edit',
         component: KeywordEditFormComponent,
       },
