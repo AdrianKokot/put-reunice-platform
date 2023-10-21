@@ -253,5 +253,11 @@
   "EDIT_USER": "Edit user",
   "EDIT_KEYWORD": "Edit keyword",
   "USER_DETAILS": "User details",
-  "KEYWORD_DETAILS": "Keyword details"
+  "KEYWORD_DETAILS": "Keyword details",
+  "ERROR_404_TITLE": "Page not found",
+  "ERROR_404_MESSAGE": "The page you are looking for does not exist.",
+  "ERROR_403_TITLE": "Access denied",
+  "ERROR_403_MESSAGE": "You do not have permission to access this page.",
+  "ERROR_500_TITLE": "Internal server error",
+  "ERROR_500_MESSAGE": "An error occurred while processing your request."
 }

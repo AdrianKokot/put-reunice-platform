@@ -29,7 +29,7 @@
     [columns]='columns'
     *tuiLet='items$ | async as items'
   >
-    <thead>
+    <thead [formGroup]='filtersForm'>
     <tr tuiThGroup>
       <th
         *tuiHead="'title'"
