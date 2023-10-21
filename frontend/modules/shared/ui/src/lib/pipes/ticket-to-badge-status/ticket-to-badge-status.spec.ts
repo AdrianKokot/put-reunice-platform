@@ -1,4 +1,4 @@
-import { TicketToBadgeStatusPipe } from './ticket-status-to-badge-status.pipe';
+import { TicketToBadgeStatusPipe } from './ticket-to-badge-status.pipe';
 
 describe('TicketToBadgeStatus', () => {
   let pipe: TicketToBadgeStatusPipe;
