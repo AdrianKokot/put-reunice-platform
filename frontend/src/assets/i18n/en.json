@@ -335,5 +335,15 @@
   "PAGE_CONTACT_FORM_TITLE": "Do you have any questions?",
   "SEND": "Send",
   "SEND_QUESTION_SUCCESS": "Question sent successfully",
-  "YOUR_QUESTION": "Your question"
+  "YOUR_QUESTION": "Your question",
+  "USERS_QUESTIONS": "Users' questions",
+  "TICKETS": "Tickets",
+  "REQUESTER_EMAIL": "Requester email",
+  "TICKET_STATUS": "Status",
+  "TICKET_STATUS_NEW": "New",
+  "SEE_TICKET": "See ticket",
+  "MAIN_PAGE_CONTENT": "Main page content",
+  "WEBSITE": "Website",
+  "ADDRESS": "Address",
+  "EDIT_UNIVERSITY": "Edit university"
 }
