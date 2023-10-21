@@ -1,18 +1,123 @@
-<table tuiTable [columns]="columns">
-  <thead>
-    <tr tuiThGroup>
-      <th *tuiHead="'id'" tuiTh>Id</th>
-      <th *tuiHead="'date'" tuiTh>Date</th>
-      <th *tuiHead="'size'" tuiTh>Size</th>
-      <th *tuiHead="'actions'" tuiTh>Actions</th>
-    </tr>
-  </thead>
-  <tbody *tuiLet="(backups$ | async) ?? [] as data" tuiTbody [data]="data">
-    <tr *ngFor="let item of data; let index = index" tuiTr>
-      <td *tuiCell="'id'" tuiTd>{{ index + 1 }}</td>
-      <td *tuiCell="'date'" tuiTd>{{ item.name }}</td>
-      <td *tuiCell="'size'" tuiTd>{{ item.size }}</td>
-      <td *tuiCell="'actions'" tuiTd></td>
-    </tr>
-  </tbody>
-</table>
+<div
+  class="w-full d-flex gap-4 tui-space_bottom-4"
+  [formGroup]="filtersForm"
+  *tuiLet="delete$ | async"
+>
+  <div class="w-full"></div>
+
+  <a
+    (click)="actions.new()"
+    [showLoader]="(newLoading$ | async) ?? false"
+    appearance="primary"
+    tuiButton
+    type="button"
+  >
+    {{ 'NEW_BACKUP' | translate }}
+  </a>
+</div>
+
+<tui-scrollbar class="reunice-table-wrapper">
+  <table
+    tuiTable
+    tuiSortBy
+    [columns]="columns"
+    *tuiLet="items$ | async as items"
+  >
+    <thead>
+      <tr tuiThGroup>
+        <th
+          *tuiHead="'id'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
+          {{ 'CREATED_ON' | translate }}
+        </th>
+        <th
+          *tuiHead="'size'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'BACKUP_SIZE' | translate }}
+        </th>
+        <th
+          *tuiHead="'actions'"
+          tuiTh
+          [sorter]="null"
+          [sticky]="true"
+          class="column-actions"
+        ></th>
+      </tr>
+    </thead>
+
+    <tbody tuiTbody>
+      <tr
+        *ngFor="
+          let item of items;
+          else: loadingList;
+          empty: emptyList;
+          trackById
+        "
+        tuiTr
+      >
+        <td *tuiCell="'id'" tuiTd class="column-rest">
+          {{ item.id | localizedDate }}
+        </td>
+
+        <td *tuiCell="'size'" tuiTd class="column-sm">
+          {{ item.size }}
+        </td>
+
+        <td class="column-actions" *tuiCell="'actions'" tuiTd>
+          <a
+            [href]="'/api/backups/' + item.id"
+            target="_blank"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconDownload'"
+            shape="rounded"
+            [tuiHint]="'DOWNLOAD' | translate"
+          >
+          </a>
+
+          <a
+            [reuniceConfirm]="'BACKUP_DELETE_DESCRIPTION' | translate"
+            (confirm)="actions.delete(item.id)"
+            tuiIconButton
+            size="s"
+            appearance="flat-destructive"
+            [icon]="'tuiIconTrash2'"
+            shape="rounded"
+            [tuiHint]="'DELETE' | translate"
+          >
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</tui-scrollbar>
+
+<tui-table-pagination
+  class="tui-space_top-2"
+  [total]="(total$ | async) ?? 0"
+></tui-table-pagination>
+
+<ng-template #emptyList>
+  <tr>
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
+      {{ emptyMessage$ | async }}
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #loadingList>
+  <tr>
+    <td [colSpan]="columns.length">
+      <tui-loader></tui-loader>
+    </td>
+  </tr>
+</ng-template>

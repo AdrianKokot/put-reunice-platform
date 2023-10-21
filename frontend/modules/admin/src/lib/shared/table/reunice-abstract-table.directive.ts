@@ -62,6 +62,8 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
     REUNICE_TABLE_SERVICE,
   );
 
+  private readonly _refresh$ = new BehaviorSubject<void>(undefined);
+
   private readonly _storage = inject(LOCAL_STORAGE);
 
   protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
@@ -97,6 +99,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         debounceTime(300),
         map(() => this.filtersForm.getRawValue()),
       ),
+      this._refresh$,
     ])
       .pipe(
         debounceTime(200),
@@ -128,5 +131,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         shareReplay(),
       )
       .subscribe((x) => this._items$.next(x));
+  }
+
+  refresh() {
+    this._refresh$.next();
   }
 }
