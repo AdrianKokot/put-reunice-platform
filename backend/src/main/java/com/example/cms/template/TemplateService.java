@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TemplateService {
@@ -66,6 +67,7 @@ public class TemplateService {
                 combinedSpecification = combinedSpecification.and(spec);
             }
         }
+
 
         return templateRepository.findAll(combinedSpecification, pageable);
     }
@@ -160,11 +162,14 @@ public class TemplateService {
     }
 
     private void attachUniversities(Template template, Set<Long> universityIds) {
-        universityIds.addAll(
-                securityService.getPrincipal().get().getUniversities()
-        );
+        if (template.getIsAvailableToAll()) {
+            template.getUniversities().clear();
+            return;
+        }
 
-        Set<University> universities = universityRepository.findAllById(universityIds)
+        Set<Long> uniqueUniversityIds = Stream.concat(universityIds.stream(), securityService.getPrincipal().get().getUniversities().stream()).collect(Collectors.toSet());
+
+        Set<University> universities = universityRepository.findAllById(uniqueUniversityIds)
                 .stream()
                 .filter(university -> !securityService.isForbiddenUniversity(university))
                 .collect(Collectors.toSet());
