@@ -186,8 +186,8 @@
   "SYSTEM_BACKUP_AND_RESTORE": "System backup & restore",
   "PAGE_LOCATION": "Page location",
   "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account",
-  "TEMPLATE_AVAILABLE_FOR_UNIVERSITIES": "Available for universities",
-  "CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES": "Mark as available for all universities",
+  "TEMPLATE_AVAILABLE_TO_UNIVERSITIES": "Available to universities",
+  "CHECKBOX_TEMPLATE_AVAILABLE_TO_ALL_UNIVERSITIES": "Mark as available to all universities",
   "LOAD_TEMPLATE": "Load template",
   "NO_TEMPLATES_AVAILABLE": "No templates available",
   "CREATED_AT": "Created",
@@ -263,5 +263,6 @@
   "BACKUP_SIZE": "Backup size",
   "NEW_BACKUP": "Create backup",
   "DOWNLOAD": "Download",
-  "BACKUP_DELETE_DESCRIPTION": "Are you sure you want to delete this backup?"
+  "BACKUP_DELETE_DESCRIPTION": "Are you sure you want to delete this backup?",
+  "CREATE_TEMPLATE": "Create template"
 }
