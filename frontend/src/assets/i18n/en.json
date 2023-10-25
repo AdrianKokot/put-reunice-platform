@@ -140,93 +140,6 @@
   "USER_CREATE_SUCCESS": "User created successfully",
   "TEMPLATE_UPDATE_SUCCESS": "Template updated successfully",
   "TEMPLATE_CREATE_SUCCESS": "Template created successfully",
-  "TEMPLATE": {
-    "ONE": "Template",
-    "MANY": "Templates",
-    "FIELD_NAME": "Template name",
-    "AVAILABLE": "Available templates",
-    "EDIT_MODE": "Edit mode",
-    "SELECTION_MODE": "Selection mode",
-    "ADD": "Add",
-    "EDIT": "Edit",
-    "RENAME": "Change name",
-    "DELETE": "Delete",
-    "ADD_TO_UNIVERSITY": "Add to university",
-    "REMOVE_FROM_UNIVERSITY": "Remove from university",
-    "LOAD": "Load template",
-    "PREVIEW": "Preview",
-    "NONE_SELECTED": "No template selected",
-    "IS_REQUIRED": "Template is required",
-    "EDITOR_HEADER": "Editing template",
-    "DIALOG_ADD_HEADER": "Adding template",
-    "DIALOG_RENAME_HEADER": "Changing template name",
-    "DIALOG_LOAD_HEADER": "Loading template",
-    "LOAD_CONFIRM_DESCRIPTION": "Are you sure you want to load the template? It will replace the entire content of the page."
-  },
-  "BACKUP": {
-    "ONE": "Backup",
-    "MANY": "Backups",
-    "TITLE": "Database backups",
-    "TIME_SINCE": "Time since the last backup: ",
-    "NUMBER_OF": "Number of backups: ",
-    "CREATE_NEW": "Create backup",
-    "CREATE_SUCCESS": "Backup created successfully",
-    "DELETE_SUCCESS": "Backup deleted successfully",
-    "POSITION_COL": "No.",
-    "DATE_COL": "Date",
-    "SIZE_COL": "Size",
-    "DElETE_TOOLTIP": "Delete backup",
-    "DOWNLOAD_TOOLTIP": "Download backup",
-    "NO_BACKUPS": "---"
-  },
-  "ERRORS": {
-    "400": "Invalid request",
-    "401": "Not authorized",
-    "403": "No access",
-    "404": "Resource not found",
-    "500": "Server error",
-    "PAGE": {
-      "400": {
-        "DELETING_WITH_CHILD": "Cannot delete page with subpages"
-      },
-      "403": "No access to page",
-      "404": "Page not found"
-    },
-    "UNIVERSITY": {
-      "400": {
-        "NAME_TAKEN": "This name is already taken",
-        "UNIVERSITY_NOT_HIDDEN": "Cannot delete not hidden university",
-        "ACTIVE_USER_EXISTS": "Cannot delete university with active users"
-      },
-      "403": "No access to university",
-      "404": "University not found"
-    },
-    "USER": {
-      "400": {
-        "PAGES_EXISTS": "Cannot delete a user, if he is the author of any page",
-        "SAME_PASSWORD": "The old password is the same as the new password",
-        "USERNAME_TAKEN": "User with given username already exists",
-        "WRONG_PASSWORD": "The password is wrong",
-        "NOT_VALID_PASSWORD": "The password is not valid",
-        "USER_ENABLED": "Cannot delete active user"
-      },
-      "403": "No access to user",
-      "404": "User not found"
-    },
-    "TEMPLATE": {
-      "404": "Template not found"
-    },
-    "BACKUP": {
-      "400": "Error occurred during backup import/export",
-      "404": "Backup not found"
-    },
-    "LOGIN": {
-      "401": {
-        "DISABLED": "Account is deactivated",
-        "WRONG_CREDENTIALS": "Wrong username or password"
-      }
-    }
-  },
   "FILENAME": "File name",
   "TYPE": "File type",
   "SIZE": "File size",
@@ -236,18 +149,6 @@
   "DOWNLOAD_FILE_TOOLTIP": "Download plik",
   "KEYWORD_UPDATE_SUCCESS": "Keyword updated successfully",
   "KEYWORD_CREATE_SUCCESS": "Keyword created successfully",
-  "KEYWORD": {
-    "ONE": "Keyword",
-    "MANY": "Keywords",
-    "EDIT": "Edit",
-    "EDIT_MANY": "Edit keywords",
-    "ADD": "Add",
-    "DELETE": "Delete",
-    "AVAILABLE": "Available keywords",
-    "EDIT_MODE": "Edit mode",
-    "CLOSE": "Close",
-    "VIEW_MODE": "View mode"
-  },
   "NO_FILES": "No files uploaded yet.",
   "DELETE_FILE_DESCRIPTION": "Are you sure you want to delete this file? This operation cannot be undone.",
   "DELETE_FILE_CONFIRMATION": "File deleted successfully.",
@@ -285,8 +186,8 @@
   "SYSTEM_BACKUP_AND_RESTORE": "System backup & restore",
   "PAGE_LOCATION": "Page location",
   "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account",
-  "TEMPLATE_AVAILABLE_FOR_UNIVERSITIES": "Available for universities",
-  "CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES": "Mark as available for all universities",
+  "TEMPLATE_AVAILABLE_TO_UNIVERSITIES": "Available to universities",
+  "CHECKBOX_TEMPLATE_AVAILABLE_TO_ALL_UNIVERSITIES": "Mark as available to all universities",
   "LOAD_TEMPLATE": "Load template",
   "NO_TEMPLATES_AVAILABLE": "No templates available",
   "CREATED_AT": "Created",
@@ -335,5 +236,33 @@
   "PAGE_CONTACT_FORM_TITLE": "Do you have any questions?",
   "SEND": "Send",
   "SEND_QUESTION_SUCCESS": "Question sent successfully",
-  "YOUR_QUESTION": "Your question"
+  "YOUR_QUESTION": "Your question",
+  "USERS_QUESTIONS": "Users' questions",
+  "TICKETS": "Tickets",
+  "REQUESTER_EMAIL": "Requester email",
+  "TICKET_STATUS": "Status",
+  "TICKET_STATUS_NEW": "New",
+  "SEE_TICKET": "See ticket",
+  "MAIN_PAGE_CONTENT": "Main page content",
+  "WEBSITE": "Website",
+  "ADDRESS": "Address",
+  "EDIT_UNIVERSITY": "Edit university",
+  "PAGE_DETAILS": "Page details",
+  "TEMPLATE_DETAILS": "Template details",
+  "EDIT_TEMPLATE": "Edit template",
+  "EDIT_USER": "Edit user",
+  "EDIT_KEYWORD": "Edit keyword",
+  "USER_DETAILS": "User details",
+  "KEYWORD_DETAILS": "Keyword details",
+  "ERROR_404_TITLE": "Page not found",
+  "ERROR_404_MESSAGE": "The page you are looking for does not exist.",
+  "ERROR_403_TITLE": "Access denied",
+  "ERROR_403_MESSAGE": "You do not have permission to access this page.",
+  "ERROR_500_TITLE": "Internal server error",
+  "ERROR_500_MESSAGE": "An error occurred while processing your request.",
+  "BACKUP_SIZE": "Backup size",
+  "NEW_BACKUP": "Create backup",
+  "DOWNLOAD": "Download",
+  "BACKUP_DELETE_DESCRIPTION": "Are you sure you want to delete this backup?",
+  "CREATE_TEMPLATE": "Create template"
 }

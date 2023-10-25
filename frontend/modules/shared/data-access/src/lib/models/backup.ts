@@ -1,4 +1,4 @@
 export interface Backup {
-  name: string;
+  id: string;
   size: string;
 }

@@ -4,6 +4,7 @@ import { UniversityListComponent } from './feature/university-list/university-li
 import { UniversityEditFormComponent } from './feature/university-edit-form/university-edit-form.component';
 import { UniversityCreateFormComponent } from './feature/university-create-form/university-create-form.component';
 import { UniversityDetailsComponent } from './feature/university-details/university-details.component';
+import { translatedTitle } from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -11,21 +12,21 @@ const routes: Routes = [
     component: UniversityListComponent,
   },
   {
-    title: 'Create University',
+    title: translatedTitle('CREATE_UNIVERSITY'),
     path: 'new',
     component: UniversityCreateFormComponent,
   },
   {
-    title: 'University details',
+    title: translatedTitle('UNIVERSITY_DETAILS'),
     path: ':id',
     children: [
       {
-        title: 'University details',
+        title: translatedTitle('UNIVERSITY_DETAILS'),
         path: '',
         component: UniversityDetailsComponent,
       },
       {
-        title: 'Edit university',
+        title: translatedTitle('EDIT_UNIVERSITY'),
         path: 'edit',
         component: UniversityEditFormComponent,
       },

@@ -48,6 +48,11 @@ export const adminRoutes: Route[] = [
         canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
         loadChildren: () => import('./backup/backup.module'),
       },
+      {
+        title: translatedTitle('TICKETS'),
+        path: 'tickets',
+        loadChildren: () => import('./ticket/ticket.module'),
+      },
     ],
   },
 ];

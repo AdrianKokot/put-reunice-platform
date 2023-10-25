@@ -10,18 +10,11 @@ public class TemplateDtoFormUpdate {
     String name;
     String content;
     Set<Long> universities;
-
-    public Template toTemplate() {
-        Template template = new Template();
-
-        template.setName(name);
-        template.setContent(content);
-
-        return template;
-    }
+    Boolean availableToAllUniversities;
 
     public void updateTemplate(Template template) {
         template.setName(name);
         template.setContent(content);
+        template.setIsAvailableToAll(availableToAllUniversities);
     }
 }

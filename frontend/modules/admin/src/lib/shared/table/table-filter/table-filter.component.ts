@@ -133,6 +133,11 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
     return this.button?.nativeFocusableElement ?? null;
   }
 
+  override writeValue(value: T | null) {
+    super.writeValue(value);
+    this.appliedFilter = !!value;
+  }
+
   constructor(
     @Optional()
     @Self()
