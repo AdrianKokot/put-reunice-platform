@@ -45,7 +45,7 @@ public class TicketService {
         ticket.setTicketHandlers(
                 page.getHandlers().stream().map(handler -> {
                     TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                    ticketUserStatus.setLastSeenOn(null);
+                    ticketUserStatus.setLastSeenOn(Instant.now());
                     ticketUserStatus.setUser(handler);
                     ticketUserStatus.setTicket(ticket);
                     ticketUserStatusRepository.save(ticketUserStatus);

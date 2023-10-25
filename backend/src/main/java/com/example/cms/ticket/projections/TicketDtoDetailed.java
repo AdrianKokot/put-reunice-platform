@@ -1,15 +1,16 @@
 package com.example.cms.ticket.projections;
 
-import com.example.cms.ticket.Response;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticket.TicketStatus;
+import com.example.cms.ticketUserStatus.TicketUserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class TicketDtoDetailed {
     private TicketStatus status;
     private String title;
     private String description;
-    private List<Response> responses;
+    private Map<String, Instant> lastSeenOn;
 
     public static TicketDtoDetailed of(Ticket ticket) {
         if (ticket == null) {
@@ -39,6 +40,7 @@ public class TicketDtoDetailed {
         status = ticket.getStatus();
         title = ticket.getTitle();
         description = ticket.getDescription();
-        responses = ticket.getResponses();
+        lastSeenOn = ticket.getTicketHandlers().stream()
+                .collect(Collectors.toMap(item -> item.getUser().getUsername(), TicketUserStatus::getLastSeenOn));
     }
 }
