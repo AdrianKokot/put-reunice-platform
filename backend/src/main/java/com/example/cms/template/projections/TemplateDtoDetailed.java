@@ -17,6 +17,7 @@ public class TemplateDtoDetailed {
     private String name;
     private String content;
     private Set<UniversityDtoSimple> universities;
+    private Boolean availableToAllUniversities;
 
     public static TemplateDtoDetailed of(Template template) {
         if (template == null) {
@@ -32,5 +33,6 @@ public class TemplateDtoDetailed {
         universities = template.getUniversities().stream()
                 .map(UniversityDtoSimple::of)
                 .collect(Collectors.toSet());
+        availableToAllUniversities = template.getIsAvailableToAll();
     }
 }

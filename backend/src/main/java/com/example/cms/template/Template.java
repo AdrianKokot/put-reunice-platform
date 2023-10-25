@@ -34,9 +34,11 @@ public class Template {
             joinColumns = @JoinColumn(name = "template_id"),
             inverseJoinColumns = @JoinColumn(name = "university_id")
     )
-
     @ToString.Exclude
     private Set<University> universities = new HashSet<>();
+
+    @NotNull(message = "isAvailableForAll must not be null")
+    private Boolean isAvailableToAll = false;
 
     @Override
     public boolean equals(Object o) {

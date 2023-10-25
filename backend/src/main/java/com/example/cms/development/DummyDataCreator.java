@@ -9,6 +9,8 @@ import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
 import com.example.cms.security.Role;
 import com.example.cms.template.TemplateService;
+import com.example.cms.template.projections.TemplateDtoFormCreate;
+import com.example.cms.template.projections.TemplateDtoFormUpdate;
 import com.example.cms.university.UniversityService;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.user.UserService;
@@ -1486,8 +1488,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.modifyHiddenField(8L, false);
         pageService.modifyHiddenField(10L, false);
 
-        templateService.save("UniversityTemplate");
-        templateService.modifyContentField(1L, "Template used for university main page.");
+        templateService.save(new TemplateDtoFormCreate("UniversityTemplate", "Template used for university main page", Set.of(), true));
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 "admin",
@@ -1500,10 +1501,10 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.assignUsersToPage(List.of(5L, 22L), 5L);
 
         UUID ticketId1 = ticketService.createTicket("michal.wazowski9020@gmail.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
-        UUID ticketId2 = ticketService.createTicket("requester2@email.com","Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
-        UUID ticketId3 = ticketService.createTicket("requester3@email.com","Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
-        UUID ticketId4 = ticketService.createTicket("requester4@email.com","Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
-        UUID ticketId5 = ticketService.createTicket("requester5@email.com","Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
+        UUID ticketId2 = ticketService.createTicket("requester2@email.com", "Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
+        UUID ticketId3 = ticketService.createTicket("requester3@email.com", "Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
+        UUID ticketId4 = ticketService.createTicket("requester4@email.com", "Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
+        UUID ticketId5 = ticketService.createTicket("requester5@email.com", "Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
 
         ticketService.addResponse(ticketId1, new Response("michal", "message content to ticket 1 from author1"));
         ticketService.addResponse(ticketId1, new Response("author1", "another message content to ticket 1 from author1"));
