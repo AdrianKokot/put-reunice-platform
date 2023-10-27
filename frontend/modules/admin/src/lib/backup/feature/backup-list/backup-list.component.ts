@@ -62,6 +62,7 @@ export class BackupListComponent extends ReuniceAbstractTable<Backup> {
     switchMap(() =>
       this.service.create({}).pipe(
         map(() => false),
+        tap(() => this.refresh()),
         startWith(true),
       ),
     ),

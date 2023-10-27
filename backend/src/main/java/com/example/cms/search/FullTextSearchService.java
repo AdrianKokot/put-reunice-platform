@@ -2,7 +2,6 @@ package com.example.cms.search;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.typesense.api.Client;
 import org.typesense.api.Configuration;
@@ -18,6 +17,11 @@ public abstract class FullTextSearchService {
     protected final ApplicationConfigurationProvider applicationConfigurationProvider;
 
     protected final Client client;
+    private Boolean health = false;
+
+    protected Boolean isConnected() {
+        return health;
+    }
 
     public FullTextSearchService(ApplicationConfigurationProvider applicationConfigurationProvider) {
         this.applicationConfigurationProvider = applicationConfigurationProvider;
@@ -37,7 +41,9 @@ public abstract class FullTextSearchService {
 
         try {
             log.info(client.health.retrieve().toString());
+            this.health = true;
         } catch (Exception e) {
+            this.health = false;
             log.log(java.util.logging.Level.SEVERE, "Error while connecting to Typesense", e);
         }
 

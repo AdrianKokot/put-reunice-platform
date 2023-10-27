@@ -3,12 +3,15 @@ package com.example.cms.backup;
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.backup.exceptions.BackupNotFound;
 import com.example.cms.file.FileUtils;
+import com.example.cms.page.PageService;
+import com.example.cms.search.PageFullTextSearchService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -41,6 +44,8 @@ public class BackupService {
     private final JdbcTemplate jdbcTemplate;
     private final EntityManager entityManager;
     private final ZipService zipService;
+    private final PageFullTextSearchService pageSearchService;
+    private final PageService pageService;
 
     private Connection getConnection() {
         return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource())
@@ -126,6 +131,10 @@ public class BackupService {
 
         Files.delete(restoreMainPath.resolve("pg_largeobject.txt"));
         FileUtils.deleteFiles(files);
+
+        pageSearchService.deleteCollection();
+        pageSearchService.createCollection();
+        pageService.getAllVisible(Pageable.unpaged(), null).forEach(pageSearchService::upsert);
     }
 
     private void readTableFromFile(String path, String table, CopyManager copyManager) throws IOException, SQLException {
