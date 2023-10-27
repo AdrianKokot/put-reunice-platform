@@ -3,6 +3,7 @@ package com.example.cms.backup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,8 +19,9 @@ public class BackupController {
     private final BackupService backupService;
 
     @PostMapping()
-    public void exportDatabaseBackup() throws SQLException, IOException {
+    public ResponseEntity<Void> exportDatabaseBackup() throws SQLException, IOException {
         backupService.exportBackup(String.valueOf(Timestamp.valueOf(LocalDateTime.now()).getTime()));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/import/{backupName}")

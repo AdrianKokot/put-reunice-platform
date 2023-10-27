@@ -66,6 +66,7 @@ public class BackupService {
     @Transactional
     @Async
     public void exportBackup(String backupName) throws SQLException, IOException {
+        log.info("[BACKUP-EXPORT-JOB][{}] Start exporting backup", backupName);
         Connection connection = getConnection();
         CopyManager copyManager = createCopyManager(connection);
         Path backupPath = backupsMainPath.resolve(backupName).normalize();
@@ -77,6 +78,7 @@ public class BackupService {
         List<File> files = new ArrayList<>();
         while (tables.next()) {
             String tableName = tables.getString("TABLE_NAME");
+            log.info("[BACKUP-EXPORT-JOB][{}] Export table: {}", backupName, tableName);
             File file = backupPath.resolve(tableName.concat(".txt")).toFile();
             files.add(file);
             writeTableToFile(file, tableName, copyManager);
@@ -85,8 +87,10 @@ public class BackupService {
         files.add(file);
         writeTableToFile(file, LARGE_OBJECT_TABLE, copyManager);
 
+        log.info("[BACKUP-EXPORT-JOB][{}] Start creating zip archive", backupName);
         zipService.zipArchive(files, backupPath.resolve(backupName.concat(".zip")));
         FileUtils.deleteFiles(files);
+        log.info("[BACKUP-EXPORT-JOB][{}] Finish job", backupName);
     }
 
     private void writeTableToFile(File file, String table, CopyManager copyManager) throws IOException, SQLException {
@@ -158,7 +162,7 @@ public class BackupService {
                 .filter(file -> {
                     File[] fileList = Optional.ofNullable(file.listFiles()).orElse(new File[]{});
                     return fileList.length == 1 &&
-                            fileList[0].getName().substring(fileList[0].getName().lastIndexOf('.')).equals(".zip");
+                           fileList[0].getName().substring(fileList[0].getName().lastIndexOf('.')).equals(".zip");
                 })
                 .map(File::getName).map(fileName -> {
                     File zipFile = backupsMainPath.resolve(fileName).resolve(fileName.concat(".zip")).toFile();
