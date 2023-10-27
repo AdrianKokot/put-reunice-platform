@@ -264,5 +264,7 @@
   "NEW_BACKUP": "Create backup",
   "DOWNLOAD": "Download",
   "BACKUP_DELETE_DESCRIPTION": "Are you sure you want to delete this backup?",
-  "CREATE_TEMPLATE": "Create template"
+  "CREATE_TEMPLATE": "Create template",
+  "BACKUP_SUCCESSFULLY_SCHEDULED": "Backup creation was successfully scheduled",
+  "REFRESH": "Refresh"
 }

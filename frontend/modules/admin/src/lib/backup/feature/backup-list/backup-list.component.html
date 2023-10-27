@@ -5,12 +5,20 @@
 >
   <div class="w-full"></div>
 
+  <button
+    (click)="refresh()"
+    tuiIconButton
+    [icon]="'tuiIconRefreshCcw'"
+    appearance="secondary"
+    type="button"
+    [tuiHint]="'REFRESH' | translate"
+  ></button>
+
   <a
     (click)="actions.new()"
     [showLoader]="(newLoading$ | async) ?? false"
     appearance="primary"
     tuiButton
-    type="button"
   >
     {{ 'NEW_BACKUP' | translate }}
   </a>

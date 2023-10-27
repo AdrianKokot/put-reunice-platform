@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Backup, BackupService } from '@reunice/modules/shared/data-access';
 import {
   BaseFormImportsModule,
@@ -20,6 +20,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { TuiAlertService } from '@taiga-ui/core';
+import { TranslateService } from '@ngx-translate/core';
 
 interface DeleteAction {
   action: 'delete';
@@ -45,6 +47,9 @@ type UiAction = DeleteAction | NewAction;
   providers: [provideReuniceTable(BackupService)],
 })
 export class BackupListComponent extends ReuniceAbstractTable<Backup> {
+  private readonly _alert = inject(TuiAlertService);
+  private readonly _translate = inject(TranslateService);
+
   readonly columns: Array<keyof Backup | string> = ['id', 'size', 'actions'];
 
   readonly filtersForm = new FormGroup({});
@@ -62,7 +67,13 @@ export class BackupListComponent extends ReuniceAbstractTable<Backup> {
     switchMap(() =>
       this.service.create({}).pipe(
         map(() => false),
-        tap(() => this.refresh()),
+        tap(() => {
+          this._alert
+            .open(this._translate.instant('BACKUP_SUCCESSFULLY_SCHEDULED'), {
+              status: 'success',
+            })
+            .subscribe();
+        }),
         startWith(true),
       ),
     ),
