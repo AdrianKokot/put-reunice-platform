@@ -65,7 +65,9 @@
       type="button"
       appearance="flat-destructive"
       class="tui-form__button"
-      reuniceConfirm
+      [reuniceConfirm]="
+        'USER_DELETE_DESCRIPTION' | translate: { username: item.username }
+      "
       [showLoader]="(deleteHandler.loading$ | async) ?? false"
       [disabled]="item.id === user.id"
       (confirm)="deleteHandler.delete(item.id)"
