@@ -1,12 +1,5 @@
-import {
-  ChangeDetectorRef,
-  Directive,
-  inject,
-  Input,
-  OnChanges,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+/* eslint-disable @angular-eslint/no-input-rename */
+import { ChangeDetectorRef, Directive, inject, Input, OnChanges, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -15,7 +8,7 @@ import {
   Page,
   Template,
   University,
-  User,
+  User
 } from '@reunice/modules/shared/data-access';
 import { combineLatest, Subject } from 'rxjs';
 
@@ -58,6 +51,11 @@ export class UserControlsResourceDirective<
   })
   controlledResource: T | null = null;
 
+  @Input({
+    alias: 'reuniceUserControlsResourceElse',
+  })
+  fallbackTemplate: TemplateRef<unknown> | null = null;
+
   constructor(
     private readonly templateRef: TemplateRef<UserControlsResourceContext<T>>,
     private readonly viewContainer: ViewContainerRef,
@@ -80,6 +78,8 @@ export class UserControlsResourceDirective<
             this.templateRef,
             new UserControlsResourceContext<T>(this.controlledResource),
           );
+        } else if (this.fallbackTemplate !== null) {
+          this.viewContainer.createEmbeddedView(this.fallbackTemplate);
         }
 
         cdr.markForCheck();

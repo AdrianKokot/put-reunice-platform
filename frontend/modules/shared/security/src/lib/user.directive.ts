@@ -1,21 +1,10 @@
 /* eslint-disable @angular-eslint/no-input-rename */
-import {
-  ChangeDetectorRef,
-  Directive,
-  inject,
-  Input,
-  OnInit,
-  TemplateRef,
-  ViewContainerRef,
-} from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { AuthService } from './auth.service';
-import {
-  ExtendedAccountType,
-  ExtendedAccountTypeEnum,
-  User,
-} from '@reunice/modules/shared/data-access';
-import { distinctUntilKeyChanged, map, shareReplay, startWith } from 'rxjs';
+import { ExtendedAccountType, ExtendedAccountTypeEnum, User } from '@reunice/modules/shared/data-access';
+import { shareReplay, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isUserOfType } from './is-user-of-type';
 
 class UserContext {
   get $implicit(): User | null {
@@ -56,11 +45,6 @@ export class UserDirective implements OnInit {
   private readonly _userType$ = inject(AuthService).user$.pipe(
     startWith(null),
     takeUntilDestroyed(),
-    map((user) => ({
-      type: user?.accountType ?? ExtendedAccountTypeEnum.GUEST,
-      user,
-    })),
-    distinctUntilKeyChanged('type'),
     shareReplay(1),
   );
 
@@ -89,13 +73,10 @@ export class UserDirective implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._userType$.subscribe(({ type, user }) => {
+    this._userType$.subscribe((user) => {
       this.viewContainer.clear();
 
-      if (
-        type === this.requiredAccountType ||
-        this.requiredAccountType === null
-      ) {
+      if (this.requiredAccountType === null || isUserOfType(user, this.requiredAccountType)) {
         this.viewContainer.createEmbeddedView(this.templateRef, this._context);
       } else if (this.fallbackTemplate !== null) {
         this.viewContainer.createEmbeddedView(

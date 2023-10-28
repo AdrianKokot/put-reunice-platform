@@ -1,44 +1,44 @@
-<div *tuiLet="item$ | async as item">
+<div *tuiLet='item$ | async as item'>
   <form
-    [formGroup]="handler.form"
-    [class.form-skeleton]="item === null"
-    (ngSubmit)="handler.submit()"
+    [formGroup]='handler.form'
+    [class.form-skeleton]='item === null'
+    (ngSubmit)='handler.submit()'
   >
-    <h3 class="tui-form__header">
+    <h3 class='tui-form__header'>
       {{ 'BASIC_INFORMATION' | translate }}
     </h3>
 
-    <div class="tui-form__row tui-form__row_multi-fields">
-      <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
+    <div class='tui-form__row tui-form__row_multi-fields'>
+      <label [tuiLabel]="'TITLE' | translate" class='tui-form__multi-field'>
         <tui-input
-          formControlName="title"
-          tuiTextfieldSize="m"
-          [tuiTextfieldLabelOutside]="true"
+          formControlName='title'
+          tuiTextfieldSize='m'
+          [tuiTextfieldLabelOutside]='true'
         >
-          <input tuiTextfield type="text" />
+          <input tuiTextfield type='text' />
         </tui-input>
 
         <tui-error
-          formControlName="title"
-          [error]="[] | tuiFieldError | async"
+          formControlName='title'
+          [error]='[] | tuiFieldError | async'
         ></tui-error>
       </label>
 
       <label
         [tuiLabel]="'VISIBILITY' | translate"
-        class="tui-form__multi-field"
+        class='tui-form__multi-field'
       >
         <tui-select
-          formControlName="hidden"
-          tuiTextfieldSize="m"
-          [valueContent]="valueContent"
-          [tuiTextfieldLabelOutside]="true"
+          formControlName='hidden'
+          tuiTextfieldSize='m'
+          [valueContent]='valueContent'
+          [tuiTextfieldLabelOutside]='true'
         >
           <tui-data-list *tuiDataList>
-            <button tuiOption [value]="false">
+            <button tuiOption [value]='false'>
               {{ 'VISIBLE' | translate }}
             </button>
-            <button tuiOption [value]="true">{{ 'HIDDEN' | translate }}</button>
+            <button tuiOption [value]='true'>{{ 'HIDDEN' | translate }}</button>
           </tui-data-list>
         </tui-select>
 
@@ -47,91 +47,113 @@
         </ng-template>
 
         <tui-error
-          formControlName="hidden"
-          [error]="[] | tuiFieldError | async"
+          formControlName='hidden'
+          [error]='[] | tuiFieldError | async'
         ></tui-error>
       </label>
 
-      <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
-        <tui-input
-          formControlName="author"
-          tuiTextfieldSize="m"
-          [readOnly]="true"
-          [tuiTextfieldLabelOutside]="true"
-        >
-          <input tuiTextfield type="text" />
-        </tui-input>
+      <ng-container *reuniceUser="'ADMINISTRATIVE'; else authorNotAdmin">
+        <label [tuiLabel]="'AUTHOR' | translate" class='tui-form__multi-field'
+               *reuniceUserControlsResource='item; else authorNotAdmin'>
+          <tui-combo-box
+            tuiTextfieldSize='m'
+            *tuiLet='userSearch.itemIds$ | async as items'
+            formControlName='creatorId'
+            [tuiTextfieldLabelOutside]='true'
+            (searchChange)='userSearch.search($event)'
+            [stringify]='(userSearch.stringify$ | async)!'
+          >
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]='items'
+              [itemContent]='(userSearch.stringify$ | async)!'
+            ></tui-data-list-wrapper>
+          </tui-combo-box>
 
-        <tui-error
-          formControlName="author"
-          [error]="[] | tuiFieldError | async"
-        ></tui-error>
-      </label>
+          <tui-error
+            formControlName='creatorId'
+            [error]='[] | tuiFieldError | async'
+          ></tui-error>
+        </label>
+      </ng-container>
+
+      <ng-template #authorNotAdmin>
+        <label [tuiLabel]="'AUTHOR' | translate" class='tui-form__multi-field'>
+          <tui-input
+            formControlName='author'
+            tuiTextfieldSize='m'
+            [readOnly]='true'
+            [tuiTextfieldLabelOutside]='true'
+          >
+            <input tuiTextfield type='text' />
+          </tui-input>
+        </label>
+      </ng-template>
     </div>
 
-    <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+    <label [tuiLabel]="'DESCRIPTION' | translate" class='tui-form__row'>
       <tui-text-area
-        formControlName="description"
-        tuiTextfieldSize="m"
-        [tuiTextfieldLabelOutside]="true"
-        [maxLength]="255"
-        [expandable]="true"
+        formControlName='description'
+        tuiTextfieldSize='m'
+        [tuiTextfieldLabelOutside]='true'
+        [maxLength]='255'
+        [expandable]='true'
       >
       </tui-text-area>
 
       <tui-error
-        formControlName="description"
-        [error]="[] | tuiFieldError | async"
+        formControlName='description'
+        [error]='[] | tuiFieldError | async'
       ></tui-error>
     </label>
 
-    <h3 class="tui-form__header">
+    <h3 class='tui-form__header'>
       {{ 'PAGE_CONTENT' | translate }}
     </h3>
 
-    <label class="tui-form__row" [tuiLabel]="'CONTENT' | translate">
-      <tui-editor formControlName="content">
-        <ng-container ngProjectAs="tools">
+    <label class='tui-form__row' [tuiLabel]="'CONTENT' | translate">
+      <tui-editor formControlName='content'>
+        <ng-container ngProjectAs='tools'>
           <reunice-load-template-tool
             tuiItem
-            [universityId]="item?.university?.id ?? null"
+            [universityId]='item?.university?.id ?? null'
           >
           </reunice-load-template-tool>
         </ng-container>
       </tui-editor>
 
       <tui-error
-        formControlName="content"
-        [error]="[] | tuiFieldError | async"
+        formControlName='content'
+        [error]='[] | tuiFieldError | async'
       ></tui-error>
     </label>
 
-    <h3 class="tui-form__header">{{ 'PAGE_FILES' | translate }}</h3>
+    <h3 class='tui-form__header'>{{ 'PAGE_FILES' | translate }}</h3>
 
-    <div class="tui-form__row">
-      <div class="tui-space_bottom-1">
+    <div class='tui-form__row'>
+      <div class='tui-space_bottom-1'>
         {{ 'FILES' | translate }}
       </div>
 
-      <ng-container *tuiLet="handler.form.controls.files as filesControl">
+      <ng-container *tuiLet='handler.form.controls.files as filesControl'>
         <tui-input-files
-          [multiple]="true"
-          (ngModelChange)="filesControl.markAsTouched()"
-          [formControl]="filesControl"
-          (reject)="onReject($event)"
+          [multiple]='true'
+          (ngModelChange)='filesControl.markAsTouched()'
+          [formControl]='filesControl'
+          (reject)='onReject($event)'
         >
         </tui-input-files>
 
         <tui-files
-          class="tui-space_top-1"
-          [max]="3"
-          *tuiLet="files$ | async as files"
+          class='tui-space_top-1'
+          [max]='3'
+          *tuiLet='files$ | async as files'
         >
-          <ng-container *ngFor="let file of files">
-            <ng-container *ngIf="file.toRemove !== true">
+          <ng-container *ngFor='let file of files'>
+            <ng-container *ngIf='file.toRemove !== true'>
               <tui-file
                 *tuiItem
-                [file]="file"
+                [file]='file'
                 [showDelete]="
                   file.uploadedBy === user.username ||
                   user.accountType === 'ADMIN' ||
@@ -139,106 +161,106 @@
                     user.enrolledUniversities[0].id ===
                       form.controls.universityId.value)
                 "
-                (removed)="removeExistingFile(file)"
+                (removed)='removeExistingFile(file)'
               >
-                <div class="text-02 tui-text_body-s">
+                <div class='text-02 tui-text_body-s'>
                   {{
-                    'UPLOADED_AT_BY'
-                      | translate
-                        : {
-                            at: file.lastModified | localizedDate,
-                            by: file.uploadedBy
-                          }
+                  'UPLOADED_AT_BY'
+                    | translate
+                    : {
+                      at: file.lastModified | localizedDate,
+                      by: file.uploadedBy
+                    }
                   }}
                 </div>
               </tui-file>
             </ng-container>
           </ng-container>
 
-          <ng-container *ngIf="files === null">
-            <tui-file *tuiItem class="tui-skeleton"></tui-file>
+          <ng-container *ngIf='files === null'>
+            <tui-file *tuiItem class='tui-skeleton'></tui-file>
           </ng-container>
 
-          <ng-container *ngFor="let file of filesControl.valueChanges | async">
+          <ng-container *ngFor='let file of filesControl.valueChanges | async'>
             <tui-file
               *tuiItem
-              [file]="file"
-              [showDelete]="filesControl.enabled"
-              (removed)="removeFile(file)"
+              [file]='file'
+              [showDelete]='filesControl.enabled'
+              (removed)='removeFile(file)'
             ></tui-file>
           </ng-container>
 
-          <ng-container *ngFor="let file of rejectedFiles">
+          <ng-container *ngFor='let file of rejectedFiles'>
             <tui-file
               *tuiItem
-              state="error"
-              [file]="file"
-              [showDelete]="filesControl.enabled"
-              (removed)="clearRejected(file)"
+              state='error'
+              [file]='file'
+              [showDelete]='filesControl.enabled'
+              (removed)='clearRejected(file)'
             ></tui-file>
           </ng-container>
         </tui-files>
 
         <tui-error
           [error]="['maxLength'] | tuiFieldError | async"
-          [formControl]="filesControl"
+          [formControl]='filesControl'
         ></tui-error>
       </ng-container>
     </div>
 
-    <h3 class="tui-form__header">
+    <h3 class='tui-form__header'>
       {{ 'PAGE_CONTACT_REQUEST_HANDLERS' | translate }}
     </h3>
 
     <label
       [tuiLabel]="'CONTACT_REQUEST_HANDLERS' | translate"
-      class="tui-form__row"
+      class='tui-form__row'
     >
       <tui-multi-select
-        tuiTextfieldSize="m"
-        formControlName="contactRequestHandlers"
-        [tuiTextfieldLabelOutside]="true"
-        (searchChange)="userSearch.search($event)"
-        [stringify]="(userSearch.stringify$ | async)!"
+        tuiTextfieldSize='m'
+        formControlName='contactRequestHandlers'
+        [tuiTextfieldLabelOutside]='true'
+        (searchChange)='userSearch.search($event)'
+        [stringify]='(userSearch.stringify$ | async)!'
       >
         <tui-data-list-wrapper
           *tuiDataList
           tuiMultiSelectGroup
-          [items]="userSearch.itemIds$ | async"
-          [itemContent]="(userSearch.stringify$ | async)!"
+          [items]='userSearch.itemIds$ | async'
+          [itemContent]='(userSearch.stringify$ | async)!'
         ></tui-data-list-wrapper>
       </tui-multi-select>
 
       <tui-error
-        formControlName="contactRequestHandlers"
-        [error]="[] | tuiFieldError | async"
+        formControlName='contactRequestHandlers'
+        [error]='[] | tuiFieldError | async'
       ></tui-error>
     </label>
 
     <div
-      class="tui-form__buttons tui-form__buttons_align_end"
-      *ngIf="item !== null"
+      class='tui-form__buttons tui-form__buttons_align_end'
+      *ngIf='item !== null'
     >
       <a
         [routerLink]="['..']"
         tuiButton
-        type="button"
-        appearance="flat"
-        size="m"
-        class="tui-form__button"
+        type='button'
+        appearance='flat'
+        size='m'
+        class='tui-form__button'
       >
         {{ 'CANCEL' | translate }}
       </a>
       <button
         tuiButton
-        size="m"
-        type="submit"
-        *tuiLet="confirmText$ | async as confirmText"
-        [reuniceConfirm]="
+        size='m'
+        type='submit'
+        *tuiLet='confirmText$ | async as confirmText'
+        [reuniceConfirm]='
           confirmText !== null ? (confirmText | translate) : null
-        "
-        class="tui-form__button"
-        [showLoader]="(handler.loading$ | async) ?? false"
+        '
+        class='tui-form__button'
+        [showLoader]='(handler.loading$ | async) ?? false'
       >
         {{ 'SAVE' | translate }}
       </button>

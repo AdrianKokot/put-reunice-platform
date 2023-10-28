@@ -265,5 +265,6 @@
   "DOWNLOAD": "Download",
   "BACKUP_DELETE_DESCRIPTION": "Are you sure you want to delete this backup?",
   "CREATE_TEMPLATE": "Create template",
-  "SEARCH_HINT": "Type words for the best results"
+  "SEARCH_HINT": "Type words for the best results",
+  "NO_UNIVERSITY_SELECTED": "No university selected"
 }

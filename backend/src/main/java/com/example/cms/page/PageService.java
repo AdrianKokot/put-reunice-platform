@@ -174,6 +174,10 @@ public class PageService {
         page.setHidden(form.getHidden());
         page.setContent(Content.of(form.getContent()));
 
+        if(securityService.hasHigherRoleThan(Role.USER)) {
+            page.setCreator(userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFound::new));
+        }
+
         Set<User> usersToAssign = new HashSet<>();
 
         form.getContactRequestHandlers().forEach(userId -> {
