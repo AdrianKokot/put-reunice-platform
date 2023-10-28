@@ -1,5 +1,13 @@
 /* eslint-disable @angular-eslint/no-input-rename */
-import { ChangeDetectorRef, Directive, inject, Input, OnChanges, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Directive,
+  inject,
+  Input,
+  OnChanges,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -8,7 +16,7 @@ import {
   Page,
   Template,
   University,
-  User
+  User,
 } from '@reunice/modules/shared/data-access';
 import { combineLatest, Subject } from 'rxjs';
 
