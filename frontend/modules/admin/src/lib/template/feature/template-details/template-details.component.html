@@ -42,7 +42,7 @@
       type="button"
       appearance="flat-destructive"
       class="tui-form__button"
-      reuniceConfirm
+      [reuniceConfirm]="'TEMPLATE_DELETE_DESCRIPTION' | translate"
       [showLoader]="(deleteHandler.loading$ | async) ?? false"
       (confirm)="deleteHandler.delete(item.id)"
     >

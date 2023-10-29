@@ -11,6 +11,7 @@ import {
 import { SearchService } from '@reunice/modules/shared/data-access';
 import {
   TuiDataListModule,
+  TuiHintModule,
   TuiLoaderModule,
   TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
@@ -32,6 +33,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TuiElementModule,
     TuiLoaderModule,
     TranslateModule,
+    TuiHintModule,
   ],
   templateUrl: './search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

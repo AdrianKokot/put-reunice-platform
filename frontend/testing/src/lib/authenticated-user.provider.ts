@@ -1,6 +1,7 @@
 import { AuthService } from '@reunice/modules/shared/security';
 import { User } from '@reunice/modules/shared/data-access';
 import { Provider } from '@angular/core';
+import { of, shareReplay } from 'rxjs';
 
 export const provideAuthenticatedUser = (
   user: Partial<User> = {
@@ -18,5 +19,6 @@ export const provideAuthenticatedUser = (
   provide: AuthService,
   useValue: {
     userSnapshot: user,
+    user$: of(user).pipe(shareReplay(1)),
   },
 });
