@@ -12,7 +12,7 @@ const routes: Routes = [
     component: UserListComponent,
   },
   {
-    title: translatedTitle('CREATE_USER'),
+    title: translatedTitle('NEW_USER'),
     path: 'new',
     component: UserCreateFormComponent,
   },

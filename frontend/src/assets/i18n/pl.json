@@ -22,6 +22,7 @@
   "CANNOT_DELETE_PAGE_WITH_CHILDREN": "Nie można usunąć strony z podstronami",
   "CANNOT_DELETE_UNIVERSITY_WITH_ENROLLED_USERS": "Nie można usunąć uniwersytetu z użytkownikami",
   "CANNOT_DELETE_VISIBLE_PAGE": "Nie można usunąć widocznej strony",
+  "CANNOT_DELETE_VISIBLE_UNIVERSITY": "Nie można usunąć widocznego uniwersytetu",
   "CHANGES_SAVED_SUCCESS": "Zmiany zostały pomyślnie zapisane",
   "CHANGE_PASSWORD": "Zmień hasło",
   "CHECKBOX_TEMPLATE_AVAILABLE_TO_ALL_UNIVERSITIES": "Oznacz jako dostępny dla wszystkich uniwersytetów",

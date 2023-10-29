@@ -12,7 +12,7 @@ const routes: Routes = [
     component: UniversityListComponent,
   },
   {
-    title: translatedTitle('CREATE_UNIVERSITY'),
+    title: translatedTitle('NEW_UNIVERSITY'),
     path: 'new',
     component: UniversityCreateFormComponent,
   },
