@@ -3,6 +3,7 @@ package com.example.cms.backup;
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.backup.exceptions.BackupNotFound;
 import com.example.cms.file.FileUtils;
+import com.example.cms.page.PageRepository;
 import com.example.cms.page.PageService;
 import com.example.cms.search.PageFullTextSearchService;
 import lombok.Getter;
@@ -11,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -45,7 +48,7 @@ public class BackupService {
     private final EntityManager entityManager;
     private final ZipService zipService;
     private final PageFullTextSearchService pageSearchService;
-    private final PageService pageService;
+    private final PageRepository pageRepository;
 
     private Connection getConnection() {
         return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource())
@@ -102,10 +105,13 @@ public class BackupService {
     @Secured("ROLE_ADMIN")
     @Transactional
     public void importBackup(String backupName) throws IOException, SQLException {
+        log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", backupName);
         Path zipPath = restoreMainPath.resolve(backupName.concat(".zip"));
 
         zipService.unzipArchive(zipPath);
         Files.delete(zipPath);
+
+        log.info("[BACKUP-IMPORT-JOB][{}] Start importing tables", backupName);
 
         CopyManager copyManager = createCopyManager(getConnection());
 
@@ -136,9 +142,13 @@ public class BackupService {
         Files.delete(restoreMainPath.resolve("pg_largeobject.txt"));
         FileUtils.deleteFiles(files);
 
+        log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", backupName);
+
         pageSearchService.deleteCollection();
         pageSearchService.createCollection();
-        pageService.getAllVisible(Pageable.unpaged(), null).forEach(pageSearchService::upsert);
+        pageRepository.findAll().forEach(pageSearchService::upsert);
+
+        log.info("[BACKUP-IMPORT-JOB][{}] Finish job", backupName);
     }
 
     private void readTableFromFile(String path, String table, CopyManager copyManager) throws IOException, SQLException {
@@ -150,6 +160,36 @@ public class BackupService {
     private void executeQueryOnTables(List<String> tableNames, String query) {
         tableNames.forEach(tableName ->
                 entityManager.createNativeQuery(String.format(query, tableName)).executeUpdate());
+    }
+
+    @Secured("ROLE_ADMIN")
+    public Page<BackupDto> getBackups(Pageable pageable) {
+        List<BackupDto> allBackups = getBackups();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allBackups.size());
+        Sort sort = pageable.getSortOr(Sort.by("id").descending());
+
+        if (sort.isSorted()) {
+            allBackups.sort((o1, o2) -> {
+                int result = 0;
+
+                for (Sort.Order order : sort) {
+                    if (order.getProperty().equals("id")) {
+                        result = o1.getId().compareTo(o2.getId());
+                    } else if (order.getProperty().equals("size")) {
+                        result = o1.getSize().compareTo(o2.getSize());
+                    }
+
+                    if (order.getDirection().equals(Sort.Direction.DESC)) {
+                        result *= -1;
+                    }
+                }
+                return result;
+            });
+        }
+
+        return new org.springframework.data.domain.PageImpl<>(allBackups.subList(start, end), pageable, allBackups.size());
     }
 
     @Secured("ROLE_ADMIN")
