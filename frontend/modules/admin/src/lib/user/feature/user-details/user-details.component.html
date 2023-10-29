@@ -69,7 +69,15 @@
         'USER_DELETE_DESCRIPTION' | translate: { username: item.username }
       "
       [showLoader]="(deleteHandler.loading$ | async) ?? false"
-      [disabled]="item.id === user.id"
+      [disabled]="item.id === user.id || item.enabled"
+      [tuiHint]="
+        (item.id === user.id
+          ? 'CANNOT_DEACTIVATE_OWN_ACCOUNT'
+          : item.enabled
+          ? 'CANNOT_DELETE_ENABLED_ACCOUNT'
+          : ''
+        ) | translate
+      "
       (confirm)="deleteHandler.delete(item.id)"
     >
       {{ 'DELETE' | translate }}

@@ -19,6 +19,8 @@
   "BASIC_INFORMATION": "Podstawowe informacje",
   "CANCEL": "Anuluj",
   "CANNOT_DEACTIVATE_OWN_ACCOUNT": "Nie możesz dezaktywować własnego konta",
+  "CANNOT_DELETE_ENABLED_ACCOUNT": "Nie możesz usunąć aktywnego konta",
+  "CANNOT_DELETE_OWN_ACCOUNT": "Nie możesz usunąć własnego konta",
   "CANNOT_DELETE_PAGE_WITH_CHILDREN": "Nie można usunąć strony z podstronami",
   "CANNOT_DELETE_UNIVERSITY_WITH_ENROLLED_USERS": "Nie można usunąć uniwersytetu z użytkownikami",
   "CANNOT_DELETE_VISIBLE_PAGE": "Nie można usunąć widocznej strony",

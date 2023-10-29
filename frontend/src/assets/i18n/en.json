@@ -19,6 +19,8 @@
   "BASIC_INFORMATION": "Basic information",
   "CANCEL": "Cancel",
   "CANNOT_DEACTIVATE_OWN_ACCOUNT": "You cannot deactivate your own account",
+  "CANNOT_DELETE_ENABLED_ACCOUNT": "You cannot delete enabled account",
+  "CANNOT_DELETE_OWN_ACCOUNT": "You cannot delete your own account",
   "CANNOT_DELETE_PAGE_WITH_CHILDREN": "Cannot delete page with subpages",
   "CANNOT_DELETE_UNIVERSITY_WITH_ENROLLED_USERS": "Cannot delete university with enrolled users",
   "CANNOT_DELETE_VISIBLE_PAGE": "Cannot delete visible page",
