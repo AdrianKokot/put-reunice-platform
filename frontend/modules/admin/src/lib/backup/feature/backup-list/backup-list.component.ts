@@ -20,13 +20,14 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { TuiAlertService } from '@taiga-ui/core';
+import { TuiAlertService, TuiDialogService } from '@taiga-ui/core';
 import { TranslateService } from '@ngx-translate/core';
 
 interface DeleteAction {
   action: 'delete';
   id: Backup['id'];
 }
+
 interface NewAction {
   action: 'new';
 }
@@ -48,6 +49,7 @@ type UiAction = DeleteAction | NewAction;
 })
 export class BackupListComponent extends ReuniceAbstractTable<Backup> {
   private readonly _alert = inject(TuiAlertService);
+  private readonly _dialog = inject(TuiDialogService);
   private readonly _translate = inject(TranslateService);
 
   readonly columns: Array<keyof Backup | string> = ['id', 'size', 'actions'];
@@ -85,4 +87,10 @@ export class BackupListComponent extends ReuniceAbstractTable<Backup> {
     exhaustMap(({ id }) => this.service.delete(id)),
     tap(() => this.refresh()),
   );
+
+  openInstructionsDialog() {
+    this._dialog
+      .open(this._translate.instant('RESTORE_INSTRUCTIONS_CONTENT'))
+      .subscribe();
+  }
 }

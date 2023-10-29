@@ -3,6 +3,10 @@
   [formGroup]="filtersForm"
   *tuiLet="delete$ | async"
 >
+  <button tuiButton (click)="openInstructionsDialog()" appearance="whiteblock">
+    {{ 'RESTORE_INSTRUCTIONS' | translate }}
+  </button>
+
   <div class="w-full"></div>
 
   <button

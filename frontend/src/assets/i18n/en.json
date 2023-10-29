@@ -110,6 +110,8 @@
   "PROFILE": "Profile",
   "REFRESH": "Refresh",
   "REQUESTER_EMAIL": "Requester email",
+  "RESTORE_INSTRUCTIONS": "Restore instructions",
+  "RESTORE_INSTRUCTIONS_CONTENT": "<p class=\"tui-text_h6\">In order to restore data from backup, please follow these steps:</p><ol class=\"tui-list tui-list_ordered\"><li class=\"tui-list__item\">Download the backup file</li><li class=\"tui-list__item\">Shut down the <strong>backend</strong> service</li><li class=\"tui-list__item\">Upload the backup file to mapped <strong><em>db-resources/restore</em></strong> path</li><li class=\"tui-list__item\">Start the <strong>backend</strong> service</li></ol>",
   "ROLE": "Role",
   "SAVE": "Save",
   "SEARCH": "Search",

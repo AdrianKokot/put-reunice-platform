@@ -110,6 +110,8 @@
   "PROFILE": "Profil",
   "REFRESH": "Odśwież",
   "REQUESTER_EMAIL": "E-mail zgłaszającego",
+  "RESTORE_INSTRUCTIONS": "Instrukcje przywracania",
+  "RESTORE_INSTRUCTIONS_CONTENT": "<p class=\"tui-text_h6\">Aby przywrócić dane z kopii zapasowej, wykonaj następujące kroki:</p><ol class=\"tui-list tui-list_ordered\"><li class=\"tui-list__item\">Pobierz plik kopii zapasowej</li><li class=\"tui-list__item\">Wyłącz usługę <strong>backend</strong></li><li class=\"tui-list__item\">Prześlij plik kopii zapasowej do mapowanej w kontenerze ścieżki <strong><em>db-resources/restore</em></strong></li><li class=\"tui-list__item\">Uruchom usługę <strong>backend</strong></li></ol>",
   "ROLE": "Rola",
   "SAVE": "Zapisz",
   "SEARCH": "Szukaj",
