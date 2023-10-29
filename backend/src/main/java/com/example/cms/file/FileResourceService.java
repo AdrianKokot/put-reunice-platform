@@ -40,19 +40,19 @@ public class FileResourceService {
     private final PageRepository pageRepository;
     private final SecurityService securityService;
 
-    public ResponseEntity<Resource> downloadFiles(Long fileId) {
+    @Secured("ROLE_USER")
+    public FileResource get(Long fileId) {
         FileResource fileResource = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
         Page page = fileResource.getPage();
         if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
             throw new PageForbidden();
         }
 
-        HttpHeaders httpHeaders = prepareHeaders(fileResource.getFilename(), fileResource.getFileType(), fileResource.getData().length);
-
-        return ResponseEntity.ok().headers(httpHeaders).body(new ByteArrayResource(fileResource.getData()));
+        return fileResource;
     }
 
     @Secured("ROLE_USER")
+    @Transactional
     public void uploadFile(Long pageId, Long userId, MultipartFile multipartFile) throws IOException {
 
         Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
@@ -114,20 +114,10 @@ public class FileResourceService {
         fileRepository.deleteById(fileId);
     }
 
-    @Transactional
     protected void deleteFileIfExists(Page page, MultipartFile multipartFile) {
         Optional<FileResource> optionalFileResource = fileRepository.findFileResourceByFilenameAndPage(multipartFile.getOriginalFilename(), page);
 
         optionalFileResource.ifPresent(fileRepository::delete);
-    }
-
-    private static HttpHeaders prepareHeaders(String filename, String fileType, Integer length) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("File-Name", filename);
-        httpHeaders.setContentDisposition(ContentDisposition.parse("attachment; File-Name=\"" + filename + "\""));
-        httpHeaders.setContentType(MediaType.parseMediaType(fileType));
-        httpHeaders.setContentLength(length);
-        return httpHeaders;
     }
 
     private static FileResource prepareFileResource(Page page, User user, MultipartFile multipartFile) throws IOException {
