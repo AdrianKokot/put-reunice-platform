@@ -1,24 +1,6 @@
 package com.example.cms.user;
 
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import com.example.cms.SearchCriteria;
-import com.example.cms.security.LoggedUser;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -33,10 +15,23 @@ import com.example.cms.user.exceptions.UserNotFound;
 import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
-import com.example.cms.user.projections.UserDtoSimple;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +86,23 @@ public class UserService {
 
         validatePassword(form.getPassword());
 
-        User newUser = form.toUser(passwordEncoder);
+        User newUser = new User();
+
+        newUser.setUsername(form.getUsername());
+        if (form.getPassword() != null) {
+            newUser.setPassword(passwordEncoder.encode(form.getPassword()));
+        }
+        newUser.setFirstName(form.getFirstName());
+        newUser.setLastName(form.getLastName());
+        newUser.setEmail(form.getEmail());
+        newUser.setPhoneNumber(form.getPhoneNumber());
+        newUser.setAccountType(form.getAccountType());
+        newUser.setEnabled(form.isEnabled());
+
+        if (!newUser.getAccountType().equals(Role.ADMIN)) {
+            newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
+        }
+
         if (!securityService.hasHigherRoleThan(newUser.getAccountType())) {
             throw new UserForbidden();
         }
@@ -117,9 +128,39 @@ public class UserService {
             throw new UserForbidden();
         }
 
-        form.updateUser(user);
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setEmail(form.getEmail());
+        user.setPhoneNumber(form.getPhoneNumber());
+        user.setDescription(form.getDescription());
+        user.setUsername(form.getUsername());
+
+        if (securityService.hasHigherRoleThan(Role.USER)) {
+            user.setEnabled(form.isEnabled());
+            user.setAccountType(form.getAccountType());
+
+            if (user.getAccountType().equals(Role.ADMIN)) {
+                user.setEnrolledUniversities(new HashSet<>());
+            } else {
+                user.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
+            }
+        }
 
         return UserDtoDetailed.of(userRepository.save(user));
+    }
+
+    private Set<University> validateUniversities(Set<Long> universitiesId) {
+        Set<University> newUniversities = universitiesId.stream().map(universityId -> universityRepository.findById(universityId)
+                        .orElseThrow(UniversityNotFound::new))
+                .collect(Collectors.toSet());
+
+        newUniversities.forEach(university -> {
+            if (securityService.isForbiddenUniversity(university)) {
+                throw new UniversityForbidden();
+            }
+        });
+
+        return newUniversities;
     }
 
     @Secured("ROLE_MODERATOR")
