@@ -159,6 +159,7 @@
   "USER_DELETE_DESCRIPTION": "Are you sure you want to delete this user?",
   "USER_DETAILS": "User details",
   "USER_DETAILS_TAB": "Details",
+  "USER_PAGES_TAB": "Pages",
   "USER_PASSWORD_CHANGE_SUCCESS": "Password changed successfully",
   "USER_UPDATE_SUCCESS": "User updated successfully",
   "VIEW_PAGE": "View page",

@@ -159,6 +159,7 @@
   "USER_DELETE_DESCRIPTION": "Czy na pewno chcesz usunąć tego użytkownika?",
   "USER_DETAILS": "Szczegóły użytkownika",
   "USER_DETAILS_TAB": "Szczegóły",
+  "USER_PAGES_TAB": "Strony",
   "USER_PASSWORD_CHANGE_SUCCESS": "Hasło zostało pomyślnie zmienione",
   "USER_UPDATE_SUCCESS": "Użytkownik został pomyślnie zaktualizowany",
   "VIEW_PAGE": "Wyświetl stronę",
