@@ -77,7 +77,7 @@ export class PageFilesListComponent {
   private readonly _previewService = inject(TuiPreviewDialogService);
 
   readonly files$ = resourceIdFromRoute('pageId').pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
   );
 
   readonly _previewState$ = new Subject<Parameters<typeof this.showFile>>();
@@ -107,7 +107,7 @@ export class PageFilesListComponent {
           ...initialState,
           loading: false,
           type: 'url',
-          content: `/api/file/${data.file.id}/download`,
+          content: `/api/files/${data.file.id}/download`,
         });
 
       return of({ ...initialState, loading: false, type: 'unsupported' });

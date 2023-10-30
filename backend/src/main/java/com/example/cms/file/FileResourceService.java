@@ -5,21 +5,18 @@ import com.example.cms.file.exceptions.FileNotFound;
 import com.example.cms.file.projections.FileDtoSimple;
 import com.example.cms.page.Page;
 import com.example.cms.page.PageRepository;
+import com.example.cms.page.PageRoleSpecification;
 import com.example.cms.page.exceptions.PageForbidden;
 import com.example.cms.page.exceptions.PageNotFound;
+import com.example.cms.security.LoggedUser;
+import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
 import com.example.cms.user.exceptions.UserNotFound;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -69,13 +66,8 @@ public class FileResourceService {
         fileRepository.save(fileResource);
     }
 
-    public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
-        if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
-        }
-
-        Specification<FileResource> combinedSpecification = null;
+    public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Map<String, String> filterVars) {
+        Specification<FileResource> combinedSpecification = Specification.where(FileRoleSpecification.of(securityService.getPrincipal()));
 
         if (!filterVars.isEmpty()) {
             List<FileSpecification> specifications = filterVars.entrySet().stream()
@@ -89,17 +81,22 @@ public class FileResourceService {
                     }).collect(Collectors.toList());
 
             for (Specification<FileResource> spec : specifications) {
-                if (combinedSpecification == null) {
-                    combinedSpecification = Specification.where(spec);
-                }
                 combinedSpecification = combinedSpecification.and(spec);
             }
         }
 
-        if (combinedSpecification == null)
-            combinedSpecification = Specification.where(new FileSpecification(new SearchCriteria("page", "eq", pageId)));
-
         return fileRepository.findAll(combinedSpecification, pageable);
+    }
+
+    public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
+        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
+            throw new PageForbidden();
+        }
+
+        return this.getAll(pageable, new HashMap<>(filterVars) {{
+            put("page_eq", String.valueOf(pageId));
+        }});
     }
 
     @Transactional
@@ -124,6 +121,7 @@ public class FileResourceService {
         FileResource fileResource = new FileResource();
         fileResource.setUploadDate(Timestamp.from(Instant.now()));
         fileResource.setUploadedBy(user.getUsername());
+        fileResource.setUploadedById(user.getId());
         fileResource.setPage(page);
         fileResource.setFilename(StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())));
         fileResource.setFileSize(multipartFile.getSize());

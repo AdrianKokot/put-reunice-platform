@@ -39,6 +39,7 @@ public class FileResource {
 
     private Timestamp uploadDate;
 
+    private Long uploadedById;
     private String uploadedBy;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

@@ -26,7 +26,7 @@
           target="_blank"
           rel="nofollow"
           (click)="$event.stopPropagation()"
-          [href]="'/api/file/' + file.id + '/download'"
+          [href]="'/api/files/' + file.id + '/download'"
           appearance="flat"
           shape="rounded"
           size="s"
@@ -64,7 +64,7 @@
         [icon]="'tuiIconDownload'"
         target="_blank"
         rel="nofollow"
-        [href]="'/api/file/' + state.fileId + '/download'"
+        [href]="'/api/files/' + state.fileId + '/download'"
       ></a>
 
       <button
