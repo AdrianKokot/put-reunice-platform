@@ -6,6 +6,9 @@
     <button tuiTab>
       {{ 'USER_PAGES_TAB' | translate }}
     </button>
+    <button tuiTab>
+      {{ 'USER_FILES_TAB' | translate }}
+    </button>
   </tui-tabs>
 
   <div [hidden]="activeTabIndex !== 0" [class.details-skeleton]="item === null">
@@ -53,6 +56,10 @@
   </div>
 
   <div [hidden]="activeTabIndex !== 1">
-    <reunice-user-pages *ngIf="item" [userId]="item.id"> </reunice-user-pages>
+    <reunice-user-pages *ngIf="item" [userId]="item.id"></reunice-user-pages>
+  </div>
+
+  <div [hidden]="activeTabIndex !== 2">
+    <reunice-user-files *ngIf="item" [userId]="item.id"></reunice-user-files>
   </div>
 </ng-container>

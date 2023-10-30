@@ -37,7 +37,6 @@ public class FileResourceService {
     private final PageRepository pageRepository;
     private final SecurityService securityService;
 
-    @Secured("ROLE_USER")
     public FileResource get(Long fileId) {
         FileResource fileResource = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
         Page page = fileResource.getPage();
@@ -130,14 +129,4 @@ public class FileResourceService {
 
         return fileResource;
     }
-
-    private static List<FileDtoSimple> prepareProjectionOutput(List<Object[]> objects) {
-        List<FileDtoSimple> output = new ArrayList<>();
-        for (Object[] object : objects) {
-            output.add(new FileDtoSimple(object[0].toString(), object[1].toString(),
-                    Long.parseLong(object[2].toString()), object[3].toString(), object[4].toString()));
-        }
-        return output;
-    }
-
 }
