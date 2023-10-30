@@ -146,6 +146,11 @@ public class UserService {
             }
         }
 
+        if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
+            validatePassword(form.getPassword());
+            user.setPassword(passwordEncoder.encode(form.getPassword()));
+        }
+
         return UserDtoDetailed.of(userRepository.save(user));
     }
 

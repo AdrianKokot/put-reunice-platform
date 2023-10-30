@@ -16,4 +16,5 @@ public class UserDtoFormUpdate {
     boolean enabled;
     Role accountType;
     String username;
+    String password;
 }
