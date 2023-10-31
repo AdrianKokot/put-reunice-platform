@@ -17,6 +17,11 @@ public class RestErrorBody {
             field = violation.getPropertyPath().toString();
             message = violation.getMessage();
         }
+
+        FieldViolation(String field, String message) {
+            this.field = field;
+            this.message = message;
+        }
     }
 
     private final String message;
