@@ -1,8 +1,15 @@
 package com.example.cms.backup;
 
+import com.example.cms.page.Page;
+import com.example.cms.page.projections.PageDtoSimple;
+import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -10,6 +17,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/backups")
@@ -18,8 +27,9 @@ public class BackupController {
     private final BackupService backupService;
 
     @PostMapping()
-    public void exportDatabaseBackup() throws SQLException, IOException {
+    public ResponseEntity<Void> exportDatabaseBackup() throws SQLException, IOException {
         backupService.exportBackup(String.valueOf(Timestamp.valueOf(LocalDateTime.now()).getTime()));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/import/{backupName}")
@@ -28,8 +38,16 @@ public class BackupController {
     }
 
     @GetMapping()
-    public List<BackupDto> getBackups() {
-        return backupService.getBackups();
+    public ResponseEntity<List<BackupDto>> getBackups(Pageable pageable) {
+        org.springframework.data.domain.Page<BackupDto> response = backupService.getBackups(pageable);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(response.getTotalElements()));
+
+        return new ResponseEntity<>(
+                response.stream().collect(Collectors.toList()),
+                httpHeaders,
+                HttpStatus.OK);
     }
 
     @GetMapping(value = "/{backupName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)

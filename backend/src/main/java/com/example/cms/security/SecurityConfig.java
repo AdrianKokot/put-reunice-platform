@@ -1,15 +1,18 @@
 package com.example.cms.security;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.example.cms.configuration.ApplicationConfigurationProvider;
+import com.example.cms.security.authentication.RestSessionInformationExpiredStrategy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.concurrent.DelegatingSecurityContextExecutor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,29 +26,26 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
+import org.springframework.security.web.authentication.session.*;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.example.cms.configuration.ApplicationConfigurationProvider;
-import com.example.cms.security.authentication.RestSessionInformationExpiredStrategy;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executor;
 
 @Slf4j
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class SecurityConfig {
+@Configuration
+public class SecurityConfig implements AsyncConfigurer {
 
-	@Autowired
-	private ApplicationConfigurationProvider applicationConfigurationProvider;
+    @Autowired
+    private ApplicationConfigurationProvider applicationConfigurationProvider;
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
@@ -143,5 +143,13 @@ public class SecurityConfig {
                 .anonymous().authorities("ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER");
 
         return http.build();
+    }
+
+    @Override
+    @Bean(name = "asyncExecutor")
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.initialize();
+        return new DelegatingSecurityContextExecutor(executor);
     }
 }

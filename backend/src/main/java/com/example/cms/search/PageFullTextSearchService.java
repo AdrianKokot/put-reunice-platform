@@ -28,8 +28,10 @@ public class PageFullTextSearchService extends FullTextSearchService {
         createCollection();
     }
 
-
     public void upsert(Page page) {
+        if (!isConnected())
+            return;
+
         try {
             client.collections("pages").documents()
                     .upsert(pageToMap(page));
@@ -39,6 +41,9 @@ public class PageFullTextSearchService extends FullTextSearchService {
     }
 
     public void delete(Page page) {
+        if (!isConnected())
+            return;
+
         try {
             client.collections("pages").documents(page.getId().toString())
                     .delete();
@@ -72,7 +77,18 @@ public class PageFullTextSearchService extends FullTextSearchService {
         return list.stream().map(PageSearchHitDto::from).collect(Collectors.toList());
     }
 
-    private void createCollection() {
+    public void deleteCollection() {
+        if (!isConnected())
+            return;
+
+        try {
+            client.collections(COLLECTION_NAME).delete();
+        } catch (Exception e) {
+            log.log(java.util.logging.Level.SEVERE, "Error while clearing collection", e);
+        }
+    }
+
+    public void createCollection() {
         try {
             if (client.collections(COLLECTION_NAME).retrieve() != null) {
                 if (!this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup().equalsIgnoreCase("create"))
@@ -80,8 +96,7 @@ public class PageFullTextSearchService extends FullTextSearchService {
 
                 client.collections(COLLECTION_NAME).delete();
             }
-        } catch (Exception e) {
-            log.log(java.util.logging.Level.SEVERE, "Error while retrieving collection", e);
+        } catch (Exception ignored) {
         }
 
         List<Field> fields = new ArrayList<>();

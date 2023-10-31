@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'new',
-    title: translatedTitle('CREATE_TEMPLATE'),
+    title: translatedTitle('NEW_TEMPLATE'),
     component: TemplateCreateFormComponent,
   },
   {

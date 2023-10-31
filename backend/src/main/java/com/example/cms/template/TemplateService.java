@@ -6,7 +6,6 @@ import com.example.cms.template.exceptions.TemplateNotFound;
 import com.example.cms.template.projections.TemplateDtoDetailed;
 import com.example.cms.template.projections.TemplateDtoFormCreate;
 import com.example.cms.template.projections.TemplateDtoFormUpdate;
-import com.example.cms.template.projections.TemplateDtoSimple;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.university.exceptions.UniversityForbidden;
@@ -40,7 +39,6 @@ public class TemplateService {
 
     @Secured("ROLE_USER") //added by MSz
     public TemplateDtoDetailed get(Long id) {
-        // TODO: return university only if visible
         return templateRepository.findById(id).map(TemplateDtoDetailed::of).orElseThrow(TemplateNotFound::new);
     }
 
@@ -68,20 +66,7 @@ public class TemplateService {
             }
         }
 
-
         return templateRepository.findAll(combinedSpecification, pageable);
-    }
-
-    @Secured("ROLE_USER") //added by MSz
-    public List<TemplateDtoSimple> getAllByUniversity(Pageable pageable, Long universityID) {
-        University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFound::new);
-        if (!securityService.hasUniversity(university.getId())) {
-            throw new UniversityForbidden();
-        }
-
-        return templateRepository.findByUniversities_Id(pageable, universityID).stream()
-                .map(TemplateDtoSimple::of)
-                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_ADMIN")

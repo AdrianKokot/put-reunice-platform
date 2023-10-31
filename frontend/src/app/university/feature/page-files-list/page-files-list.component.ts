@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import {
   filter,
-  map,
   Observable,
   of,
   startWith,
@@ -44,7 +43,7 @@ type FilePreviewUIState = {
   fileId: FileResource['id'];
 } & (
   | { loading: true }
-  | { loading: false; content: PolymorpheusContent; type: 'url' | 'html' }
+  | { loading: false; content: PolymorpheusContent; type: 'url' }
   | { loading: false; type: 'unsupported' }
 );
 
@@ -102,18 +101,6 @@ export class PageFilesListComponent {
           .open(this._previewTemplate ?? '')
           .pipe(takeUntil(this._destroyed$))
           .subscribe();
-
-      if (data.file.type.startsWith('text'))
-        return this._fileService.download(data.file.id).pipe(
-          switchMap((blob) => blob.text()),
-          map<string, FilePreviewUIState>((blob) => ({
-            ...initialState,
-            loading: false,
-            content: blob,
-            type: 'html',
-          })),
-          startWith(initialState),
-        );
 
       if (data.file.type.startsWith('image'))
         return of({

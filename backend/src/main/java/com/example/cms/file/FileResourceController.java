@@ -5,7 +5,6 @@ import com.example.cms.security.SecurityService;
 import com.example.cms.user.exceptions.UserNotFound;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -46,8 +45,18 @@ public class FileResourceController {
     }
 
     @GetMapping("{id}/download")
-    public ResponseEntity<Resource> downloadFiles(@PathVariable("id") Long fileId) {
-        return fileService.downloadFiles(fileId);
+    public ResponseEntity<byte[]> downloadFiles(@PathVariable("id") Long fileId) {
+        FileResource file = fileService.get(fileId);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename());
+        headers.add(HttpHeaders.CONTENT_TYPE, file.getFileType());
+        headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getData().length));
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(file.getData());
     }
 
     @PostMapping("upload")

@@ -82,15 +82,6 @@
         [src]="state.content"
       />
 
-      <ng-container *ngIf="!state.loading && state.type === 'html'">
-        <ng-container
-          *ngTemplateOutlet="
-            previewContent;
-            context: { $implicit: state.content }
-          "
-        ></ng-container>
-      </ng-container>
-
       <div
         *ngIf="!state.loading && state.type === 'unsupported'"
         class="preview-unavailable-container"
@@ -107,16 +98,3 @@
     </tui-preview>
   </ng-template>
 </ng-container>
-
-<ng-template #previewContent let-content>
-  <div
-    (touchstart)="$event.stopPropagation()"
-    (wheel)="$event.stopPropagation()"
-  >
-    <tui-scrollbar class="html-content-background">
-      <div class="html-content-wrapper">
-        <div class="html-content" [innerHTML]="content"></div>
-      </div>
-    </tui-scrollbar>
-  </div>
-</ng-template>

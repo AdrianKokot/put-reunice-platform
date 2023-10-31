@@ -3,14 +3,26 @@
   [formGroup]="filtersForm"
   *tuiLet="delete$ | async"
 >
+  <button tuiButton (click)="openInstructionsDialog()" appearance="whiteblock">
+    {{ 'RESTORE_INSTRUCTIONS' | translate }}
+  </button>
+
   <div class="w-full"></div>
+
+  <button
+    (click)="refresh()"
+    tuiIconButton
+    [icon]="'tuiIconRefreshCcw'"
+    appearance="secondary"
+    type="button"
+    [tuiHint]="'REFRESH' | translate"
+  ></button>
 
   <a
     (click)="actions.new()"
     [showLoader]="(newLoading$ | async) ?? false"
     appearance="primary"
     tuiButton
-    type="button"
   >
     {{ 'NEW_BACKUP' | translate }}
   </a>
