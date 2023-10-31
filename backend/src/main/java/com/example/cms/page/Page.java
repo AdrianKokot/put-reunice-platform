@@ -30,20 +30,20 @@ public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Title must not be empty")
+    @NotBlank(message = "ERRORS.PAGE.400.TITLE_EMPTY")
     private String title;
-    @NotBlank(message = "Description must not be empty")
+    @NotBlank(message = "ERRORS.PAGE.400.DESCRIPTION_EMPTY")
     private String description;
-    @NotNull(message = "Content must not be null")
+    @NotNull(message = "ERRORS.PAGE.400.CONTENT_EMPTY")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Content content;
     private boolean hidden;
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(message = "Creator must not be null")
+    @NotNull(message = "ERRORS.PAGE.400.CREATOR_EMPTY")
     private User creator;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(message = "University must not be null")
+    @NotNull(message = "ERRORS.PAGE.400.UNIVERSITY_EMPTY")
     private University university;
     @ManyToOne(fetch = FetchType.LAZY)
     private Page parent;

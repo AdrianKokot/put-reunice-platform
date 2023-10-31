@@ -41,34 +41,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
-    @NotEmpty(message = "Username must not be empty")
+    @NotEmpty(message = "ERRORS.USER.400.USERNAME_EMPTY")
     private String username;
-    @NotEmpty(message = "Password must not be empty")
+    @NotEmpty(message = "ERRORS.USER.400.PASSWORD_EMPTY")
     private String password;
     private String firstName;
     private String lastName;
     private Instant lastLoginDate;
-    @Email(message = "Email must be valid")
+    @Email(message = "ERRORS.USER.400.EMAIL_NOT_VALID")
     private String email;
-    @Pattern(message = "PhoneNumber must be valid", regexp = "^(\\+?\\d{3,12})?$")
+    @Pattern(message = "ERRORS.USER.400.PHONE_NUMBER_NOT_VALID", regexp = "^(\\+?\\d{3,12})?$")
     private String phoneNumber;
     private String description;
-    @NotNull(message = "Account type must not be null")
+    @NotNull(message = "ERRORS.USER.400.ACCOUNT_TYPE_EMPTY")
     private Role accountType;
     private boolean enabled;
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", accountType='" + accountType + '\'' +
-                ", enabled=" + enabled +
-                '}';
+               "id=" + id +
+               ", username='" + username + '\'' +
+               ", password='" + password + '\'' +
+               ", firstName='" + firstName + '\'' +
+               ", lastName='" + lastName + '\'' +
+               ", email='" + email + '\'' +
+               ", phoneNumber='" + phoneNumber + '\'' +
+               ", accountType='" + accountType + '\'' +
+               ", enabled=" + enabled +
+               '}';
     }
 
     @Override

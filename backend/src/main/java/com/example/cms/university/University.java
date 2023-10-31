@@ -34,16 +34,16 @@ public class University {
     private Page mainPage;
 
     @Column(unique = true)
-    @NotBlank(message = "Name must not be empty")
+    @NotBlank(message = "ERRORS.UNIVERSITY.400.NAME_EMPTY")
     private String name;
     @Column(unique = true)
-    @NotBlank(message = "Short name must not be empty")
+    @NotBlank(message = "ERRORS.UNIVERSITY.400.SHORT_NAME_EMPTY")
     private String shortName;
 
     private String address;
     private String website;
 
-    @NotBlank(message = "Description must not be empty")
+    @NotBlank(message = "ERRORS.UNIVERSITY.400.DESCRIPTION_EMPTY")
     private String description;
     private boolean hidden;
 

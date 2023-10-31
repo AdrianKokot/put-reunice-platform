@@ -21,11 +21,11 @@ public class Template {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name must not be empty")
+    @NotBlank(message = "ERRORS.TEMPLATE.400.NAME_EMPTY")
     private String name;
 
     @Lob
-    @NotNull(message = "Content must not be null")
+    @NotNull(message = "ERRORS.TEMPLATE.400.CONTENT_EMPTY")
     private String content;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
