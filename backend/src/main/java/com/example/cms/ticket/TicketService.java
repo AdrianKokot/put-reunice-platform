@@ -7,7 +7,11 @@ import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
+import com.example.cms.ticket.exceptions.InvalidTicketStatusChange;
 import com.example.cms.ticket.exceptions.TicketNotFound;
+import com.example.cms.ticket.projections.TicketDto;
+import com.example.cms.ticket.projections.TicketDtoDetailed;
+import com.example.cms.ticket.projections.TicketDtoFormUpdate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,15 @@ public class TicketService {
 
     public void addResponse(UUID ticketId, Response response) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
+
+        Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
+                .filter(item -> item.getUser()
+                        .getId()
+                        .equals(securityService.getPrincipal().get().getId()))
+                .findFirst();
+        if (ticket.getStatus().equals(TicketStatus.NEW) && userStatusOptional.isPresent()) {
+            ticket.setStatus(TicketStatus.OPEN);
+        }
 
         ticket.addResponse(response);
         ticketRepository.save(ticket);
@@ -113,5 +126,33 @@ public class TicketService {
         }
 
         return ticketRepository.findAll(combinedSpecification, pageable);
+    }
+
+    public TicketDtoDetailed updateTicket(TicketDtoFormUpdate ticketDtoFormUpdate, UUID ticketId) throws InvalidTicketStatusChange {
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
+
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+
+        Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
+                .filter(item -> item.getUser()
+                        .getId()
+                        .equals(loggedUserOptional.get().getId()))
+                .findFirst();
+
+        if (userStatusOptional.isPresent()) {
+            if (!ticketDtoFormUpdate.getTicketStatus().equals(ticket.getStatus()) ||
+                    ticketDtoFormUpdate.getTicketStatus().equals(TicketStatus.CANCELED) ||
+                    ticketDtoFormUpdate.getTicketStatus().equals(TicketStatus.NEW)) {
+                throw new InvalidTicketStatusChange();
+            }
+        } else {
+            if (!ticketDtoFormUpdate.getTicketStatus().equals(ticket.getStatus()) ||
+                    !ticketDtoFormUpdate.getTicketStatus().equals(TicketStatus.CANCELED)) {
+                throw new InvalidTicketStatusChange();
+            }
+        }
+
+        ticketDtoFormUpdate.updateTicket(ticket);
+        return TicketDtoDetailed.of(ticketRepository.save(ticket));
     }
 }
