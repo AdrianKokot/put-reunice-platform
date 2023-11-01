@@ -2,7 +2,9 @@ package com.example.cms.page;
 
 import com.example.cms.university.University;
 import com.example.cms.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
@@ -19,6 +21,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "pages")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Page {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

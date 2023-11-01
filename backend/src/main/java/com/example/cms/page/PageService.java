@@ -57,6 +57,7 @@ public class PageService {
         }).orElseThrow(PageNotFound::new);
     }
 
+    @Secured("ROLE_USER")
     public org.springframework.data.domain.Page<Page> getAllVisible(Pageable pageable, Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         Role role;

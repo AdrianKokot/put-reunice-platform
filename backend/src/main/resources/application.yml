@@ -90,3 +90,8 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
+
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
