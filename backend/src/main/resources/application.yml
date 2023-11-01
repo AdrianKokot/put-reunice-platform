@@ -82,10 +82,10 @@ springdoc:
 
 spring:
   mail:
-    host: ${SMTP_SERVER}
-    port: ${SMTP_PORT}
-    username: ${SMTP_USERNAME}
-    password: ${SMTP_PASSWORD}
+    host: ${SMTP_SERVER:none}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:none}
+    password: ${SMTP_PASSWORD:none}
     protocol: smtp
     properties.mail.smtp:
       auth: true

@@ -6,7 +6,8 @@ import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbidden;
 import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.page.projections.*;
-import com.example.cms.search.PageFullTextSearchService;
+import com.example.cms.search.FullTextSearchService;
+import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PageService {
-    private final PageFullTextSearchService searchService;
+    private final FullTextSearchService<Page, PageSearchHitDto> searchService;
     private final PageRepository pageRepository;
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;

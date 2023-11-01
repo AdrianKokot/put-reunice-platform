@@ -4,8 +4,8 @@ import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.backup.exceptions.BackupNotFound;
 import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.PageService;
-import com.example.cms.search.PageFullTextSearchService;
+import com.example.cms.search.FullTextSearchService;
+import com.example.cms.search.projections.PageSearchHitDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class BackupService {
     private final JdbcTemplate jdbcTemplate;
     private final EntityManager entityManager;
     private final ZipService zipService;
-    private final PageFullTextSearchService pageSearchService;
+    private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> pageSearchService;
     private final PageRepository pageRepository;
 
     private Connection getConnection() {
