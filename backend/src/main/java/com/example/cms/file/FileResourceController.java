@@ -21,14 +21,30 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/file")
+@RequestMapping("/files")
 public class FileResourceController {
 
     private final FileResourceService fileService;
     private final SecurityService securityService;
 
+    @GetMapping()
+    public ResponseEntity<List<FileDtoSimple>> getAll(Pageable pageable, @RequestParam Map<String, String> vars) {
+
+        Page<FileResource> responsePage = fileService.getAll(
+                pageable,
+                FilterPathVariableValidator.validate(vars, FileResource.class));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+
+        return new ResponseEntity<>(
+                responsePage.stream().map(FileDtoSimple::of).collect(Collectors.toList()),
+                httpHeaders,
+                HttpStatus.OK);
+    }
+
     @GetMapping("page/{pageId}")
-    public ResponseEntity<List<FileDtoSimple>> getAll(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
+    public ResponseEntity<List<FileDtoSimple>> getAllByPage(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<FileResource> responsePage = fileService.getAll(
                 pageable,

@@ -39,11 +39,11 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     return combineLatest([
       this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
       (resource.files ?? []).length > 0
-        ? this._http.post<void>('/api/file/upload', formData)
+        ? this._http.post<void>('/api/files/upload', formData)
         : of(null),
       (resource.filesToRemove ?? []).length > 0
         ? this._http.post<void>(
-            '/api/file/delete',
+            '/api/files/delete',
             resource.filesToRemove ?? [],
           )
         : of(null),

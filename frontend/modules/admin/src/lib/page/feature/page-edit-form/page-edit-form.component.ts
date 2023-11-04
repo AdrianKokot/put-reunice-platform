@@ -106,7 +106,7 @@ export class PageEditFormComponent {
   );
 
   readonly files$ = this._id$.pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
     shareReplay(),
   );
 

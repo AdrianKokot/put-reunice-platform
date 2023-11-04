@@ -1,96 +1,65 @@
-<div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
-  <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'FIRST_NAME' | translate" class="tui-form__multi-field">
-      {{ item?.firstName ?? '—' }}
-    </label>
-
-    <label [tuiLabel]="'LAST_NAME' | translate" class="tui-form__multi-field">
-      {{ item?.lastName ?? '—' }}
-    </label>
-
-    <label [tuiLabel]="'EMAIL' | translate" class="tui-form__multi-field">
-      {{ item?.email ?? '—' }}
-    </label>
-
-    <label
-      [tuiLabel]="'PHONE_NUMBER' | translate"
-      class="tui-form__multi-field"
-    >
-      {{ item?.phoneNumber ?? '—' }}
-    </label>
-  </div>
-
-  <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'USERNAME' | translate" class="tui-form__multi-field">
-      {{ item?.username ?? '—' }}
-    </label>
-    <label [tuiLabel]="'STATE' | translate" class="tui-form__multi-field">
-      {{ (item?.enabled ? 'ACTIVE' : 'DEACTIVATED') | translate }}
-    </label>
-
-    <label [tuiLabel]="'ROLE' | translate" class="tui-form__multi-field">
-      {{ 'ACCOUNT_TYPE_' + item?.accountType | translate }}
-    </label>
-
-    <label
-      [tuiLabel]="'LAST_LOGIN_DATE' | translate"
-      class="tui-form__multi-field"
-    >
-      {{ item?.lastLoginDate ? (item?.lastLoginDate | localizedDate) : '-' }}
-    </label>
-  </div>
-
-  <label
-    [tuiLabel]="'ENROLLED_UNIVERSITIES' | translate"
-    class="tui-form__row"
-    *ngIf="item?.accountType !== 'ADMIN'"
-  >
-    <div class="tag-list tui-space_top-1">
-      <tui-tag
-        *ngFor="let university of item?.enrolledUniversities ?? []"
-        status="primary"
-        [hoverable]="false"
-        [value]="university.name"
-      ></tui-tag>
-    </div>
-  </label>
-
-  <div
-    class="tui-form__buttons tui-form__buttons_align_end"
-    *ngIf="item !== null"
-  >
-    <button
-      *reuniceUserControlsResource="item"
-      tuiButton
-      type="button"
-      appearance="flat-destructive"
-      class="tui-form__button"
-      [reuniceConfirm]="
-        'USER_DELETE_DESCRIPTION' | translate: { username: item.username }
-      "
-      [showLoader]="(deleteHandler.loading$ | async) ?? false"
-      [disabled]="item.id === user.id || item.enabled"
-      [tuiHint]="
-        (item.id === user.id
-          ? 'CANNOT_DEACTIVATE_OWN_ACCOUNT'
-          : item.enabled
-          ? 'CANNOT_DELETE_ENABLED_ACCOUNT'
-          : ''
-        ) | translate
-      "
-      (confirm)="deleteHandler.delete(item.id)"
-    >
-      {{ 'DELETE' | translate }}
+<ng-container *tuiLet="item$ | async as item">
+  <tui-tabs [(activeItemIndex)]="activeTabIndex" class="tui-space_bottom-4">
+    <button tuiTab>
+      {{ 'USER_DETAILS_TAB' | translate }}
     </button>
+    <button tuiTab>
+      {{ 'USER_PAGES_TAB' | translate }}
+    </button>
+    <button tuiTab>
+      {{ 'USER_FILES_TAB' | translate }}
+    </button>
+  </tui-tabs>
 
-    <a
-      [routerLink]="['edit']"
-      tuiButton
-      type="button"
-      appearance="secondary"
-      class="tui-form__button"
+  <div [hidden]="activeTabIndex !== 0" [class.details-skeleton]="item === null">
+    <reunice-user-basic-information [user]="item">
+    </reunice-user-basic-information>
+
+    <div
+      class="tui-form__buttons tui-form__buttons_align_end"
+      *ngIf="item !== null"
     >
-      {{ 'EDIT' | translate }}
-    </a>
+      <button
+        *reuniceUserControlsResource="item"
+        tuiButton
+        type="button"
+        appearance="flat-destructive"
+        class="tui-form__button"
+        [reuniceConfirm]="
+          'USER_DELETE_DESCRIPTION' | translate: { username: item.username }
+        "
+        [showLoader]="(deleteHandler.loading$ | async) ?? false"
+        [disabled]="item.id === user.id || item.enabled"
+        [tuiHint]="
+          (item.id === user.id
+            ? 'CANNOT_DEACTIVATE_OWN_ACCOUNT'
+            : item.enabled
+            ? 'CANNOT_DELETE_ENABLED_ACCOUNT'
+            : ''
+          ) | translate
+        "
+        (confirm)="deleteHandler.delete(item.id)"
+      >
+        {{ 'DELETE' | translate }}
+      </button>
+
+      <a
+        [routerLink]="['edit']"
+        tuiButton
+        type="button"
+        appearance="secondary"
+        class="tui-form__button"
+      >
+        {{ 'EDIT' | translate }}
+      </a>
+    </div>
   </div>
-</div>
+
+  <div [hidden]="activeTabIndex !== 1">
+    <reunice-user-pages *ngIf="item" [userId]="item.id"></reunice-user-pages>
+  </div>
+
+  <div [hidden]="activeTabIndex !== 2">
+    <reunice-user-files *ngIf="item" [userId]="item.id"></reunice-user-files>
+  </div>
+</ng-container>

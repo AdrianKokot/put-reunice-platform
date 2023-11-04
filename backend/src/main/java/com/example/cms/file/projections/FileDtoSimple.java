@@ -1,10 +1,11 @@
 package com.example.cms.file.projections;
 
 import com.example.cms.file.FileResource;
+import com.example.cms.page.projections.PageDtoJoined;
+import com.example.cms.page.projections.PageDtoSimple;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Data
@@ -18,8 +19,10 @@ public class FileDtoSimple {
     private Instant lastModified;
 
     private String uploadedBy;
+    private Long uploadedById;
 
     private Long id;
+    private PageDtoJoined page;
 
 
     public static FileDtoSimple of(FileResource fileResource) {
@@ -36,14 +39,7 @@ public class FileDtoSimple {
         this.uploadedBy = fileResource.getUploadedBy();
         this.size = fileResource.getFileSize();
         this.id = fileResource.getId();
-    }
-
-    public FileDtoSimple(String filename, String fileType, Long fileSize, String uploadedDate, String uploadedBy) {
-        this.name = filename;
-        this.type = fileType;
-        this.lastModified = Timestamp.valueOf(uploadedDate).toInstant();
-        this.uploadedBy = uploadedBy;
-        this.size = fileSize;
-        this.id = -1L;
+        this.uploadedById = fileResource.getUploadedById();
+        this.page = PageDtoJoined.of(fileResource.getPage());
     }
 }
