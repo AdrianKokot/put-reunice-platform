@@ -6,11 +6,11 @@ import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.keywords.KeyWordsService;
 import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
-import com.example.cms.page.projections.PageDtoFormUpdate;
 import com.example.cms.security.Role;
 import com.example.cms.template.TemplateService;
 import com.example.cms.template.projections.TemplateDtoFormCreate;
-import com.example.cms.template.projections.TemplateDtoFormUpdate;
+import com.example.cms.ticket.Response;
+import com.example.cms.ticket.TicketService;
 import com.example.cms.university.UniversityService;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.user.UserService;
@@ -19,25 +19,6 @@ import com.example.cms.validation.exceptions.WrongParameterException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import com.example.cms.ticket.Response;
-import com.example.cms.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -47,23 +28,11 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.example.cms.backup.BackupService;
-import com.example.cms.backup.exceptions.BackupException;
-import com.example.cms.configuration.ApplicationConfigurationProvider;
-import com.example.cms.keywords.KeyWordsService;
-import com.example.cms.page.PageService;
-import com.example.cms.page.projections.PageDtoFormCreate;
-import com.example.cms.security.Role;
-import com.example.cms.template.TemplateService;
-import com.example.cms.university.UniversityService;
-import com.example.cms.university.projections.UniversityDtoFormCreate;
-import com.example.cms.user.UserService;
-import com.example.cms.user.projections.UserDtoFormCreate;
-import com.example.cms.validation.exceptions.WrongParameterException;
-
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -169,7 +138,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "__unique__email@gmail.com",
                 "123456789",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
     }
 
@@ -186,7 +156,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "wojciech.kowalski7342@gmail.com",
                 "935283642",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "admin_bar",
@@ -196,7 +167,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "leszek.bartkiewicz5229@gmail.com",
                 "264878345",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "admin_ban",
@@ -206,7 +178,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "bozena.banik9987@gmail.com",
                 "653916167",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "moderator",
@@ -216,7 +189,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "szymon.koltun8441@gmail.com",
                 "311222995",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_zlo",
@@ -226,7 +200,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "roman.zlotkowski9843@gmail.com",
                 "739393723",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_rad",
@@ -236,7 +211,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ferdynand.radecki1321@gmail.com",
                 "727456789",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_kos",
@@ -246,7 +222,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "mateusz.kostuch2531@gmail.com",
                 "672476734",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_szy",
@@ -256,7 +233,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "blazej.szymkowski5231@gmail.com",
                 "738350481",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_mie",
@@ -266,7 +244,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "marcin.mieczkowski7235@gmail.com",
                 "830393622",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_jus",
@@ -276,7 +255,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ewa.jusko9033@gmail.com",
                 "258683257",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_hal",
@@ -286,7 +266,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "eliza.halicka8511@gmail.com",
                 "852660762",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_ols",
@@ -296,7 +277,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "igor.olszowy5729@gmail.com",
                 "542395438",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_gor",
@@ -306,7 +288,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "tomasz.gorczyca2514@gmail.com",
                 "481764007",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_sob",
@@ -316,7 +299,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "anastazja.sobolewicz7829@gmail.com",
                 "343862564",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_smi",
@@ -326,7 +310,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "arkadiusz.smialek2512@gmail.com",
                 "722351974",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_kam",
@@ -336,7 +321,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "halina.kamienska3612@gmail.com",
                 "662386326",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user",
@@ -346,7 +332,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "zuzanna.giertych1196@gmail.com",
                 "607386937",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_sob",
@@ -356,7 +343,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "kornelia.sobczynska3202@gmail.com",
                 "991417604",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_jer",
@@ -366,7 +354,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "michal.jerzak4983@gmail.com",
                 "702758897",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kul",
@@ -376,7 +365,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "stefan.kulinski8388@gmail.com",
                 "333229173",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_mic",
@@ -386,7 +376,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "jerzy.michno9332@gmail.com",
                 "262637472",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_waz",
@@ -396,7 +387,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "michal.wazowski9020@gmail.com",
                 "460515555",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_bie_krz",
@@ -406,7 +398,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "krzysztof.bielak4152@gmail.com",
                 "168130688",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_zub_mat",
@@ -416,7 +409,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "mateusz.zubek3408@gmail.com",
                 "945442735",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fia_fil",
@@ -426,7 +420,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "filip.fialkowski6444@gmail.com",
                 "411422855",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fil_rob",
@@ -436,7 +431,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "robert.filan2085@gmail.com",
                 "162988145",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_zyl_nik",
@@ -446,7 +442,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "nikodem.zyla9010@gmail.com",
                 "172856301",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fra_luk",
@@ -456,7 +453,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "lukasz.franc7575@gmail.com",
                 "281506654",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_rum_mar",
@@ -466,7 +464,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "mariusz.ruminski4387@gmail.com",
                 "943157548",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_prz_dar",
@@ -476,7 +475,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "dariusz.przybyszewski8263@gmail.com",
                 "481361620",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_ber_gra",
@@ -486,7 +486,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "grazyna.bereza4794@gmail.com",
                 "525852050",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_poc_luc",
@@ -496,7 +497,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "lucyna.pociask8433@gmail.com",
                 "790540150",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_was_kry",
@@ -506,7 +508,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "krystyna.wasko5594@gmail.com",
                 "889104495",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_les_bar",
@@ -516,7 +519,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "barbara.lesak4474@gmail.com",
                 "963386317",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fal_edw",
@@ -526,7 +530,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "edward.falkowski2311@gmail.com",
                 "827669891",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kos_win",
@@ -536,7 +541,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "wincenty.kostka4672@gmail.com",
                 "896274278",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_ign_dze",
@@ -546,7 +552,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "dzesika.ignatowska6987@gmail.com",
                 "460808376",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kry_rok",
@@ -556,7 +563,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "roksana.kryszak2878@gmail.com",
                 "510676502",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kem_mar",
@@ -566,7 +574,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "marian.kempka2425@gmail.com",
                 "276986682",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_les_ant",
@@ -576,7 +585,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "antoni.leszczynski7188@gmail.com",
                 "667887826",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
 
         universityService.addNewUniversity(new UniversityDtoFormCreate(
