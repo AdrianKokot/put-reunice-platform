@@ -5,8 +5,13 @@ import com.example.cms.validation.exceptions.BadRequestException;
 public class UniversityException extends BadRequestException {
 
     public UniversityException(UniversityExceptionType type) {
-        super(getMessage(type));
+        this(type, null);
     }
+
+    public UniversityException(UniversityExceptionType type, String field) {
+        super(getMessage(type), field);
+    }
+
     private static String getMessage(UniversityExceptionType type) {
         switch (type) {
             case NAME_TAKEN:

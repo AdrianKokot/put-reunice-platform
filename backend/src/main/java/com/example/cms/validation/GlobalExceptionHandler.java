@@ -45,6 +45,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     ResponseEntity<RestErrorBody> handleBadRequestException(BadRequestException ex) {
         RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.BAD_REQUEST, ex);
+
+        if (ex.getField() != null) {
+            errorBody.setFieldViolations(List.of(new RestErrorBody.FieldViolation(ex.getField(), ex.getMessage())));
+        }
+
         return ResponseEntity.badRequest().body(errorBody);
     }
 

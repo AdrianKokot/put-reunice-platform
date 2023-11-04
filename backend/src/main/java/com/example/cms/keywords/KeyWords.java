@@ -19,7 +19,7 @@ public class KeyWords {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Word must not be empty")
+    @NotBlank(message = "ERRORS.KEYWORDS.400.WORD_EMPTY")
     private String word;
 
     @Override

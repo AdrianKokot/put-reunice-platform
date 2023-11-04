@@ -37,7 +37,7 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @NotEmpty(message = "Requester email must not be empty")
+    @NotEmpty(message = "ERRORS.TICKET.400.REQUESTER_EMAIL_EMPTY")
     private String requesterEmail;
     @CreationTimestamp
     private Instant requestedTime;

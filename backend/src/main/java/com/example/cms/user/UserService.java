@@ -81,7 +81,7 @@ public class UserService {
     @Secured("ROLE_MODERATOR")
     public UserDtoDetailed createUser(UserDtoFormCreate form) {
         if (userRepository.existsByUsername(form.getUsername())) {
-            throw new UserException(UserExceptionType.USERNAME_TAKEN);
+            throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
 
         validatePassword(form.getPassword());
@@ -114,10 +114,10 @@ public class UserService {
         if (password == null) {
             password = "";
         }
-        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,64}");
+        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
         Matcher matcher = pattern.matcher(password);
         if (!matcher.find()) {
-            throw new UserException(UserExceptionType.NOT_VALID_PASSWORD);
+            throw new UserException(UserExceptionType.NOT_VALID_PASSWORD, "password");
         }
     }
 
@@ -126,6 +126,10 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
         if (securityService.isForbiddenUser(user)) {
             throw new UserForbidden();
+        }
+
+        if (userRepository.existsByUsername(form.getUsername())) {
+            throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
 
         user.setFirstName(form.getFirstName());
@@ -225,11 +229,11 @@ public class UserService {
         }
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new UserException(UserExceptionType.WRONG_PASSWORD);
+            throw new UserException(UserExceptionType.WRONG_PASSWORD, "oldPassword");
         }
 
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new UserException(UserExceptionType.SAME_PASSWORD);
+            throw new UserException(UserExceptionType.SAME_PASSWORD, "newPassword");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));

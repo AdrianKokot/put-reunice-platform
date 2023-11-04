@@ -1,7 +1,6 @@
 import {
   catchError,
   exhaustMap,
-  filter,
   map,
   mergeMap,
   Observable,
@@ -20,6 +19,7 @@ import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiAlertService } from '@taiga-ui/core';
 import { ERROR_SYMBOL_VALUE, LOADING_SYMBOL_VALUE } from './wrapper.symbols';
+import { FieldViolationApiError } from '@reunice/modules/shared/data-access';
 
 export interface FormSubmitWrapperFunctions<
   TControl extends {
@@ -45,12 +45,10 @@ export interface FormSubmitWrapperFunctions<
   successAlertMessage?: string;
 }
 
-export const handleValidationApiError = (
-  form: FormGroup,
-  err: HttpErrorResponse,
-) => {
-  // TODO Handle validation errors
-  console.log(err);
+export const isValidationApiError = (
+  error: HttpErrorResponse['error'],
+): error is FieldViolationApiError => {
+  return 'fieldViolations' in error;
 };
 
 export class FormSubmitWrapper<
@@ -63,16 +61,37 @@ export class FormSubmitWrapper<
   private readonly _translate = inject(TranslateService);
   private readonly _alert = inject(TuiAlertService);
 
+  private handleValidationApiError(form: FormGroup, err: HttpErrorResponse) {
+    if (isValidationApiError(err.error)) {
+      const fieldViolationError = err.error;
+
+      for (const { field, message } of fieldViolationError.fieldViolations) {
+        form
+          .get(field)
+          ?.setErrors({ server: this._translate.instant(message) });
+      }
+
+      if (fieldViolationError.fieldViolations.length === 0) {
+        this._alert
+          .open(this._translate.instant(err.error.message), {
+            status: 'error',
+          })
+          .subscribe();
+      }
+    }
+    console.log(err);
+  }
+
   public readonly loading$: Observable<boolean> = this._submit$.pipe(
     takeUntilDestroyed(),
     tap(() => tuiMarkControlAsTouchedAndValidate(this.form)),
-    filter(() => this.form.valid),
+    // filter(() => this.form.valid),
     exhaustMap(() =>
       this.functions.submit(this.form.getRawValue()).pipe(
         startWith(LOADING_SYMBOL_VALUE),
         catchError((err) => {
           if (err instanceof HttpErrorResponse)
-            handleValidationApiError(this.form, err);
+            this.handleValidationApiError(this.form, err);
 
           return of(ERROR_SYMBOL_VALUE);
         }),
