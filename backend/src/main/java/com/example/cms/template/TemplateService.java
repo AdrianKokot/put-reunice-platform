@@ -37,12 +37,12 @@ public class TemplateService {
         this.securityService = securityService;
     }
 
-    @Secured("ROLE_USER") //added by MSz
+    @Secured("ROLE_USER")
     public TemplateDtoDetailed get(Long id) {
         return templateRepository.findById(id).map(TemplateDtoDetailed::of).orElseThrow(TemplateNotFound::new);
     }
 
-    @Secured("ROLE_MODERATOR")
+    @Secured("ROLE_USER")
     public Page<Template> getAll(Pageable pageable, Map<String, String> filterVars) {
         Specification<Template> combinedSpecification = null;
 

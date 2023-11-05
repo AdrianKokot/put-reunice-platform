@@ -64,8 +64,8 @@ public class SecurityService {
                 case MODERATOR:
                     return !hasUniversity(page.getUniversity().getId());
                 case USER:
-                    return !page.getCreator().getId().equals(loggedUser.getId()) ||
-                            !hasUniversity(page.getUniversity().getId());
+                    return (!page.getCreator().getId().equals(loggedUser.getId()) &&
+                            !hasUniversity(page.getUniversity().getId())) || page.getParent() == null;
             }
             return true;
         }).orElse(true);
