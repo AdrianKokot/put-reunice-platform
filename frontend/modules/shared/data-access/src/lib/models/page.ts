@@ -8,7 +8,7 @@ export interface Page {
   description: string;
   hidden: boolean;
   content: string;
-  parent: Page;
+  parent: Page | null;
   university: University;
   children: Page[];
   createdOn: string;

@@ -154,11 +154,16 @@
     </button>
 
     <a
-      [routerLink]="['edit']"
+      [routerLink]="cantEdit ? null : ['edit']"
       tuiButton
       type="button"
       appearance="secondary"
       class="tui-form__button"
+      *tuiLet="item.parent === null && user.accountType === 'USER' as cantEdit"
+      [disabled]="cantEdit"
+      [tuiHint]="
+        (cantEdit ? 'CANNOT_EDIT_UNIVERSITY_LANDING_PAGE' : '') | translate
+      "
     >
       {{ 'EDIT' | translate }}
     </a>
