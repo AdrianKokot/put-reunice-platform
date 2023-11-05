@@ -69,6 +69,8 @@ public class BackupService {
     @Transactional
     @Async
     public void exportBackup(String backupName) throws SQLException, IOException {
+        backupName = secureBackupName(backupName);
+
         log.info("[BACKUP-EXPORT-JOB][{}] Start exporting backup", backupName);
         Connection connection = getConnection();
         CopyManager copyManager = createCopyManager(connection);
@@ -105,6 +107,8 @@ public class BackupService {
     @Secured("ROLE_ADMIN")
     @Transactional
     public void importBackup(String backupName) throws IOException, SQLException {
+        backupName = secureBackupName(backupName);
+
         log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", backupName);
         Path zipPath = restoreMainPath.resolve(backupName.concat(".zip"));
 
@@ -213,6 +217,8 @@ public class BackupService {
 
     @Secured("ROLE_ADMIN")
     public FileSystemResource getBackupFile(String backupName) {
+        backupName = secureBackupName(backupName);
+
         try {
             Path path = backupsMainPath.resolve(backupName).resolve(backupName.concat(".zip"))
                     .normalize().toRealPath();
@@ -224,6 +230,8 @@ public class BackupService {
 
     @Secured("ROLE_ADMIN")
     public void deleteBackupFile(String backupName) {
+        backupName = secureBackupName(backupName);
+
         try {
             Path path = backupsMainPath.resolve(backupName).resolve(backupName.concat(".zip"))
                     .normalize().toRealPath();
@@ -232,5 +240,9 @@ public class BackupService {
         } catch (IOException e) {
             throw new BackupNotFound();
         }
+    }
+
+    public static String secureBackupName(String backupName) {
+        return backupName.replaceAll("\\.", "").replaceAll("/", "");
     }
 }
