@@ -46,7 +46,7 @@ export class AuthService {
 
   logout(): Observable<void> {
     return this._http
-      .get<void>('/api/logout')
+      .post<void>('/api/logout', {})
       .pipe(tap(() => this._user$.next(null)));
   }
 
