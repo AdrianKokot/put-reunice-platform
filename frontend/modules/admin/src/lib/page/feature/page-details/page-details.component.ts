@@ -20,6 +20,7 @@ import {
 import {
   TuiFilesModule,
   TuiIslandModule,
+  TuiTabsModule,
   TuiTagModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
@@ -37,6 +38,7 @@ import { TuiLinkModule } from '@taiga-ui/core';
     TuiTreeModule,
     TuiTagModule,
     TuiLinkModule,
+    TuiTabsModule,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +53,7 @@ export class PageDetailsComponent {
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
     shareReplay(),
   );
+
   readonly user: User =
     inject(AuthService).userSnapshot ?? throwError('User is null');
 
@@ -75,4 +78,6 @@ export class PageDetailsComponent {
     successAlertMessage: 'PAGE_DELETED_SUCCESS',
     effect: navigateToResourceList(),
   });
+
+  activeTabIndex = 0;
 }
