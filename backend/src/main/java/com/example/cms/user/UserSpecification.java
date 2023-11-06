@@ -45,9 +45,8 @@ public class UserSpecification extends SearchSpecification implements Specificat
                     return criteriaBuilder.disjunction();
                 }
             } else if (root.get(criteria.getKey()).getJavaType() == Set.class) {
-                Join<User, University> universityJoin = root.join("enrolledUniversities");
                 return criteriaBuilder.equal(
-                        universityJoin.get("id"), parseInt(criteria.getValue().toString()));
+                        root.get("enrolledUniversities").get("id"), parseInt(criteria.getValue().toString()));
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
             return this.searchPredicate(root, query, criteriaBuilder);
