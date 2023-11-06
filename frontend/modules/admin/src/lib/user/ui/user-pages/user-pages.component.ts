@@ -36,6 +36,10 @@ export class UserPagesComponent extends ReuniceAbstractTable<Page> {
     this.filtersForm.controls.creator_eq.setValue(value);
   }
 
+  @Input() set handlerId(value: number | null) {
+    this.filtersForm.controls.handlers_eq.setValue(value);
+  }
+
   readonly columns: Array<keyof Page | string> = [
     'title',
     'createdOn',
@@ -47,6 +51,7 @@ export class UserPagesComponent extends ReuniceAbstractTable<Page> {
   readonly filtersForm = inject(FormBuilder).group({
     hidden_eq: [null as boolean | null],
     creator_eq: [null as number | null],
+    handlers_eq: [null as number | null],
     university_eq: [null as number | null],
   });
 

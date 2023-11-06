@@ -88,7 +88,7 @@
           {{ item.university.name }}
         </td>
         <td *tuiCell="'hidden'" tuiTd>
-          {{ item.hidden }}
+          {{ (item.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
         </td>
 
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
