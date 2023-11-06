@@ -44,7 +44,14 @@ public class TemplateService {
 
     @Secured("ROLE_USER")
     public Page<Template> getAll(Pageable pageable, Map<String, String> filterVars) {
-        Specification<Template> combinedSpecification = null;
+        Specification<Template> combinedSpecification = Specification.where(
+                securityService.getPrincipal()
+                        .map(loggedUser -> new TemplateRoleSpecification(
+                                loggedUser.getAccountType(),
+                                loggedUser.getUniversities())
+                        )
+                        .orElseGet(() -> new TemplateRoleSpecification(null, null))
+        );
 
         if (!filterVars.isEmpty()) {
             List<TemplateSpecification> specifications = filterVars.entrySet().stream()
@@ -59,9 +66,6 @@ public class TemplateService {
                     }).collect(Collectors.toList());
 
             for (Specification<Template> spec : specifications) {
-                if (combinedSpecification == null) {
-                    combinedSpecification = Specification.where(spec);
-                }
                 combinedSpecification = combinedSpecification.and(spec);
             }
         }
