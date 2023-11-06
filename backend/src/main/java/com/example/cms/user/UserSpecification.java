@@ -30,13 +30,19 @@ public class UserSpecification extends SearchSpecification implements Specificat
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), criteria.getValue());
-            } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
-            } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
-            } else if (root.get(criteria.getKey()).getJavaType() == Role.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == Role.class) {
                 try {
                     Role searchRole = Role.valueOf(criteria.getValue().toString().toUpperCase());
                     return criteriaBuilder.equal(
@@ -44,7 +50,16 @@ public class UserSpecification extends SearchSpecification implements Specificat
                 } catch (Exception e) {
                     return criteriaBuilder.disjunction();
                 }
-            } else if (root.get(criteria.getKey()).getJavaType() == Set.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == Set.class) {
+
+                if (criteria.getKey().equalsIgnoreCase("handlersPages")) {
+                    var join = root.join("handlersPages");
+
+                    return criteriaBuilder.equal(join.get("id"), parseInt(criteria.getValue().toString()));
+                }
+
                 return criteriaBuilder.equal(
                         root.get("enrolledUniversities").get("id"), parseInt(criteria.getValue().toString()));
             }
