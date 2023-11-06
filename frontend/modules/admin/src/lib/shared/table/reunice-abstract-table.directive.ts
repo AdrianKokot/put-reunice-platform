@@ -16,6 +16,7 @@ import {
   combineLatest,
   debounceTime,
   map,
+  Observable,
   of,
   shareReplay,
   startWith,
@@ -66,7 +67,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
 
   private readonly _storage = inject(LOCAL_STORAGE);
 
-  protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
+  protected readonly emptyMessage$: Observable<string> = inject(
+    TUI_NOTHING_FOUND_MESSAGE,
+  );
 
   @HostBinding('style.--page-size')
   private _pageSize = 10;

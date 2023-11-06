@@ -102,30 +102,10 @@
     </div>
 
     <div [hidden]="activeTabIndex !== 2">
-      <label
-        [tuiLabel]="'PAGE_CONTACT_REQUEST_HANDLERS' | translate"
-        class="tui-form__row"
-        *ngIf="(item?.contactRequestHandlers?.length ?? 0) !== 0"
-      >
-        <div class="tag-list tui-space_top-1">
-          <tui-tag
-            *ngFor="
-              let handler of item?.contactRequestHandlers ?? [];
-              trackById
-            "
-            status="primary"
-            [hoverable]="false"
-            [value]="
-              handler.firstName +
-              ' ' +
-              handler.lastName +
-              ' (' +
-              handler.email +
-              ')'
-            "
-          ></tui-tag>
-        </div>
-      </label>
+      <reunice-page-users
+        *ngIf="item !== null"
+        [handles]="item.id"
+      ></reunice-page-users>
     </div>
 
     <div [hidden]="activeTabIndex !== 3">

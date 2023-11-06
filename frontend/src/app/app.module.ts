@@ -103,8 +103,8 @@ import {
       provide: TUI_VALIDATION_ERRORS,
       deps: [TranslateService],
       useFactory: (translate: TranslateService) => ({
-        required: translate.get('VALIDATION_ERROR_REQUIRED'),
-        email: translate.get('VALIDATION_ERROR_EMAIL'),
+        required: () => translate.get('VALIDATION_ERROR_REQUIRED'),
+        email: () => translate.get('VALIDATION_ERROR_EMAIL'),
         maxlength: (params: { requiredLength: number }) =>
           translate.get('VALIDATION_ERROR_MAXLENGTH', params),
       }),

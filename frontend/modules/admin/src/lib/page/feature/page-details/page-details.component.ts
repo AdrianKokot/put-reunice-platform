@@ -26,6 +26,7 @@ import {
 } from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLinkModule } from '@taiga-ui/core';
+import { PageUsersComponent } from '../../ui/page-users/page-users.component';
 
 @Component({
   selector: 'reunice-page-details',
@@ -39,6 +40,7 @@ import { TuiLinkModule } from '@taiga-ui/core';
     TuiTagModule,
     TuiLinkModule,
     TuiTabsModule,
+    PageUsersComponent,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
