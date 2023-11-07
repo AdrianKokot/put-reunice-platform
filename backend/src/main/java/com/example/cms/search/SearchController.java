@@ -1,5 +1,6 @@
 package com.example.cms.search;
 
+import com.example.cms.page.Page;
 import com.example.cms.search.projections.PageSearchHitDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/search")
 public class SearchController {
-    private final PageFullTextSearchService pageService;
+    private final FullTextSearchService<Page, PageSearchHitDto> pageService;
 
     @GetMapping("/pages")
     ResponseEntity<List<PageSearchHitDto>> searchPages(@RequestParam String query) {

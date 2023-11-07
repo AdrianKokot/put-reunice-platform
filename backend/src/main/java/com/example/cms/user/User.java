@@ -4,7 +4,9 @@ import com.example.cms.page.Page;
 import com.example.cms.security.Role;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.university.University;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
@@ -22,6 +24,8 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)

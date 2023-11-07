@@ -26,24 +26,20 @@ public class PageRoleSpecification implements Specification<Page> {
         Predicate conjunctionPred = criteriaBuilder.conjunction();
 
         if (this.role == null) {
-            predicates.add(criteriaBuilder.and(
+            return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("hidden"), false),
                     criteriaBuilder.equal(root.get("university").get("hidden"), false)
-            ));
-        } else if (!this.role.equals(Role.ADMIN)) {
-            predicates.add(criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("hidden"), false),
-                    criteriaBuilder.equal(root.get("university").get("hidden"), false)
-            ));
-
-            if (this.creator != null && this.role.equals(Role.MODERATOR)) {
-                predicates.add(root.get("university").get("id").in(universities));
-            }
-
-            if (this.universities != null && this.role.equals(Role.USER)) {
-                predicates.add(criteriaBuilder.equal(root.get("creator").get("id"), creator));
-            }
+            );
         }
+
+        if (!this.role.equals(Role.ADMIN)) {
+            predicates.add(root.get("university").get("id").in(universities));
+        }
+
+        if (this.role.equals(Role.USER)) {
+            predicates.add(criteriaBuilder.equal(root.get("creator").get("id"), creator));
+        }
+
         return predicates.isEmpty() ? conjunctionPred :  criteriaBuilder.and(conjunctionPred,
                 criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }

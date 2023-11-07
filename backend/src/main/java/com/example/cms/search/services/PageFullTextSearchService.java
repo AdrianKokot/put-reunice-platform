@@ -1,11 +1,14 @@
-package com.example.cms.search;
+package com.example.cms.search.services;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.page.Page;
+import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
+import com.example.cms.search.services.BaseFullTextSearchService;
 import com.example.cms.university.University;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.typesense.api.FieldTypes;
 import org.typesense.api.exceptions.RequestMalformed;
@@ -19,8 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Log
-public class PageFullTextSearchService extends FullTextSearchService {
-
+@Profile("postgres")
+public class PageFullTextSearchService extends BaseFullTextSearchService implements FullTextSearchService<Page, PageSearchHitDto> {
     private static final String COLLECTION_NAME = "pages";
 
     public PageFullTextSearchService(@Autowired ApplicationConfigurationProvider applicationConfigurationProvider) {

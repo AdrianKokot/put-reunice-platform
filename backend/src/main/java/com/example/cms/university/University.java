@@ -2,8 +2,7 @@ package com.example.cms.university;
 
 import com.example.cms.page.Page;
 import com.example.cms.user.User;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -16,6 +15,8 @@ import java.util.Set;
 @Table(name = "universities")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class University {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
