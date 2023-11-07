@@ -4,6 +4,7 @@ import {
   TuiAlertModule,
   tuiButtonOptionsProvider,
   TuiDialogModule,
+  tuiNotificationOptionsProvider,
   TuiRootModule,
 } from '@taiga-ui/core';
 import { NgModule } from '@angular/core';
@@ -73,6 +74,9 @@ import { TUI_HIDE_TEXT, TUI_SHOW_ALL_TEXT } from '@taiga-ui/kit';
         default:
           return import('@taiga-ui/i18n/languages/english');
       }
+    }),
+    tuiNotificationOptionsProvider({
+      autoClose: 2500,
     }),
     {
       provide: HTTP_INTERCEPTORS,
