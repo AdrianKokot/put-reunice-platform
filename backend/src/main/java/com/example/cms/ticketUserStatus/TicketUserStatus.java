@@ -21,7 +21,7 @@ public class TicketUserStatus {
 
     @ManyToOne
     @MapsId("ticketId")
-    @JoinColumn(name = "ticket_id")
+    @JoinColumn(name = "ticket_id", columnDefinition = "uuid")
     Ticket ticket;
 
     Instant lastSeenOn;

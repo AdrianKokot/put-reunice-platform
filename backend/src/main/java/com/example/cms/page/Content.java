@@ -11,6 +11,8 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "contents")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

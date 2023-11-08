@@ -27,21 +27,23 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.session.*;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 @Slf4j
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-@Configuration
 public class SecurityConfig implements AsyncConfigurer {
 
     @Autowired
@@ -113,7 +115,7 @@ public class SecurityConfig implements AsyncConfigurer {
                 .maxSessionsPreventsLogin(false)
                 .expiredSessionStrategy(sessionInformationExpiredStrategy());
 
-        http.csrf().disable();
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.cors();
 
         http.authorizeRequests()
@@ -127,20 +129,6 @@ public class SecurityConfig implements AsyncConfigurer {
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(authenticationEntryPoint);
-
-        return http.build();
-    }
-
-    @Bean
-    @Profile("not-secured")
-    public SecurityFilterChain notSecuredFilterChain(HttpSecurity http) throws Exception {
-
-        http.csrf().disable();
-
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .and()
-                .anonymous().authorities("ROLE_ADMIN", "ROLE_MODERATOR", "ROLE_USER");
 
         return http.build();
     }

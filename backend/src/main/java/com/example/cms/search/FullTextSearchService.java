@@ -1,52 +1,15 @@
 package com.example.cms.search;
 
-import com.example.cms.configuration.ApplicationConfigurationProvider;
-import lombok.extern.java.Log;
-import org.springframework.stereotype.Component;
-import org.typesense.api.Client;
-import org.typesense.api.Configuration;
-import org.typesense.resources.Node;
-
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
-@Log
-@Component
-public abstract class FullTextSearchService {
-    protected final ApplicationConfigurationProvider applicationConfigurationProvider;
+public interface FullTextSearchService<T, TDto> {
+    void upsert(T item);
 
-    protected final Client client;
-    private Boolean health = false;
+    void delete(T item);
 
-    protected Boolean isConnected() {
-        return health;
-    }
+    void deleteCollection();
 
-    public FullTextSearchService(ApplicationConfigurationProvider applicationConfigurationProvider) {
-        this.applicationConfigurationProvider = applicationConfigurationProvider;
-        this.client = getClient();
-    }
+    void createCollection();
 
-    private Client getClient() {
-        List<Node> nodes = new ArrayList<>();
-
-        nodes.add(
-                new Node("http", applicationConfigurationProvider.getTypesenseHost(), "8108")
-        );
-
-        Configuration configuration = new Configuration(nodes, Duration.ofSeconds(2), applicationConfigurationProvider.getTypesenseApiKey());
-
-        Client client = new Client(configuration);
-
-        try {
-            log.info(client.health.retrieve().toString());
-            this.health = true;
-        } catch (Exception e) {
-            this.health = false;
-            log.log(java.util.logging.Level.SEVERE, "Error while connecting to Typesense", e);
-        }
-
-        return client;
-    }
+    List<TDto> search(String query);
 }
