@@ -156,7 +156,7 @@ class PageControllerTest {
             }
 
             @Test
-            void get_UserRole_WithUniversityAccessAndNotPageCreator_DetailsHidden() throws Exception {
+            void get_UserRole_WithUniversityAccessAndNotPageCreator_DetailsVisible() throws Exception {
                 ctx.setAuthentication(CustomAuthenticationToken.create(Role.USER, Set.of(universityId), userId + 1));
 
                 var result = mvc.perform(get("/api/pages/" + pageId).contentType(MediaType.APPLICATION_JSON))
@@ -165,7 +165,7 @@ class PageControllerTest {
 
                 var dto = objectMapper.readValue(result.getResponse().getContentAsString(), PageDtoDetailed.class);
 
-                assertThat(dto.getContactRequestHandlers(), is(nullValue()));
+                assertThat(dto.getContactRequestHandlers(), is(notNullValue()));
             }
         }
 
@@ -223,11 +223,11 @@ class PageControllerTest {
             }
 
             @Test
-            void get_UserRole_WithUniversityAccessAndNotPageCreator_Forbidden() throws Exception {
+            void get_UserRole_WithUniversityAccessAndNotPageCreator_Success() throws Exception {
                 ctx.setAuthentication(CustomAuthenticationToken.create(Role.USER, Set.of(universityId), userId + 1));
 
                 mvc.perform(get("/api/pages/" + pageId).contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isForbidden())
+                        .andExpect(status().isOk())
                         .andReturn();
             }
         }
