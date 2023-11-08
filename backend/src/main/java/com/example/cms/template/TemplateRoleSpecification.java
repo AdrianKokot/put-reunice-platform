@@ -4,10 +4,7 @@ import com.example.cms.security.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.Collection;
 
 @AllArgsConstructor
@@ -25,7 +22,7 @@ public class TemplateRoleSpecification implements Specification<Template> {
         if (!this.role.equals(Role.ADMIN)) {
             return criteriaBuilder.or(
                     criteriaBuilder.equal(root.get("isAvailableToAll"), true),
-                    root.get("universities").get("id").in(universities)
+                    root.join("universities", JoinType.LEFT).get("id").in(universities)
             );
         }
 
