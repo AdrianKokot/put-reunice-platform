@@ -8,55 +8,31 @@
     <thead [formGroup]="filtersForm">
       <tr tuiThGroup>
         <th
-          *tuiHead="'title'"
+          *tuiHead="'username'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'USERNAME' | translate }}
+        </th>
+        <th
+          *tuiHead="'firstName'"
           tuiTh
           tuiSortable
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'TITLE' | translate }}
+          {{ 'NAME' | translate }}
         </th>
         <th
-          *tuiHead="'createdOn'"
+          *tuiHead="'email'"
           tuiTh
           tuiSortable
           [sticky]="true"
-          class="column-sm"
+          class="column-md"
         >
-          {{ 'CREATED_ON' | translate }}
-        </th>
-        <th
-          *tuiHead="'university'"
-          tuiTh
-          tuiSortable
-          [sticky]="true"
-          class="column-sm"
-        >
-          {{ 'UNIVERSITY' | translate }}
-          <reunice-table-filter
-            formControlName="university_eq"
-            [searchWrapper]="universitySearch"
-          ></reunice-table-filter>
-        </th>
-        <th
-          *tuiHead="'hidden'"
-          tuiTh
-          tuiSortable
-          [sticky]="true"
-          class="column-xs"
-        >
-          {{ 'HIDDEN' | translate }}
-
-          <reunice-table-filter formControlName="hidden_eq">
-            <tui-data-list *tuiDataList size="s">
-              <button tuiOption [value]="false">
-                {{ 'VISIBLE' | translate }}
-              </button>
-              <button tuiOption [value]="true">
-                {{ 'HIDDEN' | translate }}
-              </button>
-            </tui-data-list>
-          </reunice-table-filter>
+          {{ 'EMAIL' | translate }}
         </th>
         <th
           *tuiHead="'actions'"
@@ -78,22 +54,24 @@
         "
         tuiTr
       >
-        <td *tuiCell="'title'" tuiTd>
-          {{ item.title }}
+        <td *tuiCell="'username'" tuiTd>
+          {{ item.username }}
         </td>
-        <td *tuiCell="'createdOn'" tuiTd>
-          {{ item.createdOn | localizedDate }}
+        <td *tuiCell="'firstName'" tuiTd>
+          {{ item.firstName }} {{ item.lastName }}
         </td>
-        <td *tuiCell="'university'" tuiTd>
-          {{ item.university.name }}
-        </td>
-        <td *tuiCell="'hidden'" tuiTd>
-          {{ (item.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+        <td
+          *tuiCell="'email'"
+          tuiTd
+          class="text-ellipsis column-md"
+          [title]="item.email"
+        >
+          {{ item.email }}
         </td>
 
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
           <a
-            [routerLink]="['/admin/pages', item.id]"
+            [routerLink]="['/admin/users', item.id]"
             tuiIconButton
             size="s"
             appearance="flat"
@@ -104,7 +82,7 @@
           </a>
 
           <a
-            [routerLink]="['/admin/pages', item.id, 'edit']"
+            [routerLink]="['/admin/users', item.id, 'edit']"
             tuiIconButton
             size="s"
             appearance="flat"

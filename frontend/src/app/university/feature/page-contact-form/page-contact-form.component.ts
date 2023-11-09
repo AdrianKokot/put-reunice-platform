@@ -53,6 +53,7 @@ export class PageContactFormComponent {
   readonly form = inject(FormBuilder).nonNullable.group({
     pageId: [],
     name: ['', [Validators.required, Validators.maxLength(255)]],
+    subject: ['', [Validators.required, Validators.maxLength(255)]],
     email: [
       '',
       [Validators.required, Validators.maxLength(255), Validators.email],
