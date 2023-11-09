@@ -10,7 +10,7 @@ server:
     session:
       cookie:
         http-only: true
-        secure: false
+        secure: true
       timeout: 30m
 
 # Here we define active profiles
