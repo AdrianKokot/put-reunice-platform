@@ -69,12 +69,12 @@ public class BackupService {
     @Transactional
     @Async
     public void exportBackup(String backupName) throws SQLException, IOException {
-        backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
+        var securedBackupName = secureBackupName(backupName);
 
-        log.info("[BACKUP-EXPORT-JOB][{}] Start exporting backup", backupName);
+        log.info("[BACKUP-EXPORT-JOB][{}] Start exporting backup", securedBackupName);
         Connection connection = getConnection();
         CopyManager copyManager = createCopyManager(connection);
-        Path backupPath = backupsMainPath.resolve(backupName).normalize();
+        Path backupPath = backupsMainPath.resolve(securedBackupName).normalize();
         Files.createDirectories(backupPath);
         Files.createDirectories(restoreMainPath);
 
@@ -83,7 +83,7 @@ public class BackupService {
         List<File> files = new ArrayList<>();
         while (tables.next()) {
             String tableName = tables.getString("TABLE_NAME");
-            log.info("[BACKUP-EXPORT-JOB][{}] Export table: {}", backupName, tableName);
+            log.info("[BACKUP-EXPORT-JOB][{}] Export table: {}", securedBackupName, tableName);
             File file = backupPath.resolve(tableName.concat(".txt")).toFile();
             files.add(file);
             writeTableToFile(file, tableName, copyManager);
@@ -92,10 +92,10 @@ public class BackupService {
         files.add(file);
         writeTableToFile(file, LARGE_OBJECT_TABLE, copyManager);
 
-        log.info("[BACKUP-EXPORT-JOB][{}] Start creating zip archive", backupName);
-        zipService.zipArchive(files, backupPath.resolve(backupName.concat(".zip")));
+        log.info("[BACKUP-EXPORT-JOB][{}] Start creating zip archive", securedBackupName);
+        zipService.zipArchive(files, backupPath.resolve(securedBackupName.concat(".zip")));
         FileUtils.deleteFiles(files);
-        log.info("[BACKUP-EXPORT-JOB][{}] Finish job", backupName);
+        log.info("[BACKUP-EXPORT-JOB][{}] Finish job", securedBackupName);
     }
 
     private void writeTableToFile(File file, String table, CopyManager copyManager) throws IOException, SQLException {
@@ -107,15 +107,15 @@ public class BackupService {
     @Secured("ROLE_ADMIN")
     @Transactional
     public void importBackup(String backupName) throws IOException, SQLException {
-        backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
+        var securedBackupName = secureBackupName(backupName);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", backupName);
-        Path zipPath = restoreMainPath.resolve(backupName.concat(".zip"));
+        log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", securedBackupName);
+        Path zipPath = restoreMainPath.resolve(securedBackupName.concat(".zip"));
 
         zipService.unzipArchive(zipPath);
         Files.delete(zipPath);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Start importing tables", backupName);
+        log.info("[BACKUP-IMPORT-JOB][{}] Start importing tables", securedBackupName);
 
         CopyManager copyManager = createCopyManager(getConnection());
 
@@ -146,13 +146,13 @@ public class BackupService {
         Files.delete(restoreMainPath.resolve("pg_largeobject.txt"));
         FileUtils.deleteFiles(files);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", backupName);
+        log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", securedBackupName);
 
         pageSearchService.deleteCollection();
         pageSearchService.createCollection();
         pageRepository.findAll().forEach(pageSearchService::upsert);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Finish job", backupName);
+        log.info("[BACKUP-IMPORT-JOB][{}] Finish job", securedBackupName);
     }
 
     private void readTableFromFile(String path, String table, CopyManager copyManager) throws IOException, SQLException {
@@ -217,10 +217,10 @@ public class BackupService {
 
     @Secured("ROLE_ADMIN")
     public FileSystemResource getBackupFile(String backupName) {
-        backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
+        var securedBackupName = secureBackupName(backupName);
 
         try {
-            Path path = backupsMainPath.resolve(backupName).resolve(backupName.concat(".zip"))
+            Path path = backupsMainPath.resolve(securedBackupName).resolve(securedBackupName.concat(".zip"))
                     .normalize().toRealPath();
             return new FileSystemResource(path);
         } catch (IOException e) {
@@ -230,15 +230,19 @@ public class BackupService {
 
     @Secured("ROLE_ADMIN")
     public void deleteBackupFile(String backupName) {
-        backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
+        var securedBackupName = secureBackupName(backupName);
 
         try {
-            Path path = backupsMainPath.resolve(backupName).resolve(backupName.concat(".zip"))
+            Path path = backupsMainPath.resolve(securedBackupName).resolve(securedBackupName.concat(".zip"))
                     .normalize().toRealPath();
             Files.delete(path);
             Files.delete(path.getParent());
         } catch (IOException e) {
             throw new BackupNotFound();
         }
+    }
+
+    private String secureBackupName(String backupName) {
+      return backupName.replaceAll("\\.", "").replaceAll("/", "");
     }
 }
