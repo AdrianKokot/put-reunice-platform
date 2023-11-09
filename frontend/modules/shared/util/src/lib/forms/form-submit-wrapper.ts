@@ -1,6 +1,7 @@
 import {
   catchError,
   exhaustMap,
+  filter,
   map,
   mergeMap,
   Observable,
@@ -45,6 +46,8 @@ export interface FormSubmitWrapperFunctions<
   successAlertMessage?: string;
 }
 
+const INTERCEPTED_ERROR_CODES = new Set([404, 403, 500, 401]);
+
 export const isValidationApiError = (
   error: HttpErrorResponse['error'],
 ): error is FieldViolationApiError => {
@@ -62,7 +65,10 @@ export class FormSubmitWrapper<
   private readonly _alert = inject(TuiAlertService);
 
   private handleValidationApiError(form: FormGroup, err: HttpErrorResponse) {
-    if (isValidationApiError(err.error)) {
+    if (
+      isValidationApiError(err.error) &&
+      !INTERCEPTED_ERROR_CODES.has(err.status)
+    ) {
       const fieldViolationError = err.error;
 
       for (const { field, message } of fieldViolationError.fieldViolations) {
@@ -79,13 +85,12 @@ export class FormSubmitWrapper<
           .subscribe();
       }
     }
-    console.log(err);
   }
 
   public readonly loading$: Observable<boolean> = this._submit$.pipe(
     takeUntilDestroyed(),
     tap(() => tuiMarkControlAsTouchedAndValidate(this.form)),
-    // filter(() => this.form.valid),
+    filter(() => this.form.valid),
     exhaustMap(() =>
       this.functions.submit(this.form.getRawValue()).pipe(
         startWith(LOADING_SYMBOL_VALUE),

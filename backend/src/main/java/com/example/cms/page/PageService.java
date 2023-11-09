@@ -170,6 +170,9 @@ public class PageService {
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbidden();
         }
+        if (page.getParent() == null && !securityService.hasHigherRoleThan(Role.USER)) {
+            throw new PageForbidden();
+        }
 
         page.setTitle(form.getTitle());
         page.setDescription(form.getDescription());

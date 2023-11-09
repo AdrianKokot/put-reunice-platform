@@ -36,18 +36,24 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
 
     formData.append('pageId', resource.id.toString());
 
-    return combineLatest([
-      this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
-      (resource.files ?? []).length > 0
-        ? this._http.post<void>('/api/files/upload', formData)
-        : of(null),
-      (resource.filesToRemove ?? []).length > 0
-        ? this._http.post<void>(
-            '/api/files/delete',
-            resource.filesToRemove ?? [],
-          )
-        : of(null),
-    ]).pipe(switchMap(() => this.get(resource.id)));
+    return this._http
+      .put<Page>(`${this._resourceUrl}/${resource.id}`, resource)
+      .pipe(
+        switchMap(() =>
+          combineLatest([
+            (resource.files ?? []).length > 0
+              ? this._http.post<void>('/api/files/upload', formData)
+              : of(null),
+            (resource.filesToRemove ?? []).length > 0
+              ? this._http.post<void>(
+                  '/api/files/delete',
+                  resource.filesToRemove ?? [],
+                )
+              : of(null),
+          ]),
+        ),
+        switchMap(() => this.get(resource.id)),
+      );
   }
 
   getUniversityHierarchy(universityId: BaseResource['id']): Observable<Page> {

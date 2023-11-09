@@ -1,21 +1,19 @@
 package com.example.cms.security;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.example.cms.page.Page;
+import com.example.cms.university.University;
+import com.example.cms.user.User;
+import com.example.cms.validation.exceptions.UnauthorizedException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 
-import com.example.cms.page.Page;
-import com.example.cms.university.University;
-import com.example.cms.user.User;
-import com.example.cms.validation.exceptions.UnauthorizedException;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,7 +23,7 @@ public class SecurityService {
 
     /**
      * Gets an optional which contains the currently logged user, or is empty (if the user is not logged in).
-     * 
+     *
      * @return an optional which contains the currently logged user, or is empty (if the user is not logged in)
      */
     public Optional<LoggedUser> getPrincipal() {
@@ -64,8 +62,8 @@ public class SecurityService {
                 case MODERATOR:
                     return !hasUniversity(page.getUniversity().getId());
                 case USER:
-                    return !page.getCreator().getId().equals(loggedUser.getId()) ||
-                            !hasUniversity(page.getUniversity().getId());
+                    return (!page.getCreator().getId().equals(loggedUser.getId()) &&
+                            !hasUniversity(page.getUniversity().getId()));
             }
             return true;
         }).orElse(true);
@@ -102,12 +100,12 @@ public class SecurityService {
                     return false;
                 case MODERATOR:
                     return !loggedUser.getId().equals(user.getId()) && //moderator does not perform action with respect to him(her)self
-                            (!hasHigherRoleThan(user.getAccountType()) ||
-                             !hasUniversity(user.getEnrolledUniversities().stream()
-                                            .map(University::getId)
-                                            .collect(Collectors.toList())
-                                           )
-                            );
+                           (!hasHigherRoleThan(user.getAccountType()) ||
+                            !hasUniversity(user.getEnrolledUniversities().stream()
+                                    .map(University::getId)
+                                    .collect(Collectors.toList())
+                            )
+                           );
                 case USER:
                     return !loggedUser.getId().equals(user.getId());
             }
@@ -117,10 +115,10 @@ public class SecurityService {
 
     /**
      * Establishes if currently logged used is a main administrator or is enrolled to at least one university identified by an ID from the given list of IDs.
-     *   
+     *
      * @param universities list of university identifiers
      * @return {@code true} if ID of the currently logged user's university is in the given list of university IDs, or if currently logged user is a main administrator,
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     public boolean hasUniversity(List<Long> universities) {
         LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);
@@ -137,10 +135,10 @@ public class SecurityService {
 
     /**
      * Establishes if currently logged used is a main administrator or is enrolled the university identified by the given ID.
-     *   
+     *
      * @param universityId university identifier
      * @return {@code true} if the currently logged user is enrolled to the university with given ID, or if currently logged user is a main administrator,
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     public boolean hasUniversity(Long universityId) {
         LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);
@@ -149,11 +147,11 @@ public class SecurityService {
 
     /**
      * Tells if the first given role is higher that the second one.
-     * 
+     *
      * @param userRole users' role
-     * @param role reference role
+     * @param role     reference role
      * @return {@code true} if the first given role (user's role) is higher that the second one,
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public boolean hasHigherRoleThan(Role userRole, Role role) {
         switch (role) {
@@ -168,10 +166,10 @@ public class SecurityService {
 
     /**
      * Tells if the role of the currently logged user is higher that the given role.
-     * 
+     *
      * @param role reference role
      * @return {@code true} if the role of the currently logged user is higher that the given one,
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public boolean hasHigherRoleThan(Role role) {
         LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);

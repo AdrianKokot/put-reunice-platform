@@ -51,7 +51,7 @@ public class UserService {
         return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFound::new);
     }
 
-    @Secured("ROLE_MODERATOR")
+    @Secured("ROLE_USER")
     public Page<User> getUsers(Pageable pageable, Map<String, String> filterVars) {
         Specification<User> combinedSpecification = null;
 

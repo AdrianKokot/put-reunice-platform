@@ -34,10 +34,8 @@ public class TemplateSpecification extends SearchSpecification implements Specif
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == Set.class) {
-                Join<Template, University> universityJoin = root.join("universities", JoinType.LEFT);
-
                 Predicate predicateUniversity = criteriaBuilder.equal(
-                        universityJoin.get("id"), parseInt(criteria.getValue().toString()));
+                        root.join("universities", JoinType.LEFT).get("id"), parseInt(criteria.getValue().toString()));
 
                 Predicate templateAvailableToAllUniversities = criteriaBuilder.isTrue(root.get("isAvailableToAll"));
 
