@@ -4,13 +4,18 @@ import {
   TuiAlertModule,
   tuiButtonOptionsProvider,
   TuiDialogModule,
+  tuiNotificationOptionsProvider,
   TuiRootModule,
 } from '@taiga-ui/core';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,6 +35,12 @@ import { TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
 
 import '@angular/common/locales/global/pl';
 import '@angular/common/locales/global/en-GB';
+import { TuiPreviewModule } from '@taiga-ui/addon-preview';
+import {
+  TUI_HIDE_TEXT,
+  TUI_SHOW_ALL_TEXT,
+  TUI_VALIDATION_ERRORS,
+} from '@taiga-ui/kit';
 
 @NgModule({
   declarations: [RootComponent],
@@ -51,6 +62,7 @@ import '@angular/common/locales/global/en-GB';
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
+    TuiPreviewModule,
     TuiLetModule,
     UiModule,
     PolymorpheusModule,
@@ -67,6 +79,9 @@ import '@angular/common/locales/global/en-GB';
           return import('@taiga-ui/i18n/languages/english');
       }
     }),
+    tuiNotificationOptionsProvider({
+      autoClose: 2500,
+    }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
@@ -77,7 +92,27 @@ import '@angular/common/locales/global/en-GB';
       useClass: HttpErrorInterceptor,
       multi: true,
     },
+    {
+      provide: TUI_HIDE_TEXT,
+      useFactory: (translate: TranslateService) => translate.get('HIDE'),
+      deps: [TranslateService],
+    },
+    {
+      provide: TUI_SHOW_ALL_TEXT,
+      useFactory: (translate: TranslateService) => translate.get('SHOW_ALL'),
+      deps: [TranslateService],
+    },
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      deps: [TranslateService],
+      useFactory: (translate: TranslateService) => ({
+        required: () => translate.get('VALIDATION_ERROR_REQUIRED'),
+        email: () => translate.get('VALIDATION_ERROR_EMAIL'),
+        maxlength: (params: { requiredLength: number }) =>
+          translate.get('VALIDATION_ERROR_MAXLENGTH', params),
+      }),
+    },
   ],
   bootstrap: [RootComponent],
 })

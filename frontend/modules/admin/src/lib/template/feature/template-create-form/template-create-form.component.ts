@@ -41,22 +41,20 @@ export class TemplateCreateFormComponent {
     name: ['', [Validators.required, Validators.maxLength(255)]],
     content: [''],
     universities: [this._user?.enrolledUniversities.map((u) => u.id) ?? []],
-    allUniversities: [this._user?.accountType === AccountTypeEnum.ADMIN],
+    availableToAllUniversities: [
+      this._user?.accountType === AccountTypeEnum.ADMIN,
+    ],
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) =>
-      this._service.create({
-        ...value,
-        universities: value.allUniversities ? null : value.universities,
-      }),
+    submit: (value) => this._service.create(value),
     successAlertMessage: 'TEMPLATE_CREATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
 
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
-    'name_ct',
+    'search',
     'name',
   );
 }

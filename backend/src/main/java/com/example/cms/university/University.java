@@ -2,8 +2,7 @@ package com.example.cms.university;
 
 import com.example.cms.page.Page;
 import com.example.cms.user.User;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -16,6 +15,8 @@ import java.util.Set;
 @Table(name = "universities")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class University {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,16 +35,16 @@ public class University {
     private Page mainPage;
 
     @Column(unique = true)
-    @NotBlank(message = "Name must not be empty")
+    @NotBlank(message = "ERRORS.UNIVERSITY.400.NAME_EMPTY")
     private String name;
     @Column(unique = true)
-    @NotBlank(message = "Short name must not be empty")
+    @NotBlank(message = "ERRORS.UNIVERSITY.400.SHORT_NAME_EMPTY")
     private String shortName;
 
     private String address;
     private String website;
 
-    @NotBlank(message = "Description must not be empty")
+    @NotBlank(message = "ERRORS.UNIVERSITY.400.DESCRIPTION_EMPTY")
     private String description;
     private boolean hidden;
 

@@ -8,6 +8,7 @@ export * from './lib/models/user';
 export * from './lib/models/account-type';
 export * from './lib/models/base-resource';
 export * from './lib/models/ticket';
+export * from './lib/models/field-violation.error';
 
 export * from './lib/services/backup.service';
 export * from './lib/services/file.service';

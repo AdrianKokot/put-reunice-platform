@@ -6,7 +6,8 @@ import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbidden;
 import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.page.projections.*;
-import com.example.cms.search.PageFullTextSearchService;
+import com.example.cms.search.FullTextSearchService;
+import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -25,15 +26,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PageService {
-    private final PageFullTextSearchService searchService;
+    private final FullTextSearchService<Page, PageSearchHitDto> searchService;
     private final PageRepository pageRepository;
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
@@ -47,10 +46,18 @@ public class PageService {
             if (!isPageVisible(page.getParent())) {
                 page.setParent(null);
             }
-            return PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
+
+            PageDtoDetailed pageDto = PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
+
+            if (securityService.isForbiddenPage(page)) {
+                pageDto.setContactRequestHandlers(null);
+            }
+
+            return pageDto;
         }).orElseThrow(PageNotFound::new);
     }
 
+    @Secured("ROLE_USER")
     public org.springframework.data.domain.Page<Page> getAllVisible(Pageable pageable, Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         Role role;
@@ -119,7 +126,7 @@ public class PageService {
 
     private boolean isPageVisible(Page page) {
         return page != null && !((page.isHidden() || page.getUniversity().isHidden()) &&
-                securityService.isForbiddenPage(page));
+                                 securityService.isForbiddenPage(page));
     }
 
     private Page save(Page page) {
@@ -163,8 +170,31 @@ public class PageService {
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbidden();
         }
+        if (page.getParent() == null && !securityService.hasHigherRoleThan(Role.USER)) {
+            throw new PageForbidden();
+        }
 
-        form.updatePage(page);
+        page.setTitle(form.getTitle());
+        page.setDescription(form.getDescription());
+        page.setHidden(form.getHidden());
+        page.setContent(Content.of(form.getContent()));
+
+        if(securityService.hasHigherRoleThan(Role.USER)) {
+            page.setCreator(userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFound::new));
+        }
+
+        Set<User> usersToAssign = new HashSet<>();
+
+        form.getContactRequestHandlers().forEach(userId -> {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null) {
+                throw new UserNotFound(userId);
+            }
+
+            usersToAssign.add(user);
+        });
+
+        page.setHandlers(usersToAssign);
         save(page);
     }
 
@@ -235,5 +265,28 @@ public class PageService {
     public PageDtoHierarchy getHierarchy(long universityId) {
         University university = universityRepository.findById(universityId).orElseThrow(PageNotFound::new);
         return PageDtoHierarchy.of(university.getMainPage(), securityService);
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public void assignUsersToPage(List<Long> userIds, Long pageId) {
+        com.example.cms.page.Page page = pageRepository.findById(pageId).orElse(null);
+
+        if (page == null) {
+            throw new PageNotFound();
+        }
+
+        Set<User> usersToAssign = new HashSet<>();
+
+        userIds.forEach(id -> {
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                throw new UserNotFound(id);
+            }
+
+            usersToAssign.add(user);
+        });
+
+        page.setHandlers(usersToAssign);
+        pageRepository.save(page);
     }
 }

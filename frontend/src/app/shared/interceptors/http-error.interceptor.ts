@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -16,9 +16,10 @@ import {
   switchMap,
   throwError,
 } from 'rxjs';
-import { TuiAlertService, TuiNotification } from '@taiga-ui/core';
+import { TuiAlertService } from '@taiga-ui/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -28,16 +29,19 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   }>();
   private readonly _ignoredUrls = ['/api/users/logged', '/api/login'];
 
+  private _translate: TranslateService | null = null;
+
   constructor(
     private readonly _router: Router,
+    private readonly _injector: Injector,
     @Inject(TuiAlertService) readonly alert: TuiAlertService,
   ) {
     this._errorAlert$
       .pipe(
         exhaustMap(({ title, message }) =>
           alert.open(message, {
-            status: TuiNotification.Error,
-            label: title ?? 'Something went wrong',
+            status: 'error',
+            label: title,
             autoClose: true,
             hasCloseButton: true,
           }),
@@ -60,10 +64,14 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) {
+        if (
+          error.status === 404 ||
+          error.status === 403 ||
+          error.status === 500
+        ) {
           this._errorAlert$.next({
-            title: 'Not found',
-            message: 'The page you are looking for does not exist',
+            title: this.translate(`ERROR_${error.status}_TITLE`),
+            message: this.translate(`ERROR_${error.status}_MESSAGE`),
           });
         }
 
@@ -73,22 +81,15 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           );
         }
 
-        if (error.status === 403) {
-          this._errorAlert$.next({
-            title: 'Forbidden',
-            message: "You don't have permission to access this page",
-          });
-        }
-
-        if (error.status === 500) {
-          this._errorAlert$.next({
-            title: 'Server error',
-            message: 'Something went wrong on the server',
-          });
-        }
-
         return throwError(() => error);
       }),
     );
+  }
+
+  private translate(key: string): string {
+    if (this._translate === null)
+      this._translate = this._injector.get(TranslateService);
+
+    return this._translate?.instant(key) ?? '';
   }
 }

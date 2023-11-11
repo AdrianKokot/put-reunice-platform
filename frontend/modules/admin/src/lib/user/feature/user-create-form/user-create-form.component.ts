@@ -4,7 +4,7 @@ import {
   UniversityService,
   UserService,
 } from '@reunice/modules/shared/data-access';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { FormSubmitWrapper } from '@reunice/modules/shared/util';
 import {
   BaseFormImportsModule,
@@ -52,7 +52,13 @@ export class UserCreateFormComponent {
     accountType: [this.accountType.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
     enrolledUniversities: [
-      (this._user?.enrolledUniversities.map((u) => u.id) ?? []).at(0),
+      this._user?.enrolledUniversities?.map((u) => u.id)?.at(0),
+      [
+        (control: AbstractControl) =>
+          control.parent?.get('accountType')?.value !== this.accountType.ADMIN
+            ? Validators.required(control)
+            : null,
+      ],
     ],
   });
 
@@ -61,7 +67,7 @@ export class UserCreateFormComponent {
       this._service.create({
         ...value,
         enrolledUniversities:
-          value.enrolledUniversities !== undefined
+          typeof value.enrolledUniversities === 'number'
             ? [value.enrolledUniversities]
             : [],
       }),
@@ -71,7 +77,7 @@ export class UserCreateFormComponent {
 
   readonly universitySearch = new ResourceSearchWrapper(
     inject(UniversityService),
-    'name_ct',
+    'search',
     'name',
   );
 }

@@ -104,4 +104,10 @@ public class PageController {
         service.modifyKeyWordsField(id, keyWords);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/handlers")
+    ResponseEntity<Void> addPageHandlers(@PathVariable long id, @RequestBody List<Long> pageHandlers) {
+        service.assignUsersToPage(pageHandlers, id);
+        return ResponseEntity.accepted().build();
+    }
 }

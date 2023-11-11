@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { dashboardTiles } from '../../tiles';
 import { AuthService, isUserOfType } from '@reunice/modules/shared/security';
 import { TranslateModule } from '@ngx-translate/core';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'reunice-dashboard-tiles',
@@ -21,8 +22,11 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardTilesComponent {
-  private readonly _user = inject(AuthService).userSnapshot;
-  readonly links = dashboardTiles.filter(
-    (tile) => !tile.role || isUserOfType(this._user, tile.role),
+  readonly links$ = inject(AuthService).user$.pipe(
+    map((user) =>
+      dashboardTiles.filter(
+        (tile) => !tile.role || isUserOfType(user, tile.role),
+      ),
+    ),
   );
 }

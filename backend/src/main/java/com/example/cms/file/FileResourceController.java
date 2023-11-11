@@ -5,7 +5,6 @@ import com.example.cms.security.SecurityService;
 import com.example.cms.user.exceptions.UserNotFound;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -22,14 +21,30 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/file")
+@RequestMapping("/files")
 public class FileResourceController {
 
     private final FileResourceService fileService;
     private final SecurityService securityService;
 
+    @GetMapping()
+    public ResponseEntity<List<FileDtoSimple>> getAll(Pageable pageable, @RequestParam Map<String, String> vars) {
+
+        Page<FileResource> responsePage = fileService.getAll(
+                pageable,
+                FilterPathVariableValidator.validate(vars, FileResource.class));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
+
+        return new ResponseEntity<>(
+                responsePage.stream().map(FileDtoSimple::of).collect(Collectors.toList()),
+                httpHeaders,
+                HttpStatus.OK);
+    }
+
     @GetMapping("page/{pageId}")
-    public ResponseEntity<List<FileDtoSimple>> getAll(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
+    public ResponseEntity<List<FileDtoSimple>> getAllByPage(@PathVariable Long pageId, Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<FileResource> responsePage = fileService.getAll(
                 pageable,
@@ -45,9 +60,19 @@ public class FileResourceController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("download/page/{pageId}/{filename}")
-    public ResponseEntity<Resource> downloadFiles(@PathVariable("pageId") Long pageId, @PathVariable("filename") String filename) {
-        return fileService.downloadFiles(pageId, filename);
+    @GetMapping("{id}/download")
+    public ResponseEntity<byte[]> downloadFiles(@PathVariable("id") Long fileId) {
+        FileResource file = fileService.get(fileId);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename());
+        headers.add(HttpHeaders.CONTENT_TYPE, file.getFileType());
+        headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getData().length));
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(file.getData());
     }
 
     @PostMapping("upload")

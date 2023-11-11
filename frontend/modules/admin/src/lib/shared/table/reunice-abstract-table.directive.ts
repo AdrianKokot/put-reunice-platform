@@ -16,6 +16,7 @@ import {
   combineLatest,
   debounceTime,
   map,
+  Observable,
   of,
   shareReplay,
   startWith,
@@ -28,6 +29,7 @@ import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import {
   AbstractApiService,
   ApiPagination,
+  ApiParams,
   ApiSort,
   BaseResource,
 } from '@reunice/modules/shared/data-access';
@@ -61,9 +63,13 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
     REUNICE_TABLE_SERVICE,
   );
 
+  private readonly _refresh$ = new BehaviorSubject<void>(undefined);
+
   private readonly _storage = inject(LOCAL_STORAGE);
 
-  protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
+  protected readonly emptyMessage$: Observable<string> = inject(
+    TUI_NOTHING_FOUND_MESSAGE,
+  );
 
   @HostBinding('style.--page-size')
   private _pageSize = 10;
@@ -96,12 +102,14 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         debounceTime(300),
         map(() => this.filtersForm.getRawValue()),
       ),
+      this._refresh$,
     ])
       .pipe(
         debounceTime(200),
         map(
           ([sort, direction, { page, size }, filters]): ApiPagination &
-            ApiSort<T> => ({
+            ApiSort<T> &
+            ApiParams => ({
             sort: (typeof sort === 'string' && sort.length > 0
               ? (sort as keyof T).toString() +
                 ',' +
@@ -113,7 +121,6 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
           }),
         ),
         tap(({ size }) => (this._pageSize = size)),
-        tap(console.debug),
         switchMap((apiParams) =>
           this.service.getAll(apiParams).pipe(
             map(({ items, totalItems }) => {
@@ -127,5 +134,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         shareReplay(),
       )
       .subscribe((x) => this._items$.next(x));
+  }
+
+  refresh() {
+    this._refresh$.next();
   }
 }

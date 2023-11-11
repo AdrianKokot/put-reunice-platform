@@ -1,12 +1,15 @@
 package com.example.cms.template;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.example.cms.SearchCriteria;
-import com.example.cms.user.User;
-import com.example.cms.user.UserSpecification;
+import com.example.cms.security.SecurityService;
+import com.example.cms.template.exceptions.TemplateNotFound;
+import com.example.cms.template.projections.TemplateDtoDetailed;
+import com.example.cms.template.projections.TemplateDtoFormCreate;
+import com.example.cms.template.projections.TemplateDtoFormUpdate;
+import com.example.cms.university.University;
+import com.example.cms.university.UniversityRepository;
+import com.example.cms.university.exceptions.UniversityForbidden;
+import com.example.cms.university.exceptions.UniversityNotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,14 +17,11 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.cms.security.SecurityService;
-import com.example.cms.template.exceptions.TemplateNotFound;
-import com.example.cms.template.projections.TemplateDtoDetailed;
-import com.example.cms.template.projections.TemplateDtoSimple;
-import com.example.cms.university.University;
-import com.example.cms.university.UniversityRepository;
-import com.example.cms.university.exceptions.UniversityForbidden;
-import com.example.cms.university.exceptions.UniversityNotFound;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TemplateService {
@@ -37,15 +37,21 @@ public class TemplateService {
         this.securityService = securityService;
     }
 
-    @Secured("ROLE_USER") //added by MSz
+    @Secured("ROLE_USER")
     public TemplateDtoDetailed get(Long id) {
-        // TODO: return university only if visible
         return templateRepository.findById(id).map(TemplateDtoDetailed::of).orElseThrow(TemplateNotFound::new);
     }
 
-    @Secured("ROLE_MODERATOR")
+    @Secured("ROLE_USER")
     public Page<Template> getAll(Pageable pageable, Map<String, String> filterVars) {
-        Specification<Template> combinedSpecification = null;
+        Specification<Template> combinedSpecification = Specification.where(
+                securityService.getPrincipal()
+                        .map(loggedUser -> new TemplateRoleSpecification(
+                                loggedUser.getAccountType(),
+                                loggedUser.getUniversities())
+                        )
+                        .orElseGet(() -> new TemplateRoleSpecification(null, null))
+        );
 
         if (!filterVars.isEmpty()) {
             List<TemplateSpecification> specifications = filterVars.entrySet().stream()
@@ -60,9 +66,6 @@ public class TemplateService {
                     }).collect(Collectors.toList());
 
             for (Specification<Template> spec : specifications) {
-                if (combinedSpecification == null) {
-                    combinedSpecification = Specification.where(spec);
-                }
                 combinedSpecification = combinedSpecification.and(spec);
             }
         }
@@ -70,23 +73,19 @@ public class TemplateService {
         return templateRepository.findAll(combinedSpecification, pageable);
     }
 
-    @Secured("ROLE_USER") //added by MSz
-    public List<TemplateDtoSimple> getAllByUniversity(Pageable pageable, Long universityID) {
-        University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFound::new);
-        if (!securityService.hasUniversity(university.getId())) {
-            throw new UniversityForbidden();
-        }
-
-        return templateRepository.findByUniversities_Id(pageable, universityID).stream()
-                .map(TemplateDtoSimple::of)
-                .collect(Collectors.toList());
-    }
-
     @Secured("ROLE_ADMIN")
     public TemplateDtoDetailed save(String name) {
         Template template = new Template();
         template.setName(name);
         template.setContent("");
+
+        return TemplateDtoDetailed.of(templateRepository.save(template));
+    }
+
+    @Secured("ROLE_MODERATOR")
+    public TemplateDtoDetailed save(TemplateDtoFormCreate form) {
+        Template template = form.toTemplate();
+        attachUniversities(template, form.getUniversities());
 
         return TemplateDtoDetailed.of(templateRepository.save(template));
     }
@@ -139,5 +138,31 @@ public class TemplateService {
     public void delete(Long id) {
         Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
         templateRepository.delete(template);
+    }
+
+    @Secured("ROLE_MODERATOR")
+    public void update(long id, TemplateDtoFormUpdate form) {
+        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
+
+        form.updateTemplate(template);
+        attachUniversities(template, form.getUniversities());
+
+        templateRepository.save(template);
+    }
+
+    private void attachUniversities(Template template, Set<Long> universityIds) {
+        if (template.getIsAvailableToAll()) {
+            template.getUniversities().clear();
+            return;
+        }
+
+        Set<Long> uniqueUniversityIds = Stream.concat(universityIds.stream(), securityService.getPrincipal().get().getUniversities().stream()).collect(Collectors.toSet());
+
+        Set<University> universities = universityRepository.findAllById(uniqueUniversityIds)
+                .stream()
+                .filter(university -> !securityService.isForbiddenUniversity(university))
+                .collect(Collectors.toSet());
+
+        template.setUniversities(universities);
     }
 }

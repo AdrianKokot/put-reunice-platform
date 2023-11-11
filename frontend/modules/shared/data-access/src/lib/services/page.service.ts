@@ -2,9 +2,10 @@ import { BaseResource } from '../models/base-resource';
 import { Injectable } from '@angular/core';
 import { AbstractApiService } from './abstract-api.service';
 import { Page, PageForm } from '../models/page';
-import { combineLatest, Observable, of, switchMap } from 'rxjs';
+import { combineLatest, delay, Observable, of, switchMap } from 'rxjs';
 import { TuiFileLike } from '@taiga-ui/kit';
 import { FileResource } from '../models/file';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -18,30 +19,13 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     return this._http.get<Page[]>(this._resourceUrl + '/main?sort=title');
   }
 
-  override create(resource: PageForm & Partial<Page>): Observable<Page> {
-    return this._http
-      .post<Page>(this._resourceUrl, resource)
-      .pipe(
-        switchMap((page) =>
-          combineLatest([
-            this._http.patch<Page>(
-              `${this._resourceUrl}/${page.id}/content`,
-              resource.content,
-            ),
-            this._http.patch<Page>(
-              `${this._resourceUrl}/${page.id}/hidden`,
-              resource.hidden,
-            ),
-          ]).pipe(switchMap(() => this.get(page.id))),
-        ),
-      );
-  }
-
   override update(
-    resource: (Partial<Page> & Pick<Page, 'id'>) &
+    resource: (Partial<Omit<Page, 'contactRequestHandlers'>> &
+      Pick<Page, 'id'>) &
       Partial<{
         files: TuiFileLike[];
         filesToRemove: Array<FileResource['id']>;
+        contactRequestHandlers: Array<User['id']>;
       }>,
   ): Observable<Page> {
     const formData = new FormData();
@@ -51,33 +35,38 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
     });
 
     formData.append('pageId', resource.id.toString());
-    console.log({ formData });
 
-    return combineLatest([
-      this._http.patch<Page>(
-        `${this._resourceUrl}/${resource.id}/content`,
-        resource.content,
-      ),
-      this._http.patch<Page>(
-        `${this._resourceUrl}/${resource.id}/hidden`,
-        resource.hidden,
-      ),
-      this._http.put<Page>(`${this._resourceUrl}/${resource.id}`, resource),
-      (resource.files ?? []).length > 0
-        ? this._http.post<void>('/api/file/upload', formData)
-        : of(null),
-      (resource.filesToRemove ?? []).length > 0
-        ? this._http.post<void>(
-            '/api/file/delete',
-            resource.filesToRemove ?? [],
-          )
-        : of(null),
-    ]).pipe(switchMap(() => this.get(resource.id)));
+    return this._http
+      .put<Page>(`${this._resourceUrl}/${resource.id}`, resource)
+      .pipe(
+        switchMap(() =>
+          combineLatest([
+            (resource.files ?? []).length > 0
+              ? this._http.post<void>('/api/files/upload', formData)
+              : of(null),
+            (resource.filesToRemove ?? []).length > 0
+              ? this._http.post<void>(
+                  '/api/files/delete',
+                  resource.filesToRemove ?? [],
+                )
+              : of(null),
+          ]),
+        ),
+        switchMap(() => this.get(resource.id)),
+      );
   }
 
   getUniversityHierarchy(universityId: BaseResource['id']): Observable<Page> {
     return this._http.get<Page>(
       `${this._resourceUrl}/hierarchy/${universityId}`,
     );
+  }
+
+  sendQuestion(
+    pageId: BaseResource['id'],
+    form: { name: string; content: string; email: string },
+  ) {
+    console.log({ pageId, form });
+    return of(true).pipe(delay(1000));
   }
 }

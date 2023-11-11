@@ -2,7 +2,6 @@ package com.example.cms.university;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.PageRoleSpecification;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -15,10 +14,8 @@ import com.example.cms.university.exceptions.UniversityNotFound;
 import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
-import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.UserSpecification;
 import com.example.cms.user.exceptions.UserForbidden;
 import com.example.cms.user.exceptions.UserNotFound;
 import lombok.RequiredArgsConstructor;
@@ -100,7 +97,7 @@ public class UniversityService {
     @Secured("ROLE_ADMIN")
     public UniversityDtoDetailed addNewUniversity(UniversityDtoFormCreate form) {
         if (universityRepository.existsByNameOrShortName(form.getName(), form.getShortName())) {
-            throw new UniversityException(UniversityExceptionType.NAME_TAKEN);
+            throw new UniversityException(UniversityExceptionType.NAME_TAKEN, "name");
         }
 
         User creator = userRepository.findById(form.getCreatorId())

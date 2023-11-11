@@ -1,4 +1,4 @@
-<ng-container *ngFor="let item of links">
+<ng-container *ngFor="let item of links$ | async">
   <a tuiAction [routerLink]="item.url" class="justify-start items-center">
     <tui-marker-icon
       [src]="item.icon"

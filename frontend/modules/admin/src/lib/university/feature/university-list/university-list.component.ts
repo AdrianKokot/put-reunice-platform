@@ -10,11 +10,16 @@ import {
   provideReuniceTable,
   ReuniceAbstractTable,
 } from '../../../shared';
+import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-university-list',
   standalone: true,
-  imports: [BaseFormImportsModule, BaseTableImportsModule],
+  imports: [
+    BaseFormImportsModule,
+    BaseTableImportsModule,
+    FormNotEmptyValuesPipeModule,
+  ],
   templateUrl: './university-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideReuniceTable(UniversityService)],

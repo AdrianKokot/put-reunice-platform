@@ -17,7 +17,7 @@ import { LangService, langToLocale } from '@reunice/modules/shared/util';
 
 @Pipe({
   name: 'localizedDate',
-  pure: false,
+  pure: true,
 })
 export class LocalizedDatePipe implements PipeTransform, OnDestroy {
   private _value: string | null = null;

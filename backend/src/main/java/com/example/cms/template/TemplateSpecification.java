@@ -2,13 +2,11 @@ package com.example.cms.template;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.SearchSpecification;
-import lombok.AllArgsConstructor;
+import com.example.cms.university.University;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.Set;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
@@ -21,7 +19,6 @@ public class TemplateSpecification extends SearchSpecification implements Specif
 
     @Override
     public Predicate toPredicate(Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
@@ -36,6 +33,13 @@ public class TemplateSpecification extends SearchSpecification implements Specif
             } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
+            } else if (root.get(criteria.getKey()).getJavaType() == Set.class) {
+                Predicate predicateUniversity = criteriaBuilder.equal(
+                        root.join("universities", JoinType.LEFT).get("id"), parseInt(criteria.getValue().toString()));
+
+                Predicate templateAvailableToAllUniversities = criteriaBuilder.isTrue(root.get("isAvailableToAll"));
+
+                return criteriaBuilder.or(predicateUniversity, templateAvailableToAllUniversities);
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
             return this.searchPredicate(root, query, criteriaBuilder);

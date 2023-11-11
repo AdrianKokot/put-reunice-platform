@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   catchError,
+  merge,
   Observable,
   of,
   shareReplay,
@@ -21,17 +22,13 @@ export class AuthService {
   private readonly _user$ = new Subject<User | null>();
 
   private _userSnapshot: User | null = null;
-  readonly user$ = this._user$.pipe(
+  readonly user$ = merge(this._user$, this.getUser()).pipe(
     tap((user) => (this._userSnapshot = user)),
     shareReplay(1),
   );
 
   get userSnapshot() {
     return this._userSnapshot;
-  }
-
-  constructor() {
-    this.getUser().subscribe((user) => this._user$.next(user));
   }
 
   private getUser() {
@@ -49,7 +46,7 @@ export class AuthService {
 
   logout(): Observable<void> {
     return this._http
-      .get<void>('/api/logout')
+      .post<void>('/api/logout', {})
       .pipe(tap(() => this._user$.next(null)));
   }
 

@@ -113,8 +113,16 @@ form.form-skeleton [tuiWrapper],
   display: flex;
 }
 
+.d-inline-flex {
+  display: inline-flex;
+}
+
 .d-block {
   display: block;
+}
+
+.d-none {
+  display: none;
 }
 
 .items-center {
@@ -127,6 +135,10 @@ form.form-skeleton [tuiWrapper],
 
 .justify-start {
   justify-content: flex-start !important;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .w-full {
@@ -162,6 +174,10 @@ form.form-skeleton [tuiWrapper],
   gap: 1rem;
 }
 
+.tui-space_left-auto {
+  margin-left: auto;
+}
+
 // Language
 
 html {
@@ -177,4 +193,20 @@ label._optional .t-label .t-text {
     content: ' (' var(--reunice-optional-text) ')';
     color: var(--tui-text-02);
   }
+}
+
+tui-file.tui-file_with-right-icon {
+  > .t-wrapper {
+    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+
+    > .t-text {
+      margin-right: auto;
+      max-width: ~'calc(100% - 2.75rem)';
+    }
+  }
+
+  padding-right: 0.5625rem !important;
 }

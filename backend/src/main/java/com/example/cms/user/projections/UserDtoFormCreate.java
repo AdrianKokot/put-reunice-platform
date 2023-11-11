@@ -1,9 +1,11 @@
 package com.example.cms.user.projections;
 
 import com.example.cms.security.Role;
-import com.example.cms.user.User;
+import lombok.Builder;
 import lombok.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
+import java.util.Set;
 
 @Value
 public class UserDtoFormCreate {
@@ -15,20 +17,5 @@ public class UserDtoFormCreate {
     String phoneNumber;
     boolean enabled;
     Role accountType;
-
-    public User toUser(PasswordEncoder passwordEncoder) {
-        User user = new User();
-
-        user.setUsername(username);
-        if (password != null) {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPhoneNumber(phoneNumber);
-        user.setEmail(email);
-        user.setAccountType(accountType);
-        user.setEnabled(enabled);
-        return user;
-    }
+    Set<Long> enrolledUniversities;
 }

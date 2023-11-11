@@ -21,6 +21,7 @@ import {
   BaseResource,
 } from '@reunice/modules/shared/data-access';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isValidationApiError } from './form-submit-wrapper';
 
 export interface DeleteResourceWrapperFunctions {
   /**
@@ -44,7 +45,19 @@ export class DeleteResourceWrapper<TResource extends BaseResource> {
       this.service.delete(id).pipe(
         startWith(LOADING_SYMBOL_VALUE),
         catchError((err) => {
-          if (err instanceof HttpErrorResponse)
+          if (err instanceof HttpErrorResponse) {
+            if (isValidationApiError(err.error)) {
+              return this._alert
+                .open(this._translate.instant(err.error.message), {
+                  status: 'error',
+                  label: this._translate.instant('ERROR'),
+                })
+                .pipe(
+                  startWith(null),
+                  map(() => ERROR_SYMBOL_VALUE),
+                );
+            }
+
             return this._alert
               .open(this._translate.instant('ERROR_DURING_DELETE'), {
                 status: 'error',
@@ -53,6 +66,7 @@ export class DeleteResourceWrapper<TResource extends BaseResource> {
                 startWith(null),
                 map(() => ERROR_SYMBOL_VALUE),
               );
+          }
 
           return of(ERROR_SYMBOL_VALUE);
         }),

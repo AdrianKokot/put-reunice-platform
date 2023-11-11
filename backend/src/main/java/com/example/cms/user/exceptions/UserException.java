@@ -5,7 +5,11 @@ import com.example.cms.validation.exceptions.BadRequestException;
 public class UserException extends BadRequestException {
 
     public UserException(UserExceptionType type) {
-        super(getMessage(type));
+        this(type, null);
+    }
+
+    public UserException(UserExceptionType type, String field) {
+        super(getMessage(type), field);
     }
 
     private static String getMessage(UserExceptionType type) {

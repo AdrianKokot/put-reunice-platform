@@ -4,6 +4,7 @@ import {
   FileService,
   PageService,
   User,
+  UserService,
 } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -16,13 +17,37 @@ import {
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
+  ResourceSearchWrapper,
 } from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
-import { TuiFileLike, TuiInputFilesModule } from '@taiga-ui/kit';
-import { shareReplay, startWith, switchMap } from 'rxjs';
-import { AuthService } from '@reunice/modules/shared/security';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import {
+  TuiCheckboxLabeledModule,
+  TuiComboBoxModule,
+  TuiDataListWrapperModule,
+  TuiFileLike,
+  TuiInputFilesModule,
+  TuiMultiSelectModule,
+} from '@taiga-ui/kit';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  share,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
+import {
+  AuthService,
+  UserControlsResourceDirective,
+  UserDirective,
+} from '@reunice/modules/shared/security';
+import {
+  ConfirmDirective,
+  LocalizedPipeModule,
+} from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -34,6 +59,13 @@ import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
     LoadTemplateComponent,
     TuiInputFilesModule,
     LocalizedPipeModule,
+    TuiCheckboxLabeledModule,
+    TuiMultiSelectModule,
+    TuiDataListWrapperModule,
+    ConfirmDirective,
+    TuiComboBoxModule,
+    UserControlsResourceDirective,
+    UserDirective,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,12 +80,14 @@ export class PageEditFormComponent {
     id: [-1, [Validators.required]],
     universityId: [-1, [Validators.required]],
     title: ['', [Validators.required, Validators.maxLength(255)]],
-    author: ['', [Validators.required, Validators.maxLength(255)]],
+    author: [''],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
     files: [[] as TuiFileLike[]],
     filesToRemove: [[] as Array<FileResource['id']>],
+    contactRequestHandlers: [[] as Array<User['id']>],
+    creatorId: [-1, [Validators.required]],
   });
 
   private readonly _id$ = resourceIdFromRoute();
@@ -64,13 +98,34 @@ export class PageEditFormComponent {
         ...item,
         universityId: item.university.id,
         author: item.creator.firstName + ' ' + item.creator.lastName,
+        creatorId: item.creator.id,
+        contactRequestHandlers:
+          item.contactRequestHandlers?.map((x) => x.id) ?? [],
       });
     }),
   );
 
   readonly files$ = this._id$.pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
     shareReplay(),
+  );
+
+  readonly confirmText$ = combineLatest([
+    this.item$,
+    this.form.valueChanges,
+  ]).pipe(
+    debounceTime(100),
+    map(([item, formValue]) => {
+      if (item?.hidden !== formValue.hidden) {
+        return formValue.hidden
+          ? 'PAGE_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
+          : 'PAGE_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
+      }
+
+      return null;
+    }),
+    distinctUntilChanged(),
+    share(),
   );
 
   handler = new FormSubmitWrapper(this.form, {
@@ -80,6 +135,12 @@ export class PageEditFormComponent {
   });
 
   rejectedFiles: readonly TuiFileLike[] = [];
+
+  readonly userSearch = new ResourceSearchWrapper(
+    inject(UserService),
+    'search',
+    (item) => `${item.firstName} ${item.lastName} (${item.email})`,
+  );
 
   onReject(files: TuiFileLike | readonly TuiFileLike[]): void {
     this.rejectedFiles = [...this.rejectedFiles, ...(files as TuiFileLike[])];

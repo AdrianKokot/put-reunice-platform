@@ -1,0 +1,108 @@
+<tui-scrollbar class="reunice-table-wrapper">
+  <table
+    tuiTable
+    tuiSortBy
+    [columns]="columns"
+    *tuiLet="items$ | async as items"
+  >
+    <thead [formGroup]="filtersForm">
+      <tr tuiThGroup>
+        <th
+          *tuiHead="'name'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-md"
+        >
+          {{ 'FILE_NAME' | translate }}
+        </th>
+        <th
+          *tuiHead="'pageTitle'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
+          {{ 'PAGE_TITLE' | translate }}
+        </th>
+        <th
+          *tuiHead="'lastModified'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'CREATED_ON' | translate }}
+        </th>
+        <th
+          *tuiHead="'actions'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-actions"
+        ></th>
+      </tr>
+    </thead>
+
+    <tbody tuiTbody>
+      <tr
+        *ngFor="
+          let item of items;
+          else: loadingList;
+          empty: emptyList;
+          trackById
+        "
+        tuiTr
+      >
+        <td *tuiCell="'name'" tuiTd>
+          {{ item.name }}
+        </td>
+        <td *tuiCell="'pageTitle'" tuiTd>
+          {{ item.page.title }}
+        </td>
+        <td *tuiCell="'lastModified'" tuiTd>
+          {{ item.lastModified | localizedDate }}
+        </td>
+
+        <td class="column-actions" *tuiCell="'actions'" tuiTd>
+          <a
+            [routerLink]="[
+              '/universities',
+              item.page.universityId,
+              'page',
+              item.page.id
+            ]"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconInfo'"
+            shape="rounded"
+            [tuiHint]="'SEE_PAGE' | translate"
+          >
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</tui-scrollbar>
+
+<tui-table-pagination
+  class="tui-space_top-2"
+  [total]="(total$ | async) ?? 0"
+></tui-table-pagination>
+
+<ng-template #emptyList>
+  <tr>
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
+      {{ emptyMessage$ | async }}
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #loadingList>
+  <tr>
+    <td [colSpan]="columns.length">
+      <tui-loader></tui-loader>
+    </td>
+  </tr>
+</ng-template>

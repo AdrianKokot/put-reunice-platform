@@ -1,20 +1,5 @@
 package com.example.cms.development;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-
 import com.example.cms.backup.BackupService;
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
@@ -23,25 +8,41 @@ import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.security.Role;
 import com.example.cms.template.TemplateService;
+import com.example.cms.template.projections.TemplateDtoFormCreate;
+import com.example.cms.ticket.Response;
+import com.example.cms.ticket.TicketService;
 import com.example.cms.university.UniversityService;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.user.UserService;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.validation.exceptions.WrongParameterException;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.SQLException;
+import java.util.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
-	
-	private enum DatabaseSchemaCreateType {
-		INITIALIZE, //create only main admin so the data can be added manually (e.g., using a frontend application)
-		POPULATE    //insert dummy data to demonstrate the application
-	}
+
+    private enum DatabaseSchemaCreateType {
+        INITIALIZE, //create only main admin so the data can be added manually (e.g., using a frontend application)
+        POPULATE    //insert dummy data to demonstrate the application
+    }
 
     private final PageService pageService;
     private final UserService userService;
@@ -49,9 +50,13 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final TemplateService templateService;
     private final BackupService backupService;
     private final KeyWordsService keyWordsService;
-    
+    private final TicketService ticketService;
+
     @Autowired
-	private ApplicationConfigurationProvider applicationConfigurationProvider;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private ApplicationConfigurationProvider applicationConfigurationProvider;
 
     @Override
     public void onApplicationEvent(@NonNull final ContextRefreshedEvent event) {
@@ -66,15 +71,15 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
             //MSz extended
             log.info(String.format("** databaseSchemaHandlingOnStartup read from properties file: %s", applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()));
             if (applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup().equals("create")) {
-            	if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("populate")) {
-            		tryToRestoreDatabase(DatabaseSchemaCreateType.POPULATE);
-            	} else if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("initialize")) {
-            		tryToRestoreDatabase(DatabaseSchemaCreateType.INITIALIZE);
-            	} else {
-            		throw new WrongParameterException("Invalid value of parameter databaseSchemaCreateType.");
-            	}
+                if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("populate")) {
+                    tryToRestoreDatabase(DatabaseSchemaCreateType.POPULATE);
+                } else if (applicationConfigurationProvider.getDatabaseSchemaCreateType().equalsIgnoreCase("initialize")) {
+                    tryToRestoreDatabase(DatabaseSchemaCreateType.INITIALIZE);
+                } else {
+                    throw new WrongParameterException("Invalid value of parameter databaseSchemaCreateType.");
+                }
             } else {
-            	log.info("** Using encountered database schema.");
+                log.info("** Using encountered database schema.");
             }
         } catch (IOException e) {
             throw new BackupException();
@@ -87,7 +92,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
      * Checks if there is at least one zip file in the path returned by {@link BackupService#getRestoreMainPath()},
      * and if so, then takes randomly one of available zip files and tries to restore all tables in the database from that backup file.
      * If there is not a zip file in the path returned by {@link BackupService#getRestoreMainPath()}, then inserts data into the database based on the value of the parameter.
-     * 
+     *
      * @param databaseSchemaCreateType type of database schema create to perform on application startup if a backup is not available
      */
     private void tryToRestoreDatabase(DatabaseSchemaCreateType databaseSchemaCreateType) {
@@ -107,20 +112,20 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                     }
                     log.info(String.format("** Imported %s backup.", backupName));
                 }, () -> {
-                	switch (databaseSchemaCreateType) {
-                	case POPULATE:
-                		createDummyData();
-                        log.info("** Created dummy data.");
-                		break;
-                	case INITIALIZE:
-                		createInitialData();
-                		log.info("** Database schema initialized with a main administrator account.");
-                		break;
-                	}
-                    
+                    switch (databaseSchemaCreateType) {
+                        case POPULATE:
+                            createDummyData();
+                            log.info("** Created dummy data.");
+                            break;
+                        case INITIALIZE:
+                            createInitialData();
+                            log.info("** Database schema initialized with a main administrator account.");
+                            break;
+                    }
+
                 });
     }
-    
+
     /**
      * Creates minimum data for the application to be functional, i.e., only the main administrator account.
      */
@@ -133,7 +138,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "__unique__email@gmail.com",
                 "123456789",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
     }
 
@@ -150,7 +156,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "wojciech.kowalski7342@gmail.com",
                 "935283642",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "admin_bar",
@@ -160,7 +167,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "leszek.bartkiewicz5229@gmail.com",
                 "264878345",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "admin_ban",
@@ -170,7 +178,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "bozena.banik9987@gmail.com",
                 "653916167",
                 true,
-                Role.ADMIN
+                Role.ADMIN,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "moderator",
@@ -180,7 +189,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "szymon.koltun8441@gmail.com",
                 "311222995",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_zlo",
@@ -190,7 +200,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "roman.zlotkowski9843@gmail.com",
                 "739393723",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_rad",
@@ -200,7 +211,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ferdynand.radecki1321@gmail.com",
                 "727456789",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_kos",
@@ -210,7 +222,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "mateusz.kostuch2531@gmail.com",
                 "672476734",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_szy",
@@ -220,7 +233,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "blazej.szymkowski5231@gmail.com",
                 "738350481",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_mie",
@@ -230,7 +244,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "marcin.mieczkowski7235@gmail.com",
                 "830393622",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_jus",
@@ -240,7 +255,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ewa.jusko9033@gmail.com",
                 "258683257",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_hal",
@@ -250,7 +266,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "eliza.halicka8511@gmail.com",
                 "852660762",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_ols",
@@ -260,7 +277,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "igor.olszowy5729@gmail.com",
                 "542395438",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_gor",
@@ -270,7 +288,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "tomasz.gorczyca2514@gmail.com",
                 "481764007",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_sob",
@@ -280,7 +299,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "anastazja.sobolewicz7829@gmail.com",
                 "343862564",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_smi",
@@ -290,7 +310,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "arkadiusz.smialek2512@gmail.com",
                 "722351974",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "mod_kam",
@@ -300,7 +321,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "halina.kamienska3612@gmail.com",
                 "662386326",
                 true,
-                Role.MODERATOR
+                Role.MODERATOR,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user",
@@ -310,7 +332,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "zuzanna.giertych1196@gmail.com",
                 "607386937",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_sob",
@@ -320,7 +343,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "kornelia.sobczynska3202@gmail.com",
                 "991417604",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_jer",
@@ -330,7 +354,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "michal.jerzak4983@gmail.com",
                 "702758897",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kul",
@@ -340,7 +365,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "stefan.kulinski8388@gmail.com",
                 "333229173",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_mic",
@@ -350,7 +376,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "jerzy.michno9332@gmail.com",
                 "262637472",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_waz",
@@ -360,7 +387,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "michal.wazowski9020@gmail.com",
                 "460515555",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_bie_krz",
@@ -370,7 +398,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "krzysztof.bielak4152@gmail.com",
                 "168130688",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_zub_mat",
@@ -380,7 +409,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "mateusz.zubek3408@gmail.com",
                 "945442735",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fia_fil",
@@ -390,7 +420,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "filip.fialkowski6444@gmail.com",
                 "411422855",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fil_rob",
@@ -400,7 +431,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "robert.filan2085@gmail.com",
                 "162988145",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_zyl_nik",
@@ -410,7 +442,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "nikodem.zyla9010@gmail.com",
                 "172856301",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fra_luk",
@@ -420,7 +453,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "lukasz.franc7575@gmail.com",
                 "281506654",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_rum_mar",
@@ -430,7 +464,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "mariusz.ruminski4387@gmail.com",
                 "943157548",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_prz_dar",
@@ -440,7 +475,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "dariusz.przybyszewski8263@gmail.com",
                 "481361620",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_ber_gra",
@@ -450,7 +486,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "grazyna.bereza4794@gmail.com",
                 "525852050",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_poc_luc",
@@ -460,7 +497,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "lucyna.pociask8433@gmail.com",
                 "790540150",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_was_kry",
@@ -470,7 +508,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "krystyna.wasko5594@gmail.com",
                 "889104495",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_les_bar",
@@ -480,7 +519,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "barbara.lesak4474@gmail.com",
                 "963386317",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_fal_edw",
@@ -490,7 +530,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "edward.falkowski2311@gmail.com",
                 "827669891",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kos_win",
@@ -500,7 +541,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "wincenty.kostka4672@gmail.com",
                 "896274278",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_ign_dze",
@@ -510,7 +552,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "dzesika.ignatowska6987@gmail.com",
                 "460808376",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kry_rok",
@@ -520,7 +563,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "roksana.kryszak2878@gmail.com",
                 "510676502",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_kem_mar",
@@ -530,7 +574,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "marian.kempka2425@gmail.com",
                 "276986682",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
         userService.createUser(new UserDtoFormCreate(
                 "user_les_ant",
@@ -540,7 +585,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "antoni.leszczynski7188@gmail.com",
                 "667887826",
                 true,
-                Role.USER
+                Role.USER,
+                Set.of()
         ));
 
         universityService.addNewUniversity(new UniversityDtoFormCreate(
@@ -666,82 +712,233 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.save(new PageDtoFormCreate(
                 "Education",
                 "The list of courses we offer.",
-                "",
+                "<section>\n" +
+                "        <h2>Undergraduate Programs</h2>\n" +
+                "        <p>Discover our range of undergraduate programs in engineering and technology fields.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Computer Science</li>\n" +
+                "            <li>Electrical Engineering</li>\n" +
+                "            <li>Civil Engineering</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Graduate Programs</h2>\n" +
+                "        <p>Explore advanced studies in various engineering disciplines.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Mechanical Engineering</li>\n" +
+                "            <li>Chemical Engineering</li>\n" +
+                "            <li>Architecture</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 1L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Computer Science",
-                "Computers, math, programming...",
-                "",
+                "The Bachelor of Science in Computer Science program at Poznań University of Technology provides a comprehensive foundation in computer science theory and practical programming skills.",
+                " <section>\n" +
+                "        <h2>Program Overview</h2>\n" +
+                "        <p>Students will study a range of subjects including algorithms, data structures, software engineering, and database systems. The program also emphasizes hands-on projects and collaborative learning.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Key Courses</h2>\n" +
+                "        <ul>\n" +
+                "            <li>Introduction to Algorithms</li>\n" +
+                "            <li>Object-Oriented Programming</li>\n" +
+                "            <li>Database Systems</li>\n" +
+                "            <li>Software Engineering</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Career Opportunities</h2>\n" +
+                "        <p>Graduates of this program are well-equipped for roles in software development, web development, database administration, and more.</p>\n" +
+                "    </section>",
                 4L,
                 11L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
-                "First degree",
-                "First degree",
-                "",
+                "Undergraduate Programs",
+                "Undergraduate Programs",
+                "    <section>\n" +
+                "        <h2>Bachelor of Science in Computer Science</h2>\n" +
+                "        <p>Explore the foundational principles of computer science and gain practical programming skills.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Introduction to Algorithms</li>\n" +
+                "            <li>Object-Oriented Programming</li>\n" +
+                "            <li>Database Systems</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Bachelor of Engineering in Electrical Engineering</h2>\n" +
+                "        <p>Study the core concepts of electrical engineering and specialize in areas like power systems or electronics.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Electric Circuits</li>\n" +
+                "            <li>Signals and Systems</li>\n" +
+                "            <li>Power Electronics</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 12L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
-                "Second degree",
-                "Second degree",
-                "",
+                "Graduate Programs",
+                "Graduate Programs",
+                " <section>\n" +
+                "        <h2>Master of Science in Mechanical Engineering</h2>\n" +
+                "        <p>Deepen your knowledge in mechanical engineering with advanced coursework and research opportunities.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Finite Element Analysis</li>\n" +
+                "            <li>Advanced Thermodynamics</li>\n" +
+                "            <li>Robotics and Automation</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Master of Engineering in Chemical Engineering</h2>\n" +
+                "        <p>Specialize in chemical process engineering or materials engineering with advanced coursework and projects.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Chemical Reactor Design</li>\n" +
+                "            <li>Polymer Science</li>\n" +
+                "            <li>Process Safety</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 12L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
-                "Telecommunication",
-                "Computer networks, communication...",
-                "",
+                "Engineering in Electrical Engineering",
+                "The Bachelor of Engineering in Electrical Engineering program at Poznań University of Technology offers a solid foundation in electrical engineering principles and specialized knowledge in areas like power systems or electronics.",
+                "<section>\n" +
+                "        <h2>Program Overview</h2>\n" +
+                "        <p>Students will study subjects including electric circuits, signals and systems, and power electronics. The program also includes hands-on labs and practical projects.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Specializations</h2>\n" +
+                "        <ul>\n" +
+                "            <li>Power Systems</li>\n" +
+                "            <li>Electronics</li>\n" +
+                "            <li>Control Systems</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Career Paths</h2>\n" +
+                "        <p>Graduates are prepared for careers in power generation and distribution, electronics design, control systems engineering, and more.</p>\n" +
+                "    </section>",
                 4L,
                 11L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
-                "The list of research papers and other academic studies.",
-                "",
+                "At Poznań University of Technology, we're dedicated to cutting-edge research that drives innovation.",
+                "<section>\n" +
+                "        <h2>Research Areas</h2>\n" +
+                "        <ul>\n" +
+                "            <li>Artificial Intelligence</li>\n" +
+                "            <li>Green Energy Technologies</li>\n" +
+                "            <li>Advanced Materials</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Research Facilities</h2>\n" +
+                "        <p>Explore our state-of-the-art labs and centers for scientific discovery.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Robotics Lab</li>\n" +
+                "            <li>Nanotechnology Center</li>\n" +
+                "            <li>Environmental Engineering Lab</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 4L,
                 1L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
-                "Business",
-                "Services and experts",
-                "",
+                "International Programs",
+                "Explore opportunities for international students to study at Poznań University of Technology.",
+                "<section>\n" +
+                "        <h2>Exchange Programs</h2>\n" +
+                "        <p>Information on exchange partnerships and study abroad opportunities.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>English-Taught Programs</h2>\n" +
+                "        <p>Discover programs offered in English for international students.</p>\n" +
+                "    </section>",
                 17L,
                 1L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
-                "Staff",
-                "The list of our staff.",
-                "",
+                "Facilities",
+                "Facilities",
+                "    <section>\n" +
+                "        <h2>Libraries</h2>\n" +
+                "        <p>Explore our well-equipped libraries with extensive collections of engineering and technology resources.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Laboratories</h2>\n" +
+                "        <p>Information about specialized labs supporting hands-on learning and research.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Advanced Materials Lab</li>\n" +
+                "            <li>Robotics and Automation Lab</li>\n" +
+                "            <li>Fluid Dynamics Lab</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 17L,
                 1L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
-                "This page contains contact information.",
-                "",
+                "Get in touch with us for inquiries, admissions, and general information about Poznań University of Technology.",
+                "<section>\n" +
+                "        <h2>Admissions Office</h2>\n" +
+                "        <p>Contact details for the admissions office for prospective students.</p>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>General Inquiries</h2>\n" +
+                "        <p>For any other questions or information, feel free to reach out to our main office.</p>\n" +
+                "    </section>",
                 18L,
                 1L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
-                "History",
-                "The history of our university.",
-                "",
+                "Student Life",
+                "Discover the vibrant campus life and opportunities for personal growth at Poznań University of Technology.",
+                "    <section>\n" +
+                "        <h2>Clubs and Organizations</h2>\n" +
+                "        <p>Get involved in student-led clubs and organizations covering various interests.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Engineering Society</li>\n" +
+                "            <li>Debating Club</li>\n" +
+                "            <li>Chess Club</li>\n" +
+                "        </ul>\n" +
+                "    </section>\n" +
+                "    <section>\n" +
+                "        <h2>Student Services</h2>\n" +
+                "        <p>Find resources and support services to help you succeed academically and personally.</p>\n" +
+                "        <ul>\n" +
+                "            <li>Academic Advising</li>\n" +
+                "            <li>Counseling Services</li>\n" +
+                "            <li>Career Development</li>\n" +
+                "        </ul>\n" +
+                "    </section>",
                 18L,
                 1L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -750,7 +947,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Students",
@@ -758,7 +956,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -766,7 +965,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -774,7 +974,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 19L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -782,7 +983,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 19L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -790,7 +992,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 20L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -798,7 +1001,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 20L,
                 2L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "News",
@@ -806,7 +1010,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 22L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Academic Calendar",
@@ -814,7 +1019,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 22L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Student Offices",
@@ -822,7 +1028,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 22L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research at AMU",
@@ -830,7 +1037,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 23L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "AMU Research Portal",
@@ -838,7 +1046,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 5L,
                 23L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -847,7 +1056,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 6L,
                 3L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -855,7 +1065,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 6L,
                 3L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -863,7 +1074,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 21L,
                 3L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -871,7 +1083,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 21L,
                 3L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -879,7 +1092,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 22L,
                 3L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -887,7 +1101,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 22L,
                 3L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -896,7 +1111,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 7L,
                 4L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -904,7 +1120,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 7L,
                 4L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -912,7 +1129,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 23L,
                 4L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -920,7 +1138,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 23L,
                 4L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -928,7 +1147,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 24L,
                 4L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -936,7 +1156,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 24L,
                 4L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -945,7 +1166,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 8L,
                 5L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -953,7 +1175,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 8L,
                 5L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -961,7 +1184,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 25L,
                 5L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -969,7 +1193,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 25L,
                 5L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -977,7 +1202,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 26L,
                 5L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -985,7 +1211,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 26L,
                 5L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -994,7 +1221,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 9L,
                 6L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -1002,7 +1230,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 9L,
                 6L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -1010,7 +1239,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 27L,
                 6L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -1018,7 +1248,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 27L,
                 6L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -1026,7 +1257,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 28L,
                 6L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -1034,7 +1266,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 28L,
                 6L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -1043,7 +1276,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 10L,
                 7L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -1051,7 +1285,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 10L,
                 7L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -1059,7 +1294,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 29L,
                 7L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -1067,7 +1303,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 29L,
                 7L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -1075,7 +1312,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 30L,
                 7L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -1083,7 +1321,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 30L,
                 7L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -1092,7 +1331,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 11L,
                 8L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -1100,7 +1340,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 11L,
                 8L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -1108,7 +1349,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 31L,
                 8L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -1116,7 +1358,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 31L,
                 8L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -1124,7 +1367,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 32L,
                 8L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -1132,7 +1376,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 32L,
                 8L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -1141,7 +1386,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 12L,
                 9L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -1149,7 +1395,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 12L,
                 9L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -1157,7 +1404,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 33L,
                 9L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -1165,7 +1413,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 33L,
                 9L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -1173,7 +1422,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 34L,
                 9L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -1181,7 +1431,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 34L,
                 9L,
-                ""
+                "",
+                false
         ));
 
         pageService.save(new PageDtoFormCreate(
@@ -1190,7 +1441,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 13L,
                 10L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Research",
@@ -1198,7 +1450,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 13L,
                 10L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Business",
@@ -1206,7 +1459,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 35L,
                 10L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Staff",
@@ -1214,7 +1468,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 35L,
                 10L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "Contact",
@@ -1222,7 +1477,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 36L,
                 10L,
-                ""
+                "",
+                false
         ));
         pageService.save(new PageDtoFormCreate(
                 "History",
@@ -1230,60 +1486,45 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "",
                 36L,
                 10L,
-                ""
+                "",
+                false
         ));
-
 
         pageService.modifyHiddenField(1L, false);
         pageService.modifyHiddenField(2L, false);
         pageService.modifyHiddenField(3L, false);
-        pageService.modifyHiddenField(4L, false);
         pageService.modifyHiddenField(5L, false);
         pageService.modifyHiddenField(6L, false);
-        pageService.modifyHiddenField(7L, false);
         pageService.modifyHiddenField(8L, false);
-        pageService.modifyHiddenField(9L, false);
         pageService.modifyHiddenField(10L, false);
-        pageService.modifyHiddenField(11L, false);
-        pageService.modifyHiddenField(12L, false);
-        pageService.modifyHiddenField(13L, false);
-        pageService.modifyHiddenField(14L, false);
-        pageService.modifyHiddenField(15L, false);
-        pageService.modifyHiddenField(16L, false);
-        pageService.modifyHiddenField(17L, false);
-        pageService.modifyHiddenField(18L, false);
-        pageService.modifyHiddenField(19L, false);
-        pageService.modifyHiddenField(20L, false);
-        pageService.modifyHiddenField(21L, false);
-        pageService.modifyHiddenField(22L, false);
-        pageService.modifyHiddenField(23L, false);
-        pageService.modifyHiddenField(24L, false);
-        pageService.modifyHiddenField(25L, false);
-        pageService.modifyHiddenField(26L, false);
-        pageService.modifyHiddenField(27L, false);
-        pageService.modifyHiddenField(28L, false);
-        pageService.modifyHiddenField(29L, false);
-        pageService.modifyHiddenField(30L, false);
-        pageService.modifyHiddenField(31L, false);
-        pageService.modifyHiddenField(32L, false);
-        pageService.modifyHiddenField(33L, false);
-        pageService.modifyHiddenField(34L, false);
-        pageService.modifyHiddenField(35L, false);
-        pageService.modifyHiddenField(36L, false);
 
-        templateService.save("UniversityTemplate");
-        templateService.modifyContentField(1L, "Template used for university main page.");
+        templateService.save(new TemplateDtoFormCreate("UniversityTemplate", "Template used for university main page", Set.of(), true));
 
-        templateService.save("UniversityTemplate2");
-        templateService.modifyContentField(2L, "Second template used for university main page.");
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                "admin",
+                "51D7k4F8"));
 
-        keyWordsService.save("sztuczna inteligencja");
-        keyWordsService.save("si");
-        keyWordsService.save("artificial intelligence");
-        keyWordsService.save("ai");
-        keyWordsService.save("politechnika");
-        keyWordsService.save("uniwersytet");
-        keyWordsService.save("university");
-        keyWordsService.save("machine learning");
+        pageService.assignUsersToPage(List.of(5L, 7L), 1L);
+        pageService.assignUsersToPage(List.of(5L, 6L, 7L), 2L);
+        pageService.assignUsersToPage(List.of(5L, 7L, 4L), 3L);
+        pageService.assignUsersToPage(List.of(5L, 6L, 4L), 4L);
+        pageService.assignUsersToPage(List.of(5L, 22L), 5L);
+
+        UUID ticketId1 = ticketService.createTicket("michal.wazowski9020@gmail.com", "Problem to page 1", "This is description to my ticket. I have a problem with page 1", 1L);
+        UUID ticketId2 = ticketService.createTicket("requester2@email.com", "Problem to page 2", "This is description to my ticket. I have a problem with page 2", 2L);
+        UUID ticketId3 = ticketService.createTicket("requester3@email.com", "Problem to page 3", "This is description to my ticket. I have a problem with page 3", 3L);
+        UUID ticketId4 = ticketService.createTicket("requester4@email.com", "Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
+        UUID ticketId5 = ticketService.createTicket("requester5@email.com", "Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
+
+        ticketService.addResponse(ticketId1, new Response("michal", "message content to ticket 1 from author1"));
+        ticketService.addResponse(ticketId1, new Response("author1", "another message content to ticket 1 from author1"));
+        ticketService.addResponse(ticketId1, new Response("author2", "message content to ticket 1 from author2"));
+        ticketService.addResponse(ticketId2, new Response("author3", "message content to ticket 2 from author3"));
+        ticketService.addResponse(ticketId2, new Response("author4", "message content to ticket 2 from author4"));
+        ticketService.addResponse(ticketId3, new Response("author5", "message content to ticket 3 from author5"));
+        ticketService.addResponse(ticketId3, new Response("author6", "message content to ticket 3 from author6"));
+        ticketService.addResponse(ticketId3, new Response("author5", "another message content to ticket 3 from author5"));
+        ticketService.addResponse(ticketId4, new Response("author1", "message content to ticket 4 from author1"));
+        ticketService.addResponse(ticketId4, new Response("author7", "message content to ticket 4 from author7"));
     }
 }

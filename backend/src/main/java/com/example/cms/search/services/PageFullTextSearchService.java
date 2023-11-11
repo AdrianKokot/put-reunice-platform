@@ -1,11 +1,14 @@
-package com.example.cms.search;
+package com.example.cms.search.services;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.page.Page;
+import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
+import com.example.cms.search.services.BaseFullTextSearchService;
 import com.example.cms.university.University;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.typesense.api.FieldTypes;
 import org.typesense.api.exceptions.RequestMalformed;
@@ -19,8 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Log
-public class PageFullTextSearchService extends FullTextSearchService {
-
+@Profile("postgres")
+public class PageFullTextSearchService extends BaseFullTextSearchService implements FullTextSearchService<Page, PageSearchHitDto> {
     private static final String COLLECTION_NAME = "pages";
 
     public PageFullTextSearchService(@Autowired ApplicationConfigurationProvider applicationConfigurationProvider) {
@@ -28,8 +31,10 @@ public class PageFullTextSearchService extends FullTextSearchService {
         createCollection();
     }
 
-
     public void upsert(Page page) {
+        if (!isConnected())
+            return;
+
         try {
             client.collections("pages").documents()
                     .upsert(pageToMap(page));
@@ -39,6 +44,9 @@ public class PageFullTextSearchService extends FullTextSearchService {
     }
 
     public void delete(Page page) {
+        if (!isConnected())
+            return;
+
         try {
             client.collections("pages").documents(page.getId().toString())
                     .delete();
@@ -72,7 +80,18 @@ public class PageFullTextSearchService extends FullTextSearchService {
         return list.stream().map(PageSearchHitDto::from).collect(Collectors.toList());
     }
 
-    private void createCollection() {
+    public void deleteCollection() {
+        if (!isConnected())
+            return;
+
+        try {
+            client.collections(COLLECTION_NAME).delete();
+        } catch (Exception e) {
+            log.log(java.util.logging.Level.SEVERE, "Error while clearing collection", e);
+        }
+    }
+
+    public void createCollection() {
         try {
             if (client.collections(COLLECTION_NAME).retrieve() != null) {
                 if (!this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup().equalsIgnoreCase("create"))
@@ -80,8 +99,7 @@ public class PageFullTextSearchService extends FullTextSearchService {
 
                 client.collections(COLLECTION_NAME).delete();
             }
-        } catch (Exception e) {
-            log.log(java.util.logging.Level.SEVERE, "Error while retrieving collection", e);
+        } catch (Exception ignored) {
         }
 
         List<Field> fields = new ArrayList<>();

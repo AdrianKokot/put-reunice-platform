@@ -28,6 +28,8 @@ public class PageDtoDetailed {
     private Instant createdOn;
     private Instant updatedOn;
     private String keyWords;
+    private List<UserDtoSimple> contactRequestHandlers;
+    private Boolean hasContactRequestHandler;
 
     public static PageDtoDetailed of(Page page) {
         return of(page, List.of());
@@ -55,5 +57,7 @@ public class PageDtoDetailed {
 
         createdOn = page.getCreatedOn().toInstant();
         updatedOn = page.getUpdatedOn().toInstant();
+        contactRequestHandlers = page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
+        hasContactRequestHandler = !contactRequestHandlers.isEmpty();
     }
 }

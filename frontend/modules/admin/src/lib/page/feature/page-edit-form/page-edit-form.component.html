@@ -52,21 +52,46 @@
         ></tui-error>
       </label>
 
-      <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
-        <tui-input
-          formControlName="author"
-          tuiTextfieldSize="m"
-          [readOnly]="true"
-          [tuiTextfieldLabelOutside]="true"
+      <ng-container *reuniceUser="'ADMINISTRATIVE'; else authorNotAdmin">
+        <label
+          [tuiLabel]="'AUTHOR' | translate"
+          class="tui-form__multi-field"
+          *reuniceUserControlsResource="item; else authorNotAdmin"
         >
-          <input tuiTextfield type="text" />
-        </tui-input>
+          <tui-combo-box
+            tuiTextfieldSize="m"
+            *tuiLet="userSearch.itemIds$ | async as items"
+            formControlName="creatorId"
+            [tuiTextfieldLabelOutside]="true"
+            (searchChange)="userSearch.search($event)"
+            [stringify]="(userSearch.stringify$ | async)!"
+          >
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]="items"
+              [itemContent]="(userSearch.stringify$ | async)!"
+            ></tui-data-list-wrapper>
+          </tui-combo-box>
 
-        <tui-error
-          formControlName="author"
-          [error]="[] | tuiFieldError | async"
-        ></tui-error>
-      </label>
+          <tui-error
+            formControlName="creatorId"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </label>
+      </ng-container>
+
+      <ng-template #authorNotAdmin>
+        <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
+          <tui-input
+            formControlName="author"
+            tuiTextfieldSize="m"
+            [readOnly]="true"
+            [tuiTextfieldLabelOutside]="true"
+          >
+            <input tuiTextfield type="text" />
+          </tui-input>
+        </label>
+      </ng-template>
     </div>
 
     <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
@@ -186,6 +211,35 @@
       </ng-container>
     </div>
 
+    <h3 class="tui-form__header">
+      {{ 'PAGE_CONTACT_REQUEST_HANDLERS' | translate }}
+    </h3>
+
+    <label
+      [tuiLabel]="'CONTACT_REQUEST_HANDLERS' | translate"
+      class="tui-form__row"
+    >
+      <tui-multi-select
+        tuiTextfieldSize="m"
+        formControlName="contactRequestHandlers"
+        [tuiTextfieldLabelOutside]="true"
+        (searchChange)="userSearch.search($event)"
+        [stringify]="(userSearch.stringify$ | async)!"
+      >
+        <tui-data-list-wrapper
+          *tuiDataList
+          tuiMultiSelectGroup
+          [items]="userSearch.itemIds$ | async"
+          [itemContent]="(userSearch.stringify$ | async)!"
+        ></tui-data-list-wrapper>
+      </tui-multi-select>
+
+      <tui-error
+        formControlName="contactRequestHandlers"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
     <div
       class="tui-form__buttons tui-form__buttons_align_end"
       *ngIf="item !== null"
@@ -204,6 +258,10 @@
         tuiButton
         size="m"
         type="submit"
+        *tuiLet="confirmText$ | async as confirmText"
+        [reuniceConfirm]="
+          confirmText !== null ? (confirmText | translate) : null
+        "
         class="tui-form__button"
         [showLoader]="(handler.loading$ | async) ?? false"
       >

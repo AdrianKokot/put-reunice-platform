@@ -8,9 +8,9 @@
   <div class="button-container">
     <button
       tuiIconButton
-      size="xs"
+      size="s"
       shape="rounded"
-      appearance="icon"
+      [appearance]="appliedFilter ? 'flat' : 'icon'"
       [icon]="'tuiIconFilter'"
       type="button"
     ></button>

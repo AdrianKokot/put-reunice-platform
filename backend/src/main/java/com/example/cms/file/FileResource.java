@@ -24,13 +24,13 @@ public class FileResource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "File name must not be empty")
+    @NotBlank(message = "ERRORS.FILE.400.FILENAME_EMPTY")
     private String filename;
 
-    @NotBlank(message = "File type name must not be empty")
+    @NotBlank(message = "ERRORS.FILE.400.FILETYPE_EMPTY")
     private String fileType;
 
-    @NotNull(message = "File size must not be null")
+    @NotNull(message = "ERRORS.FILE.400.FILESIZE_EMPTY")
     private Long fileSize;
 
     @Lob
@@ -39,11 +39,12 @@ public class FileResource {
 
     private Timestamp uploadDate;
 
+    private Long uploadedById;
     private String uploadedBy;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull(message = "Page must not be null")
+    @NotNull(message = "ERRORS.FILE.400.PAGE_EMPTY")
     private Page page;
 
     @Override

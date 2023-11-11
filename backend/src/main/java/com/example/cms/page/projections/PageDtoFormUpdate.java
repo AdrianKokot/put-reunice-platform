@@ -1,15 +1,15 @@
 package com.example.cms.page.projections;
 
-import com.example.cms.page.Page;
 import lombok.Value;
+
+import java.util.Set;
 
 @Value
 public class PageDtoFormUpdate {
     String title;
     String description;
-
-    public void updatePage(Page page) {
-        page.setTitle(title);
-        page.setDescription(description);
-    }
+    String content;
+    Boolean hidden;
+    Set<Long> contactRequestHandlers;
+    Long creatorId;
 }

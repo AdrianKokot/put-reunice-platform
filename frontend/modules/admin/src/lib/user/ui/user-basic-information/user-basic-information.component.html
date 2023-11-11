@@ -1,0 +1,52 @@
+<div class="tui-form__row tui-form__row_multi-fields">
+  <label [tuiLabel]="'FIRST_NAME' | translate" class="tui-form__multi-field">
+    {{ user?.firstName ?? '—' }}
+  </label>
+
+  <label [tuiLabel]="'LAST_NAME' | translate" class="tui-form__multi-field">
+    {{ user?.lastName ?? '—' }}
+  </label>
+
+  <label [tuiLabel]="'EMAIL' | translate" class="tui-form__multi-field">
+    {{ user?.email ?? '—' }}
+  </label>
+
+  <label [tuiLabel]="'PHONE_NUMBER' | translate" class="tui-form__multi-field">
+    {{ user?.phoneNumber ?? '—' }}
+  </label>
+</div>
+
+<div class="tui-form__row tui-form__row_multi-fields">
+  <label [tuiLabel]="'USERNAME' | translate" class="tui-form__multi-field">
+    {{ user?.username ?? '—' }}
+  </label>
+  <label [tuiLabel]="'STATE' | translate" class="tui-form__multi-field">
+    {{ (user?.enabled ? 'ACTIVE' : 'DEACTIVATED') | translate }}
+  </label>
+
+  <label [tuiLabel]="'ROLE' | translate" class="tui-form__multi-field">
+    {{ 'ACCOUNT_TYPE_' + user?.accountType | translate }}
+  </label>
+
+  <label
+    [tuiLabel]="'LAST_LOGIN_DATE' | translate"
+    class="tui-form__multi-field"
+  >
+    {{ user?.lastLoginDate ? (user?.lastLoginDate | localizedDate) : '-' }}
+  </label>
+</div>
+
+<label
+  [tuiLabel]="'ENROLLED_UNIVERSITIES' | translate"
+  class="tui-form__row"
+  *ngIf="user?.accountType !== 'ADMIN'"
+>
+  <div class="tag-list tui-space_top-1">
+    <tui-tag
+      *ngFor="let university of user?.enrolledUniversities ?? []"
+      status="primary"
+      [hoverable]="false"
+      [value]="university.name"
+    ></tui-tag>
+  </div>
+</label>

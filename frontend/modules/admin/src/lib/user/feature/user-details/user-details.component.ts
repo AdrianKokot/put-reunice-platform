@@ -10,12 +10,22 @@ import {
   BaseDetailsImportsModule,
   navigateToResourceList,
 } from '../../../shared';
-import { TuiTagModule } from '@taiga-ui/kit';
+import { TuiTabsModule, TuiTagModule } from '@taiga-ui/kit';
+import { UserBasicInformationComponent } from '../../ui/user-basic-information/user-basic-information.component';
+import { UserPagesComponent } from '../../ui/user-pages/user-pages.component';
+import { UserFilesComponent } from '../../ui/user-files/user-files.component';
 
 @Component({
   selector: 'reunice-user-details',
   standalone: true,
-  imports: [BaseDetailsImportsModule, TuiTagModule],
+  imports: [
+    BaseDetailsImportsModule,
+    TuiTagModule,
+    TuiTabsModule,
+    UserBasicInformationComponent,
+    UserPagesComponent,
+    UserFilesComponent,
+  ],
   templateUrl: './user-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,4 +39,6 @@ export class UserDetailsComponent {
     successAlertMessage: 'USER_DELETED_SUCCESS',
     effect: navigateToResourceList(),
   });
+
+  activeTabIndex = 0;
 }

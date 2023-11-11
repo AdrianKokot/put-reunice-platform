@@ -1,10 +1,11 @@
 import { inject, NgModule } from '@angular/core';
 import { CanActivateFn, Router, RouterModule, Routes } from '@angular/router';
+import { UniversityService } from '@reunice/modules/shared/data-access';
+import { translatedTitle } from '@reunice/modules/shared/util';
+import { map } from 'rxjs';
+import { PageDetailsComponent } from './feature/page-details/page-details.component';
 import { UniversityListComponent } from './feature/university-list/university-list.component';
 import { UniversityShellComponent } from './feature/university-shell/university-shell.component';
-import { PageDetailsComponent } from './feature/page-details/page-details.component';
-import { UniversityService } from '@reunice/modules/shared/data-access';
-import { map } from 'rxjs';
 
 export const RedirectToUniversityMainPage: CanActivateFn = (route) => {
   const id = route.paramMap.get('id');
@@ -29,12 +30,12 @@ const routes: Routes = [
   {
     path: '',
     component: UniversityListComponent,
-    title: 'Uniwersytety',
+    title: translatedTitle('UNIVERSITIES'),
   },
   {
     path: ':id',
     component: UniversityShellComponent,
-    title: 'Szczegóły uniwersytetu',
+    title: translatedTitle('UNIVERSITY_DETAILS'),
     children: [
       {
         path: 'page/:pageId',
@@ -42,7 +43,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        canActivate: [RedirectToUniversityMainPage],
+        canMatch: [RedirectToUniversityMainPage],
         component: PageDetailsComponent,
       },
     ],

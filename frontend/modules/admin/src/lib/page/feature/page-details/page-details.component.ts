@@ -11,14 +11,22 @@ import {
   resourceIdFromRoute,
   throwError,
 } from '@reunice/modules/shared/util';
-import { filter, shareReplay, startWith, switchMap, tap } from 'rxjs';
+import { filter, shareReplay, startWith, switchMap } from 'rxjs';
 import { AuthService } from '@reunice/modules/shared/security';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
 } from '../../../shared';
-import { TuiFilesModule, TuiIslandModule, TuiTreeModule } from '@taiga-ui/kit';
+import {
+  TuiFilesModule,
+  TuiIslandModule,
+  TuiTabsModule,
+  TuiTagModule,
+  TuiTreeModule,
+} from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
+import { TuiLinkModule } from '@taiga-ui/core';
+import { PageUsersComponent } from '../../ui/page-users/page-users.component';
 
 @Component({
   selector: 'reunice-page-details',
@@ -29,6 +37,10 @@ import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
     TuiEditorSocketModule,
     TuiIslandModule,
     TuiTreeModule,
+    TuiTagModule,
+    TuiLinkModule,
+    TuiTabsModule,
+    PageUsersComponent,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,9 +53,9 @@ export class PageDetailsComponent {
 
   readonly item$ = this._id$.pipe(
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
-    tap(console.log),
     shareReplay(),
   );
+
   readonly user: User =
     inject(AuthService).userSnapshot ?? throwError('User is null');
 
@@ -58,7 +70,7 @@ export class PageDetailsComponent {
   );
 
   readonly files$ = this._id$.pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
     shareReplay(),
   );
 
@@ -68,4 +80,6 @@ export class PageDetailsComponent {
     successAlertMessage: 'PAGE_DELETED_SUCCESS',
     effect: navigateToResourceList(),
   });
+
+  activeTabIndex = 0;
 }

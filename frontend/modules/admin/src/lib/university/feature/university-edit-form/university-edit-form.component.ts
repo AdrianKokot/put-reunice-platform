@@ -10,11 +10,19 @@ import {
   navigateToResourceDetails,
 } from '../../../shared';
 import { TuiLetModule } from '@taiga-ui/cdk';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  share,
+} from 'rxjs';
+import { ConfirmDirective } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-university-edit-form',
   standalone: true,
-  imports: [BaseFormImportsModule, TuiLetModule],
+  imports: [BaseFormImportsModule, TuiLetModule, ConfirmDirective],
   templateUrl: './university-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,6 +40,24 @@ export class UniversityEditFormComponent {
   });
 
   readonly item$ = formResourceFromRoute(this._service, this.form);
+
+  readonly confirmText$ = combineLatest([
+    this.item$,
+    this.form.valueChanges,
+  ]).pipe(
+    debounceTime(100),
+    map(([item, formValue]) => {
+      if (item?.hidden !== formValue.hidden) {
+        return formValue.hidden
+          ? 'UNIVERSITY_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
+          : 'UNIVERSITY_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
+      }
+
+      return null;
+    }),
+    distinctUntilChanged(),
+    share(),
+  );
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
