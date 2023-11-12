@@ -8,7 +8,15 @@
     ></tui-badge>
   </h3>
 
-  <p class="text-02">Ticket #{{ ticket?.id }}</p>
+  <p class="text-02">
+    {{
+      'TICKET_ID'
+        | translate
+          : {
+              id: ticket?.id
+            }
+    }}
+  </p>
 
   <hr />
 
@@ -35,7 +43,7 @@
     (ngSubmit)="sendAndResolveHandler.submit()"
   >
     <tui-textarea formControlName="content" [expandable]="true">
-      Leave a reply
+      {{ 'TICKET_LEAVE_REPLY' | translate }}
     </tui-textarea>
 
     <div class="tui-form__buttons tui-form__buttons_align_end gap-4">
@@ -45,7 +53,7 @@
         appearance="secondary-destructive"
         (click)="markAsIrrelevantHandler.submit()"
       >
-        Mark as irrelevant
+        {{ 'TICKET_MARK_IRRELEVANT' | translate }}
       </button>
       <div class="group" tuiGroup>
         <button
@@ -56,10 +64,10 @@
           [disabled]="!form.valid"
           (click)="sendHandler.submit()"
         >
-          Send
+          {{ 'TICKET_REPLY' | translate }}
         </button>
         <button tuiButton type="submit" [disabled]="!form.valid">
-          Send & resolve
+          {{ 'TICKET_REPLY_AND_RESOLVE' | translate }}
         </button>
       </div>
     </div>

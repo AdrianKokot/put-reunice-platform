@@ -72,17 +72,17 @@ export class TicketComponent {
       this.form.reset({ content: '' });
       return of(response);
     },
-    successAlertMessage: 'REPLY_SEND_SUCCESS',
+    successAlertMessage: 'TICKET_REPLY_SUCCESS',
   });
 
   readonly sendAndResolveHandler = new FormSubmitWrapper(this.form, {
     submit: (values) => this._service.sendAndResolve(values),
-    successAlertMessage: 'REPLY_AND_RESOLVE_SEND_SUCCESS',
+    successAlertMessage: 'TICKET_REPLY_AND_RESOLVE_SUCCESS',
   });
 
   readonly markAsIrrelevantHandler = new FormSubmitWrapper(this.form, {
     submit: (values) => this._service.markAsIrrelevant(values.id),
-    successAlertMessage: 'MARK_AS_IRRELEVANT_SUCCESS',
+    successAlertMessage: 'TICKET_MARK_IRRELEVANT_SUCCESS',
   });
 
   constructor() {
