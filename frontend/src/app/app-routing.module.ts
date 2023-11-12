@@ -42,7 +42,7 @@ const routes: Routes = [
     canMatch: [AuthGuard],
   },
   {
-    path: 'ticket/:id',
+    path: 'tickets/:id',
     loadChildren: () =>
       import('./ticket/ticket.module').then((m) => m.TicketModule),
   },

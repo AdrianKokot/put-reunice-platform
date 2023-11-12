@@ -15,6 +15,7 @@ import { TicketService } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiBadgeModule } from '@taiga-ui/kit';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import { switchMap, startWith, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'reunice-ticket',
@@ -50,6 +51,11 @@ export class TicketComponent {
     toResourceFromId(this._service, (item) => {
       this.form.patchValue({ ...item });
     }),
+  );
+
+  readonly ticketResponses$ = this._id$.pipe(
+    switchMap((id) => this._service.getResponses(id).pipe(startWith([]))),
+    shareReplay(),
   );
 
   readonly sendHandler = new FormSubmitWrapper(this.form, {
