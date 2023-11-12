@@ -11,11 +11,14 @@ import {
   toResourceFromId,
 } from '@reunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
-import { TicketService } from '@reunice/modules/shared/data-access';
+import {
+  TicketResponse,
+  TicketService,
+} from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiBadgeModule } from '@taiga-ui/kit';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
-import { switchMap, startWith, shareReplay } from 'rxjs';
+import { switchMap, startWith, BehaviorSubject, of } from 'rxjs';
 import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -57,13 +60,18 @@ export class TicketComponent {
     }),
   );
 
-  readonly ticketResponses$ = this._id$.pipe(
-    switchMap((id) => this._service.getResponses(id).pipe(startWith([]))),
-    shareReplay(),
+  private readonly _ticketResponses$ = new BehaviorSubject<TicketResponse[]>(
+    [],
   );
+  readonly ticketResponses$ = this._ticketResponses$.asObservable();
 
   readonly sendHandler = new FormSubmitWrapper(this.form, {
     submit: (values) => this._service.send(values),
+    effect: (response) => {
+      this._ticketResponses$.next(response);
+      this.form.reset({ content: '' });
+      return of(response);
+    },
     successAlertMessage: 'REPLY_SEND_SUCCESS',
   });
 
@@ -76,4 +84,12 @@ export class TicketComponent {
     submit: (values) => this._service.markAsIrrelevant(values.id),
     successAlertMessage: 'MARK_AS_IRRELEVANT_SUCCESS',
   });
+
+  constructor() {
+    this._id$
+      .pipe(
+        switchMap((id) => this._service.getResponses(id).pipe(startWith([]))),
+      )
+      .subscribe((responses) => this._ticketResponses$.next(responses));
+  }
 }

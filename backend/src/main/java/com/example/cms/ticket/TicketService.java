@@ -28,10 +28,13 @@ public class TicketService {
     private final SecurityService securityService;
     private final TicketUserStatusRepository ticketUserStatusRepository;
 
-    public void addResponse(UUID ticketId, Response response) {
+    public void addResponse(UUID ticketId, String content) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
 
-        ticket.addResponse(response);
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        String author = loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
+
+        ticket.addResponse(new Response(author, content));
         ticketRepository.save(ticket);
     }
 
