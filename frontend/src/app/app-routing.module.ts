@@ -42,6 +42,11 @@ const routes: Routes = [
     canMatch: [AuthGuard],
   },
   {
+    path: 'tickets/:id',
+    loadChildren: () =>
+      import('./ticket/ticket.module').then((m) => m.TicketModule),
+  },
+  {
     path: '',
     redirectTo: 'universities',
     pathMatch: 'full',

@@ -1,0 +1,75 @@
+<ng-container *tuiLet="ticket$ | async as ticket">
+  <h3 class="tui-text_h3 tui-space_top-4 tui-space_bottom-2">
+    {{ ticket?.title }}
+    <tui-badge
+      *ngIf="ticket"
+      [status]="ticket | ticketToBadgeStatus"
+      [value]="'TICKET_STATUS_' + ticket.status | translate"
+    ></tui-badge>
+  </h3>
+
+  <p class="text-02">
+    {{
+      'TICKET_ID'
+        | translate
+          : {
+              id: ticket?.id
+            }
+    }}
+  </p>
+
+  <hr />
+
+  <ng-container *tuiLet="ticketResponses$ | async as ticketResponses">
+    <ng-container *ngFor="let message of ticketResponses">
+      <div class="d-flex gap-4 tui-space_top-4">
+        <tui-avatar
+          [text]="message.author"
+          class="tui-space_top-1"
+        ></tui-avatar>
+        <tui-island class="w-full">
+          <div class="tui-text_body-s message-info">
+            {{ message?.responseTime | localizedDate }}
+          </div>
+          {{ message?.content }}
+        </tui-island>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <form
+    [formGroup]="form"
+    class="tui-space_top-4"
+    (ngSubmit)="sendAndResolveHandler.submit()"
+  >
+    <tui-textarea formControlName="content" [expandable]="true">
+      {{ 'TICKET_LEAVE_REPLY' | translate }}
+    </tui-textarea>
+
+    <div class="tui-form__buttons tui-form__buttons_align_end gap-4">
+      <button
+        tuiButton
+        type="button"
+        appearance="secondary-destructive"
+        (click)="markAsIrrelevantHandler.submit()"
+      >
+        {{ 'TICKET_MARK_IRRELEVANT' | translate }}
+      </button>
+      <div class="group" tuiGroup>
+        <button
+          tuiButton
+          type="button"
+          appearance="secondary"
+          class="tui-group__auto-width-item"
+          [disabled]="!form.valid"
+          (click)="sendHandler.submit()"
+        >
+          {{ 'TICKET_REPLY' | translate }}
+        </button>
+        <button tuiButton type="submit" [disabled]="!form.valid">
+          {{ 'TICKET_REPLY_AND_RESOLVE' | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-container>

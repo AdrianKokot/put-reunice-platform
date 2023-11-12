@@ -9,3 +9,10 @@ export interface Ticket {
   status: string;
   title: string;
 }
+
+export interface TicketResponse {
+  id: number;
+  author: string;
+  responseTime: string;
+  content: string;
+}
