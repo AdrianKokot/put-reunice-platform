@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@angular/core';
 import { AbstractApiService } from './abstract-api.service';
 import { Ticket, TicketResponse } from '../models/ticket';
