@@ -16,6 +16,8 @@ import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiBadgeModule } from '@taiga-ui/kit';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 import { switchMap, startWith, shareReplay } from 'rxjs';
+import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'reunice-ticket',
@@ -35,6 +37,8 @@ import { switchMap, startWith, shareReplay } from 'rxjs';
     TuiLetModule,
     TuiBadgeModule,
     LocalizedPipeModule,
+    TicketToBadgeStatusModule,
+    TranslateModule,
   ],
 })
 export class TicketComponent {
