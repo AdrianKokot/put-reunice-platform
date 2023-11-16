@@ -57,6 +57,12 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/responses")
     public ResponseEntity<List<Response>> getTicketResponses(Pageable pageable, @PathVariable UUID ticketId) {
+        List<Ticket> optionalTicket = service.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
+                .get().collect(Collectors.toList());
+
+        if (!optionalTicket.equals(List.of())) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Ticket ticket = service.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
                 .get().collect(Collectors.toList()).get(0);
         List<Response> responses = ticket.getResponses();
@@ -71,9 +77,9 @@ public class TicketController {
     }
 
     @PutMapping("/{ticketId}")
-    public ResponseEntity<TicketDtoDetailed> editTicket(@PathVariable UUID ticketId ,@RequestBody TicketDtoFormUpdate ticketDtoFormUpdate) {
+    public ResponseEntity updateTicketStatus(@PathVariable UUID ticketId ,@RequestBody TicketStatus ticketStatusToChangeTo) {
         try {
-            TicketDtoDetailed ticketDtoDetailed = service.updateTicket(ticketDtoFormUpdate, ticketId);
+            TicketDtoDetailed ticketDtoDetailed = service.updateTicketStatus(ticketStatusToChangeTo, ticketId);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));
 
@@ -83,9 +89,7 @@ public class TicketController {
                     HttpStatus.OK);
         }
         catch (Exception ex) {
-            // TODO: send ex to client
-            return new ResponseEntity<>(
-                    HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 

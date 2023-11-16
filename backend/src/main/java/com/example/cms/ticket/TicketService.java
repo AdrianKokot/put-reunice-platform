@@ -9,9 +9,7 @@ import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.InvalidTicketStatusChange;
 import com.example.cms.ticket.exceptions.TicketNotFound;
-import com.example.cms.ticket.projections.TicketDto;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
-import com.example.cms.ticket.projections.TicketDtoFormUpdate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,18 +30,24 @@ public class TicketService {
     private final SecurityService securityService;
     private final TicketUserStatusRepository ticketUserStatusRepository;
 
+    private Optional<TicketUserStatus> getIfLoggedUserIsHandler(Ticket ticket) {
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        return loggedUserOptional.flatMap(loggedUser -> ticket.getTicketHandlers().stream()
+                .filter(item -> item.getUser()
+                        .getId()
+                        .equals(loggedUser.getId()))
+                .findFirst());
+    }
+
     public void addResponse(UUID ticketId, Response response) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
 
-        Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
-                .filter(item -> item.getUser()
-                        .getId()
-                        .equals(securityService.getPrincipal().get().getId()))
-                .findFirst();
-        if (ticket.getStatus().equals(TicketStatus.NEW) && userStatusOptional.isPresent()) {
-            ticket.setStatus(TicketStatus.OPEN);
+        Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
+        if (userStatusOptional.isPresent()) {
+            try {
+                ticket.setStatus(ticket.getStatus().transition(TicketStatus.HANDLED));
+            } catch (Exception ignored) { }
         }
-
         ticket.addResponse(response);
         ticketRepository.save(ticket);
     }
@@ -72,19 +76,11 @@ public class TicketService {
         Ticket ticket = this.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
                 .get().collect(Collectors.toList()).get(0);
 
-        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        if (loggedUserOptional.isPresent()) {
-            Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
-                    .filter(item -> item.getUser()
-                            .getId()
-                            .equals(loggedUserOptional.get().getId()))
-                    .findFirst();
-
-            if (userStatusOptional.isPresent()) {
-                TicketUserStatus userStatus = userStatusOptional.get();
-                userStatus.setLastSeenOn(Instant.now());
-                ticketUserStatusRepository.save(userStatus);
-            }
+        Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
+        if (userStatusOptional.isPresent()) {
+            TicketUserStatus userStatus = userStatusOptional.get();
+            userStatus.setLastSeenOn(Instant.now());
+            ticketUserStatusRepository.save(userStatus);
         }
 
         return ticket;
@@ -128,31 +124,18 @@ public class TicketService {
         return ticketRepository.findAll(combinedSpecification, pageable);
     }
 
-    public TicketDtoDetailed updateTicket(TicketDtoFormUpdate ticketDtoFormUpdate, UUID ticketId) throws InvalidTicketStatusChange {
+    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidTicketStatusChange {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
-
-        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-
-        Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
-                .filter(item -> item.getUser()
-                        .getId()
-                        .equals(loggedUserOptional.get().getId()))
-                .findFirst();
+        Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 
         if (userStatusOptional.isPresent()) {
-            if (!ticketDtoFormUpdate.getTicketStatus().equals(ticket.getStatus()) ||
-                    ticketDtoFormUpdate.getTicketStatus().equals(TicketStatus.CANCELED) ||
-                    ticketDtoFormUpdate.getTicketStatus().equals(TicketStatus.NEW)) {
-                throw new InvalidTicketStatusChange();
-            }
-        } else {
-            if (!ticketDtoFormUpdate.getTicketStatus().equals(ticket.getStatus()) ||
-                    !ticketDtoFormUpdate.getTicketStatus().equals(TicketStatus.CANCELED)) {
+            try {
+                ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
+            } catch (Exception ex) {
                 throw new InvalidTicketStatusChange();
             }
         }
 
-        ticketDtoFormUpdate.updateTicket(ticket);
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
     }
 }

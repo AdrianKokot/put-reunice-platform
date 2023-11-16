@@ -32,7 +32,7 @@ public class Ticket {
     }
     @ManyToOne
     private Page page;
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TicketUserStatus> ticketHandlers;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
