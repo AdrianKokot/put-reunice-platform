@@ -42,10 +42,10 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
         switchMap(() =>
           combineLatest([
             (resource.files ?? []).length > 0
-              ? this._http.post<void>('/api/files/upload', formData)
+              ? this._http.post('/api/files/upload', formData)
               : of(null),
             (resource.filesToRemove ?? []).length > 0
-              ? this._http.post<void>(
+              ? this._http.post(
                   '/api/files/delete',
                   resource.filesToRemove ?? [],
                 )
