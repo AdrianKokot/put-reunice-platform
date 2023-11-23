@@ -1,17 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '@reunice/modules/shared/security';
-import {
-  catchError,
-  exhaustMap,
-  filter,
-  of,
-  startWith,
-  Subject,
-  switchMap,
-} from 'rxjs';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Component({
   selector: 'reunice-login-shell',
@@ -27,26 +19,8 @@ export class LoginShellComponent {
     password: ['', [Validators.required]],
   });
 
-  readonly submit$ = new Subject<void>();
-  readonly showLoader$ = this.submit$.pipe(
-    filter(() => {
-      if (this.form.invalid) {
-        this.form.markAllAsTouched();
-        return false;
-      }
-
-      return true;
-    }),
-    exhaustMap(() =>
-      this._auth.login(this.form.getRawValue()).pipe(
-        switchMap(() => this._router.navigate(['/'])),
-        catchError((err: HttpErrorResponse) => {
-          // TODO Handle validation errors
-          console.log(err);
-          return of(false);
-        }),
-        startWith(true),
-      ),
-    ),
-  );
+  readonly handler = new FormSubmitWrapper(this.form, {
+    submit: (formValue) => this._auth.login(formValue),
+    effect: () => fromPromise(this._router.navigate(['/'])),
+  });
 }

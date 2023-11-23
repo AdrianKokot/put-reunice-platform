@@ -1,6 +1,6 @@
 <form
   [formGroup]="form"
-  (ngSubmit)="submit$.next()"
+  (ngSubmit)="handler.submit()"
   class="max-w-xs mx-auto tui-space_top-14"
 >
   <h3 class="tui-form__header tui-form__header_margin-top_none">
@@ -49,7 +49,7 @@
       size="m"
       type="submit"
       class="tui-form__button w-full"
-      [showLoader]="(showLoader$ | async) ?? false"
+      [showLoader]="(handler.loading$ | async) ?? false"
     >
       {{ 'LOGIN' | translate }}
     </button>
