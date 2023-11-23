@@ -2,8 +2,8 @@
 FROM node:18-alpine AS build-fe
 WORKDIR /usr/src/app
 COPY frontend/. .
-RUN npm ci
-RUN npm run build
+RUN npm ci && \
+    npm run build
 
 ### Build ###
 FROM maven:3.6.1-jdk-11-slim AS build-be
