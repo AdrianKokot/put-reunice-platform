@@ -135,7 +135,7 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
 
   override writeValue(value: T | null) {
     super.writeValue(value);
-    this.appliedFilter = !!value;
+    this.appliedFilter = value !== null && value !== undefined;
   }
 
   constructor(
