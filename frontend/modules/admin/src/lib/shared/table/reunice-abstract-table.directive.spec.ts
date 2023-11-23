@@ -73,10 +73,10 @@ describe(ReuniceAbstractTable.name, () => {
     expect(component).toBeTruthy();
   });
 
-  it('should save pagination to local storage', async () => {
+  it('should save pagination to local storage', () => {
     const spy = jest.spyOn(component['_storage'], 'setItem');
 
-    component['_pagination']!.paginationChange.emit({ size: 50, page: 0 });
+    component['_pagination']?.paginationChange.emit({ size: 50, page: 0 });
 
     expect(spy).toHaveBeenCalledWith(
       TableStorageKeys.PageSize,
