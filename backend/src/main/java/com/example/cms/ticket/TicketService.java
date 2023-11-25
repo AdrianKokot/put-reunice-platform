@@ -2,12 +2,12 @@ package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.exceptions.PageForbidden;
-import com.example.cms.page.exceptions.PageNotFound;
+import com.example.cms.page.exceptions.PageForbiddenException;
+import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
-import com.example.cms.ticket.exceptions.TicketNotFound;
+import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +29,16 @@ public class TicketService {
     private final TicketUserStatusRepository ticketUserStatusRepository;
 
     public void addResponse(UUID ticketId, Response response) {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
 
         ticket.addResponse(response);
         ticketRepository.save(ticket);
     }
 
     public UUID createTicket(String requesterEmail, String title, String description, Long pageId) {
-        com.example.cms.page.Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        com.example.cms.page.Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
+            throw new PageForbiddenException();
         }
 
         Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));

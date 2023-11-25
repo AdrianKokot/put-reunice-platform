@@ -33,8 +33,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     distinctUntilChanged(),
     switchMap((search) =>
       this._service
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        // @ts-expect-error I don't know how to create types to make typescript recognize that this is a valid call
         .getAll({ [this.searchKey]: search, size: 250 })
         .pipe(
           map(({ items }) => items),

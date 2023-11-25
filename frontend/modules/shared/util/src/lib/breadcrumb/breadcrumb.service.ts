@@ -26,7 +26,7 @@ export class BreadcrumbService {
         route = route.firstChild;
 
         if (route.snapshot.url.toString() !== '')
-          currentUrl += '/' + route.snapshot.url.toString();
+          currentUrl += `/${route.snapshot.url.toString()}`;
 
         const title = route.snapshot.title;
         if (title && title !== breadcrumbs.at(-1)?.title) {

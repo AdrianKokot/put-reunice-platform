@@ -23,7 +23,7 @@ public abstract class BaseFullTextSearchService {
         return health;
     }
 
-    public BaseFullTextSearchService(ApplicationConfigurationProvider applicationConfigurationProvider) {
+    protected BaseFullTextSearchService(ApplicationConfigurationProvider applicationConfigurationProvider) {
         this.applicationConfigurationProvider = applicationConfigurationProvider;
         this.client = getClient();
     }

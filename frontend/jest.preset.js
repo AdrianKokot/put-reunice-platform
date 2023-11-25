@@ -11,7 +11,7 @@ module.exports = {
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
-  extensionsToTreatAsEsm: [`.ts`],
+  extensionsToTreatAsEsm: ['.ts'],
   transform: {
     '^(?!.*(taiga-ui-addon-editor-extensions)).*(ts|mjs|js|html)$': [
       'jest-preset-angular',

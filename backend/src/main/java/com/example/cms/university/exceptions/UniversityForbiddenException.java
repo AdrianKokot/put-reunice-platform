@@ -2,8 +2,8 @@ package com.example.cms.university.exceptions;
 
 import com.example.cms.validation.exceptions.ForbiddenException;
 
-public class UniversityForbidden extends ForbiddenException {
-    public UniversityForbidden() {
+public class UniversityForbiddenException extends ForbiddenException {
+    public UniversityForbiddenException() {
         super("ERRORS.UNIVERSITY.403");
     }
 }
