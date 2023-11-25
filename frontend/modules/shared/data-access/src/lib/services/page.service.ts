@@ -16,7 +16,7 @@ export class PageService extends AbstractApiService<Page, Page, PageForm> {
   }
 
   getMainPages(): Observable<Page[]> {
-    return this._http.get<Page[]>(this._resourceUrl + '/main?sort=title');
+    return this._http.get<Page[]>(`${this._resourceUrl}/main?sort=title`);
   }
 
   override update(

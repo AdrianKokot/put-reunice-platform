@@ -53,7 +53,7 @@ export class AuthService {
   changePassword(data: { newPassword: string; oldPassword: string }) {
     const { id } = this._userSnapshot ?? throwError('User not logged in');
 
-    return this._http.patch<void>(`${this._resourceUrl}/${id}`, data);
+    return this._http.patch(`${this._resourceUrl}/${id}`, data);
   }
 
   update(data: Pick<User, 'firstName' | 'lastName' | 'email' | 'phoneNumber'>) {
