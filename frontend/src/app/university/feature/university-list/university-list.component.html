@@ -1,21 +1,47 @@
-<h2 class="tui-text_h2 tui-space_top-14">
+<h2 class="tui-text_h2 tui-space_top-14 text-center">
   {{ 'UNIVERSITIES_WE_WORK_WITH' | translate }}
 </h2>
 
-<div class="tui-row">
-  <div
-    class="tui-col_md-4"
+<div class="universities-grid tui-space_bottom-6">
+  <a
     *ngFor="let page of universities$ | async; else: loading; empty: blank"
+    tuiIsland
+    [routerLink]="[page.university.id, 'page', page.id]"
   >
-    <a tuiIsland [routerLink]="[page.university.id, 'page', page.id]">
-      <h3 class="tui-island__title">{{ page.title }}</h3>
-    </a>
-  </div>
+    <figure class="tui-island__figure">
+      <!--      TODO: Add images to university and use it here-->
+      <img
+        height="180"
+        width="350"
+        [ngSrc]="'https://api.lorem.space/image/crm?w=550&h=150&i=' + page.id"
+        [alt]="page.university.name + ' image'"
+      />
+    </figure>
+
+    <h3 class="tui-island__title tui-space_bottom-1">{{ page.title }}</h3>
+    <p class="tui-island__paragraph">
+      <tui-line-clamp
+        [content]="page.description"
+        [linesLimit]="2"
+      ></tui-line-clamp>
+    </p>
+    <p class="tui-island__category">{{ page.university.address }}</p>
+  </a>
 </div>
+
 <ng-template #loading>
-  <!--  TODO Add some skeleton after making the list look nice -->
-  Loading....
-  <tui-loader></tui-loader>
+  <tui-island *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="">
+    <figure class="tui-island__figure tui-skeleton"></figure>
+    <h3 class="tui-island__title tui-space_bottom-1 tui-skeleton">
+      placeholder text
+    </h3>
+    <p class="tui-island__paragraph tui-skeleton">placeholder text</p>
+    <p class="tui-island__category tui-skeleton">placeholder text</p>
+  </tui-island>
 </ng-template>
 
-<ng-template #blank> No items to show </ng-template>
+<ng-template #blank>
+  <p class="text-center no-universities tui-text_body-m">
+    {{ 'NO_UNIVERSITIES' | translate }}
+  </p>
+</ng-template>

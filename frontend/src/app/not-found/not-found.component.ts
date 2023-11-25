@@ -16,7 +16,6 @@ import { TuiButtonModule } from '@taiga-ui/core';
     TuiButtonModule,
   ],
   templateUrl: './not-found.component.html',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotFoundComponent {}
