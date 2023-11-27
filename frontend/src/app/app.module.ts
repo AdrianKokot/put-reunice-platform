@@ -70,7 +70,7 @@ import {
   ],
   providers: [
     tuiButtonOptionsProvider({ size: 'm' }),
-    tuiLanguageSwitcher(async (language: TuiLanguageName): Promise<unknown> => {
+    tuiLanguageSwitcher((language: TuiLanguageName): Promise<unknown> => {
       switch (language) {
         case 'polish':
           return import('@taiga-ui/i18n/languages/polish');

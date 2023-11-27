@@ -77,7 +77,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
       throw new Error(
-        ReuniceAbstractTable.name + ': missing required content child.',
+        `${ReuniceAbstractTable.name}: missing required content child.`,
       );
     }
 
@@ -111,9 +111,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
             ApiSort<T> &
             ApiParams => ({
             sort: (typeof sort === 'string' && sort.length > 0
-              ? (sort as keyof T).toString() +
-                ',' +
-                (direction === 1 ? 'asc' : 'desc')
+              ? `${(sort as keyof T).toString()},${
+                  direction === 1 ? 'asc' : 'desc'
+                }`
               : undefined) as `${keyof T & string},${'asc' | 'desc'}`,
             page,
             size,

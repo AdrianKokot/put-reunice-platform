@@ -2,14 +2,14 @@ package com.example.cms.template;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.security.SecurityService;
-import com.example.cms.template.exceptions.TemplateNotFound;
+import com.example.cms.template.exceptions.TemplateNotFoundException;
 import com.example.cms.template.projections.TemplateDtoDetailed;
 import com.example.cms.template.projections.TemplateDtoFormCreate;
 import com.example.cms.template.projections.TemplateDtoFormUpdate;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
-import com.example.cms.university.exceptions.UniversityForbidden;
-import com.example.cms.university.exceptions.UniversityNotFound;
+import com.example.cms.university.exceptions.UniversityForbiddenException;
+import com.example.cms.university.exceptions.UniversityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,7 +39,7 @@ public class TemplateService {
 
     @Secured("ROLE_USER")
     public TemplateDtoDetailed get(Long id) {
-        return templateRepository.findById(id).map(TemplateDtoDetailed::of).orElseThrow(TemplateNotFound::new);
+        return templateRepository.findById(id).map(TemplateDtoDetailed::of).orElseThrow(TemplateNotFoundException::new);
     }
 
     @Secured("ROLE_USER")
@@ -93,11 +93,11 @@ public class TemplateService {
     @Secured("ROLE_MODERATOR")
     @Transactional
     public TemplateDtoDetailed addUniversity(Long templateID, Long universityID) {
-        Template template = templateRepository.findById(templateID).orElseThrow(TemplateNotFound::new);
-        University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFound::new);
+        Template template = templateRepository.findById(templateID).orElseThrow(TemplateNotFoundException::new);
+        University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFoundException::new);
 
         if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbidden();
+            throw new UniversityForbiddenException();
         }
 
         template.getUniversities().add(university);
@@ -107,11 +107,11 @@ public class TemplateService {
     @Secured("ROLE_MODERATOR")
     @Transactional
     public TemplateDtoDetailed removeUniversity(Long templateID, Long universityID) {
-        Template template = templateRepository.findById(templateID).orElseThrow(TemplateNotFound::new);
-        University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFound::new);
+        Template template = templateRepository.findById(templateID).orElseThrow(TemplateNotFoundException::new);
+        University university = universityRepository.findById(universityID).orElseThrow(UniversityNotFoundException::new);
 
         if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbidden();
+            throw new UniversityForbiddenException();
         }
 
         template.getUniversities().remove(university);
@@ -120,7 +120,7 @@ public class TemplateService {
 
     @Secured("ROLE_ADMIN")
     public void modifyNameField(Long id, String name) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
+        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
 
         template.setName(name);
         templateRepository.save(template);
@@ -128,7 +128,7 @@ public class TemplateService {
 
     @Secured("ROLE_ADMIN")
     public void modifyContentField(Long id, String content) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
+        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
 
         template.setContent(content);
         templateRepository.save(template);
@@ -136,13 +136,13 @@ public class TemplateService {
 
     @Secured("ROLE_ADMIN")
     public void delete(Long id) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
+        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
         templateRepository.delete(template);
     }
 
     @Secured("ROLE_MODERATOR")
     public void update(long id, TemplateDtoFormUpdate form) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFound::new);
+        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
 
         form.updateTemplate(template);
         attachUniversities(template, form.getUniversities());

@@ -58,7 +58,9 @@ export class UniversityShellComponent implements OnDestroy {
 
   public readonly pages$ = this._universityId$.pipe(
     switchMap((id) =>
-      this._pageService.getUniversityHierarchy(+id).pipe(startWith(null)),
+      this._pageService
+        .getUniversityHierarchy(Number(id))
+        .pipe(startWith(null)),
     ),
     map((pages) => {
       const addPageToMap = (page: Page, parentId: Page['id'] | null = null) => {
@@ -97,7 +99,7 @@ export class UniversityShellComponent implements OnDestroy {
     map(({ pageId }) => {
       const breadcrumbs: Array<Pick<Page, 'id' | 'title'>> = [];
 
-      let currentId: number | null = +pageId;
+      let currentId: number | null = Number(pageId);
       while (currentId) {
         const page = this._pagesMap.get(currentId);
         if (!page) {

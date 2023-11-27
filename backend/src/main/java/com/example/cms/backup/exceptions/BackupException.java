@@ -7,3 +7,4 @@ public class BackupException extends BadRequestException {
         super("ERRORS.BACKUP.400");
     }
 }
+

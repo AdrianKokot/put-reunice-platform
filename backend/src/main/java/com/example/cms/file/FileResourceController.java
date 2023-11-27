@@ -2,7 +2,7 @@ package com.example.cms.file;
 
 import com.example.cms.file.projections.FileDtoSimple;
 import com.example.cms.security.SecurityService;
-import com.example.cms.user.exceptions.UserNotFound;
+import com.example.cms.user.exceptions.UserNotFoundException;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -79,7 +79,7 @@ public class FileResourceController {
     public ResponseEntity<List<String>> uploadFiles(
             @RequestParam("pageId") Long pageId,
             @RequestParam("files") List<MultipartFile> multipartFiles) throws IOException {
-        Long userId = securityService.getPrincipal().orElseThrow(UserNotFound::new).getId();
+        Long userId = securityService.getPrincipal().orElseThrow(UserNotFoundException::new).getId();
 
         List<String> filenames = new ArrayList<>();
         for (MultipartFile file : multipartFiles) {

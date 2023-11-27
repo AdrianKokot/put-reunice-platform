@@ -1,19 +1,15 @@
 package com.example.cms.file;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.file.exceptions.FileNotFound;
-import com.example.cms.file.projections.FileDtoSimple;
+import com.example.cms.file.exceptions.FileNotFoundException;
 import com.example.cms.page.Page;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.PageRoleSpecification;
-import com.example.cms.page.exceptions.PageForbidden;
-import com.example.cms.page.exceptions.PageNotFound;
-import com.example.cms.security.LoggedUser;
-import com.example.cms.security.Role;
+import com.example.cms.page.exceptions.PageForbiddenException;
+import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.SecurityService;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.exceptions.UserNotFound;
+import com.example.cms.user.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,10 +34,10 @@ public class FileResourceService {
     private final SecurityService securityService;
 
     public FileResource get(Long fileId) {
-        FileResource fileResource = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
+        FileResource fileResource = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
         Page page = fileResource.getPage();
         if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
+            throw new PageForbiddenException();
         }
 
         return fileResource;
@@ -51,12 +47,12 @@ public class FileResourceService {
     @Transactional
     public void uploadFile(Long pageId, Long userId, MultipartFile multipartFile) throws IOException {
 
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
+            throw new PageForbiddenException();
         }
 
-        User user = userRepository.findById(userId).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         deleteFileIfExists(page, multipartFile);
 
@@ -88,9 +84,9 @@ public class FileResourceService {
     }
 
     public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
         if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
+            throw new PageForbiddenException();
         }
 
         return this.getAll(pageable, new HashMap<>(filterVars) {{
@@ -101,10 +97,10 @@ public class FileResourceService {
     @Transactional
     @Secured("ROLE_USER")
     public void deleteFile(Long fileId) {
-        FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFound::new);
+        FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
 
         if (securityService.isForbiddenPage(file.getPage())) {
-            throw new PageForbidden();
+            throw new PageForbiddenException();
         }
 
         fileRepository.deleteById(fileId);

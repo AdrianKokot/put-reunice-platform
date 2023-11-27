@@ -25,6 +25,9 @@ spring:
       max-request-size: 200MB
   profiles:
     active: secured, postgres
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 ---
 

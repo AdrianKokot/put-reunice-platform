@@ -97,7 +97,7 @@ export class PageEditFormComponent {
       this.form.patchValue({
         ...item,
         universityId: item.university.id,
-        author: item.creator.firstName + ' ' + item.creator.lastName,
+        author: `${item.creator.firstName} ${item.creator.lastName}`,
         creatorId: item.creator.id,
         contactRequestHandlers:
           item.contactRequestHandlers?.map((x) => x.id) ?? [],

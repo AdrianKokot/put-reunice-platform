@@ -1,7 +1,7 @@
 package com.example.cms.backup;
 
 import com.example.cms.backup.exceptions.BackupException;
-import com.example.cms.backup.exceptions.BackupNotFound;
+import com.example.cms.backup.exceptions.BackupNotFoundException;
 import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.search.FullTextSearchService;
@@ -120,7 +120,7 @@ public class BackupService {
         CopyManager copyManager = createCopyManager(getConnection());
 
         List<File> files = Arrays.stream(Optional.ofNullable(restoreMainPath.toFile().listFiles()).orElseThrow(() -> {
-                    throw new BackupNotFound();
+                    throw new BackupNotFoundException();
                 }))
                 .filter(File::isFile)
                 .filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt")))
@@ -199,7 +199,7 @@ public class BackupService {
     @Secured("ROLE_ADMIN")
     public List<BackupDto> getBackups() {
         List<File> files = Arrays.stream(Optional.ofNullable(backupsMainPath.toFile().listFiles()).orElseThrow(() -> {
-            throw new BackupNotFound();
+            throw new BackupNotFoundException();
         })).filter(File::isDirectory).collect(Collectors.toList());
 
         return files.stream()
@@ -224,7 +224,7 @@ public class BackupService {
                     .normalize().toRealPath();
             return new FileSystemResource(path);
         } catch (IOException e) {
-            throw new BackupNotFound();
+            throw new BackupNotFoundException();
         }
     }
 
@@ -238,7 +238,7 @@ public class BackupService {
             Files.delete(path);
             Files.delete(path.getParent());
         } catch (IOException e) {
-            throw new BackupNotFound();
+            throw new BackupNotFoundException();
         }
     }
 
