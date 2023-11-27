@@ -70,7 +70,7 @@ class PageControllerTest {
         user = userRepository.save(user);
         this.userId = user.getId();
 
-        var university = new University(null, null, null, "TEST_UNIVERSITY", "TST_U", null, null, "TEST_UNIVERSITY", false);
+        var university = new University(null, null, null, "TEST_UNIVERSITY", "TST_U", null, null, "TEST_UNIVERSITY", false, "");
         university = universityRepository.save(university);
         this.universityId = university.getId();
 

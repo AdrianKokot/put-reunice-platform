@@ -24,6 +24,7 @@ public class UniversityDtoDetailed {
     private Set<UserDtoSimple> enrolledUsers;
     private String address;
     private String website;
+    private String image;
 
     public static UniversityDtoDetailed of(University university) {
         if (university == null) {
@@ -42,5 +43,6 @@ public class UniversityDtoDetailed {
         mainPage = PageDtoDetailed.of(university.getMainPage());
         address = university.getAddress();
         website = university.getWebsite();
+        image = university.getImage();
     }
 }

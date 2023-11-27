@@ -20,6 +20,8 @@ public class UniversityException extends BadRequestException {
                 return "ERRORS.UNIVERSITY.400.UNIVERSITY_NOT_HIDDEN";
             case ACTIVE_USER_EXISTS:
                 return "ERRORS.UNIVERSITY.400.ACTIVE_USER_EXISTS";
+            case IMAGE_UPLOAD_FAILED:
+                return "ERRORS.UNIVERSITY.400.IMAGE_UPLOAD_FAILED";
             default:
                 return "ERRORS.400";
         }

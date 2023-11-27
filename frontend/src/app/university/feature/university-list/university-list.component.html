@@ -9,11 +9,10 @@
     [routerLink]="[page.university.id, 'page', page.id]"
   >
     <figure class="tui-island__figure">
-      <!--      TODO: Add images to university and use it here-->
       <img
         height="180"
         width="350"
-        [ngSrc]="'https://api.lorem.space/image/crm?w=550&h=150&i=' + page.id"
+        [ngSrc]="page.university.image"
         [alt]="page.university.name + ' image'"
       />
     </figure>
