@@ -59,8 +59,7 @@ public class TicketService {
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {
-        Ticket ticket = this.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
-                .get().collect(Collectors.toList()).get(0);
+        Ticket ticket = this.getTicketById(ticketId);
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         if (loggedUserOptional.isPresent()) {
@@ -116,5 +115,11 @@ public class TicketService {
         }
 
         return ticketRepository.findAll(combinedSpecification, pageable);
+    }
+
+
+    public Ticket getTicketById(UUID id) {
+        return getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
+                .get().collect(Collectors.toList()).get(0);
     }
 }

@@ -56,8 +56,7 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/responses")
     public ResponseEntity<List<Response>> getTicketResponses(Pageable pageable, @PathVariable UUID ticketId) {
-        Ticket ticket = service.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
-                .get().collect(Collectors.toList()).get(0);
+        Ticket ticket = service.getTicketById(ticketId);
         List<Response> responses = ticket.getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -76,9 +75,7 @@ public class TicketController {
     ) {
         service.addResponse(ticketId, responseDtoCreate.getContent());
 
-        Ticket ticket = service.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
-                .get().collect(Collectors.toList()).get(0);
-        List<Response> responses = ticket.getResponses();
+        List<Response> responses = service.getTicketById(ticketId).getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
