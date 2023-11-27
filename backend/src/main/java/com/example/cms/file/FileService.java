@@ -19,27 +19,21 @@ public class FileService {
 
     @Autowired
     FileService(ApplicationConfigurationProvider config) {
-        this.uploadsDirectory = Paths.get(config.getUploadsDirectory().replace("///", ""));
+        this.uploadsDirectory = Paths.get(config.getUploadsDirectory().replace("///", "")).normalize().toAbsolutePath();
     }
 
-    public String store(MultipartFile file, String fileName) throws IOException {
+    public String store(MultipartFile file, String filename) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("Failed to store empty file.");
         }
-        var destinationFile = this.uploadsDirectory
-                .resolve(Paths.get(fileName.replace("..", "")))
-                .normalize().toAbsolutePath();
+
+        var fileDestination = FileUtils.getSecureFilePath(this.uploadsDirectory, filename);
 
         try (var inputStream = file.getInputStream()) {
-            Files.copy(inputStream, destinationFile,
-                    StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(inputStream, fileDestination, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        return "/static/" + destinationFile.getFileName().toString();
-    }
-
-    public String store(MultipartFile file) throws IOException {
-        return store(file, file.getOriginalFilename());
+        return "/static/" + fileDestination.getFileName().toString();
     }
 }
 

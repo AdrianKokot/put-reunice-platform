@@ -2,6 +2,7 @@ package com.example.cms.university;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.file.FileService;
+import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
@@ -146,7 +147,7 @@ public class UniversityService {
         }
 
         try {
-            var filename = university.getId() + "_" + Instant.now().toEpochMilli() + (file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.')));
+            var filename = university.getId() + "_" + Instant.now().toEpochMilli() + "." + FileUtils.getFileExtension(file);
 
             university.setImage(fileService.store(file, filename));
         } catch (Exception e) {

@@ -1,12 +1,16 @@
 package com.example.cms.file;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 
 public class FileUtils {
@@ -14,6 +18,7 @@ public class FileUtils {
     private FileUtils() {
 
     }
+
     public static File newFileFromZipEntry(File destinationDir, ZipEntry zipEntry) throws IOException {
         File destFile = new File(destinationDir, zipEntry.getName());
 
@@ -43,5 +48,32 @@ public class FileUtils {
             ci.next();
         }
         return String.format("%.1f %cB", bytes / 1024.0, ci.current());
+    }
+
+    public static String getFileExtension(MultipartFile file) {
+        return getFileExtension(file.getOriginalFilename());
+    }
+
+    public static String getFileExtension(File file) {
+        return getFileExtension(file.getName());
+    }
+
+    public static String getFileExtension(String filename) {
+        return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(f.lastIndexOf(".") + 1)).orElse("");
+    }
+
+    public static Path getSecureFilePath(Path basePath, String filepath) throws IOException {
+        return getSecureFilePath(basePath.toString(), filepath);
+    }
+
+    public static Path getSecureFilePath(String basePath, String filepath) throws IOException {
+        var normalizedFilePath = Paths.get(filepath).normalize();
+        var file = new File(basePath, normalizedFilePath.toString());
+
+        if (file.toPath().normalize().startsWith(basePath)) {
+            return file.toPath().toAbsolutePath();
+        }
+
+        throw new IOException("File path is outside of the target dir: " + filepath);
     }
 }

@@ -51,10 +51,9 @@ public class BackupService {
     private final PageRepository pageRepository;
 
     private Connection getConnection() {
-        return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource())
-                .orElseThrow(() -> {
-                    throw new BackupException();
-                }));
+        return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource()).orElseThrow(() -> {
+            throw new BackupException();
+        }));
     }
 
     private CopyManager createCopyManager(Connection connection) throws SQLException {
@@ -69,33 +68,32 @@ public class BackupService {
     @Transactional
     @Async
     public void exportBackup(String backupName) throws SQLException, IOException {
-        var securedBackupName = secureBackupName(backupName);
-
-        log.info("[BACKUP-EXPORT-JOB][{}] Start exporting backup", securedBackupName);
+        log.info("[BACKUP-EXPORT-JOB][{}] Start exporting backup", backupName);
         Connection connection = getConnection();
         CopyManager copyManager = createCopyManager(connection);
-        Path backupPath = backupsMainPath.resolve(securedBackupName).normalize();
-        Files.createDirectories(backupPath);
+
+        var backupPath = getBackupPath(backupName);
+        Path backupDirectoryPath = backupPath.getParent();
+        Files.createDirectories(backupDirectoryPath);
         Files.createDirectories(restoreMainPath);
 
-        ResultSet tables = connection.getMetaData().getTables(null, "public",
-                "%", new String[]{"TABLE"});
+        ResultSet tables = connection.getMetaData().getTables(null, "public", "%", new String[]{"TABLE"});
         List<File> files = new ArrayList<>();
         while (tables.next()) {
             String tableName = tables.getString("TABLE_NAME");
-            log.info("[BACKUP-EXPORT-JOB][{}] Export table: {}", securedBackupName, tableName);
-            File file = backupPath.resolve(tableName.concat(".txt")).toFile();
+            log.info("[BACKUP-EXPORT-JOB][{}] Export table: {}", backupName, tableName);
+            File file = backupDirectoryPath.resolve(tableName.concat(".txt")).toFile();
             files.add(file);
             writeTableToFile(file, tableName, copyManager);
         }
-        File file = backupPath.resolve(LARGE_OBJECT_TABLE.concat(".txt")).toFile();
+        File file = backupDirectoryPath.resolve(LARGE_OBJECT_TABLE.concat(".txt")).toFile();
         files.add(file);
         writeTableToFile(file, LARGE_OBJECT_TABLE, copyManager);
 
-        log.info("[BACKUP-EXPORT-JOB][{}] Start creating zip archive", securedBackupName);
-        zipService.zipArchive(files, backupPath.resolve(securedBackupName.concat(".zip")));
+        log.info("[BACKUP-EXPORT-JOB][{}] Start creating zip archive", backupName);
+        zipService.zipArchive(files, backupPath);
         FileUtils.deleteFiles(files);
-        log.info("[BACKUP-EXPORT-JOB][{}] Finish job", securedBackupName);
+        log.info("[BACKUP-EXPORT-JOB][{}] Finish job", backupName);
     }
 
     private void writeTableToFile(File file, String table, CopyManager copyManager) throws IOException, SQLException {
@@ -107,28 +105,19 @@ public class BackupService {
     @Secured("ROLE_ADMIN")
     @Transactional
     public void importBackup(String backupName) throws IOException, SQLException {
-        var securedBackupName = secureBackupName(backupName);
-
-        log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", securedBackupName);
-        Path zipPath = restoreMainPath.resolve(securedBackupName.concat(".zip"));
+        log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", backupName);
+        var zipPath = FileUtils.getSecureFilePath(restoreMainPath, backupName.concat(".zip"));
 
         zipService.unzipArchive(zipPath);
         Files.delete(zipPath);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Start importing tables", securedBackupName);
+        log.info("[BACKUP-IMPORT-JOB][{}] Start importing tables", backupName);
 
         CopyManager copyManager = createCopyManager(getConnection());
 
-        List<File> files = Arrays.stream(Optional.ofNullable(restoreMainPath.toFile().listFiles()).orElseThrow(() -> {
-                    throw new BackupNotFoundException();
-                }))
-                .filter(File::isFile)
-                .filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt")))
-                .collect(Collectors.toList());
+        List<File> files = Arrays.stream(Optional.ofNullable(restoreMainPath.toFile().listFiles()).orElseThrow(BackupNotFoundException::new)).filter(File::isFile).filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt"))).collect(Collectors.toList());
 
-        List<String> tableNames = files.stream()
-                .map(file -> file.getName().substring(0, file.getName().lastIndexOf('.')))
-                .collect(Collectors.toList());
+        List<String> tableNames = files.stream().map(FileUtils::getFileExtension).collect(Collectors.toList());
 
         executeQueryOnTables(tableNames, "ALTER TABLE %s DISABLE TRIGGER ALL");
         executeQueryOnTables(tableNames, "DELETE FROM %s");
@@ -138,21 +127,20 @@ public class BackupService {
         }
 
         entityManager.createNativeQuery("DELETE FROM pg_largeobject").executeUpdate();
-        readTableFromFile(restoreMainPath.resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(),
-                LARGE_OBJECT_TABLE, copyManager);
+        readTableFromFile(restoreMainPath.resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(), LARGE_OBJECT_TABLE, copyManager);
 
         executeQueryOnTables(tableNames, "ALTER TABLE %s ENABLE TRIGGER ALL");
 
         Files.delete(restoreMainPath.resolve("pg_largeobject.txt"));
         FileUtils.deleteFiles(files);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", securedBackupName);
+        log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", backupName);
 
         pageSearchService.deleteCollection();
         pageSearchService.createCollection();
         pageRepository.findAll().forEach(pageSearchService::upsert);
 
-        log.info("[BACKUP-IMPORT-JOB][{}] Finish job", securedBackupName);
+        log.info("[BACKUP-IMPORT-JOB][{}] Finish job", backupName);
     }
 
     private void readTableFromFile(String path, String table, CopyManager copyManager) throws IOException, SQLException {
@@ -162,8 +150,7 @@ public class BackupService {
     }
 
     private void executeQueryOnTables(List<String> tableNames, String query) {
-        tableNames.forEach(tableName ->
-                entityManager.createNativeQuery(String.format(query, tableName)).executeUpdate());
+        tableNames.forEach(tableName -> entityManager.createNativeQuery(String.format(query, tableName)).executeUpdate());
     }
 
     @Secured("ROLE_ADMIN")
@@ -202,26 +189,19 @@ public class BackupService {
             throw new BackupNotFoundException();
         })).filter(File::isDirectory).collect(Collectors.toList());
 
-        return files.stream()
-                .filter(file -> {
-                    File[] fileList = Optional.ofNullable(file.listFiles()).orElse(new File[]{});
-                    return fileList.length == 1 &&
-                           fileList[0].getName().substring(fileList[0].getName().lastIndexOf('.')).equals(".zip");
-                })
-                .map(File::getName).map(fileName -> {
-                    File zipFile = backupsMainPath.resolve(fileName).resolve(fileName.concat(".zip")).toFile();
-                    return new BackupDto(fileName, FileUtils.humanReadableByteCountSI(zipFile.length()));
-                })
-                .collect(Collectors.toList());
+        return files.stream().filter(file -> {
+            File[] fileList = Optional.ofNullable(file.listFiles()).orElse(new File[]{});
+            return fileList.length == 1 && fileList[0].getName().substring(fileList[0].getName().lastIndexOf('.')).equals(".zip");
+        }).map(File::getName).map(fileName -> {
+            File zipFile = backupsMainPath.resolve(fileName).resolve(fileName.concat(".zip")).toFile();
+            return new BackupDto(fileName, FileUtils.humanReadableByteCountSI(zipFile.length()));
+        }).collect(Collectors.toList());
     }
 
     @Secured("ROLE_ADMIN")
     public FileSystemResource getBackupFile(String backupName) {
-        var securedBackupName = secureBackupName(backupName);
-
         try {
-            Path path = backupsMainPath.resolve(securedBackupName).resolve(securedBackupName.concat(".zip"))
-                    .normalize().toRealPath();
+            var path = getBackupPath(backupName);
             return new FileSystemResource(path);
         } catch (IOException e) {
             throw new BackupNotFoundException();
@@ -230,11 +210,8 @@ public class BackupService {
 
     @Secured("ROLE_ADMIN")
     public void deleteBackupFile(String backupName) {
-        var securedBackupName = secureBackupName(backupName);
-
         try {
-            Path path = backupsMainPath.resolve(securedBackupName).resolve(securedBackupName.concat(".zip"))
-                    .normalize().toRealPath();
+            var path = getBackupPath(backupName);
             Files.delete(path);
             Files.delete(path.getParent());
         } catch (IOException e) {
@@ -242,7 +219,7 @@ public class BackupService {
         }
     }
 
-    private String secureBackupName(String backupName) {
-      return backupName.replaceAll("\\.", "").replaceAll("/", "");
+    private Path getBackupPath(String backupName) throws IOException {
+        return FileUtils.getSecureFilePath(backupsMainPath, Path.of(backupName).resolve(backupName.concat(".zip")).toString());
     }
 }
