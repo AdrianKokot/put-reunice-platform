@@ -43,7 +43,7 @@ public class CustomApplicationConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("file:" + this.config.getUploadsDirectory());
+                .addResourceLocations("file://" + this.config.getUploadsDirectory());
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/");
     }

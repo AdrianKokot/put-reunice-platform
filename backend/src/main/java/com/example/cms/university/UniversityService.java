@@ -157,6 +157,17 @@ public class UniversityService {
         universityRepository.save(university);
     }
 
+    @Secured("ROLE_ADMIN")
+    public void setUniversityImage(Long id, String image) {
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
+        if (securityService.isForbiddenUniversity(university)) {
+            throw new UniversityForbiddenException();
+        }
+
+        university.setImage(image);
+        universityRepository.save(university);
+    }
+
     @Transactional
     @Secured("ROLE_ADMIN") // TODO: remove UniversityService#enrollUsersToUniversity
     public UniversityDtoDetailed enrollUsersToUniversity(Long universityId, Long userId) {

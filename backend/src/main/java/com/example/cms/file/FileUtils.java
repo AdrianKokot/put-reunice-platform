@@ -1,5 +1,6 @@
 package com.example.cms.file;
 
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -67,13 +68,20 @@ public class FileUtils {
     }
 
     public static Path getSecureFilePath(String basePath, String filepath) throws IOException {
+        if (filepath.chars().filter(ch -> ch == '.').count() > 1) {
+            throw new IOException("File path contains more than one dot: " + filepath);
+        }
+        if (filepath.contains("//") || filepath.contains("\\\\")) {
+            throw new IOException("File path contains more than one slash: " + filepath);
+        }
+
         var normalizedBasePath = Paths.get(basePath).normalize().toAbsolutePath();
         var normalizedFilePath = normalizedBasePath.resolve(filepath).normalize().toAbsolutePath();
-        
+
         if (normalizedFilePath.startsWith(basePath)) {
             return normalizedFilePath;
         }
 
-        throw new IOException("File path is outside of the target dir: " + filepath);
+        throw new IOException("File path is outside of the target dir: " + normalizedFilePath);
     }
 }
