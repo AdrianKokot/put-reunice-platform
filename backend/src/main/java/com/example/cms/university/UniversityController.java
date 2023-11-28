@@ -5,7 +5,6 @@ import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.university.projections.UniversityDtoSimple;
-import com.example.cms.user.User;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,12 +13,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -67,6 +66,14 @@ public class UniversityController {
             @PathVariable long universityId,
             @RequestBody UniversityDtoFormUpdate form) {
         return service.update(universityId, form);
+    }
+
+    @PostMapping("/{universityId}/image")
+    public ResponseEntity<Void> uploadUniversityImage(
+            @PathVariable long universityId,
+            @RequestBody MultipartFile file) {
+        service.uploadUniversityImage(universityId, file);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{universityId}/users/{userId}")

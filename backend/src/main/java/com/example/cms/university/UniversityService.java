@@ -1,6 +1,8 @@
 package com.example.cms.university;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.file.FileService;
+import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
@@ -25,7 +27,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +44,7 @@ public class UniversityService {
     private final PageRepository pageRepository;
     private final TemplateRepository templateRepository;
     private final SecurityService securityService;
+    private final FileService fileService;
 
     public UniversityDtoDetailed getUniversity(Long id) {
         return universityRepository.findById(id).map(university -> {
@@ -130,7 +135,37 @@ public class UniversityService {
         }
 
         form.updateUniversity(university);
+
         return UniversityDtoDetailed.of(universityRepository.save(university));
+    }
+
+    @Secured("ROLE_MODERATOR")
+    public void uploadUniversityImage(Long id, MultipartFile file) {
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
+        if (securityService.isForbiddenUniversity(university)) {
+            throw new UniversityForbiddenException();
+        }
+
+        try {
+            var filename = university.getId() + "_" + Instant.now().toEpochMilli() + "." + FileUtils.getFileExtension(file);
+
+            university.setImage(fileService.store(file, filename));
+        } catch (Exception e) {
+            throw new UniversityException(UniversityExceptionType.IMAGE_UPLOAD_FAILED);
+        }
+
+        universityRepository.save(university);
+    }
+
+    @Secured("ROLE_ADMIN")
+    public void setUniversityImage(Long id, String image) {
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
+        if (securityService.isForbiddenUniversity(university)) {
+            throw new UniversityForbiddenException();
+        }
+
+        university.setImage(image);
+        universityRepository.save(university);
     }
 
     @Transactional

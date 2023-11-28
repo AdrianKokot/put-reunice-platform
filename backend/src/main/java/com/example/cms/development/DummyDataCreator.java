@@ -597,6 +597,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "Piotrowo 3, 60-965 Poznań",
                 "https://www.put.poznan.pl/"
         ));
+        universityService.setUniversityImage(1L, "/static/put_logo.jpg");
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Adam Mickiewicz University in Poznań",
                 "UAM",
@@ -605,6 +606,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "Uniwersytet im. Adama Mickiewicza w Poznaniu, ul. Wieniawskiego 1, 61-712 Poznań",
                 "https://amu.edu.pl/"
         ));
+        universityService.setUniversityImage(2L, "/static/uam_logo.png");
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Poznań University of Medical Sciences",
                 "PUMS",
@@ -613,6 +615,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ul. Rokietnicka 5, 60-806 Poznań",
                 "https://pums.edu.pl/"
         ));
+        universityService.setUniversityImage(3L, "/static/pums_logo.png");
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Poznań University of Economics and Business",
                 "PUEB",
@@ -629,6 +632,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ul. Wojska Polskiego 121, 60-624 Poznań",
                 "https://uap.edu.pl/"
         ));
+        universityService.setUniversityImage(5L, "/static/ufa_logo.png");
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Wroclaw University of Technology",
                 "WUT",
@@ -637,6 +641,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "Wybrzeże Wyspiańskiego 27, 50-370 Wrocław",
                 "https://pwr.edu.pl/"
         ));
+        universityService.setUniversityImage(6L, "/static/wut_logo.jpg");
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Karol Lipiński Academy of Music in Wrocław",
                 "KLAMW",
@@ -653,6 +658,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ul. Morska 81-87, 81-225 Gdynia",
                 "https://www.am.gdynia.pl/"
         ));
+        universityService.setUniversityImage(8L, "/static/gmu_logo.png");
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Chopin University of Music",
                 "CUM",
@@ -669,6 +675,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 "ul. Krakowska 71-79, 71-017 Szczecin",
                 "https://www.us.szc.pl/"
         ));
+        universityService.setUniversityImage(10L, "/static/us_logo.jpg");
 
         universityService.modifyHiddenField(1L, false);
         universityService.modifyHiddenField(2L, false);

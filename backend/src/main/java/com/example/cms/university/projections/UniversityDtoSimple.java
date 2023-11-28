@@ -16,6 +16,8 @@ public class UniversityDtoSimple implements Serializable {
     private String shortName;
     private boolean hidden;
     private String address;
+    private String image;
+    private String description;
 
     public static UniversityDtoSimple of(University university) {
         if (university == null) {
@@ -30,5 +32,7 @@ public class UniversityDtoSimple implements Serializable {
         shortName = university.getShortName();
         hidden = university.isHidden();
         address = university.getAddress();
+        image = university.getImage();
+        description = university.getDescription();
     }
 }

@@ -48,6 +48,8 @@ public class University {
     private String description;
     private boolean hidden;
 
+    private String image;
+
     @Override
     public String toString() {
         return "University{" +
