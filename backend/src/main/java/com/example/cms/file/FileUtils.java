@@ -1,6 +1,5 @@
 package com.example.cms.file;
 
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -75,8 +74,8 @@ public class FileUtils {
             throw new IOException("File path contains more than one slash: " + filepath);
         }
 
-        var normalizedBasePath = Paths.get(basePath).normalize().toAbsolutePath();
-        var normalizedFilePath = normalizedBasePath.resolve(filepath).normalize().toAbsolutePath();
+        var normalizedBasePath = Paths.get(basePath).toAbsolutePath().normalize();
+        var normalizedFilePath = normalizedBasePath.resolve(filepath).toAbsolutePath().normalize();
 
         if (normalizedFilePath.startsWith(basePath)) {
             return normalizedFilePath;

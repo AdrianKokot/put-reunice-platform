@@ -4,7 +4,8 @@ databaseSchemaHandlingOnStartup: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP:create} #
 databaseSchemaCreateType: ${DATABASE_SCHEMA_CREATE_TYPE:populate} #populate|initialize
 typesenseApiKey: ${TYPESENSE_API_KEY:devapikey}
 typesenseHost: ${TYPESENSE_HOST:localhost}
-uploadsDirectory: ${UPLOADS_DIRECTORY:/uploads}
+uploadsDirectory: ${UPLOADS_DIRECTORY:/uploads/}
+backupsDirectory: ${BACKUPS_DIRECTORY:/db-resources/}
 
 server:
   servlet:
@@ -79,10 +80,10 @@ spring:
 springdoc:
   api-docs:
     enabled: true
-    path: /api/api-docs
+    path: /api-docs
   swagger-ui:
     enabled: true
-    path: /api/swagger-ui
+    path: /swagger-ui
 
 spring:
   mail:
