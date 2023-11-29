@@ -7,12 +7,10 @@ import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +50,7 @@ public class BackupService {
     public Path getRestoreMainPath() {
         return this.config.getBackupsDirectory().resolve("restore").toAbsolutePath();
     }
+
     public Path getBackupsMainPath() {
         return this.config.getBackupsDirectory().resolve("backups").toAbsolutePath();
     }

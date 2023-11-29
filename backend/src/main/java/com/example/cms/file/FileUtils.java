@@ -13,12 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 
-public class FileUtils {
-
-    private FileUtils() {
-
-    }
-
+public final class FileUtils {
     public static File newFileFromZipEntry(File destinationDir, ZipEntry zipEntry) throws IOException {
         File destFile = new File(destinationDir, zipEntry.getName());
 
