@@ -57,22 +57,15 @@ public final class FileUtils {
         return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(f.lastIndexOf(".") + 1)).orElse("");
     }
 
-    public static Path getSecureFilePath(Path basePath, String filepath) throws IOException {
-        return getSecureFilePath(basePath.toString(), filepath);
-    }
+    public static Path getSecureFilePath(Path basePath, String rawFilepath) throws IOException {
+        var filepath = rawFilepath.replaceAll("\\.(?=.*\\.)", "")
+                .replaceAll("//", "")
+                .replaceAll("\\\\", "");
 
-    public static Path getSecureFilePath(String basePath, String filepath) throws IOException {
-        if (filepath.chars().filter(ch -> ch == '.').count() > 1) {
-            throw new IOException("File path contains more than one dot: " + filepath);
-        }
-        if (filepath.contains("//") || filepath.contains("\\\\")) {
-            throw new IOException("File path contains more than one slash: " + filepath);
-        }
-
-        var normalizedBasePath = Paths.get(basePath).toAbsolutePath().normalize();
+        var normalizedBasePath = basePath.toAbsolutePath().normalize();
         var normalizedFilePath = normalizedBasePath.resolve(filepath).toAbsolutePath().normalize();
 
-        if (normalizedFilePath.startsWith(basePath)) {
+        if (normalizedFilePath.startsWith(normalizedBasePath)) {
             return normalizedFilePath;
         }
 
