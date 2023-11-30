@@ -1,5 +1,6 @@
 package com.example.cms.ticket;
 
+import com.example.cms.ticket.projections.ResponseDtoCreate;
 import com.example.cms.ticket.projections.TicketDto;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.validation.FilterPathVariableValidator;
@@ -55,9 +56,26 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/responses")
     public ResponseEntity<List<Response>> getTicketResponses(Pageable pageable, @PathVariable UUID ticketId) {
-        Ticket ticket = service.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
-                .get().collect(Collectors.toList()).get(0);
+        Ticket ticket = service.getTicketById(ticketId);
         List<Response> responses = ticket.getResponses();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
+
+        return new ResponseEntity<>(
+                responses,
+                httpHeaders,
+                HttpStatus.OK);
+    }
+
+    @PostMapping("/{ticketId}/responses")
+    public ResponseEntity<List<Response>> addResponse(
+            @PathVariable UUID ticketId,
+            @RequestBody ResponseDtoCreate responseDtoCreate
+    ) {
+        service.addResponse(ticketId, responseDtoCreate.getContent());
+
+        List<Response> responses = service.getTicketById(ticketId).getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
