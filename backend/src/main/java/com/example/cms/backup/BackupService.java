@@ -2,11 +2,11 @@ package com.example.cms.backup;
 
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.backup.exceptions.BackupNotFoundException;
+import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.copy.CopyManager;
@@ -39,21 +39,24 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class BackupService {
-    @Getter
-    private final Path restoreMainPath = Path.of("./db-resources/restore/");
-    @Getter
-    private final Path backupsMainPath = Path.of("./db-resources/backups/");
     private static final String LARGE_OBJECT_TABLE = "pg_largeobject";
+    private final ApplicationConfigurationProvider config;
     private final JdbcTemplate jdbcTemplate;
     private final EntityManager entityManager;
     private final ZipService zipService;
     private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> pageSearchService;
     private final PageRepository pageRepository;
 
+    public Path getRestoreMainPath() {
+        return this.config.getBackupsDirectory().resolve("restore").toAbsolutePath();
+    }
+
+    public Path getBackupsMainPath() {
+        return this.config.getBackupsDirectory().resolve("backups").toAbsolutePath();
+    }
+
     private Connection getConnection() {
-        return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource()).orElseThrow(() -> {
-            throw new BackupException();
-        }));
+        return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource()).orElseThrow(BackupException::new));
     }
 
     private CopyManager createCopyManager(Connection connection) throws SQLException {
@@ -75,7 +78,7 @@ public class BackupService {
         var backupPath = getBackupPath(backupName);
         Path backupDirectoryPath = backupPath.getParent();
         Files.createDirectories(backupDirectoryPath);
-        Files.createDirectories(restoreMainPath);
+        Files.createDirectories(getRestoreMainPath());
 
         ResultSet tables = connection.getMetaData().getTables(null, "public", "%", new String[]{"TABLE"});
         List<File> files = new ArrayList<>();
@@ -106,7 +109,7 @@ public class BackupService {
     @Transactional
     public void importBackup(String backupName) throws IOException, SQLException {
         log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", backupName);
-        var zipPath = FileUtils.getSecureFilePath(restoreMainPath, backupName.concat(".zip"));
+        var zipPath = FileUtils.getSecureFilePath(getRestoreMainPath(), backupName.concat(".zip"));
 
         zipService.unzipArchive(zipPath);
         Files.delete(zipPath);
@@ -115,7 +118,7 @@ public class BackupService {
 
         CopyManager copyManager = createCopyManager(getConnection());
 
-        List<File> files = Arrays.stream(Optional.ofNullable(restoreMainPath.toFile().listFiles()).orElseThrow(BackupNotFoundException::new)).filter(File::isFile).filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt"))).collect(Collectors.toList());
+        List<File> files = Arrays.stream(Optional.ofNullable(getRestoreMainPath().toFile().listFiles()).orElseThrow(BackupNotFoundException::new)).filter(File::isFile).filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt"))).collect(Collectors.toList());
 
         List<String> tableNames = files.stream().map(FileUtils::getFileExtension).collect(Collectors.toList());
 
@@ -127,11 +130,11 @@ public class BackupService {
         }
 
         entityManager.createNativeQuery("DELETE FROM pg_largeobject").executeUpdate();
-        readTableFromFile(restoreMainPath.resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(), LARGE_OBJECT_TABLE, copyManager);
+        readTableFromFile(getRestoreMainPath().resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(), LARGE_OBJECT_TABLE, copyManager);
 
         executeQueryOnTables(tableNames, "ALTER TABLE %s ENABLE TRIGGER ALL");
 
-        Files.delete(restoreMainPath.resolve("pg_largeobject.txt"));
+        Files.delete(getRestoreMainPath().resolve("pg_largeobject.txt"));
         FileUtils.deleteFiles(files);
 
         log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", backupName);
@@ -185,15 +188,13 @@ public class BackupService {
 
     @Secured("ROLE_ADMIN")
     public List<BackupDto> getBackups() {
-        List<File> files = Arrays.stream(Optional.ofNullable(backupsMainPath.toFile().listFiles()).orElseThrow(() -> {
-            throw new BackupNotFoundException();
-        })).filter(File::isDirectory).collect(Collectors.toList());
+        List<File> files = Arrays.stream(Optional.ofNullable(getBackupsMainPath().toFile().listFiles()).orElseThrow(BackupNotFoundException::new)).filter(File::isDirectory).collect(Collectors.toList());
 
         return files.stream().filter(file -> {
             File[] fileList = Optional.ofNullable(file.listFiles()).orElse(new File[]{});
             return fileList.length == 1 && fileList[0].getName().substring(fileList[0].getName().lastIndexOf('.')).equals(".zip");
         }).map(File::getName).map(fileName -> {
-            File zipFile = backupsMainPath.resolve(fileName).resolve(fileName.concat(".zip")).toFile();
+            File zipFile = getBackupsMainPath().resolve(fileName).resolve(fileName.concat(".zip")).toFile();
             return new BackupDto(fileName, FileUtils.humanReadableByteCountSI(zipFile.length()));
         }).collect(Collectors.toList());
     }
@@ -221,6 +222,6 @@ public class BackupService {
 
     private Path getBackupPath(String backupName) throws IOException {
         backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
-        return FileUtils.getSecureFilePath(backupsMainPath, backupName + "/" + backupName.concat(".zip"));
+        return FileUtils.getSecureFilePath(getBackupsMainPath(), backupName + "/" + backupName.concat(".zip"));
     }
 }

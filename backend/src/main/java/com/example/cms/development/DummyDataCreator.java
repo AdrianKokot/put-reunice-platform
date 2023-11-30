@@ -3,7 +3,6 @@ package com.example.cms.development;
 import com.example.cms.backup.BackupService;
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
-import com.example.cms.keywords.KeyWordsService;
 import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.security.Role;
@@ -29,9 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.SQLException;
 import java.util.*;
 
 @Slf4j
@@ -49,7 +46,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final UniversityService universityService;
     private final TemplateService templateService;
     private final BackupService backupService;
-    private final KeyWordsService keyWordsService;
     private final TicketService ticketService;
 
     @Autowired
@@ -81,8 +77,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
             } else {
                 log.info("** Using encountered database schema.");
             }
-        } catch (IOException e) {
-            throw new BackupException();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             SecurityContextHolder.clearContext();
         }
@@ -96,9 +92,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
      * @param databaseSchemaCreateType type of database schema create to perform on application startup if a backup is not available
      */
     private void tryToRestoreDatabase(DatabaseSchemaCreateType databaseSchemaCreateType) {
-        Arrays.stream(Optional.ofNullable(backupService.getRestoreMainPath().toFile().listFiles()).orElseThrow(() -> {
-                    throw new BackupException();
-                }))
+        Arrays.stream(Optional.ofNullable(backupService.getRestoreMainPath().toFile().listFiles()).orElseThrow(BackupException::new))
                 .filter(File::isFile)
                 .map(File::getName)
                 .filter(fileName -> fileName.substring(fileName.lastIndexOf('.')).equals(".zip"))
@@ -107,8 +101,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 .ifPresentOrElse(backupName -> {
                     try {
                         backupService.importBackup(backupName);
-                    } catch (IOException | SQLException e) {
-                        throw new BackupException();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                     log.info(String.format("** Imported %s backup.", backupName));
                 }, () -> {

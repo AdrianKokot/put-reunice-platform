@@ -1,6 +1,5 @@
 package com.example.cms.file;
 
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -14,12 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 
-public class FileUtils {
-
-    private FileUtils() {
-
-    }
-
+public final class FileUtils {
     public static File newFileFromZipEntry(File destinationDir, ZipEntry zipEntry) throws IOException {
         File destFile = new File(destinationDir, zipEntry.getName());
 
@@ -63,22 +57,15 @@ public class FileUtils {
         return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(f.lastIndexOf(".") + 1)).orElse("");
     }
 
-    public static Path getSecureFilePath(Path basePath, String filepath) throws IOException {
-        return getSecureFilePath(basePath.toString(), filepath);
-    }
+    public static Path getSecureFilePath(Path basePath, String rawFilepath) throws IOException {
+        var filepath = rawFilepath.replaceAll("\\.(?=.*\\.)", "")
+                .replaceAll("//", "")
+                .replaceAll("\\\\", "");
 
-    public static Path getSecureFilePath(String basePath, String filepath) throws IOException {
-        if (filepath.chars().filter(ch -> ch == '.').count() > 1) {
-            throw new IOException("File path contains more than one dot: " + filepath);
-        }
-        if (filepath.contains("//") || filepath.contains("\\\\")) {
-            throw new IOException("File path contains more than one slash: " + filepath);
-        }
+        var normalizedBasePath = basePath.toAbsolutePath().normalize();
+        var normalizedFilePath = normalizedBasePath.resolve(filepath).toAbsolutePath().normalize();
 
-        var normalizedBasePath = Paths.get(basePath).normalize().toAbsolutePath();
-        var normalizedFilePath = normalizedBasePath.resolve(filepath).normalize().toAbsolutePath();
-
-        if (normalizedFilePath.startsWith(basePath)) {
+        if (normalizedFilePath.startsWith(normalizedBasePath)) {
             return normalizedFilePath;
         }
 
