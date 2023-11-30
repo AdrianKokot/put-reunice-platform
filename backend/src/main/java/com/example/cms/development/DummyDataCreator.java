@@ -1517,15 +1517,15 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         UUID ticketId4 = ticketService.createTicket("requester4@email.com", "Problem to page 4", "This is description to my ticket. I have a problem with page 4", 4L);
         UUID ticketId5 = ticketService.createTicket("requester5@email.com", "Second problem to page 4", "This is description to my ticket. I have a second problem with page 5", 4L);
 
-        ticketService.addResponse(ticketId1, new Response("michal", "message content to ticket 1 from author1"));
-        ticketService.addResponse(ticketId1, new Response("author1", "another message content to ticket 1 from author1"));
-        ticketService.addResponse(ticketId1, new Response("author2", "message content to ticket 1 from author2"));
-        ticketService.addResponse(ticketId2, new Response("author3", "message content to ticket 2 from author3"));
-        ticketService.addResponse(ticketId2, new Response("author4", "message content to ticket 2 from author4"));
-        ticketService.addResponse(ticketId3, new Response("author5", "message content to ticket 3 from author5"));
-        ticketService.addResponse(ticketId3, new Response("author6", "message content to ticket 3 from author6"));
-        ticketService.addResponse(ticketId3, new Response("author5", "another message content to ticket 3 from author5"));
-        ticketService.addResponse(ticketId4, new Response("author1", "message content to ticket 4 from author1"));
-        ticketService.addResponse(ticketId4, new Response("author7", "message content to ticket 4 from author7"));
+        ticketService.addResponse(ticketId1,"message content to ticket 1 from author1");
+        ticketService.addResponse(ticketId1,"another message content to ticket 1 from author1");
+        ticketService.addResponse(ticketId1,"message content to ticket 1 from author2");
+        ticketService.addResponse(ticketId2,"message content to ticket 2 from author3");
+        ticketService.addResponse(ticketId2,"message content to ticket 2 from author4");
+        ticketService.addResponse(ticketId3,"message content to ticket 3 from author5");
+        ticketService.addResponse(ticketId3,"message content to ticket 3 from author6");
+        ticketService.addResponse(ticketId3,"another message content to ticket 3 from author5");
+        ticketService.addResponse(ticketId4,"message content to ticket 4 from author1");
+        ticketService.addResponse(ticketId4,"message content to ticket 4 from author7");
     }
 }

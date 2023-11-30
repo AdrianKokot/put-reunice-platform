@@ -17,8 +17,17 @@ export class TicketService extends AbstractApiService<Ticket> {
     );
   }
 
-  send(response: { id: string; content: string }) {
-    return of(response);
+  send({
+    id,
+    content,
+  }: {
+    id: Ticket['id'];
+    content: TicketResponse['content'];
+  }): Observable<TicketResponse[]> {
+    return this._http.post<TicketResponse[]>(
+      `${this._resourceUrl}/${id}/responses`,
+      { content },
+    );
   }
 
   sendAndResolve(response: { id: string; content: string }) {
