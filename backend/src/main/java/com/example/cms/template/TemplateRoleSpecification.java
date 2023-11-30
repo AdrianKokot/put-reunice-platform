@@ -1,11 +1,10 @@
 package com.example.cms.template;
 
 import com.example.cms.security.Role;
+import java.util.Collection;
+import javax.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
-import java.util.Collection;
 
 @AllArgsConstructor
 public class TemplateRoleSpecification implements Specification<Template> {
@@ -14,7 +13,8 @@ public class TemplateRoleSpecification implements Specification<Template> {
     private Collection<Long> universities;
 
     @Override
-    public Predicate toPredicate(Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(
+            Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if (this.role == null) {
             return criteriaBuilder.disjunction();
         }
@@ -22,8 +22,7 @@ public class TemplateRoleSpecification implements Specification<Template> {
         if (!this.role.equals(Role.ADMIN)) {
             return criteriaBuilder.or(
                     criteriaBuilder.equal(root.get("isAvailableToAll"), true),
-                    root.join("universities", JoinType.LEFT).get("id").in(universities)
-            );
+                    root.join("universities", JoinType.LEFT).get("id").in(universities));
         }
 
         return criteriaBuilder.conjunction();

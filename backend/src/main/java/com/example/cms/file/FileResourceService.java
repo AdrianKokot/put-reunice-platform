@@ -10,6 +10,12 @@ import com.example.cms.security.SecurityService;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
 import com.example.cms.user.exceptions.UserNotFoundException;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,13 +23,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +33,11 @@ public class FileResourceService {
     private final SecurityService securityService;
 
     public FileResource get(Long fileId) {
-        FileResource fileResource = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
+        FileResource fileResource =
+                fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
         Page page = fileResource.getPage();
-        if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
+        if ((page.isHidden() || page.getUniversity().isHidden())
+                && securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
 
@@ -45,7 +46,8 @@ public class FileResourceService {
 
     @Secured("ROLE_USER")
     @Transactional
-    public void uploadFile(Long pageId, Long userId, MultipartFile multipartFile) throws IOException {
+    public void uploadFile(Long pageId, Long userId, MultipartFile multipartFile)
+            throws IOException {
 
         Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
@@ -61,19 +63,25 @@ public class FileResourceService {
         fileRepository.save(fileResource);
     }
 
-    public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Map<String, String> filterVars) {
-        Specification<FileResource> combinedSpecification = Specification.where(FileRoleSpecification.of(securityService.getPrincipal()));
+    public org.springframework.data.domain.Page<FileResource> getAll(
+            Pageable pageable, Map<String, String> filterVars) {
+        Specification<FileResource> combinedSpecification =
+                Specification.where(FileRoleSpecification.of(securityService.getPrincipal()));
 
         if (!filterVars.isEmpty()) {
-            List<FileSpecification> specifications = filterVars.entrySet().stream()
-                    .map(entries -> {
-                        String[] filterBy = entries.getKey().split("_");
+            List<FileSpecification> specifications =
+                    filterVars.entrySet().stream()
+                            .map(
+                                    entries -> {
+                                        String[] filterBy = entries.getKey().split("_");
 
-                        return new FileSpecification(new SearchCriteria(
-                                filterBy[0],
-                                filterBy[filterBy.length - 1],
-                                entries.getValue()));
-                    }).collect(Collectors.toList());
+                                        return new FileSpecification(
+                                                new SearchCriteria(
+                                                        filterBy[0],
+                                                        filterBy[filterBy.length - 1],
+                                                        entries.getValue()));
+                                    })
+                            .collect(Collectors.toList());
 
             for (Specification<FileResource> spec : specifications) {
                 combinedSpecification = combinedSpecification.and(spec);
@@ -83,15 +91,21 @@ public class FileResourceService {
         return fileRepository.findAll(combinedSpecification, pageable);
     }
 
-    public org.springframework.data.domain.Page<FileResource> getAll(Pageable pageable, Long pageId, Map<String, String> filterVars) {
+    public org.springframework.data.domain.Page<FileResource> getAll(
+            Pageable pageable, Long pageId, Map<String, String> filterVars) {
         Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
-        if ((page.isHidden() || page.getUniversity().isHidden()) && securityService.isForbiddenPage(page)) {
+        if ((page.isHidden() || page.getUniversity().isHidden())
+                && securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
 
-        return this.getAll(pageable, new HashMap<>(filterVars) {{
-            put("page_eq", String.valueOf(pageId));
-        }});
+        return this.getAll(
+                pageable,
+                new HashMap<>(filterVars) {
+                    {
+                        put("page_eq", String.valueOf(pageId));
+                    }
+                });
     }
 
     @Transactional
@@ -107,18 +121,22 @@ public class FileResourceService {
     }
 
     protected void deleteFileIfExists(Page page, MultipartFile multipartFile) {
-        Optional<FileResource> optionalFileResource = fileRepository.findFileResourceByFilenameAndPage(multipartFile.getOriginalFilename(), page);
+        Optional<FileResource> optionalFileResource =
+                fileRepository.findFileResourceByFilenameAndPage(
+                        multipartFile.getOriginalFilename(), page);
 
         optionalFileResource.ifPresent(fileRepository::delete);
     }
 
-    private static FileResource prepareFileResource(Page page, User user, MultipartFile multipartFile) throws IOException {
+    private static FileResource prepareFileResource(
+            Page page, User user, MultipartFile multipartFile) throws IOException {
         FileResource fileResource = new FileResource();
         fileResource.setUploadDate(Timestamp.from(Instant.now()));
         fileResource.setUploadedBy(user.getUsername());
         fileResource.setUploadedById(user.getId());
         fileResource.setPage(page);
-        fileResource.setFilename(StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())));
+        fileResource.setFilename(
+                StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())));
         fileResource.setFileSize(multipartFile.getSize());
         fileResource.setFileType(multipartFile.getContentType());
         fileResource.setData(multipartFile.getBytes());

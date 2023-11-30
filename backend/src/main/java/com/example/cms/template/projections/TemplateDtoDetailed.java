@@ -2,12 +2,11 @@ package com.example.cms.template.projections;
 
 import com.example.cms.template.Template;
 import com.example.cms.university.projections.UniversityDtoSimple;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -30,9 +29,10 @@ public class TemplateDtoDetailed {
         id = template.getId();
         name = template.getName();
         content = template.getContent();
-        universities = template.getUniversities().stream()
-                .map(UniversityDtoSimple::of)
-                .collect(Collectors.toSet());
+        universities =
+                template.getUniversities().stream()
+                        .map(UniversityDtoSimple::of)
+                        .collect(Collectors.toSet());
         availableToAllUniversities = template.getIsAvailableToAll();
     }
 }

@@ -8,4 +8,3 @@ public enum UserExceptionType {
     SAME_PASSWORD,
     USER_IS_ENABLED,
 }
-

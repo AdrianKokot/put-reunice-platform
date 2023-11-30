@@ -1,17 +1,15 @@
 package com.example.cms.ticket;
 
-import com.example.cms.page.Page;
 import com.example.cms.security.Role;
-import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 
 @AllArgsConstructor
 public class TicketRoleSpecification implements Specification<Ticket> {
@@ -21,7 +19,8 @@ public class TicketRoleSpecification implements Specification<Ticket> {
     private String email;
 
     @Override
-    public Predicate toPredicate(Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(
+            Root<Ticket> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
         Predicate conjunctionPred = criteriaBuilder.conjunction();
@@ -37,7 +36,9 @@ public class TicketRoleSpecification implements Specification<Ticket> {
                 predicates.add(criteriaBuilder.equal(root.get("requesterEmail"), email));
             }
         }
-        return predicates.isEmpty() ? conjunctionPred :  criteriaBuilder.and(conjunctionPred,
-                criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+        return predicates.isEmpty()
+                ? conjunctionPred
+                : criteriaBuilder.and(
+                        conjunctionPred, criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 }

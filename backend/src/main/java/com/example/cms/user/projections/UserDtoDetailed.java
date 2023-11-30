@@ -3,13 +3,12 @@ package com.example.cms.user.projections;
 import com.example.cms.security.Role;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -44,7 +43,10 @@ public class UserDtoDetailed {
         accountType = user.getAccountType();
         description = user.getDescription();
         enabled = user.isEnabled();
-        enrolledUniversities = user.getEnrolledUniversities().stream().map(UniversityDtoSimple::of).collect(Collectors.toSet());
+        enrolledUniversities =
+                user.getEnrolledUniversities().stream()
+                        .map(UniversityDtoSimple::of)
+                        .collect(Collectors.toSet());
         lastLoginDate = user.getLastLoginDate();
     }
 }

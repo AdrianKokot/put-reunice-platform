@@ -1,18 +1,15 @@
 package com.example.cms.ticketUserStatus;
 
-import com.example.cms.user.User;
 import com.example.cms.ticket.Ticket;
-import lombok.*;
-
-
-import javax.persistence.*;
+import com.example.cms.user.User;
 import java.time.Instant;
+import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Data
 public class TicketUserStatus {
-    @EmbeddedId
-    TicketUserStatusKey id = new TicketUserStatusKey();
+    @EmbeddedId TicketUserStatusKey id = new TicketUserStatusKey();
 
     @ManyToOne
     @MapsId("userId")

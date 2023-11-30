@@ -1,15 +1,14 @@
 package com.example.cms.template;
 
 import com.example.cms.university.University;
-import lombok.*;
-import org.hibernate.Hibernate;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "templates")
@@ -28,12 +27,18 @@ public class Template {
     @NotNull(message = "ERRORS.TEMPLATE.400.CONTENT_EMPTY")
     private String content;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToMany(
+            cascade = {
+                CascadeType.MERGE,
+                CascadeType.PERSIST,
+                CascadeType.DETACH,
+                CascadeType.REFRESH
+            },
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "templates_universities",
             joinColumns = @JoinColumn(name = "template_id"),
-            inverseJoinColumns = @JoinColumn(name = "university_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "university_id"))
     @ToString.Exclude
     private Set<University> universities = new HashSet<>();
 

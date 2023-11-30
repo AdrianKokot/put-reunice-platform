@@ -1,10 +1,9 @@
 package com.example.cms.validation;
 
+import java.util.List;
+import javax.validation.ConstraintViolation;
 import lombok.Data;
 import lombok.Value;
-
-import javax.validation.ConstraintViolation;
-import java.util.List;
 
 @Data
 public class RestErrorBody {

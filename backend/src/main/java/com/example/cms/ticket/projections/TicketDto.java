@@ -1,18 +1,12 @@
 package com.example.cms.ticket.projections;
 
-import com.example.cms.security.Role;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticket.TicketStatus;
-import com.example.cms.university.projections.UniversityDtoSimple;
-import com.example.cms.user.User;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor

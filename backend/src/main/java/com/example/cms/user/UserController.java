@@ -6,20 +6,17 @@ import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.user.projections.UserDtoSimple;
 import com.example.cms.validation.FilterPathVariableValidator;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,12 +37,10 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDtoSimple>> getUsers(
-            Pageable pageable,
-            @RequestParam Map<String, String> vars) {
+            Pageable pageable, @RequestParam Map<String, String> vars) {
 
-        Page<User> responsePage = service.getUsers(
-                pageable,
-                FilterPathVariableValidator.validate(vars, User.class));
+        Page<User> responsePage =
+                service.getUsers(pageable, FilterPathVariableValidator.validate(vars, User.class));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
@@ -68,31 +63,35 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/universities")
-    public UserDtoDetailed updateUserEnrolledUniversities(@PathVariable long userId,
-                                                          @RequestBody List<Long> universitiesId) {
+    public UserDtoDetailed updateUserEnrolledUniversities(
+            @PathVariable long userId, @RequestBody List<Long> universitiesId) {
         return service.updateEnrolledUniversities(userId, universitiesId);
     }
 
     @PatchMapping("/{id}/enabled")
-    ResponseEntity<Void> modifyUserEnabledField(@PathVariable long id, @RequestBody boolean enabled) {
+    ResponseEntity<Void> modifyUserEnabledField(
+            @PathVariable long id, @RequestBody boolean enabled) {
         service.modifyEnabledField(id, enabled);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/password")
-    ResponseEntity<Void> modifyUserPasswordField(@PathVariable long id, @RequestBody Map<String, String> passwordMap) {
+    ResponseEntity<Void> modifyUserPasswordField(
+            @PathVariable long id, @RequestBody Map<String, String> passwordMap) {
         service.modifyPasswordField(id, passwordMap);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/username")
-    ResponseEntity<Void> modifyUserUsernameField(@PathVariable long id, @RequestBody String username) {
+    ResponseEntity<Void> modifyUserUsernameField(
+            @PathVariable long id, @RequestBody String username) {
         service.modifyUsernameField(id, username);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/accountType")
-    ResponseEntity<Void> modifyUserAccountTypeField(@PathVariable long id, @RequestBody Map<String, Role> accountType) {
+    ResponseEntity<Void> modifyUserAccountTypeField(
+            @PathVariable long id, @RequestBody Map<String, Role> accountType) {
         service.modifyAccountTypeField(id, accountType);
         return ResponseEntity.noContent().build();
     }

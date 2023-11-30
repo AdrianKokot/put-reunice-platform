@@ -1,11 +1,10 @@
 package com.example.cms.keywords;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import com.example.cms.keywords.projections.KeyWordsDtoDetailed;
-
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "keyWords")
@@ -33,7 +32,8 @@ public class KeyWordsController {
     }
 
     @PostMapping("/{id}")
-    ResponseEntity<KeyWordsDtoDetailed> updateKeyWord(@PathVariable long id, @RequestBody String word) {
+    ResponseEntity<KeyWordsDtoDetailed> updateKeyWord(
+            @PathVariable long id, @RequestBody String word) {
         service.modifyWordField(id, word);
         return ResponseEntity.noContent().build();
     }

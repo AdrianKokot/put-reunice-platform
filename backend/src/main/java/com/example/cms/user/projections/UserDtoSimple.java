@@ -31,7 +31,7 @@ public class UserDtoSimple {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         enabled = user.isEnabled();
-        accountType= user.getAccountType();
+        accountType = user.getAccountType();
         email = user.getEmail();
     }
 }

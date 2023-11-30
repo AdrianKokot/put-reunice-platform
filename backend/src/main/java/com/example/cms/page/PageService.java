@@ -18,6 +18,8 @@ import com.example.cms.user.UserRepository;
 import com.example.cms.user.exceptions.UserForbiddenException;
 import com.example.cms.user.exceptions.UserNotFoundException;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +27,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,26 +38,37 @@ public class PageService {
     private final SecurityService securityService;
 
     public PageDtoDetailed get(Long id) {
-        return pageRepository.findById(id).map(page -> {
-            if (!isPageVisible(page)) {
-                throw new PageForbiddenException();
-            }
-            if (!isPageVisible(page.getParent())) {
-                page.setParent(null);
-            }
+        return pageRepository
+                .findById(id)
+                .map(
+                        page -> {
+                            if (!isPageVisible(page)) {
+                                throw new PageForbiddenException();
+                            }
+                            if (!isPageVisible(page.getParent())) {
+                                page.setParent(null);
+                            }
 
-            PageDtoDetailed pageDto = PageDtoDetailed.of(page, findVisibleSubpages(PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
+                            PageDtoDetailed pageDto =
+                                    PageDtoDetailed.of(
+                                            page,
+                                            findVisibleSubpages(
+                                                    PageRequest.of(
+                                                            0, Integer.MAX_VALUE, Sort.by("title")),
+                                                    page));
 
-            if (securityService.isForbiddenPage(page)) {
-                pageDto.setContactRequestHandlers(null);
-            }
+                            if (securityService.isForbiddenPage(page)) {
+                                pageDto.setContactRequestHandlers(null);
+                            }
 
-            return pageDto;
-        }).orElseThrow(PageNotFoundException::new);
+                            return pageDto;
+                        })
+                .orElseThrow(PageNotFoundException::new);
     }
 
     @Secured("ROLE_USER")
-    public org.springframework.data.domain.Page<Page> getAllVisible(Pageable pageable, Map<String, String> filterVars) {
+    public org.springframework.data.domain.Page<Page> getAllVisible(
+            Pageable pageable, Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         Role role;
         List<Long> universities;
@@ -75,21 +85,23 @@ public class PageService {
             creator = null;
         }
 
-        Specification<Page> combinedSpecification = Specification.where(
-                new PageRoleSpecification(role,
-                        universities,
-                        creator));
+        Specification<Page> combinedSpecification =
+                Specification.where(new PageRoleSpecification(role, universities, creator));
 
         if (!filterVars.isEmpty()) {
-            List<PageSpecification> specifications = filterVars.entrySet().stream()
-                    .map(entries -> {
-                        String[] filterBy = entries.getKey().split("_");
+            List<PageSpecification> specifications =
+                    filterVars.entrySet().stream()
+                            .map(
+                                    entries -> {
+                                        String[] filterBy = entries.getKey().split("_");
 
-                        return new PageSpecification(new SearchCriteria(
-                                filterBy[0],
-                                filterBy[filterBy.length - 1],
-                                entries.getValue()));
-                    }).collect(Collectors.toList());
+                                        return new PageSpecification(
+                                                new SearchCriteria(
+                                                        filterBy[0],
+                                                        filterBy[filterBy.length - 1],
+                                                        entries.getValue()));
+                                    })
+                            .collect(Collectors.toList());
 
             for (Specification<Page> spec : specifications) {
                 combinedSpecification = combinedSpecification.and(spec);
@@ -109,9 +121,14 @@ public class PageService {
     }
 
     public List<PageDtoSimple> getSubpagesByParentPage(Pageable pageable, Long parentId) {
-        Page parent = Optional.ofNullable(parentId)
-                .map(id -> pageRepository.findById(id).orElseThrow(PageNotFoundException::new))
-                .orElse(null);
+        Page parent =
+                Optional.ofNullable(parentId)
+                        .map(
+                                id ->
+                                        pageRepository
+                                                .findById(id)
+                                                .orElseThrow(PageNotFoundException::new))
+                        .orElse(null);
 
         return findVisibleSubpages(pageable, parent).stream()
                 .map(PageDtoSimple::of)
@@ -125,8 +142,9 @@ public class PageService {
     }
 
     private boolean isPageVisible(Page page) {
-        return page != null && !((page.isHidden() || page.getUniversity().isHidden()) &&
-                                 securityService.isForbiddenPage(page));
+        return page != null
+                && !((page.isHidden() || page.getUniversity().isHidden())
+                        && securityService.isForbiddenPage(page));
     }
 
     private Page save(Page page) {
@@ -146,12 +164,16 @@ public class PageService {
             throw new WrongDataStructureException();
         }
 
-        Page parent = pageRepository.findById(form.getParentId()).orElseThrow(PageNotFoundException::new);
+        Page parent =
+                pageRepository.findById(form.getParentId()).orElseThrow(PageNotFoundException::new);
         if (parent.isHidden() && securityService.isForbiddenPage(parent)) {
             throw new PageForbiddenException();
         }
 
-        User creator = userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
+        User creator =
+                userRepository
+                        .findById(form.getCreatorId())
+                        .orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(creator)) {
             throw new UserForbiddenException();
         }
@@ -179,20 +201,25 @@ public class PageService {
         page.setHidden(form.getHidden());
         page.setContent(Content.of(form.getContent()));
 
-        if(securityService.hasHigherRoleThan(Role.USER)) {
-            page.setCreator(userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new));
+        if (securityService.hasHigherRoleThan(Role.USER)) {
+            page.setCreator(
+                    userRepository
+                            .findById(form.getCreatorId())
+                            .orElseThrow(UserNotFoundException::new));
         }
 
         Set<User> usersToAssign = new HashSet<>();
 
-        form.getContactRequestHandlers().forEach(userId -> {
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                throw new UserNotFoundException(userId);
-            }
+        form.getContactRequestHandlers()
+                .forEach(
+                        userId -> {
+                            User user = userRepository.findById(userId).orElse(null);
+                            if (user == null) {
+                                throw new UserNotFoundException(userId);
+                            }
 
-            usersToAssign.add(user);
-        });
+                            usersToAssign.add(user);
+                        });
 
         page.setHandlers(usersToAssign);
         save(page);
@@ -227,8 +254,8 @@ public class PageService {
             throw new PageForbiddenException();
         }
 
-        User creator = userRepository.findByUsername(username)
-                .orElseThrow(UserNotFoundException::new);
+        User creator =
+                userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(creator)) {
             throw new UserForbiddenException();
         }
@@ -263,7 +290,8 @@ public class PageService {
     }
 
     public PageDtoHierarchy getHierarchy(long universityId) {
-        University university = universityRepository.findById(universityId).orElseThrow(PageNotFoundException::new);
+        University university =
+                universityRepository.findById(universityId).orElseThrow(PageNotFoundException::new);
         return PageDtoHierarchy.of(university.getMainPage(), securityService);
     }
 
@@ -277,14 +305,15 @@ public class PageService {
 
         Set<User> usersToAssign = new HashSet<>();
 
-        userIds.forEach(id -> {
-            User user = userRepository.findById(id).orElse(null);
-            if (user == null) {
-                throw new UserNotFoundException(id);
-            }
+        userIds.forEach(
+                id -> {
+                    User user = userRepository.findById(id).orElse(null);
+                    if (user == null) {
+                        throw new UserNotFoundException(id);
+                    }
 
-            usersToAssign.add(user);
-        });
+                    usersToAssign.add(user);
+                });
 
         page.setHandlers(usersToAssign);
         pageRepository.save(page);

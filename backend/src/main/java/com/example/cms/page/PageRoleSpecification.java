@@ -1,16 +1,15 @@
 package com.example.cms.page;
 
 import com.example.cms.security.Role;
-import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 
 @AllArgsConstructor
 public class PageRoleSpecification implements Specification<Page> {
@@ -20,7 +19,8 @@ public class PageRoleSpecification implements Specification<Page> {
     private Long creator;
 
     @Override
-    public Predicate toPredicate(Root<Page> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(
+            Root<Page> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
         Predicate conjunctionPred = criteriaBuilder.conjunction();
@@ -28,8 +28,7 @@ public class PageRoleSpecification implements Specification<Page> {
         if (this.role == null) {
             return criteriaBuilder.and(
                     criteriaBuilder.equal(root.get("hidden"), false),
-                    criteriaBuilder.equal(root.get("university").get("hidden"), false)
-            );
+                    criteriaBuilder.equal(root.get("university").get("hidden"), false));
         }
 
         if (!this.role.equals(Role.ADMIN)) {
@@ -40,7 +39,9 @@ public class PageRoleSpecification implements Specification<Page> {
             predicates.add(criteriaBuilder.equal(root.get("creator").get("id"), creator));
         }
 
-        return predicates.isEmpty() ? conjunctionPred :  criteriaBuilder.and(conjunctionPred,
-                criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+        return predicates.isEmpty()
+                ? conjunctionPred
+                : criteriaBuilder.and(
+                        conjunctionPred, criteriaBuilder.or(predicates.toArray(new Predicate[0])));
     }
 }

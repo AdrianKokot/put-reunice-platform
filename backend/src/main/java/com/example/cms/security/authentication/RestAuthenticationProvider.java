@@ -25,7 +25,8 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     @Transactional
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         User user = repository.findByUsername(username).orElse(null);
@@ -35,8 +36,8 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
                 throw new DisabledException("ERRORS.LOGIN.401.DISABLED");
             }
             if (passwordEncoder.matches(password, loggedUser.getPassword())) {
-                return new UsernamePasswordAuthenticationToken(new LoggedUser(user), password,
-                        loggedUser.getAuthorities());
+                return new UsernamePasswordAuthenticationToken(
+                        new LoggedUser(user), password, loggedUser.getAuthorities());
             } else {
                 throw new BadCredentialsException("ERRORS.LOGIN.401.WRONG_CREDENTIALS");
             }

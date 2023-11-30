@@ -79,6 +79,8 @@
   "ERRORS.TEMPLATE.404": "Template not found",
   "ERRORS.TICKET.400.REQUESTER_EMAIL_EMPTY": "Requester email cannot be empty",
   "ERRORS.TICKET.404": "Ticket not found",
+  "ERRORS.TICKET.403.NO_ACCESS_RIGHT_TO_CHANGE_TICKET_STATUS": "No access right to change ticket status",
+  "ERRORS.TICKET.400.INVALID_STATUS_CHANGE": "Invalid ticket status change",
   "ERRORS.UNIVERSITY.400.ACTIVE_USER_EXISTS": "Cannot delete university with enrolled users",
   "ERRORS.UNIVERSITY.400.DESCRIPTION_EMPTY": "University description cannot be empty",
   "ERRORS.UNIVERSITY.400.IMAGE_UPLOAD_FAILED": "Image upload failed",

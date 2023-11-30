@@ -1,18 +1,17 @@
 package com.example.cms.file;
 
 import com.example.cms.page.Page;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Objects;
 
 @Entity
 @Table(name = "files")
@@ -52,7 +51,14 @@ public class FileResource {
         if (this == o) return true;
         if (!(o instanceof FileResource)) return false;
         FileResource that = (FileResource) o;
-        return id.equals(that.id) && Objects.equals(filename, that.filename) && Objects.equals(fileType, that.fileType) && Objects.equals(fileSize, that.fileSize) && Arrays.equals(data, that.data) && Objects.equals(uploadDate, that.uploadDate) && Objects.equals(uploadedBy, that.uploadedBy) && page.equals(that.page);
+        return id.equals(that.id)
+                && Objects.equals(filename, that.filename)
+                && Objects.equals(fileType, that.fileType)
+                && Objects.equals(fileSize, that.fileSize)
+                && Arrays.equals(data, that.data)
+                && Objects.equals(uploadDate, that.uploadDate)
+                && Objects.equals(uploadedBy, that.uploadedBy)
+                && page.equals(that.page);
     }
 
     @Override

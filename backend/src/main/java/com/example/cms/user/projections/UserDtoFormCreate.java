@@ -1,11 +1,8 @@
 package com.example.cms.user.projections;
 
 import com.example.cms.security.Role;
-import lombok.Builder;
-import lombok.Value;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
 import java.util.Set;
+import lombok.Value;
 
 @Value
 public class UserDtoFormCreate {

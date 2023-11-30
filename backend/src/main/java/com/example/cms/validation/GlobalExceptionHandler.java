@@ -2,6 +2,11 @@ package com.example.cms.validation;
 
 import com.example.cms.security.LoggedUser;
 import com.example.cms.validation.exceptions.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -28,40 +27,48 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     ResponseEntity<RestErrorBody> handleNotFoundException(NotFoundException ex) {
-        RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.NOT_FOUND, ex);
+        RestErrorBody errorBody =
+                createRestError(request, ex.getMessage(), HttpStatus.NOT_FOUND, ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     ResponseEntity<RestErrorBody> handleUnauthorizedException(UnauthorizedException ex) {
-        RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
+        RestErrorBody errorBody =
+                createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
     }
 
     @ExceptionHandler(ForbiddenException.class)
     ResponseEntity<RestErrorBody> handleForbiddenException(ForbiddenException ex) {
-        RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.FORBIDDEN, ex);
+        RestErrorBody errorBody =
+                createRestError(request, ex.getMessage(), HttpStatus.FORBIDDEN, ex);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorBody);
     }
 
     @ExceptionHandler(BadRequestException.class)
     ResponseEntity<RestErrorBody> handleBadRequestException(BadRequestException ex) {
-        RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.BAD_REQUEST, ex);
+        RestErrorBody errorBody =
+                createRestError(request, ex.getMessage(), HttpStatus.BAD_REQUEST, ex);
 
         if (ex.getField() != null) {
-            errorBody.setFieldViolations(List.of(new RestErrorBody.FieldViolation(ex.getField(), ex.getMessage())));
+            errorBody.setFieldViolations(
+                    List.of(new RestErrorBody.FieldViolation(ex.getField(), ex.getMessage())));
         }
 
         return ResponseEntity.badRequest().body(errorBody);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    ResponseEntity<RestErrorBody> handleConstraintViolationException(ConstraintViolationException ex) {
-        RestErrorBody errorBody = createRestError(request, "Entity validation failed", HttpStatus.BAD_REQUEST, ex);
+    ResponseEntity<RestErrorBody> handleConstraintViolationException(
+            ConstraintViolationException ex) {
+        RestErrorBody errorBody =
+                createRestError(request, "Entity validation failed", HttpStatus.BAD_REQUEST, ex);
 
-        var violations = ex.getConstraintViolations().stream()
-                .map(RestErrorBody.FieldViolation::new)
-                .collect(Collectors.toList());
+        var violations =
+                ex.getConstraintViolations().stream()
+                        .map(RestErrorBody.FieldViolation::new)
+                        .collect(Collectors.toList());
 
         errorBody.setFieldViolations(violations);
         return ResponseEntity.badRequest().body(errorBody);
@@ -73,14 +80,16 @@ public class GlobalExceptionHandler {
             return handleBadRequestException(new BadRequestException(ex.getMessage(), "password"));
         }
 
-        RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
+        RestErrorBody errorBody =
+                createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<RestErrorBody> handleAuthenticationException(AccessDeniedException ex) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof LoggedUser) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+                instanceof LoggedUser) {
             status = HttpStatus.FORBIDDEN;
         }
         RestErrorBody errorBody = createRestError(request, ex.getMessage(), status, ex);
@@ -88,13 +97,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(SessionExpiredException.class)
-    public ResponseEntity<RestErrorBody> handleHttpSessionRequiredException(SessionExpiredException ex) {
-        RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
+    public ResponseEntity<RestErrorBody> handleHttpSessionRequiredException(
+            SessionExpiredException ex) {
+        RestErrorBody errorBody =
+                createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
     }
 
-    public static RestErrorBody createRestError(HttpServletRequest request, String message, HttpStatus status,
-                                                RuntimeException exception) {
+    public static RestErrorBody createRestError(
+            HttpServletRequest request,
+            String message,
+            HttpStatus status,
+            RuntimeException exception) {
         RestErrorBody errorBody = new RestErrorBody(message);
 
         errorBody.setStatus(String.valueOf(status.value()));

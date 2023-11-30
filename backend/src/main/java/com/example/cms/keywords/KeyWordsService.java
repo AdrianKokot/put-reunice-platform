@@ -2,12 +2,11 @@ package com.example.cms.keywords;
 
 import com.example.cms.keywords.projections.KeyWordsDtoDetailed;
 import com.example.cms.validation.exceptions.NotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -15,11 +14,16 @@ public class KeyWordsService {
     private final KeyWordsRepository keyWordsRepository;
 
     public KeyWordsDtoDetailed get(Long id) {
-        return keyWordsRepository.findById(id).map(KeyWordsDtoDetailed::of).orElseThrow(NotFoundException::new);
+        return keyWordsRepository
+                .findById(id)
+                .map(KeyWordsDtoDetailed::of)
+                .orElseThrow(NotFoundException::new);
     }
 
     public List<KeyWordsDtoDetailed> getAll() {
-        return keyWordsRepository.findAll().stream().map(KeyWordsDtoDetailed::of).collect(Collectors.toList());
+        return keyWordsRepository.findAll().stream()
+                .map(KeyWordsDtoDetailed::of)
+                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_ADMIN")
@@ -37,7 +41,6 @@ public class KeyWordsService {
         keyWord.setWord(word);
         keyWordsRepository.save(keyWord);
     }
-
 
     @Secured("ROLE_ADMIN")
     public void delete(Long id) {

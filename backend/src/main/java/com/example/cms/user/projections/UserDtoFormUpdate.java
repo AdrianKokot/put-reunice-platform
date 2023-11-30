@@ -1,9 +1,8 @@
 package com.example.cms.user.projections;
 
 import com.example.cms.security.Role;
-import lombok.Value;
-
 import java.util.Set;
+import lombok.Value;
 
 @Value
 public class UserDtoFormUpdate {

@@ -7,6 +7,18 @@ import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.copy.CopyManager;
@@ -22,19 +34,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -44,7 +43,8 @@ public class BackupService {
     private final JdbcTemplate jdbcTemplate;
     private final EntityManager entityManager;
     private final ZipService zipService;
-    private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> pageSearchService;
+    private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto>
+            pageSearchService;
     private final PageRepository pageRepository;
 
     public Path getRestoreMainPath() {
@@ -56,7 +56,9 @@ public class BackupService {
     }
 
     private Connection getConnection() {
-        return DataSourceUtils.getConnection(Optional.ofNullable(jdbcTemplate.getDataSource()).orElseThrow(BackupException::new));
+        return DataSourceUtils.getConnection(
+                Optional.ofNullable(jdbcTemplate.getDataSource())
+                        .orElseThrow(BackupException::new));
     }
 
     private CopyManager createCopyManager(Connection connection) throws SQLException {
@@ -80,7 +82,8 @@ public class BackupService {
         Files.createDirectories(backupDirectoryPath);
         Files.createDirectories(getRestoreMainPath());
 
-        ResultSet tables = connection.getMetaData().getTables(null, "public", "%", new String[]{"TABLE"});
+        ResultSet tables =
+                connection.getMetaData().getTables(null, "public", "%", new String[] {"TABLE"});
         List<File> files = new ArrayList<>();
         while (tables.next()) {
             String tableName = tables.getString("TABLE_NAME");
@@ -99,7 +102,8 @@ public class BackupService {
         log.info("[BACKUP-EXPORT-JOB][{}] Finish job", backupName);
     }
 
-    private void writeTableToFile(File file, String table, CopyManager copyManager) throws IOException, SQLException {
+    private void writeTableToFile(File file, String table, CopyManager copyManager)
+            throws IOException, SQLException {
         try (var writer = new BufferedWriter(new FileWriter(file))) {
             copyManager.copyOut(String.format("COPY %s TO STDOUT", table), writer);
         }
@@ -118,9 +122,16 @@ public class BackupService {
 
         CopyManager copyManager = createCopyManager(getConnection());
 
-        List<File> files = Arrays.stream(Optional.ofNullable(getRestoreMainPath().toFile().listFiles()).orElseThrow(BackupNotFoundException::new)).filter(File::isFile).filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt"))).collect(Collectors.toList());
+        List<File> files =
+                Arrays.stream(
+                                Optional.ofNullable(getRestoreMainPath().toFile().listFiles())
+                                        .orElseThrow(BackupNotFoundException::new))
+                        .filter(File::isFile)
+                        .filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt")))
+                        .collect(Collectors.toList());
 
-        List<String> tableNames = files.stream().map(FileUtils::getFileExtension).collect(Collectors.toList());
+        List<String> tableNames =
+                files.stream().map(FileUtils::getFileExtension).collect(Collectors.toList());
 
         executeQueryOnTables(tableNames, "ALTER TABLE %s DISABLE TRIGGER ALL");
         executeQueryOnTables(tableNames, "DELETE FROM %s");
@@ -130,7 +141,10 @@ public class BackupService {
         }
 
         entityManager.createNativeQuery("DELETE FROM pg_largeobject").executeUpdate();
-        readTableFromFile(getRestoreMainPath().resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(), LARGE_OBJECT_TABLE, copyManager);
+        readTableFromFile(
+                getRestoreMainPath().resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(),
+                LARGE_OBJECT_TABLE,
+                copyManager);
 
         executeQueryOnTables(tableNames, "ALTER TABLE %s ENABLE TRIGGER ALL");
 
@@ -146,14 +160,19 @@ public class BackupService {
         log.info("[BACKUP-IMPORT-JOB][{}] Finish job", backupName);
     }
 
-    private void readTableFromFile(String path, String table, CopyManager copyManager) throws IOException, SQLException {
+    private void readTableFromFile(String path, String table, CopyManager copyManager)
+            throws IOException, SQLException {
         try (var reader = new BufferedReader(new FileReader(path))) {
             copyManager.copyIn(String.format("COPY %s FROM STDIN", table), reader);
         }
     }
 
     private void executeQueryOnTables(List<String> tableNames, String query) {
-        tableNames.forEach(tableName -> entityManager.createNativeQuery(String.format(query, tableName)).executeUpdate());
+        tableNames.forEach(
+                tableName ->
+                        entityManager
+                                .createNativeQuery(String.format(query, tableName))
+                                .executeUpdate());
     }
 
     @Secured("ROLE_ADMIN")
@@ -165,38 +184,61 @@ public class BackupService {
         Sort sort = pageable.getSortOr(Sort.by("id").descending());
 
         if (sort.isSorted()) {
-            allBackups.sort((o1, o2) -> {
-                int result = 0;
+            allBackups.sort(
+                    (o1, o2) -> {
+                        int result = 0;
 
-                for (Sort.Order order : sort) {
-                    if (order.getProperty().equals("id")) {
-                        result = o1.getId().compareTo(o2.getId());
-                    } else if (order.getProperty().equals("size")) {
-                        result = o1.getSize().compareTo(o2.getSize());
-                    }
+                        for (Sort.Order order : sort) {
+                            if (order.getProperty().equals("id")) {
+                                result = o1.getId().compareTo(o2.getId());
+                            } else if (order.getProperty().equals("size")) {
+                                result = o1.getSize().compareTo(o2.getSize());
+                            }
 
-                    if (order.getDirection().equals(Sort.Direction.DESC)) {
-                        result *= -1;
-                    }
-                }
-                return result;
-            });
+                            if (order.getDirection().equals(Sort.Direction.DESC)) {
+                                result *= -1;
+                            }
+                        }
+                        return result;
+                    });
         }
 
-        return new org.springframework.data.domain.PageImpl<>(allBackups.subList(start, end), pageable, allBackups.size());
+        return new org.springframework.data.domain.PageImpl<>(
+                allBackups.subList(start, end), pageable, allBackups.size());
     }
 
     @Secured("ROLE_ADMIN")
     public List<BackupDto> getBackups() {
-        List<File> files = Arrays.stream(Optional.ofNullable(getBackupsMainPath().toFile().listFiles()).orElseThrow(BackupNotFoundException::new)).filter(File::isDirectory).collect(Collectors.toList());
+        List<File> files =
+                Arrays.stream(
+                                Optional.ofNullable(getBackupsMainPath().toFile().listFiles())
+                                        .orElseThrow(BackupNotFoundException::new))
+                        .filter(File::isDirectory)
+                        .collect(Collectors.toList());
 
-        return files.stream().filter(file -> {
-            File[] fileList = Optional.ofNullable(file.listFiles()).orElse(new File[]{});
-            return fileList.length == 1 && fileList[0].getName().substring(fileList[0].getName().lastIndexOf('.')).equals(".zip");
-        }).map(File::getName).map(fileName -> {
-            File zipFile = getBackupsMainPath().resolve(fileName).resolve(fileName.concat(".zip")).toFile();
-            return new BackupDto(fileName, FileUtils.humanReadableByteCountSI(zipFile.length()));
-        }).collect(Collectors.toList());
+        return files.stream()
+                .filter(
+                        file -> {
+                            File[] fileList =
+                                    Optional.ofNullable(file.listFiles()).orElse(new File[] {});
+                            return fileList.length == 1
+                                    && fileList[0]
+                                            .getName()
+                                            .substring(fileList[0].getName().lastIndexOf('.'))
+                                            .equals(".zip");
+                        })
+                .map(File::getName)
+                .map(
+                        fileName -> {
+                            File zipFile =
+                                    getBackupsMainPath()
+                                            .resolve(fileName)
+                                            .resolve(fileName.concat(".zip"))
+                                            .toFile();
+                            return new BackupDto(
+                                    fileName, FileUtils.humanReadableByteCountSI(zipFile.length()));
+                        })
+                .collect(Collectors.toList());
     }
 
     @Secured("ROLE_ADMIN")
@@ -222,6 +264,7 @@ public class BackupService {
 
     private Path getBackupPath(String backupName) throws IOException {
         backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
-        return FileUtils.getSecureFilePath(getBackupsMainPath(), backupName + "/" + backupName.concat(".zip"));
+        return FileUtils.getSecureFilePath(
+                getBackupsMainPath(), backupName + "/" + backupName.concat(".zip"));
     }
 }
