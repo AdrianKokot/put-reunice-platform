@@ -1,5 +1,7 @@
 package com.example.cms.ticket;
 
+import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
+
 import java.util.List;
 
 public enum TicketStatus {
@@ -15,9 +17,9 @@ public enum TicketStatus {
         this.allowedStatusChanges = List.of(allowedStatusChanges);
     }
 
-    public TicketStatus transition(TicketStatus status) throws Exception {
+    public TicketStatus transition(TicketStatus status) throws InvalidStatusChangeException {
         if (!allowedStatusChanges.contains(status)) {
-            throw new Exception("Illegal state");
+            throw new InvalidStatusChangeException();
         }
 
         return status;

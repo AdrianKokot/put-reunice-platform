@@ -3,7 +3,6 @@ package com.example.cms.ticket;
 import com.example.cms.ticket.projections.ResponseDtoFormCreate;
 import com.example.cms.ticket.projections.TicketDto;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
-import com.example.cms.ticket.projections.TicketDtoFormUpdate;
 import com.example.cms.validation.FilterPathVariableValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -78,19 +77,14 @@ public class TicketController {
 
     @PutMapping("/{ticketId}")
     public ResponseEntity updateTicketStatus(@PathVariable UUID ticketId ,@RequestBody TicketStatus ticketStatusToChangeTo) {
-        try {
-            TicketDtoDetailed ticketDtoDetailed = service.updateTicketStatus(ticketStatusToChangeTo, ticketId);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));
+        TicketDtoDetailed ticketDtoDetailed = service.updateTicketStatus(ticketStatusToChangeTo, ticketId);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));
 
-            return new ResponseEntity<>(
-                    ticketDtoDetailed,
-                    httpHeaders,
-                    HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(
+                ticketDtoDetailed,
+                httpHeaders,
+                HttpStatus.OK);
     }
 
     @PostMapping("/{ticketId}/responses")

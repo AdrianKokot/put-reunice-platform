@@ -7,15 +7,17 @@ import com.example.cms.page.exceptions.PageNotFound;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
-import com.example.cms.ticket.exceptions.InvalidTicketStatusChange;
+import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
 import com.example.cms.ticket.exceptions.TicketNotFound;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
+import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -124,18 +126,15 @@ public class TicketService {
         return ticketRepository.findAll(combinedSpecification, pageable);
     }
 
-    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidTicketStatusChange {
+    @Secured("ROLE_USER")
+    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidStatusChangeException {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 
-        if (userStatusOptional.isPresent()) {
-            try {
-                ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
-            } catch (Exception ex) {
-                throw new InvalidTicketStatusChange();
-            }
+        if (userStatusOptional.isEmpty()) {
+            throw new TicketAccessForbiddenException();
         }
-
+        ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
     }
 }
