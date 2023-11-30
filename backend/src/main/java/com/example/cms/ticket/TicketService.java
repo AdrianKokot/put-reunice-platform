@@ -8,7 +8,6 @@ import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
-import com.example.cms.ticket.exceptions.TicketNotFound;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
@@ -132,7 +131,7 @@ public class TicketService {
 
     @Secured("ROLE_USER")
     public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidStatusChangeException {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 
         if (userStatusOptional.isEmpty()) {
@@ -140,5 +139,10 @@ public class TicketService {
         }
         ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
+    }
+
+    public Ticket getTicketById(UUID id) {
+        return getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
+                .get().collect(Collectors.toList()).get(0);
     }
 }
