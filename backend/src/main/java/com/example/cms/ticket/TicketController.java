@@ -1,5 +1,6 @@
 package com.example.cms.ticket;
 
+import com.example.cms.ticket.projections.ResponseDtoFormCreate;
 import com.example.cms.ticket.projections.ResponseDtoCreate;
 import com.example.cms.ticket.projections.TicketDto;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
@@ -64,6 +65,18 @@ public class TicketController {
 
         return new ResponseEntity<>(
                 responses,
+                httpHeaders,
+                HttpStatus.OK);
+    }
+
+    @PutMapping("/{ticketId}")
+    public ResponseEntity updateTicketStatus(@PathVariable UUID ticketId ,@RequestBody TicketStatus ticketStatusToChangeTo) {
+        TicketDtoDetailed ticketDtoDetailed = service.updateTicketStatus(ticketStatusToChangeTo, ticketId);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));
+
+        return new ResponseEntity<>(
+                ticketDtoDetailed,
                 httpHeaders,
                 HttpStatus.OK);
     }

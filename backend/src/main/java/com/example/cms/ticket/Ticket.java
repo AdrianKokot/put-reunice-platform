@@ -5,9 +5,7 @@ import com.example.cms.ticketUserStatus.TicketUserStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GeneratorType;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +14,7 @@ import java.util.*;
 
 
 @Entity
+@Setter
 @Getter
 @Table(name = "tickets")
 public class Ticket {
@@ -31,11 +30,9 @@ public class Ticket {
         this.responses = new ArrayList<>();
         this.status = TicketStatus.NEW;
     }
-    @Setter
     @ManyToOne
     private Page page;
-    @Setter
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TicketUserStatus> ticketHandlers;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,11 +42,12 @@ public class Ticket {
     private String requesterEmail;
     @CreationTimestamp
     private Instant requestedTime;
+    @UpdateTimestamp
+    private Instant lastUpdateTime;
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
     private String title;
     private String description;
-    @Getter
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Response> responses;
     private String requestedToken;

@@ -7,13 +7,17 @@ import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
+import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
+import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
+import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -28,12 +32,28 @@ public class TicketService {
     private final SecurityService securityService;
     private final TicketUserStatusRepository ticketUserStatusRepository;
 
+    private Optional<TicketUserStatus> getIfLoggedUserIsHandler(Ticket ticket) {
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        return loggedUserOptional.flatMap(loggedUser -> ticket.getTicketHandlers().stream()
+                .filter(item -> item.getUser()
+                        .getId()
+                        .equals(loggedUser.getId()))
+                .findFirst());
+    }
+
     public void addResponse(UUID ticketId, String content) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         String author = loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
 
+        Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
+        if (userStatusOptional.isPresent()) {
+            try {
+                ticket.setStatus(ticket.getStatus().transition(TicketStatus.HANDLED));
+            } catch (Exception ignored) { }
+        }
+  
         ticket.addResponse(new Response(author, content));
         ticketRepository.save(ticket);
     }
@@ -61,19 +81,11 @@ public class TicketService {
     public Ticket getTicketDetailed(UUID ticketId) {
         Ticket ticket = this.getTicketById(ticketId);
 
-        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        if (loggedUserOptional.isPresent()) {
-            Optional<TicketUserStatus> userStatusOptional = ticket.getTicketHandlers().stream()
-                    .filter(item -> item.getUser()
-                            .getId()
-                            .equals(loggedUserOptional.get().getId()))
-                    .findFirst();
-
-            if (userStatusOptional.isPresent()) {
-                TicketUserStatus userStatus = userStatusOptional.get();
-                userStatus.setLastSeenOn(Instant.now());
-                ticketUserStatusRepository.save(userStatus);
-            }
+        Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
+        if (userStatusOptional.isPresent()) {
+            TicketUserStatus userStatus = userStatusOptional.get();
+            userStatus.setLastSeenOn(Instant.now());
+            ticketUserStatusRepository.save(userStatus);
         }
 
         return ticket;
@@ -117,6 +129,17 @@ public class TicketService {
         return ticketRepository.findAll(combinedSpecification, pageable);
     }
 
+    @Secured("ROLE_USER")
+    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidStatusChangeException {
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+        Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
+
+        if (userStatusOptional.isEmpty()) {
+            throw new TicketAccessForbiddenException();
+        }
+        ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
+        return TicketDtoDetailed.of(ticketRepository.save(ticket));
+    }
 
     public Ticket getTicketById(UUID id) {
         return getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
