@@ -5,6 +5,7 @@ export interface Template {
   name: string;
   content: string;
   universities: University[] | null;
+  availableToAllUniversities: boolean;
 }
 
 export interface TemplateCreate extends Omit<Template, 'universities'> {

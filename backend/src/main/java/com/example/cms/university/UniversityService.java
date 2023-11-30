@@ -1,8 +1,9 @@
 package com.example.cms.university;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.file.FileService;
+import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.PageRoleSpecification;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -10,17 +11,15 @@ import com.example.cms.template.Template;
 import com.example.cms.template.TemplateRepository;
 import com.example.cms.university.exceptions.UniversityException;
 import com.example.cms.university.exceptions.UniversityExceptionType;
-import com.example.cms.university.exceptions.UniversityForbidden;
-import com.example.cms.university.exceptions.UniversityNotFound;
+import com.example.cms.university.exceptions.UniversityForbiddenException;
+import com.example.cms.university.exceptions.UniversityNotFoundException;
 import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
-import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.UserSpecification;
-import com.example.cms.user.exceptions.UserForbidden;
-import com.example.cms.user.exceptions.UserNotFound;
+import com.example.cms.user.exceptions.UserForbiddenException;
+import com.example.cms.user.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,15 +44,16 @@ public class UniversityService {
     private final PageRepository pageRepository;
     private final TemplateRepository templateRepository;
     private final SecurityService securityService;
+    private final FileService fileService;
 
     public UniversityDtoDetailed getUniversity(Long id) {
         return universityRepository.findById(id).map(university -> {
             if (!isUniversityVisible(university)) {
-                throw new UniversityForbidden();
+                throw new UniversityForbiddenException();
             }
 
             return UniversityDtoDetailed.of(university);
-        }).orElseThrow(UniversityNotFound::new);
+        }).orElseThrow(UniversityNotFoundException::new);
     }
 
     public Page<University> getUniversities(Pageable pageable, Map<String, String> filterVars) {
@@ -100,18 +102,18 @@ public class UniversityService {
     @Secured("ROLE_ADMIN")
     public UniversityDtoDetailed addNewUniversity(UniversityDtoFormCreate form) {
         if (universityRepository.existsByNameOrShortName(form.getName(), form.getShortName())) {
-            throw new UniversityException(UniversityExceptionType.NAME_TAKEN);
+            throw new UniversityException(UniversityExceptionType.NAME_TAKEN, "name");
         }
 
         User creator = userRepository.findById(form.getCreatorId())
-                .orElseThrow(UserNotFound::new);
+                .orElseThrow(UserNotFoundException::new);
 
         if (creator.getAccountType() != Role.ADMIN) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         if (securityService.isForbiddenUser(creator)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         String content = templateRepository.findByName("UniversityTemplate")
@@ -119,7 +121,7 @@ public class UniversityService {
 
         University newUniversity = form.toUniversity(creator, content);
         if (securityService.isForbiddenUniversity(newUniversity)) {
-            throw new UniversityForbidden();
+            throw new UniversityForbiddenException();
         }
 
         return UniversityDtoDetailed.of(universityRepository.save(newUniversity));
@@ -127,21 +129,51 @@ public class UniversityService {
 
     @Secured("ROLE_MODERATOR")
     public UniversityDtoDetailed update(Long id, UniversityDtoFormUpdate form) {
-        University university = universityRepository.findById(id).orElseThrow(UniversityNotFound::new);
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
         if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbidden();
+            throw new UniversityForbiddenException();
         }
 
         form.updateUniversity(university);
+
         return UniversityDtoDetailed.of(universityRepository.save(university));
+    }
+
+    @Secured("ROLE_MODERATOR")
+    public void uploadUniversityImage(Long id, MultipartFile file) {
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
+        if (securityService.isForbiddenUniversity(university)) {
+            throw new UniversityForbiddenException();
+        }
+
+        try {
+            var filename = university.getId() + "_" + Instant.now().toEpochMilli() + "." + FileUtils.getFileExtension(file);
+
+            university.setImage(fileService.store(file, filename));
+        } catch (Exception e) {
+            throw new UniversityException(UniversityExceptionType.IMAGE_UPLOAD_FAILED);
+        }
+
+        universityRepository.save(university);
+    }
+
+    @Secured("ROLE_ADMIN")
+    public void setUniversityImage(Long id, String image) {
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
+        if (securityService.isForbiddenUniversity(university)) {
+            throw new UniversityForbiddenException();
+        }
+
+        university.setImage(image);
+        universityRepository.save(university);
     }
 
     @Transactional
     @Secured("ROLE_ADMIN") // TODO: remove UniversityService#enrollUsersToUniversity
     public UniversityDtoDetailed enrollUsersToUniversity(Long universityId, Long userId) {
 
-        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFound::new);
-        User user = userRepository.findById(userId).orElseThrow(UserNotFound::new);
+        University university = universityRepository.findById(universityId).orElseThrow(UniversityNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         university.enrollUsers(user);
         University result = universityRepository.save(university);
@@ -150,9 +182,9 @@ public class UniversityService {
 
     @Secured("ROLE_MODERATOR")
     public void modifyHiddenField(Long id, boolean hidden) {
-        University university = universityRepository.findById(id).orElseThrow(UniversityNotFound::new);
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
         if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbidden();
+            throw new UniversityForbiddenException();
         }
 
         university.setHidden(hidden);
@@ -162,9 +194,9 @@ public class UniversityService {
     @Secured("ROLE_ADMIN")
     @Transactional
     public void deleteUniversity(Long id) {
-        University university = universityRepository.findById(id).orElseThrow(UniversityNotFound::new);
+        University university = universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
         if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbidden();
+            throw new UniversityForbiddenException();
         }
 
         validateForDelete(university);

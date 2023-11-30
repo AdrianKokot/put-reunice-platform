@@ -113,6 +113,10 @@ form.form-skeleton [tuiWrapper],
   display: flex;
 }
 
+.d-inline-flex {
+  display: inline-flex;
+}
+
 .d-block {
   display: block;
 }
@@ -131,6 +135,10 @@ form.form-skeleton [tuiWrapper],
 
 .justify-start {
   justify-content: flex-start !important;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .w-full {
@@ -201,4 +209,16 @@ tui-file.tui-file_with-right-icon {
   }
 
   padding-right: 0.5625rem !important;
+}
+
+tui-breadcrumbs {
+  height: auto !important;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+}
+
+@media @tui-desktop-lg-min {
+  .tui-container.tui-container_adaptive {
+    width: 79rem;
+  }
 }

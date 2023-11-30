@@ -2,8 +2,8 @@
 FROM node:18-alpine AS build
 WORKDIR /usr/src/app
 COPY . .
-RUN npm ci
-RUN npm run build
+RUN npm ci && \
+    npm run build
 
 ### Run ###
 FROM nginx:1.17.1-alpine

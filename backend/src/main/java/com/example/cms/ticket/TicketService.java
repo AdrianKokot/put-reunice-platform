@@ -2,14 +2,15 @@ package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.exceptions.PageForbidden;
-import com.example.cms.page.exceptions.PageNotFound;
+import com.example.cms.page.exceptions.PageForbiddenException;
+import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
 import com.example.cms.ticket.exceptions.TicketNotFound;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
+import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
@@ -41,8 +42,11 @@ public class TicketService {
                 .findFirst());
     }
 
-    public void addResponse(UUID ticketId, Response response) {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFound::new);
+    public void addResponse(UUID ticketId, String content) {
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+
+        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        String author = loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
         if (userStatusOptional.isPresent()) {
@@ -50,14 +54,15 @@ public class TicketService {
                 ticket.setStatus(ticket.getStatus().transition(TicketStatus.HANDLED));
             } catch (Exception ignored) { }
         }
-        ticket.addResponse(response);
+  
+        ticket.addResponse(new Response(author, content));
         ticketRepository.save(ticket);
     }
 
     public UUID createTicket(String requesterEmail, String title, String description, Long pageId) {
-        com.example.cms.page.Page page = pageRepository.findById(pageId).orElseThrow(PageNotFound::new);
+        com.example.cms.page.Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
-            throw new PageForbidden();
+            throw new PageForbiddenException();
         }
 
         Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
@@ -75,8 +80,7 @@ public class TicketService {
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {
-        Ticket ticket = this.getTickets(Pageable.ofSize(1), Map.of("id_eq", ticketId.toString()))
-                .get().collect(Collectors.toList()).get(0);
+        Ticket ticket = this.getTicketById(ticketId);
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
         if (userStatusOptional.isPresent()) {

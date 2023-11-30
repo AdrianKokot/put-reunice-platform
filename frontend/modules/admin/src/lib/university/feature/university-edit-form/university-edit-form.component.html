@@ -121,6 +121,27 @@
       ></tui-error>
     </label>
 
+    <label [tuiLabel]="'UNIVERSITY_IMAGE' | translate" class="tui-form__row">
+      <tui-input-files
+        *ngIf="!form.controls.file.value"
+        accept="image/*"
+        formControlName="file"
+      ></tui-input-files>
+
+      <tui-files
+        *ngIf="form.controls.file.valueChanges | async as file"
+        class="tui-space_top-1"
+        style="height: 56px"
+      >
+        <tui-file
+          *tuiItem
+          [file]="file"
+          [showDelete]="true"
+          (removed)="form.controls.file.setValue(null)"
+        ></tui-file>
+      </tui-files>
+    </label>
+
     <div
       class="tui-form__buttons tui-form__buttons_align_end"
       *ngIf="item !== null"

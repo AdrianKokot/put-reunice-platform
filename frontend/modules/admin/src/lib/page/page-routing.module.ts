@@ -4,6 +4,7 @@ import { PageEditFormComponent } from './feature/page-edit-form/page-edit-form.c
 import { PageListComponent } from './feature/page-list/page-list.component';
 import { PageCreateFormComponent } from './feature/page-create-form/page-create-form.component';
 import { PageDetailsComponent } from './feature/page-details/page-details.component';
+import { translatedTitle } from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -11,21 +12,21 @@ const routes: Routes = [
     component: PageListComponent,
   },
   {
-    title: 'New page',
+    title: translatedTitle('NEW_PAGE'),
     path: 'new',
     component: PageCreateFormComponent,
   },
   {
-    title: 'Page details',
+    title: translatedTitle('PAGE_DETAILS'),
     path: ':id',
     children: [
       {
-        title: 'Page details',
+        title: translatedTitle('PAGE_DETAILS'),
         path: '',
         component: PageDetailsComponent,
       },
       {
-        title: 'Edit page',
+        title: translatedTitle('EDIT_PAGE'),
         path: 'edit',
         component: PageEditFormComponent,
       },

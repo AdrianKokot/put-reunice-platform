@@ -4,13 +4,11 @@
   </label>
 
   <label
-    [tuiLabel]="'TEMPLATE_AVAILABLE_FOR_UNIVERSITIES' | translate"
+    [tuiLabel]="'TEMPLATE_AVAILABLE_TO_UNIVERSITIES' | translate"
     class="tui-form__row"
     *reuniceUser="'ADMIN'"
   >
-    <ng-container
-      *ngIf="(item?.universities?.length ?? 0) === 0; else universityTags"
-    >
+    <ng-container *ngIf="item?.availableToAllUniversities; else universityTags">
       {{ 'ALL_UNIVERSITIES' | translate }}
     </ng-container>
     <ng-template #universityTags>
@@ -44,7 +42,7 @@
       type="button"
       appearance="flat-destructive"
       class="tui-form__button"
-      reuniceConfirm
+      [reuniceConfirm]="'TEMPLATE_DELETE_DESCRIPTION' | translate"
       [showLoader]="(deleteHandler.loading$ | async) ?? false"
       (confirm)="deleteHandler.delete(item.id)"
     >

@@ -42,9 +42,21 @@ const routes: Routes = [
     canMatch: [AuthGuard],
   },
   {
+    path: 'tickets/:id',
+    loadChildren: () =>
+      import('./ticket/ticket.module').then((m) => m.TicketModule),
+  },
+  {
     path: '',
     redirectTo: 'universities',
     pathMatch: 'full',
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./not-found/not-found.component').then(
+        (m) => m.NotFoundComponent,
+      ),
   },
 ];
 

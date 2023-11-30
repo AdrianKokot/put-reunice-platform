@@ -2,6 +2,9 @@ db-resources/
 db
 .env
 typesense-data
+uploads/*
+!uploads/*_logo.jpg
+!uploads/*_logo.png
 
 .vscode/
 .idea

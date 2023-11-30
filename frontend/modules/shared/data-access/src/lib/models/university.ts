@@ -11,4 +11,5 @@ export interface University {
   hidden: boolean;
   address: string;
   website: string;
+  image: string;
 }

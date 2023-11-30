@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { PageService } from '@reunice/modules/shared/data-access';
 import { startWith } from 'rxjs';
-import { TuiIslandModule } from '@taiga-ui/kit';
+import { TuiIslandModule, TuiLineClampModule } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 import { TuiLoaderModule } from '@taiga-ui/core';
-import { TuiForModule } from '@taiga-ui/cdk';
+import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -18,10 +18,16 @@ import { TranslateModule } from '@ngx-translate/core';
     TuiLoaderModule,
     TuiForModule,
     TranslateModule,
+    NgOptimizedImage,
+    TuiLetModule,
+    TuiLineClampModule,
   ],
   templateUrl: './university-list.component.html',
+  styleUrls: ['./university-list.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UniversityListComponent {
-  universities$ = inject(PageService).getMainPages().pipe(startWith(null));
+  readonly universities$ = inject(PageService)
+    .getMainPages()
+    .pipe(startWith(null));
 }

@@ -27,19 +27,31 @@ public class PageSpecification extends SearchSpecification implements Specificat
                 return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
+            if (criteria.getKey().equalsIgnoreCase("handlers")) {
+                return criteriaBuilder.equal(root.join("handlers").get("id"), criteria.getValue());
+            }
+
             if (criteria.getKey().equalsIgnoreCase("university")) {
                 return criteriaBuilder.equal(root.get("university").get("id"), criteria.getValue());
-            } else if (criteria.getKey().equalsIgnoreCase("creator")) {
+            }
+
+            if (criteria.getKey().equalsIgnoreCase("creator")) {
                 return criteriaBuilder.equal(root.get("creator").get("id"), criteria.getValue());
-            } else if (root.get(criteria.getKey()).getJavaType() == String.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), criteria.getValue());
 
-            } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
 
-            } else if (root.get(criteria.getKey()).getJavaType() == Long.class) {
+            }
+
+            if (root.get(criteria.getKey()).getJavaType() == Long.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }

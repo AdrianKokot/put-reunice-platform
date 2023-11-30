@@ -5,7 +5,10 @@ import com.example.cms.ticketUserStatus.TicketUserStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UpdateTimest;
+import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Typ
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -36,8 +39,9 @@ public class Ticket {
     private Set<TicketUserStatus> ticketHandlers;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "uuid")
     private UUID id;
-    @NotEmpty(message = "Requester email must not be empty")
+    @NotEmpty(message = "ERRORS.TICKET.400.REQUESTER_EMAIL_EMPTY")
     private String requesterEmail;
     @CreationTimestamp
     private Instant requestedTime;

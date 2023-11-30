@@ -11,7 +11,12 @@ export class FormNotEmptyValuesPipe implements PipeTransform {
     return formGroup.valueChanges.pipe(
       startWith(formGroup.value),
       debounceTime(300),
-      map((formValue) => Object.values(formValue).filter((x) => !!x).length),
+      map(
+        (formValue) =>
+          Object.values(formValue).filter(
+            (x) => x !== null && x !== '' && x !== undefined,
+          ).length,
+      ),
     );
   }
 }

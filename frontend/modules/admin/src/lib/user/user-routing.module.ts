@@ -4,6 +4,7 @@ import { UserListComponent } from './feature/user-list/user-list.component';
 import { UserEditFormComponent } from './feature/user-edit-form/user-edit-form.component';
 import { UserCreateFormComponent } from './feature/user-create-form/user-create-form.component';
 import { UserDetailsComponent } from './feature/user-details/user-details.component';
+import { translatedTitle } from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -11,21 +12,21 @@ const routes: Routes = [
     component: UserListComponent,
   },
   {
-    title: 'Create User',
+    title: translatedTitle('NEW_USER'),
     path: 'new',
     component: UserCreateFormComponent,
   },
   {
-    title: 'User details',
+    title: translatedTitle('USER_DETAILS'),
     path: ':id',
     children: [
       {
-        title: 'User details',
+        title: translatedTitle('USER_DETAILS'),
         path: '',
         component: UserDetailsComponent,
       },
       {
-        title: 'Edit user',
+        title: translatedTitle('EDIT_USER'),
         path: 'edit',
         component: UserEditFormComponent,
       },

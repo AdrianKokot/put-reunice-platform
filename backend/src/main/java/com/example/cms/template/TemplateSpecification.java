@@ -19,7 +19,6 @@ public class TemplateSpecification extends SearchSpecification implements Specif
 
     @Override
     public Predicate toPredicate(Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
@@ -35,9 +34,12 @@ public class TemplateSpecification extends SearchSpecification implements Specif
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == Set.class) {
-                Join<Template, University> universityJoin = root.join("universities");
-                return criteriaBuilder.equal(
-                        universityJoin.get("id"), parseInt(criteria.getValue().toString()));
+                Predicate predicateUniversity = criteriaBuilder.equal(
+                        root.join("universities", JoinType.LEFT).get("id"), parseInt(criteria.getValue().toString()));
+
+                Predicate templateAvailableToAllUniversities = criteriaBuilder.isTrue(root.get("isAvailableToAll"));
+
+                return criteriaBuilder.or(predicateUniversity, templateAvailableToAllUniversities);
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
             return this.searchPredicate(root, query, criteriaBuilder);

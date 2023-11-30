@@ -20,11 +20,11 @@
 
   <label
     *reuniceUser="'ADMIN'"
-    [tuiLabel]="'TEMPLATE_AVAILABLE_FOR_UNIVERSITIES' | translate"
+    [tuiLabel]="'TEMPLATE_AVAILABLE_TO_UNIVERSITIES' | translate"
     class="tui-form__row"
   >
     <tui-multi-select
-      *ngIf="!form.controls.allUniversities.value"
+      *ngIf="!form.controls.availableToAllUniversities.value"
       tuiTextfieldSize="m"
       formControlName="universities"
       [tuiTextfieldLabelOutside]="true"
@@ -46,9 +46,9 @@
 
     <tui-checkbox-labeled
       class="tui-form__field-checkbox"
-      formControlName="allUniversities"
+      formControlName="availableToAllUniversities"
     >
-      {{ 'CHECKBOX_TEMPLATE_AVAILABLE_FOR_ALL_UNIVERSITIES' | translate }}
+      {{ 'CHECKBOX_TEMPLATE_AVAILABLE_TO_ALL_UNIVERSITIES' | translate }}
     </tui-checkbox-labeled>
   </label>
 

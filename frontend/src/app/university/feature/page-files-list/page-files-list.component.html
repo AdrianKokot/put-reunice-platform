@@ -2,7 +2,7 @@
   <h4
     class="tui-text_h5 tui-space_top-4 tui-space_bottom-4"
     [class.tui-skeleton]="files === null"
-    [hidden]="files?.length === 0"
+    *ngIf="files?.length !== 0"
   >
     {{ 'PAGE_FILES_LIST_TITLE' | translate }}
   </h4>
@@ -26,7 +26,7 @@
           target="_blank"
           rel="nofollow"
           (click)="$event.stopPropagation()"
-          [href]="'/api/file/' + file.id + '/download'"
+          [href]="'/api/files/' + file.id + '/download'"
           appearance="flat"
           shape="rounded"
           size="s"
@@ -64,7 +64,7 @@
         [icon]="'tuiIconDownload'"
         target="_blank"
         rel="nofollow"
-        [href]="'/api/file/' + state.fileId + '/download'"
+        [href]="'/api/files/' + state.fileId + '/download'"
       ></a>
 
       <button
@@ -82,15 +82,6 @@
         [src]="state.content"
       />
 
-      <ng-container *ngIf="!state.loading && state.type === 'html'">
-        <ng-container
-          *ngTemplateOutlet="
-            previewContent;
-            context: { $implicit: state.content }
-          "
-        ></ng-container>
-      </ng-container>
-
       <div
         *ngIf="!state.loading && state.type === 'unsupported'"
         class="preview-unavailable-container"
@@ -107,16 +98,3 @@
     </tui-preview>
   </ng-template>
 </ng-container>
-
-<ng-template #previewContent let-content>
-  <div
-    (touchstart)="$event.stopPropagation()"
-    (wheel)="$event.stopPropagation()"
-  >
-    <tui-scrollbar class="html-content-background">
-      <div class="html-content-wrapper">
-        <div class="html-content" [innerHTML]="content"></div>
-      </div>
-    </tui-scrollbar>
-  </div>
-</ng-template>

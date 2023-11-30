@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import {
   filter,
-  map,
   Observable,
   of,
   startWith,
@@ -44,7 +43,7 @@ type FilePreviewUIState = {
   fileId: FileResource['id'];
 } & (
   | { loading: true }
-  | { loading: false; content: PolymorpheusContent; type: 'url' | 'html' }
+  | { loading: false; content: PolymorpheusContent; type: 'url' }
   | { loading: false; type: 'unsupported' }
 );
 
@@ -78,7 +77,7 @@ export class PageFilesListComponent {
   private readonly _previewService = inject(TuiPreviewDialogService);
 
   readonly files$ = resourceIdFromRoute('pageId').pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
   );
 
   readonly _previewState$ = new Subject<Parameters<typeof this.showFile>>();
@@ -103,24 +102,12 @@ export class PageFilesListComponent {
           .pipe(takeUntil(this._destroyed$))
           .subscribe();
 
-      if (data.file.type.startsWith('text'))
-        return this._fileService.download(data.file.id).pipe(
-          switchMap((blob) => blob.text()),
-          map<string, FilePreviewUIState>((blob) => ({
-            ...initialState,
-            loading: false,
-            content: blob,
-            type: 'html',
-          })),
-          startWith(initialState),
-        );
-
       if (data.file.type.startsWith('image'))
         return of({
           ...initialState,
           loading: false,
           type: 'url',
-          content: `/api/file/${data.file.id}/download`,
+          content: `/api/files/${data.file.id}/download`,
         });
 
       return of({ ...initialState, loading: false, type: 'unsupported' });

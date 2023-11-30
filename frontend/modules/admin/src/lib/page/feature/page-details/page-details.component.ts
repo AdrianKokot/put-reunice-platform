@@ -20,11 +20,13 @@ import {
 import {
   TuiFilesModule,
   TuiIslandModule,
+  TuiTabsModule,
   TuiTagModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLinkModule } from '@taiga-ui/core';
+import { PageUsersComponent } from '../../ui/page-users/page-users.component';
 
 @Component({
   selector: 'reunice-page-details',
@@ -37,6 +39,8 @@ import { TuiLinkModule } from '@taiga-ui/core';
     TuiTreeModule,
     TuiTagModule,
     TuiLinkModule,
+    TuiTabsModule,
+    PageUsersComponent,
   ],
   templateUrl: './page-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +55,7 @@ export class PageDetailsComponent {
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
     shareReplay(),
   );
+
   readonly user: User =
     inject(AuthService).userSnapshot ?? throwError('User is null');
 
@@ -65,7 +70,7 @@ export class PageDetailsComponent {
   );
 
   readonly files$ = this._id$.pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
     shareReplay(),
   );
 
@@ -75,4 +80,6 @@ export class PageDetailsComponent {
     successAlertMessage: 'PAGE_DELETED_SUCCESS',
     effect: navigateToResourceList(),
   });
+
+  activeTabIndex = 0;
 }

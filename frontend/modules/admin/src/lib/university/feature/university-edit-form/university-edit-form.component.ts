@@ -15,14 +15,23 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
+  of,
   share,
+  startWith,
+  switchMap,
 } from 'rxjs';
 import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { TuiInputFilesModule } from '@taiga-ui/kit';
 
 @Component({
   selector: 'reunice-university-edit-form',
   standalone: true,
-  imports: [BaseFormImportsModule, TuiLetModule, ConfirmDirective],
+  imports: [
+    BaseFormImportsModule,
+    TuiLetModule,
+    ConfirmDirective,
+    TuiInputFilesModule,
+  ],
   templateUrl: './university-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -37,6 +46,7 @@ export class UniversityEditFormComponent {
     hidden: [true, [Validators.required]],
     address: ['', [Validators.maxLength(255)]],
     website: ['', [Validators.maxLength(255)]],
+    file: [null as File | null],
   });
 
   readonly item$ = formResourceFromRoute(this._service, this.form);
@@ -60,8 +70,21 @@ export class UniversityEditFormComponent {
   );
 
   readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) => this._service.update(value),
+    submit: ({ file, ...value }) =>
+      this._service
+        .update(value)
+        .pipe(
+          switchMap((university) =>
+            file !== null
+              ? this._service
+                  .uploadFile(university.id, file)
+                  .pipe(map(() => university))
+              : of(university),
+          ),
+        ),
     successAlertMessage: 'UNIVERSITY_UPDATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
+
+  readonly state$ = this.form.controls.file.valueChanges.pipe(startWith(null));
 }

@@ -35,6 +35,21 @@
     </label>
   </div>
 
+  <label [tuiLabel]="'SUBJECT' | translate" class="tui-form__row">
+    <tui-input
+      formControlName="subject"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <input tuiTextfield type="text" />
+    </tui-input>
+
+    <tui-error
+      formControlName="subject"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
   <label [tuiLabel]="'YOUR_QUESTION' | translate" class="tui-form__row">
     <tui-textarea
       formControlName="content"

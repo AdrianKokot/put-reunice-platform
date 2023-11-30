@@ -133,6 +133,11 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
     return this.button?.nativeFocusableElement ?? null;
   }
 
+  override writeValue(value: T | null) {
+    super.writeValue(value);
+    this.appliedFilter = value !== null && value !== undefined;
+  }
+
   constructor(
     @Optional()
     @Self()
@@ -158,7 +163,7 @@ export class TableFilterComponent<T extends BaseResource = BaseResource>
   }
 
   handleOption(item: T): void {
-    if (this.value == item) {
+    if (this.value === item) {
       this.value = null;
       this.appliedFilter = false;
     } else {

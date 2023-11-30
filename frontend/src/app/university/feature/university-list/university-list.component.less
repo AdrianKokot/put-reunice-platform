@@ -1,0 +1,46 @@
+.universities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-gap: 1.5rem;
+
+  .tui-island {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .tui-island__category {
+      text-transform: unset;
+      margin-bottom: 0;
+      margin-top: 0.25rem;
+    }
+
+    .tui-island__paragraph {
+      margin-bottom: auto;
+    }
+
+    .tui-island__figure {
+      margin: -1rem -1rem 1rem;
+      overflow: hidden;
+      height: 180px;
+      order: unset;
+
+      img {
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .tui-island__title {
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.no-universities {
+  grid-column: -1 / 1;
+}

@@ -47,4 +47,10 @@ export const dashboardTiles: DashboardTile[] = [
     description: 'SYSTEM_BACKUP_AND_RESTORE',
     role: ExtendedAccountTypeEnum.ADMIN,
   },
+  {
+    title: 'TICKETS',
+    url: ['tickets'],
+    icon: 'tuiIconMessageCircle',
+    description: 'USERS_QUESTIONS',
+  },
 ];

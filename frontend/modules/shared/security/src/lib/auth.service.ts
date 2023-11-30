@@ -44,16 +44,16 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<void> {
+  logout(): Observable<unknown> {
     return this._http
-      .get<void>('/api/logout')
+      .post('/api/logout', {})
       .pipe(tap(() => this._user$.next(null)));
   }
 
   changePassword(data: { newPassword: string; oldPassword: string }) {
     const { id } = this._userSnapshot ?? throwError('User not logged in');
 
-    return this._http.patch<void>(`${this._resourceUrl}/${id}`, data);
+    return this._http.patch(`${this._resourceUrl}/${id}`, data);
   }
 
   update(data: Pick<User, 'firstName' | 'lastName' | 'email' | 'phoneNumber'>) {

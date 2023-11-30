@@ -23,6 +23,7 @@ import { TuiEditorModule } from '@tinkoff/tui-editor';
 import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
 import {
   TuiCheckboxLabeledModule,
+  TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFileLike,
   TuiInputFilesModule,
@@ -38,7 +39,11 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { AuthService } from '@reunice/modules/shared/security';
+import {
+  AuthService,
+  UserControlsResourceDirective,
+  UserDirective,
+} from '@reunice/modules/shared/security';
 import {
   ConfirmDirective,
   LocalizedPipeModule,
@@ -58,6 +63,9 @@ import {
     TuiMultiSelectModule,
     TuiDataListWrapperModule,
     ConfirmDirective,
+    TuiComboBoxModule,
+    UserControlsResourceDirective,
+    UserDirective,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,13 +80,14 @@ export class PageEditFormComponent {
     id: [-1, [Validators.required]],
     universityId: [-1, [Validators.required]],
     title: ['', [Validators.required, Validators.maxLength(255)]],
-    author: ['', [Validators.required, Validators.maxLength(255)]],
+    author: [''],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
     files: [[] as TuiFileLike[]],
     filesToRemove: [[] as Array<FileResource['id']>],
     contactRequestHandlers: [[] as Array<User['id']>],
+    creatorId: [-1, [Validators.required]],
   });
 
   private readonly _id$ = resourceIdFromRoute();
@@ -88,7 +97,8 @@ export class PageEditFormComponent {
       this.form.patchValue({
         ...item,
         universityId: item.university.id,
-        author: item.creator.firstName + ' ' + item.creator.lastName,
+        author: `${item.creator.firstName} ${item.creator.lastName}`,
+        creatorId: item.creator.id,
         contactRequestHandlers:
           item.contactRequestHandlers?.map((x) => x.id) ?? [],
       });
@@ -96,7 +106,7 @@ export class PageEditFormComponent {
   );
 
   readonly files$ = this._id$.pipe(
-    switchMap((id) => this._fileService.getAll(id).pipe(startWith(null))),
+    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
     shareReplay(),
   );
 

@@ -5,9 +5,9 @@ export default {
   projects: getJestProjects(),
   globals: {
     'ts-jest': {
-      tsconfig: resolve(__dirname, `tsconfig.spec.json`),
+      tsconfig: resolve(__dirname, 'tsconfig.spec.json'),
       isolatedModules: true,
     },
   },
-  extensionsToTreatAsEsm: [`.ts`],
+  extensionsToTreatAsEsm: ['.ts'],
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-input-rename */
 import {
   ChangeDetectorRef,
   Directive,
@@ -58,6 +59,11 @@ export class UserControlsResourceDirective<
   })
   controlledResource: T | null = null;
 
+  @Input({
+    alias: 'reuniceUserControlsResourceElse',
+  })
+  fallbackTemplate: TemplateRef<unknown> | null = null;
+
   constructor(
     private readonly templateRef: TemplateRef<UserControlsResourceContext<T>>,
     private readonly viewContainer: ViewContainerRef,
@@ -80,6 +86,8 @@ export class UserControlsResourceDirective<
             this.templateRef,
             new UserControlsResourceContext<T>(this.controlledResource),
           );
+        } else if (this.fallbackTemplate !== null) {
+          this.viewContainer.createEmbeddedView(this.fallbackTemplate);
         }
 
         cdr.markForCheck();

@@ -1,0 +1,119 @@
+<tui-scrollbar class="reunice-table-wrapper">
+  <table
+    tuiTable
+    tuiSortBy
+    [columns]="columns"
+    *tuiLet="items$ | async as items"
+  >
+    <thead [formGroup]="filtersForm">
+      <tr tuiThGroup>
+        <th
+          *tuiHead="'username'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          {{ 'USERNAME' | translate }}
+        </th>
+        <th
+          *tuiHead="'firstName'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-rest"
+        >
+          {{ 'NAME' | translate }}
+        </th>
+        <th
+          *tuiHead="'email'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-md"
+        >
+          {{ 'EMAIL' | translate }}
+        </th>
+        <th
+          *tuiHead="'actions'"
+          tuiTh
+          [sorter]="null"
+          [sticky]="true"
+          class="column-actions"
+        ></th>
+      </tr>
+    </thead>
+
+    <tbody tuiTbody>
+      <tr
+        *ngFor="
+          let item of items;
+          else: loadingList;
+          empty: emptyList;
+          trackById
+        "
+        tuiTr
+      >
+        <td *tuiCell="'username'" tuiTd>
+          {{ item.username }}
+        </td>
+        <td *tuiCell="'firstName'" tuiTd>
+          {{ item.firstName }} {{ item.lastName }}
+        </td>
+        <td
+          *tuiCell="'email'"
+          tuiTd
+          class="text-ellipsis column-md"
+          [title]="item.email"
+        >
+          {{ item.email }}
+        </td>
+
+        <td class="column-actions" *tuiCell="'actions'" tuiTd>
+          <a
+            [routerLink]="['/admin/users', item.id]"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconInfo'"
+            shape="rounded"
+            [tuiHint]="'SEE_DETAILS' | translate"
+          >
+          </a>
+
+          <a
+            [routerLink]="['/admin/users', item.id, 'edit']"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconEdit'"
+            shape="rounded"
+            [tuiHint]="'EDIT' | translate"
+          >
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</tui-scrollbar>
+
+<tui-table-pagination
+  class="tui-space_top-2"
+  [total]="(total$ | async) ?? 0"
+></tui-table-pagination>
+
+<ng-template #emptyList>
+  <tr>
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
+      {{ emptyMessage$ | async }}
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #loadingList>
+  <tr>
+    <td [colSpan]="columns.length">
+      <tui-loader></tui-loader>
+    </td>
+  </tr>
+</ng-template>

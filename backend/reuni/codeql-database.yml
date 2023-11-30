@@ -1,0 +1,39 @@
+---
+sourceLocationPrefix: C:\git\put-reunice-platform\backend
+baselineLinesOfCode: 6798
+unicodeNewlines: false
+columnKind: utf16
+primaryLanguage: java
+inProgress:
+  primaryLanguage: java
+  installedExtractors:
+    cpp:
+     - C:/Users/kokotadrian/Downloads/codeql/cpp
+    csharp:
+     - C:/Users/kokotadrian/Downloads/codeql/csharp
+    csv:
+     - C:/Users/kokotadrian/Downloads/codeql/csv
+    go:
+     - C:/Users/kokotadrian/Downloads/codeql/go
+    html:
+     - C:/Users/kokotadrian/Downloads/codeql/html
+    java:
+     - C:/Users/kokotadrian/Downloads/codeql/java
+    javascript:
+     - C:/Users/kokotadrian/Downloads/codeql/javascript
+    properties:
+     - C:/Users/kokotadrian/Downloads/codeql/properties
+    python:
+     - C:/Users/kokotadrian/Downloads/codeql/python
+    ruby:
+     - C:/Users/kokotadrian/Downloads/codeql/ruby
+    swift:
+     - C:/Users/kokotadrian/Downloads/codeql/swift
+    xml:
+     - C:/Users/kokotadrian/Downloads/codeql/xml
+    yaml:
+     - C:/Users/kokotadrian/Downloads/codeql/yaml
+creationMetadata:
+  cliVersion: 2.15.3
+  creationTime: 2023-11-28T09:42:12.866455400Z
+finalised: false

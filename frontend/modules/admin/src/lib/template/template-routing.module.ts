@@ -4,6 +4,7 @@ import { TemplateListComponent } from './feature/template-list/template-list.com
 import { TemplateEditFormComponent } from './feature/template-edit-form/template-edit-form.component';
 import { TemplateCreateFormComponent } from './feature/template-create-form/template-create-form.component';
 import { TemplateDetailsComponent } from './feature/template-details/template-details.component';
+import { translatedTitle } from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -12,20 +13,20 @@ const routes: Routes = [
   },
   {
     path: 'new',
-    title: 'Create template',
+    title: translatedTitle('NEW_TEMPLATE'),
     component: TemplateCreateFormComponent,
   },
   {
-    title: 'Template details',
+    title: translatedTitle('TEMPLATE_DETAILS'),
     path: ':id',
     children: [
       {
-        title: 'Template details',
+        title: translatedTitle('TEMPLATE_DETAILS'),
         path: '',
         component: TemplateDetailsComponent,
       },
       {
-        title: 'Edit template',
+        title: translatedTitle('EDIT_TEMPLATE'),
         path: 'edit',
         component: TemplateEditFormComponent,
       },

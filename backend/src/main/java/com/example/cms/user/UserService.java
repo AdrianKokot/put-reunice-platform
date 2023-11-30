@@ -1,5 +1,29 @@
 package com.example.cms.user;
 
+import com.example.cms.SearchCriteria;
+import com.example.cms.page.PageRepository;
+import com.example.cms.security.Role;
+import com.example.cms.security.SecurityService;
+import com.example.cms.university.University;
+import com.example.cms.university.UniversityRepository;
+import com.example.cms.university.exceptions.UniversityForbiddenException;
+import com.example.cms.university.exceptions.UniversityNotFoundException;
+import com.example.cms.user.exceptions.UserException;
+import com.example.cms.user.exceptions.UserExceptionType;
+import com.example.cms.user.exceptions.UserForbiddenException;
+import com.example.cms.user.exceptions.UserNotFoundException;
+import com.example.cms.user.projections.UserDtoDetailed;
+import com.example.cms.user.projections.UserDtoFormCreate;
+import com.example.cms.user.projections.UserDtoFormUpdate;
+import com.example.cms.validation.exceptions.WrongDataStructureException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -8,35 +32,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.example.cms.SearchCriteria;
-import com.example.cms.security.LoggedUser;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import com.example.cms.page.PageRepository;
-import com.example.cms.security.Role;
-import com.example.cms.security.SecurityService;
-import com.example.cms.university.University;
-import com.example.cms.university.UniversityRepository;
-import com.example.cms.university.exceptions.UniversityForbidden;
-import com.example.cms.university.exceptions.UniversityNotFound;
-import com.example.cms.user.exceptions.UserException;
-import com.example.cms.user.exceptions.UserExceptionType;
-import com.example.cms.user.exceptions.UserForbidden;
-import com.example.cms.user.exceptions.UserNotFound;
-import com.example.cms.user.projections.UserDtoDetailed;
-import com.example.cms.user.projections.UserDtoFormCreate;
-import com.example.cms.user.projections.UserDtoFormUpdate;
-import com.example.cms.user.projections.UserDtoSimple;
-import com.example.cms.validation.exceptions.WrongDataStructureException;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -48,15 +43,15 @@ public class UserService {
     private final SecurityService securityService;
 
     public UserDtoDetailed getUser(Long id) {
-        return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFound::new);
+        return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFoundException::new);
     }
 
     public UserDtoDetailed getLoggedUser() {
-        Long id = securityService.getPrincipal().orElseThrow(UserNotFound::new).getId();
-        return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFound::new);
+        Long id = securityService.getPrincipal().orElseThrow(UserNotFoundException::new).getId();
+        return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFoundException::new);
     }
 
-    @Secured("ROLE_MODERATOR")
+    @Secured("ROLE_USER")
     public Page<User> getUsers(Pageable pageable, Map<String, String> filterVars) {
         Specification<User> combinedSpecification = null;
 
@@ -86,14 +81,30 @@ public class UserService {
     @Secured("ROLE_MODERATOR")
     public UserDtoDetailed createUser(UserDtoFormCreate form) {
         if (userRepository.existsByUsername(form.getUsername())) {
-            throw new UserException(UserExceptionType.USERNAME_TAKEN);
+            throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
 
         validatePassword(form.getPassword());
 
-        User newUser = form.toUser(passwordEncoder);
+        User newUser = new User();
+
+        newUser.setUsername(form.getUsername());
+        if (form.getPassword() != null) {
+            newUser.setPassword(passwordEncoder.encode(form.getPassword()));
+        }
+        newUser.setFirstName(form.getFirstName());
+        newUser.setLastName(form.getLastName());
+        newUser.setEmail(form.getEmail());
+        newUser.setPhoneNumber(form.getPhoneNumber());
+        newUser.setAccountType(form.getAccountType());
+        newUser.setEnabled(form.isEnabled());
+
+        if (!newUser.getAccountType().equals(Role.ADMIN)) {
+            newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
+        }
+
         if (!securityService.hasHigherRoleThan(newUser.getAccountType())) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         return UserDtoDetailed.of(userRepository.save(newUser));
@@ -103,35 +114,74 @@ public class UserService {
         if (password == null) {
             password = "";
         }
-        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,64}");
+        Pattern pattern = Pattern.compile("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
         Matcher matcher = pattern.matcher(password);
         if (!matcher.find()) {
-            throw new UserException(UserExceptionType.NOT_VALID_PASSWORD);
+            throw new UserException(UserExceptionType.NOT_VALID_PASSWORD, "password");
         }
     }
 
     @Secured("ROLE_USER")
     public UserDtoDetailed updateUser(Long id, UserDtoFormUpdate form) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(user)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
-        form.updateUser(user);
+        if (userRepository.existsByUsername(form.getUsername())) {
+            throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
+        }
+
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setEmail(form.getEmail());
+        user.setPhoneNumber(form.getPhoneNumber());
+        user.setDescription(form.getDescription());
+        user.setUsername(form.getUsername());
+
+        if (securityService.hasHigherRoleThan(Role.USER)) {
+            user.setEnabled(form.isEnabled());
+            user.setAccountType(form.getAccountType());
+
+            if (user.getAccountType().equals(Role.ADMIN)) {
+                user.setEnrolledUniversities(new HashSet<>());
+            } else {
+                user.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
+            }
+        }
+
+        if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
+            validatePassword(form.getPassword());
+            user.setPassword(passwordEncoder.encode(form.getPassword()));
+        }
 
         return UserDtoDetailed.of(userRepository.save(user));
     }
 
+    private Set<University> validateUniversities(Set<Long> universitiesId) {
+        Set<University> newUniversities = universitiesId.stream().map(universityId -> universityRepository.findById(universityId)
+                        .orElseThrow(UniversityNotFoundException::new))
+                .collect(Collectors.toSet());
+
+        newUniversities.forEach(university -> {
+            if (securityService.isForbiddenUniversity(university)) {
+                throw new UniversityForbiddenException();
+            }
+        });
+
+        return newUniversities;
+    }
+
     @Secured("ROLE_MODERATOR")
     public UserDtoDetailed updateEnrolledUniversities(long userId, List<Long> universitiesId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         Set<University> oldUniversities = user.getEnrolledUniversities();
         Set<University> newUniversities = universitiesId.stream().map(id -> universityRepository.findById(id)
-                        .orElseThrow(UniversityNotFound::new))
+                        .orElseThrow(UniversityNotFoundException::new))
                 .collect(Collectors.toSet());
 
         Set<University> modifiedUniversities = new HashSet<>();
@@ -142,7 +192,7 @@ public class UserService {
 
         modifiedUniversities.forEach(university -> {
             if (securityService.isForbiddenUniversity(university)) {
-                throw new UniversityForbidden();
+                throw new UniversityForbiddenException();
             }
         });
 
@@ -154,9 +204,9 @@ public class UserService {
 
     @Secured("ROLE_MODERATOR")
     public void modifyEnabledField(long id, boolean enabled) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(user, true)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         user.setEnabled(enabled);
@@ -173,17 +223,17 @@ public class UserService {
 
         validatePassword(newPassword);
 
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(user)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new UserException(UserExceptionType.WRONG_PASSWORD);
+            throw new UserException(UserExceptionType.WRONG_PASSWORD, "oldPassword");
         }
 
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new UserException(UserExceptionType.SAME_PASSWORD);
+            throw new UserException(UserExceptionType.SAME_PASSWORD, "newPassword");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -192,9 +242,9 @@ public class UserService {
 
     @Secured("ROLE_USER")
     public void modifyUsernameField(long id, String username) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(user)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
 
         if (userRepository.existsByUsername(username)) {
@@ -207,9 +257,9 @@ public class UserService {
 
     @Secured("ROLE_ADMIN")
     public void modifyAccountTypeField(long id, Map<String, Role> accountType) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(user, true)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
         if (!accountType.containsKey("accountType")) {
             throw new WrongDataStructureException();
@@ -223,9 +273,9 @@ public class UserService {
 
     @Secured("ROLE_MODERATOR")
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         if (securityService.isForbiddenUser(user, true)) {
-            throw new UserForbidden();
+            throw new UserForbiddenException();
         }
         validateForDelete(user);
 
@@ -243,7 +293,7 @@ public class UserService {
     }
 
     public void updateLastLoginDate(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         user.setLastLoginDate(Instant.now());
         userRepository.save(user);
     }

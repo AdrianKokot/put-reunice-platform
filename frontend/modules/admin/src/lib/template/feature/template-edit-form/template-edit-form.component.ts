@@ -45,14 +45,15 @@ export class TemplateEditFormComponent {
     name: ['', [Validators.required, Validators.maxLength(255)]],
     content: [''],
     universities: [this._user?.enrolledUniversities.map((u) => u.id) ?? []],
-    allUniversities: [this._user?.accountType === AccountTypeEnum.ADMIN],
+    availableToAllUniversities: [
+      this._user?.accountType === AccountTypeEnum.ADMIN,
+    ],
   });
 
   readonly item$ = resourceFromRoute(this._service, (v) =>
     this.form.patchValue({
       ...v,
       universities: v.universities?.map((u) => u.id) ?? [],
-      allUniversities: v.universities === null,
     }),
   );
 

@@ -16,6 +16,7 @@ import {
   combineLatest,
   debounceTime,
   map,
+  Observable,
   of,
   shareReplay,
   startWith,
@@ -62,9 +63,13 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
     REUNICE_TABLE_SERVICE,
   );
 
+  private readonly _refresh$ = new BehaviorSubject<void>(undefined);
+
   private readonly _storage = inject(LOCAL_STORAGE);
 
-  protected readonly emptyMessage$ = inject(TUI_NOTHING_FOUND_MESSAGE);
+  protected readonly emptyMessage$: Observable<string> = inject(
+    TUI_NOTHING_FOUND_MESSAGE,
+  );
 
   @HostBinding('style.--page-size')
   private _pageSize = 10;
@@ -72,7 +77,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
       throw new Error(
-        ReuniceAbstractTable.name + ': missing required content child.',
+        `${ReuniceAbstractTable.name}: missing required content child.`,
       );
     }
 
@@ -97,6 +102,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         debounceTime(300),
         map(() => this.filtersForm.getRawValue()),
       ),
+      this._refresh$,
     ])
       .pipe(
         debounceTime(200),
@@ -105,9 +111,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
             ApiSort<T> &
             ApiParams => ({
             sort: (typeof sort === 'string' && sort.length > 0
-              ? (sort as keyof T).toString() +
-                ',' +
-                (direction === 1 ? 'asc' : 'desc')
+              ? `${(sort as keyof T).toString()},${
+                  direction === 1 ? 'asc' : 'desc'
+                }`
               : undefined) as `${keyof T & string},${'asc' | 'desc'}`,
             page,
             size,
@@ -128,5 +134,9 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
         shareReplay(),
       )
       .subscribe((x) => this._items$.next(x));
+  }
+
+  refresh() {
+    this._refresh$.next();
   }
 }

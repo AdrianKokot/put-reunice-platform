@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,6 +47,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     ResponseEntity<RestErrorBody> handleBadRequestException(BadRequestException ex) {
         RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.BAD_REQUEST, ex);
+
+        if (ex.getField() != null) {
+            errorBody.setFieldViolations(List.of(new RestErrorBody.FieldViolation(ex.getField(), ex.getMessage())));
+        }
+
         return ResponseEntity.badRequest().body(errorBody);
     }
 
@@ -62,6 +69,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<RestErrorBody> handleAuthenticationException(AuthenticationException ex) {
+        if (ex instanceof DisabledException || ex instanceof BadCredentialsException) {
+            return handleBadRequestException(new BadRequestException(ex.getMessage(), "password"));
+        }
+
         RestErrorBody errorBody = createRestError(request, ex.getMessage(), HttpStatus.UNAUTHORIZED, ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
     }

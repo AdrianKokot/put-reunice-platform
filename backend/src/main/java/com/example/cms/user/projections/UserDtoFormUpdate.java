@@ -1,7 +1,9 @@
 package com.example.cms.user.projections;
 
-import com.example.cms.user.User;
+import com.example.cms.security.Role;
 import lombok.Value;
+
+import java.util.Set;
 
 @Value
 public class UserDtoFormUpdate {
@@ -10,12 +12,9 @@ public class UserDtoFormUpdate {
     String email;
     String phoneNumber;
     String description;
-
-    public void updateUser(User user) {
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPhoneNumber(phoneNumber);
-        user.setDescription(description);
-    }
+    Set<Long> enrolledUniversities;
+    boolean enabled;
+    Role accountType;
+    String username;
+    String password;
 }
