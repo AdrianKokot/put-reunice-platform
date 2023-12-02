@@ -16,14 +16,6 @@ import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +24,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -43,12 +42,18 @@ public class UserService {
     private final SecurityService securityService;
 
     public UserDtoDetailed getUser(Long id) {
-        return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFoundException::new);
+        return userRepository
+                .findById(id)
+                .map(UserDtoDetailed::of)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public UserDtoDetailed getLoggedUser() {
         Long id = securityService.getPrincipal().orElseThrow(UserNotFoundException::new).getId();
-        return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFoundException::new);
+        return userRepository
+                .findById(id)
+                .map(UserDtoDetailed::of)
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Secured("ROLE_USER")
@@ -56,16 +61,17 @@ public class UserService {
         Specification<User> combinedSpecification = null;
 
         if (!filterVars.isEmpty()) {
-            List<UserSpecification> specifications = filterVars.entrySet().stream()
-                    .map(entries -> {
-                        String[] filterBy = entries.getKey().split("_");
+            List<UserSpecification> specifications =
+                    filterVars.entrySet().stream()
+                            .map(
+                                    entries -> {
+                                        String[] filterBy = entries.getKey().split("_");
 
-                        return new UserSpecification(new SearchCriteria(
-                                filterBy[0],
-                                filterBy[filterBy.length - 1],
-                                entries.getValue()
-                        ));
-                    }).collect(Collectors.toList());
+                                        return new UserSpecification(
+                                                new SearchCriteria(
+                                                        filterBy[0], filterBy[filterBy.length - 1], entries.getValue()));
+                                    })
+                            .collect(Collectors.toList());
 
             for (Specification<User> spec : specifications) {
                 if (combinedSpecification == null) {
@@ -159,15 +165,21 @@ public class UserService {
     }
 
     private Set<University> validateUniversities(Set<Long> universitiesId) {
-        Set<University> newUniversities = universitiesId.stream().map(universityId -> universityRepository.findById(universityId)
-                        .orElseThrow(UniversityNotFoundException::new))
-                .collect(Collectors.toSet());
+        Set<University> newUniversities =
+                universitiesId.stream()
+                        .map(
+                                universityId ->
+                                        universityRepository
+                                                .findById(universityId)
+                                                .orElseThrow(UniversityNotFoundException::new))
+                        .collect(Collectors.toSet());
 
-        newUniversities.forEach(university -> {
-            if (securityService.isForbiddenUniversity(university)) {
-                throw new UniversityForbiddenException();
-            }
-        });
+        newUniversities.forEach(
+                university -> {
+                    if (securityService.isForbiddenUniversity(university)) {
+                        throw new UniversityForbiddenException();
+                    }
+                });
 
         return newUniversities;
     }
@@ -175,26 +187,35 @@ public class UserService {
     @Secured("ROLE_MODERATOR")
     public UserDtoDetailed updateEnrolledUniversities(long userId, List<Long> universitiesId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!securityService.hasHigherRoleThan(user.getAccountType()) || user.getAccountType().equals(Role.ADMIN)) {
+        if (!securityService.hasHigherRoleThan(user.getAccountType())
+                || user.getAccountType().equals(Role.ADMIN)) {
             throw new UserForbiddenException();
         }
 
         Set<University> oldUniversities = user.getEnrolledUniversities();
-        Set<University> newUniversities = universitiesId.stream().map(id -> universityRepository.findById(id)
-                        .orElseThrow(UniversityNotFoundException::new))
-                .collect(Collectors.toSet());
+        Set<University> newUniversities =
+                universitiesId.stream()
+                        .map(
+                                id ->
+                                        universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new))
+                        .collect(Collectors.toSet());
 
         Set<University> modifiedUniversities = new HashSet<>();
-        modifiedUniversities.addAll(oldUniversities.stream().filter(university -> !newUniversities.contains(university))
-                .collect(Collectors.toSet()));
-        modifiedUniversities.addAll(newUniversities.stream().filter(university -> !oldUniversities.contains(university))
-                .collect(Collectors.toSet()));
+        modifiedUniversities.addAll(
+                oldUniversities.stream()
+                        .filter(university -> !newUniversities.contains(university))
+                        .collect(Collectors.toSet()));
+        modifiedUniversities.addAll(
+                newUniversities.stream()
+                        .filter(university -> !oldUniversities.contains(university))
+                        .collect(Collectors.toSet()));
 
-        modifiedUniversities.forEach(university -> {
-            if (securityService.isForbiddenUniversity(university)) {
-                throw new UniversityForbiddenException();
-            }
-        });
+        modifiedUniversities.forEach(
+                university -> {
+                    if (securityService.isForbiddenUniversity(university)) {
+                        throw new UniversityForbiddenException();
+                    }
+                });
 
         user.setEnrolledUniversities(newUniversities);
 

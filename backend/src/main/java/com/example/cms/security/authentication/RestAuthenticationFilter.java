@@ -1,6 +1,9 @@
 package com.example.cms.security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -13,18 +16,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 @Slf4j
 @Component
 public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public RestAuthenticationFilter(AuthenticationManager authenticationManager,
-                                    AuthenticationSuccessHandler authenticationSuccessHandler,
-                                    AuthenticationFailureHandler authenticationFailureHandler,
-                                    CompositeSessionAuthenticationStrategy sessionAuthenticationStrategy) {
+    public RestAuthenticationFilter(
+            AuthenticationManager authenticationManager,
+            AuthenticationSuccessHandler authenticationSuccessHandler,
+            AuthenticationFailureHandler authenticationFailureHandler,
+            CompositeSessionAuthenticationStrategy sessionAuthenticationStrategy) {
         setAuthenticationManager(authenticationManager);
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         setAuthenticationFailureHandler(authenticationFailureHandler);
@@ -46,10 +46,9 @@ public class RestAuthenticationFilter extends UsernamePasswordAuthenticationFilt
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-                form.getUsername(), form.getPassword());
+        UsernamePasswordAuthenticationToken authRequest =
+                new UsernamePasswordAuthenticationToken(form.getUsername(), form.getPassword());
 
         return this.getAuthenticationManager().authenticate(authRequest);
     }
-
 }

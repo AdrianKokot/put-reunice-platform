@@ -3,14 +3,13 @@ package com.example.cms.ticket.projections;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticket.TicketStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -40,7 +39,10 @@ public class TicketDtoDetailed {
         status = ticket.getStatus();
         title = ticket.getTitle();
         description = ticket.getDescription();
-        lastSeenOn = ticket.getTicketHandlers().stream()
-                .collect(Collectors.toMap(item -> item.getUser().getUsername(), TicketUserStatus::getLastSeenOn));
+        lastSeenOn =
+                ticket.getTicketHandlers().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        item -> item.getUser().getUsername(), TicketUserStatus::getLastSeenOn));
     }
 }

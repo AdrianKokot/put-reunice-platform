@@ -3,12 +3,10 @@ package com.example.cms.page.projections;
 import com.example.cms.page.Page;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.projections.UserDtoSimple;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor

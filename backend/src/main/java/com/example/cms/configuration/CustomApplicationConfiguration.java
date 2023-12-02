@@ -13,9 +13,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * Configures the application.
- */
+/** Configures the application. */
 @Configuration
 public class CustomApplicationConfiguration implements WebMvcConfigurer {
     private final ApplicationConfigurationProvider config;
@@ -27,9 +25,16 @@ public class CustomApplicationConfiguration implements WebMvcConfigurer {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().addServersItem(new Server().url("/api").description("backend RESTfull API server behind nginx reverse proxy"))
-                .info(new Info().title("REUNICE CMS API").version("V1")
-                        .license(new License().name("MIT License")));
+        return new OpenAPI()
+                .addServersItem(
+                        new Server()
+                                .url("/api")
+                                .description("backend RESTfull API server behind nginx reverse proxy"))
+                .info(
+                        new Info()
+                                .title("REUNICE CMS API")
+                                .version("V1")
+                                .license(new License().name("MIT License")));
     }
 
     @Override
@@ -39,9 +44,9 @@ public class CustomApplicationConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**")
+        registry
+                .addResourceHandler("/static/**")
                 .addResourceLocations("file:" + this.config.getUploadsDirectory() + "/");
-        registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
 }

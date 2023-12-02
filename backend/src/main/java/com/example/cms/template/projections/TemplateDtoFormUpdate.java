@@ -1,9 +1,8 @@
 package com.example.cms.template.projections;
 
 import com.example.cms.template.Template;
-import lombok.Value;
-
 import java.util.Set;
+import lombok.Value;
 
 @Value
 public class TemplateDtoFormUpdate {
