@@ -19,7 +19,7 @@ Cypress.Commands.add('login', (user: E2EUser) => {
 
   switch (user) {
     case E2EUser.MAIN_ADMIN:
-      LoginPage.fillForm('admin', '51D7k4F8');
+      LoginPage.fillForm('E2E_ADMIN', 'e2e_ADMIN1@');
       break;
     default:
       throw new Error(`Unknown user ${user}`);

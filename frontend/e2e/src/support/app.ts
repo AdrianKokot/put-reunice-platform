@@ -21,5 +21,5 @@ export const TILES = {
 
 export const clickOnTile = (tileName: string) => {
   cy.get(`[data-test="dashboard-tile-${tileName.toUpperCase()}"]`).click();
-  cy.url().should('contain', '/admin/' + tileName.toLowerCase());
+  cy.url().should('contain', `/admin/${tileName.toLowerCase()}`);
 };
