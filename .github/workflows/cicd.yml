@@ -138,6 +138,8 @@ jobs:
       run:
         working-directory: ./frontend
     steps:
+      - name: Wait for app to start
+        run: sleep 180
       - name: 📦 Install packages
         run: npm ci
       - name: 🧪 E2E tests
