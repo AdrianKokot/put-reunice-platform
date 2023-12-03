@@ -16,7 +16,7 @@
     >
       {{ 'USERNAME_PLACEHOLDER' | translate }}
 
-      <input tuiTextfield type="text" autocomplete="username" />
+      <input tuiTextfield type="text" autocomplete="username" name="username" />
     </tui-input>
 
     <tui-error
@@ -34,7 +34,12 @@
     >
       ••••••••
 
-      <input tuiTextfield type="password" autocomplete="current-password" />
+      <input
+        tuiTextfield
+        type="password"
+        autocomplete="current-password"
+        name="password"
+      />
     </tui-input-password>
 
     <tui-error

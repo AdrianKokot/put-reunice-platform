@@ -1,5 +1,10 @@
 <ng-container *ngFor="let item of links$ | async">
-  <a tuiAction [routerLink]="item.url" class="justify-start items-center">
+  <a
+    tuiAction
+    [routerLink]="item.url"
+    class="justify-start items-center"
+    [attr.data-test]="'dashboard-tile-' + item.title"
+  >
     <tui-marker-icon
       [src]="item.icon"
       class="tui-island__marker"
