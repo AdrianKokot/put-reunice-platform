@@ -70,6 +70,7 @@
         ) | translate
       "
       (confirm)="deleteHandler.delete(item.id)"
+      data-test="delete-button"
     >
       {{ 'DELETE' | translate }}
     </button>

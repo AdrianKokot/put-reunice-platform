@@ -8,15 +8,15 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "e2e/cypress.config.ts",
-        "devServerTarget": "reunice:serve:development",
+        "devServerTarget": "reunice:serve:e2e-development",
         "testingType": "e2e"
       },
       "configurations": {
         "production": {
-          "devServerTarget": "reunice:serve:production"
+          "devServerTarget": "reunice:serve:e2e-development"
         },
         "ci": {
-          "devServerTarget": "reunice:serve-static"
+          "devServerTarget": "reunice:e2e-serve-static"
         }
       }
     },

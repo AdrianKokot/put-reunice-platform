@@ -1,23 +1,33 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
+import { LoginPage } from './pages/login.constants';
+
+export enum E2EUser {
+  MAIN_ADMIN,
+}
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
-// declare namespace Cypress {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// interface Chainable<Subject> {
-// login(...params): void;
-// }
-// }
+declare namespace Cypress {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface Chainable<Subject> {
+    login(user: E2EUser): void;
+  }
+}
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (...params) => { ... });
+Cypress.Commands.add('login', (user: E2EUser) => {
+  cy.clearAllCookies();
+  LoginPage.visit();
+
+  switch (user) {
+    case E2EUser.MAIN_ADMIN:
+      LoginPage.fillForm('E2E_ADMIN', 'e2e_ADMIN1@');
+      break;
+    default:
+      throw new Error(`Unknown user ${user}`);
+  }
+
+  cy.get(LoginPage.loginButton).click();
+  cy.url().should('contain', '/universities');
+});
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })

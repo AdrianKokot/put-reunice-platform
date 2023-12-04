@@ -582,6 +582,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 Role.USER,
                 Set.of()
         ));
+        userService.createUser(new UserDtoFormCreate(
+                "E2E_ADMIN",
+                "e2e_ADMIN1@",
+                "E2E",
+                "ADMIN",
+                "admin@e2e.test",
+                "111111111",
+                true,
+                Role.ADMIN,
+                Set.of()
+        ));
 
         universityService.addNewUniversity(new UniversityDtoFormCreate(
                 "Poznań University of Technology",
