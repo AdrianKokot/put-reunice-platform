@@ -1,5 +1,40 @@
 # REUNICE Platform
 
+## Code formatting
+
+### Java
+
+```bash
+mvn spotless:apply # format code
+mvn spotless:check # check if code is formatted
+```
+
+### TypeScript
+
+```bash
+npm run fix # format code and run eslint fix
+```
+
+## Running tests
+
+### Java unit tests
+
+```bash
+mvn test
+```
+
+### Angular unit tests
+
+```bash
+npm run test
+```
+
+### Cypress end-to-end tests
+
+```bash
+npm run e2e
+```
+
 ## Docker
 
 ### Run the application, rebuilding all images from source code
