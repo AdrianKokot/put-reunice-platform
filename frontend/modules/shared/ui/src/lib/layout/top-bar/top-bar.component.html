@@ -20,6 +20,7 @@
   <a
     *reuniceUser="'GUEST'; else loggedMenu"
     tuiIconButton
+    data-test="login-button"
     routerLink="/auth/login"
     [icon]="'tuiIconUser'"
   ></a>
@@ -30,6 +31,7 @@
         type="button"
         size="s"
         tuiIconButton
+        data-test="user-menu-button"
         [pseudoHover]="profileMenuDropdown.open || null"
       >
         <tui-avatar
@@ -39,7 +41,13 @@
     </tui-hosted-dropdown>
     <ng-template #profileMenu let-close="close">
       <tui-data-list role="menu" size="s">
-        <a routerLink="/admin" tuiOption role="menuitem" (click)="close()">
+        <a
+          routerLink="/admin"
+          tuiOption
+          role="menuitem"
+          (click)="close()"
+          data-test="user-menu-console-button"
+        >
           {{ user.accountType + '_CONSOLE' | translate }}
         </a>
         <a routerLink="/profile" tuiOption role="menuitem" (click)="close()">
@@ -50,6 +58,7 @@
           tuiOption
           role="menuitem"
           (click)="close()"
+          data-test="user-menu-logout-button"
         >
           {{ 'LOGOUT' | translate }}
         </a>

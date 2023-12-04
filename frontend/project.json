@@ -59,9 +59,17 @@
         "production": {
           "browserTarget": "reunice:build:production"
         },
+        "e2e-production": {
+          "browserTarget": "reunice:build:production",
+          "proxyConfig": "./proxy.e2e.conf.json"
+        },
         "development": {
           "browserTarget": "reunice:build:development",
           "proxyConfig": "./proxy.conf.json"
+        },
+        "e2e-development": {
+          "browserTarget": "reunice:build:development",
+          "proxyConfig": "./proxy.e2e.conf.json"
         }
       },
       "defaultConfiguration": "development"
@@ -96,7 +104,8 @@
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "reunice:build"
+        "buildTarget": "reunice:build",
+        "proxyConfig": "./proxy.e2e.conf.json"
       }
     }
   }

@@ -131,3 +131,18 @@ jobs:
             ./setup.sh
             docker pull ${{ steps.meta.outputs.tags }}
             docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -v /uploads:/uploads -v /db-resources:/db-resources -d ${{ steps.meta.outputs.tags }}
+
+  run-e2e-tests:
+    name: 🧪 E2E tests
+    runs-on: ubuntu-latest
+    needs: [ deploy-to-development ]
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Wait for app to start
+        run: sleep 180
+      - name: 📦 Install packages
+        run: npm ci
+      - name: 🧪 E2E tests
+        run: npm run e2e
