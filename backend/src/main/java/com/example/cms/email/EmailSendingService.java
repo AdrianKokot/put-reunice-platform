@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -74,7 +75,8 @@ public class EmailSendingService {
         Resource resource = resourceLoader.getResource("classpath:emailTemplates/" + templateName + ".html");
         return IOUtils.toString(Objects.requireNonNull(resource.getInputStream()), StandardCharsets.UTF_8);
     }
-    public void sendConfirmNewAccountEmail(User receiver) throws IOException {
+    @Async
+    public void sendConfirmNewAccountEmail(User receiver, String password) throws IOException {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -83,7 +85,7 @@ public class EmailSendingService {
             helper.setSubject("Witaj w Reunice! Twoje konto zostało utworzone.");
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_USER_ACCOUNT.templateName);
             contentMap.put("[Nazwa Użytkownika]", receiver.getUsername());
-            contentMap.put("[Początkowe Hasło]", receiver.getPassword());
+            contentMap.put("[Początkowe Hasło]", password);
             contentMap.put("[link_do_pierwszego_logowania]", "http://localhost/auth/login");
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
@@ -95,7 +97,8 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
-    public void sendEditUserAccountMail(String oldEmail, User receiver, User administrator){
+    @Async
+    public void sendEditUserAccountMail(String oldEmail, User receiver, String adminUsername, String adminEmail){
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -103,10 +106,10 @@ public class EmailSendingService {
             helper.setTo(oldEmail);
             helper.setSubject("Zmiany w Twoim koncie w systemie Reunice");
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT.templateName);
-            Map<String, String> contentMap = new HashMap<>();
+            contentMap.put("[Nowa Nazwa Użytkownika]", receiver.getUsername());
             contentMap.put("[Nowy Adres E-mail]", receiver.getEmail());
-            contentMap.put("[Nazwa Administratora]", administrator.getUsername());
-            contentMap.put("[E-mail Administratora]", receiver.getEmail());
+            contentMap.put("[Nazwa Administratora]", adminUsername);
+            contentMap.put("[E-mail Administratora]", adminEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
