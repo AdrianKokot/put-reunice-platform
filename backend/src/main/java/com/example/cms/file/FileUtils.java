@@ -1,20 +1,19 @@
 package com.example.cms.file;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
+import org.springframework.web.multipart.MultipartFile;
 
 public final class FileUtils {
-    public static File newFileFromZipEntry(File destinationDir, ZipEntry zipEntry) throws IOException {
+    public static File newFileFromZipEntry(File destinationDir, ZipEntry zipEntry)
+            throws IOException {
         File destFile = new File(destinationDir, zipEntry.getName());
 
         String destDirPath = destinationDir.getCanonicalPath();
@@ -54,13 +53,15 @@ public final class FileUtils {
     }
 
     public static String getFileExtension(String filename) {
-        return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(f.lastIndexOf(".") + 1)).orElse("");
+        return Optional.ofNullable(filename)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(f.lastIndexOf(".") + 1))
+                .orElse("");
     }
 
     public static Path getSecureFilePath(Path basePath, String rawFilepath) throws IOException {
-        var filepath = rawFilepath.replaceAll("\\.(?=.*\\.)", "")
-                .replaceAll("//", "")
-                .replaceAll("\\\\", "");
+        var filepath =
+                rawFilepath.replaceAll("\\.(?=.*\\.)", "").replaceAll("//", "").replaceAll("\\\\", "");
 
         var normalizedBasePath = basePath.toAbsolutePath().normalize();
         var normalizedFilePath = normalizedBasePath.resolve(filepath).toAbsolutePath().normalize();

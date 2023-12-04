@@ -1,13 +1,11 @@
 package com.example.cms.search.projections;
 
-
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.typesense.model.SearchHighlight;
 import org.typesense.model.SearchResultHit;
-
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -29,12 +27,9 @@ public class PageSearchHitDto {
                 Long.parseLong(doc.get("universityId").toString()),
                 doc.get("title").toString(),
                 doc.get("universityName").toString(),
-                hit.getHighlights().stream().collect(
-                        java.util.stream.Collectors.toMap(
-                                SearchHighlight::getField,
-                                SearchHighlight::getSnippet
-                        )
-                )
-        );
+                hit.getHighlights().stream()
+                        .collect(
+                                java.util.stream.Collectors.toMap(
+                                        SearchHighlight::getField, SearchHighlight::getSnippet)));
     }
 }

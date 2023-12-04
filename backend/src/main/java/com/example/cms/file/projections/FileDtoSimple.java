@@ -2,11 +2,9 @@ package com.example.cms.file.projections;
 
 import com.example.cms.file.FileResource;
 import com.example.cms.page.projections.PageDtoJoined;
-import com.example.cms.page.projections.PageDtoSimple;
+import java.time.Instant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +21,6 @@ public class FileDtoSimple {
 
     private Long id;
     private PageDtoJoined page;
-
 
     public static FileDtoSimple of(FileResource fileResource) {
         if (fileResource == null) {

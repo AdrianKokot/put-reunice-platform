@@ -1,8 +1,7 @@
 package com.example.cms.page.projections;
 
-import lombok.Value;
-
 import java.util.Set;
+import lombok.Value;
 
 @Value
 public class PageDtoFormUpdate {

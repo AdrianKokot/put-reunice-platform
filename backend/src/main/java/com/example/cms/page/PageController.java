@@ -2,17 +2,16 @@ package com.example.cms.page;
 
 import com.example.cms.page.projections.*;
 import com.example.cms.validation.FilterPathVariableValidator;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,12 +26,11 @@ public class PageController {
     }
 
     @GetMapping
-    ResponseEntity<List<PageDtoSimple>> readAllPages(Pageable pageable,
-                                                     @RequestParam Map<String, String> vars) {
+    ResponseEntity<List<PageDtoSimple>> readAllPages(
+            Pageable pageable, @RequestParam Map<String, String> vars) {
 
-        org.springframework.data.domain.Page<Page> responsePage = service.getAllVisible(
-                pageable,
-                FilterPathVariableValidator.validate(vars, Page.class));
+        org.springframework.data.domain.Page<Page> responsePage =
+                service.getAllVisible(pageable, FilterPathVariableValidator.validate(vars, Page.class));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
@@ -82,7 +80,8 @@ public class PageController {
     }
 
     @PatchMapping("/{id}/content")
-    ResponseEntity<Void> modifyPageContentField(@PathVariable long id, @RequestBody(required = false) String content) {
+    ResponseEntity<Void> modifyPageContentField(
+            @PathVariable long id, @RequestBody(required = false) String content) {
         service.modifyContentField(id, content);
         return ResponseEntity.noContent().build();
     }
@@ -106,7 +105,8 @@ public class PageController {
     }
 
     @PutMapping("/{id}/handlers")
-    ResponseEntity<Void> addPageHandlers(@PathVariable long id, @RequestBody List<Long> pageHandlers) {
+    ResponseEntity<Void> addPageHandlers(
+            @PathVariable long id, @RequestBody List<Long> pageHandlers) {
         service.assignUsersToPage(pageHandlers, id);
         return ResponseEntity.accepted().build();
     }

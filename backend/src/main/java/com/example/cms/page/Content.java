@@ -1,11 +1,10 @@
 package com.example.cms.page;
 
-import lombok.*;
-import org.hibernate.Hibernate;
-
+import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 @Getter
 @Setter

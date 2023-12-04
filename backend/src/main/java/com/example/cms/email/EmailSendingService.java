@@ -2,29 +2,26 @@ package com.example.cms.email;
 
 import com.example.cms.ticket.Ticket;
 import com.example.cms.user.User;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.IOUtils;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 
 @Service
 public class EmailSendingService {
-    @Autowired
-    private JavaMailSender javaMailSender;
+    @Autowired private JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
     private final ResourceLoader resourceLoader;
 
@@ -42,13 +39,16 @@ public class EmailSendingService {
             this.templateName = templateName;
         }
     }
+
     public EmailSendingService(JavaMailSender javaMailSender, ResourceLoader resourceLoader) {
         this.javaMailSender = javaMailSender;
         this.resourceLoader = resourceLoader;
     }
+
     @Value("${spring.mail.username}")
     private String sender;
-    public void sendEmail(String receiver, String subject, String body){
+
+    public void sendEmail(String receiver, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(sender);
         message.setTo(receiver);
@@ -56,6 +56,7 @@ public class EmailSendingService {
         message.setText(body);
         javaMailSender.send(message);
     }
+
     public String editContent(String content) {
         if (content == null || contentMap == null) {
             throw new IllegalArgumentException("Content and editMap cannot be null");
@@ -69,11 +70,15 @@ public class EmailSendingService {
 
         return content;
     }
+
     private String loadHtmlTemplate(String templateName) throws IOException {
 
-        Resource resource = resourceLoader.getResource("classpath:emailTemplates/" + templateName + ".html");
-        return IOUtils.toString(Objects.requireNonNull(resource.getInputStream()), StandardCharsets.UTF_8);
+        Resource resource =
+                resourceLoader.getResource("classpath:emailTemplates/" + templateName + ".html");
+        return IOUtils.toString(
+                Objects.requireNonNull(resource.getInputStream()), StandardCharsets.UTF_8);
     }
+
     public void sendConfirmNewAccountEmail(User receiver) throws IOException {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -95,7 +100,8 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
-    public void sendEditUserAccountMail(String oldEmail, User receiver, User administrator){
+
+    public void sendEditUserAccountMail(String oldEmail, User receiver, User administrator) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -125,7 +131,8 @@ public class EmailSendingService {
             helper.setFrom(sender);
             helper.setTo(ticket.getRequesterEmail());
             helper.setSubject("Zmiana statusu zapytania w systemie Reunice");
-            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
+            String emailTemplateContent =
+                    loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
             contentMap.put("[Nowy Status]", ticket.getStatus().name());
             contentMap.put("[ticket_link]", "http://localhost/ticket" + ticket.getRequestedToken());
             emailTemplateContent = editContent(emailTemplateContent);
@@ -146,7 +153,8 @@ public class EmailSendingService {
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
             helper.setSubject("Informacja o usunięciu konta w systemie Reunice");
-            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.DELETE_USER_ACCOUNT.templateName);
+            String emailTemplateContent =
+                    loadHtmlTemplate(EmailTemplate.DELETE_USER_ACCOUNT.templateName);
             contentMap.put("[Nazwa Administratora]", administrator.getUsername());
             contentMap.put("[E-mail Administratora]", administrator.getEmail());
             emailTemplateContent = editContent(emailTemplateContent);
@@ -159,6 +167,7 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
+
     public void sendDisableAccountEmail(User receiver, User administrator) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -166,7 +175,8 @@ public class EmailSendingService {
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
             helper.setSubject("Twoje konto zostało wyłączone/zawieszone w systemie Reunice");
-            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.DISABLE_USER_ACCOUNT.templateName);
+            String emailTemplateContent =
+                    loadHtmlTemplate(EmailTemplate.DISABLE_USER_ACCOUNT.templateName);
             contentMap.put("[Nazwa Administratora]", administrator.getUsername());
             contentMap.put("[E-mail Administratora]", administrator.getEmail());
             emailTemplateContent = editContent(emailTemplateContent);
@@ -179,6 +189,7 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
+
     public void sendEnableAccountEmail(User receiver, User administrator) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -186,7 +197,8 @@ public class EmailSendingService {
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
             helper.setSubject("Twoje konto zostało włączone w systemie Reunice");
-            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.ENABLE_USER_ACCOUNT.templateName);
+            String emailTemplateContent =
+                    loadHtmlTemplate(EmailTemplate.ENABLE_USER_ACCOUNT.templateName);
             contentMap.put("[Nazwa Administratora]", administrator.getUsername());
             contentMap.put("[E-mail Administratora]", administrator.getEmail());
             emailTemplateContent = editContent(emailTemplateContent);
