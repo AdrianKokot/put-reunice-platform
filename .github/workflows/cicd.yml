@@ -140,6 +140,7 @@ jobs:
       run:
         working-directory: ./frontend
     steps:
+      - uses: actions/checkout@v3
       - name: Wait for app to start
         run: sleep 180
       - name: 📦 Install packages
