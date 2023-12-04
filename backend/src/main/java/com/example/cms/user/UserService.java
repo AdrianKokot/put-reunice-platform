@@ -1,6 +1,7 @@
 package com.example.cms.user;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.email.EmailSendingService;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -24,11 +25,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -41,6 +40,7 @@ public class UserService {
     private final PageRepository pageRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecurityService securityService;
+    private final EmailSendingService emailService;
 
     public UserDtoDetailed getUser(Long id) {
         return userRepository.findById(id).map(UserDtoDetailed::of).orElseThrow(UserNotFoundException::new);
@@ -99,6 +99,11 @@ public class UserService {
         newUser.setAccountType(form.getAccountType());
         newUser.setEnabled(form.isEnabled());
 
+//        try {
+//            emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         if (!newUser.getAccountType().equals(Role.ADMIN)) {
             newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
         }
@@ -131,6 +136,7 @@ public class UserService {
         if (userRepository.existsByUsername(form.getUsername())) {
             throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
+        String oldEmail = user.getEmail();
 
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
@@ -138,6 +144,10 @@ public class UserService {
         user.setPhoneNumber(form.getPhoneNumber());
         user.setDescription(form.getDescription());
         user.setUsername(form.getUsername());
+
+        if(!oldEmail.equals(user.getEmail())){
+                emailService.sendEditUserAccountMail(oldEmail,user, "administrator@wp.pl", "admin");
+        }
 
         if (securityService.hasHigherRoleThan(Role.USER)) {
             user.setEnabled(form.isEnabled());
@@ -210,6 +220,7 @@ public class UserService {
         }
 
         user.setEnabled(enabled);
+        
         userRepository.save(user);
     }
 
