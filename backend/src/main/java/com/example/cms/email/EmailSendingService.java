@@ -29,6 +29,7 @@ public class EmailSendingService {
     public enum EmailTemplate {
         NEW_USER_ACCOUNT("NewUserAccount"),
         EDIT_USER_ACCOUNT("EditUserAccount"),
+        EDIT_USER_ACCOUNT_WITH_PASSWORD("EditUserAccountWithPwd"),
         CHANGE_TICKET_STATUS("ChangeTicketStatus"),
         DELETE_USER_ACCOUNT("DeleteUserAccount"),
         DISABLE_USER_ACCOUNT("DisableUserAccount"),
@@ -49,6 +50,7 @@ public class EmailSendingService {
     @Value("${spring.mail.username}")
     private String sender;
 
+    @Async
     public void sendEmail(String receiver, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(sender);
@@ -115,6 +117,8 @@ public class EmailSendingService {
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT.templateName);
             contentMap.put("[Nowa Nazwa Użytkownika]", receiver.getUsername());
             contentMap.put("[Nowy Adres E-mail]", receiver.getEmail());
+            contentMap.put("[Nowe Imie]", receiver.getFirstName());
+            contentMap.put("[Nowe Nazwisko]", receiver.getLastName());
             contentMap.put("[Nazwa Administratora]", adminUsername);
             contentMap.put("[E-mail Administratora]", adminEmail);
             emailTemplateContent = editContent(emailTemplateContent);
@@ -128,6 +132,33 @@ public class EmailSendingService {
         }
     }
 
+    @Async
+    public void sendEditUserAccountMail(String oldEmail, User receiver, String adminUsername, String adminEmail, String password){
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(oldEmail);
+            helper.setSubject("Zmiany w Twoim koncie w systemie Reunice");
+            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT_WITH_PASSWORD.templateName);
+            contentMap.put("[Nowa Nazwa Użytkownika]", receiver.getUsername());
+            contentMap.put("[Nowy Adres E-mail]", receiver.getEmail());
+            contentMap.put("[Nowe Imie]", receiver.getFirstName());
+            contentMap.put("[Nowe Nazwisko]", receiver.getLastName());
+            contentMap.put("[Nowe Haslo]", password);
+            contentMap.put("[Nazwa Administratora]", adminUsername);
+            contentMap.put("[E-mail Administratora]", adminEmail);
+            emailTemplateContent = editContent(emailTemplateContent);
+            helper.setText(emailTemplateContent, true);
+            javaMailSender.send(message);
+            contentMap.clear();
+        } catch (MessagingException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Async
     public void sendChangeTicketStatusEmail(Ticket ticket) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -150,7 +181,8 @@ public class EmailSendingService {
         }
     }
 
-    public void sendDeleteAccountEmail(User receiver, User administrator) {
+    @Async
+    public void sendDeleteAccountEmail(User receiver, String administratorUsername, String administratorEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -159,8 +191,8 @@ public class EmailSendingService {
             helper.setSubject("Informacja o usunięciu konta w systemie Reunice");
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.DELETE_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Administratora]", administrator.getUsername());
-            contentMap.put("[E-mail Administratora]", administrator.getEmail());
+            contentMap.put("[Nazwa Administratora]", administratorUsername);
+            contentMap.put("[E-mail Administratora]", administratorEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -172,17 +204,18 @@ public class EmailSendingService {
         }
     }
 
-    public void sendDisableAccountEmail(User receiver, User administrator) {
+    @Async
+    public void sendDisableAccountEmail(User receiver,  String administratorUsername, String administratorEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Twoje konto zostało wyłączone/zawieszone w systemie Reunice");
+            helper.setSubject("Twoje konto zostało wyłączone w systemie Reunice");
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.DISABLE_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Administratora]", administrator.getUsername());
-            contentMap.put("[E-mail Administratora]", administrator.getEmail());
+            contentMap.put("[Nazwa Administratora]", administratorUsername);
+            contentMap.put("[E-mail Administratora]", administratorEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             contentMap.clear();
@@ -193,8 +226,8 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
-
-    public void sendEnableAccountEmail(User receiver, User administrator) {
+    @Async
+    public void sendEnableAccountEmail(User receiver, String administratorUsername, String administratorEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -203,8 +236,8 @@ public class EmailSendingService {
             helper.setSubject("Twoje konto zostało włączone w systemie Reunice");
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.ENABLE_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Administratora]", administrator.getUsername());
-            contentMap.put("[E-mail Administratora]", administrator.getEmail());
+            contentMap.put("[Nazwa Administratora]", administratorUsername);
+            contentMap.put("[E-mail Administratora]", administratorEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             contentMap.clear();

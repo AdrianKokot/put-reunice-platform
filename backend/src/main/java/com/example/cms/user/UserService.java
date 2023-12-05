@@ -27,17 +27,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +43,7 @@ public class UserService {
     private final PageRepository pageRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecurityService securityService;
+    private final EmailSendingService emailService;
 
     public UserDtoDetailed getUser(Long id) {
         return userRepository
@@ -112,11 +109,11 @@ public class UserService {
         newUser.setAccountType(form.getAccountType());
         newUser.setEnabled(form.isEnabled());
 
-//        try {
-//            emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (!newUser.getAccountType().equals(Role.ADMIN)) {
             newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
         }
@@ -142,14 +139,22 @@ public class UserService {
     @Secured("ROLE_USER")
     public UserDtoDetailed updateUser(Long id, UserDtoFormUpdate form) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        boolean nothingChangedToInfromWithEmail = false;
         if (securityService.isForbiddenUser(user)) {
             throw new UserForbiddenException();
         }
 
-        if (userRepository.existsByUsername(form.getUsername())) {
+        if (userRepository.existsByUsername(form.getUsername()) && !user.getUsername().equals(form.getUsername())) {
             throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
         String oldEmail = user.getEmail();
+
+        if(user.getUsername().equals(form.getUsername()) &&
+            user.getFirstName().equals(form.getFirstName()) &&
+            user.getEmail().equals(form.getEmail()) &&
+            user.getLastName().equals(form.getLastName())){
+            nothingChangedToInfromWithEmail = true;
+        }
 
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
@@ -158,11 +163,14 @@ public class UserService {
         user.setDescription(form.getDescription());
         user.setUsername(form.getUsername());
 
-        if(!oldEmail.equals(user.getEmail())){
-                emailService.sendEditUserAccountMail(oldEmail,user, "administrator@wp.pl", "admin");
-        }
 
         if (securityService.hasHigherRoleThan(Role.USER)) {
+            if(!form.isEnabled() && user.isEnabled()){
+                emailService.sendDisableAccountEmail(user,"Administrator", "administrator@reunice.pl");
+            } else if (form.isEnabled() && !user.isEnabled()) {
+                emailService.sendEnableAccountEmail(user,"Administrator", "administrator@reunice.pl");
+            }
+
             user.setEnabled(form.isEnabled());
             user.setAccountType(form.getAccountType());
 
@@ -176,6 +184,11 @@ public class UserService {
         if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
             validatePassword(form.getPassword());
             user.setPassword(passwordEncoder.encode(form.getPassword()));
+            emailService.sendEditUserAccountMail(oldEmail,user, "administrator@reunice.pl", "admin", form.getPassword());
+        } else {
+            if(!nothingChangedToInfromWithEmail){
+                emailService.sendEditUserAccountMail(oldEmail,user, "administrator@reunice.pl", "admin");
+            }
         }
 
         return UserDtoDetailed.of(userRepository.save(user));
@@ -317,7 +330,7 @@ public class UserService {
             throw new UserForbiddenException();
         }
         validateForDelete(user);
-
+        emailService.sendDeleteAccountEmail(user, "Administrator", "admin@reunice.pl");
         userRepository.delete(user);
     }
 
