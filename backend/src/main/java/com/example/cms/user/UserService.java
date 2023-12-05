@@ -17,14 +17,6 @@ import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashSet;
@@ -34,6 +26,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -144,15 +143,16 @@ public class UserService {
             throw new UserForbiddenException();
         }
 
-        if (userRepository.existsByUsername(form.getUsername()) && !user.getUsername().equals(form.getUsername())) {
+        if (userRepository.existsByUsername(form.getUsername())
+                && !user.getUsername().equals(form.getUsername())) {
             throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
         String oldEmail = user.getEmail();
 
-        if(user.getUsername().equals(form.getUsername()) &&
-            user.getFirstName().equals(form.getFirstName()) &&
-            user.getEmail().equals(form.getEmail()) &&
-            user.getLastName().equals(form.getLastName())){
+        if (user.getUsername().equals(form.getUsername())
+                && user.getFirstName().equals(form.getFirstName())
+                && user.getEmail().equals(form.getEmail())
+                && user.getLastName().equals(form.getLastName())) {
             nothingChangedToInfromWithEmail = true;
         }
 
@@ -163,12 +163,11 @@ public class UserService {
         user.setDescription(form.getDescription());
         user.setUsername(form.getUsername());
 
-
         if (securityService.hasHigherRoleThan(Role.USER)) {
-            if(!form.isEnabled() && user.isEnabled()){
-                emailService.sendDisableAccountEmail(user,"Administrator", "administrator@reunice.pl");
+            if (!form.isEnabled() && user.isEnabled()) {
+                emailService.sendDisableAccountEmail(user, "Administrator", "administrator@reunice.pl");
             } else if (form.isEnabled() && !user.isEnabled()) {
-                emailService.sendEnableAccountEmail(user,"Administrator", "administrator@reunice.pl");
+                emailService.sendEnableAccountEmail(user, "Administrator", "administrator@reunice.pl");
             }
 
             user.setEnabled(form.isEnabled());
@@ -184,10 +183,11 @@ public class UserService {
         if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
             validatePassword(form.getPassword());
             user.setPassword(passwordEncoder.encode(form.getPassword()));
-            emailService.sendEditUserAccountMail(oldEmail,user, "administrator@reunice.pl", "admin", form.getPassword());
+            emailService.sendEditUserAccountMail(
+                    oldEmail, user, "administrator@reunice.pl", "admin", form.getPassword());
         } else {
-            if(!nothingChangedToInfromWithEmail){
-                emailService.sendEditUserAccountMail(oldEmail,user, "administrator@reunice.pl", "admin");
+            if (!nothingChangedToInfromWithEmail) {
+                emailService.sendEditUserAccountMail(oldEmail, user, "administrator@reunice.pl", "admin");
             }
         }
 

@@ -105,9 +105,9 @@ public class EmailSendingService {
         }
     }
 
-
     @Async
-    public void sendEditUserAccountMail(String oldEmail, User receiver, String adminUsername, String adminEmail){
+    public void sendEditUserAccountMail(
+            String oldEmail, User receiver, String adminUsername, String adminEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -133,14 +133,16 @@ public class EmailSendingService {
     }
 
     @Async
-    public void sendEditUserAccountMail(String oldEmail, User receiver, String adminUsername, String adminEmail, String password){
+    public void sendEditUserAccountMail(
+            String oldEmail, User receiver, String adminUsername, String adminEmail, String password) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(oldEmail);
             helper.setSubject("Zmiany w Twoim koncie w systemie Reunice");
-            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT_WITH_PASSWORD.templateName);
+            String emailTemplateContent =
+                    loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT_WITH_PASSWORD.templateName);
             contentMap.put("[Nowa Nazwa Użytkownika]", receiver.getUsername());
             contentMap.put("[Nowy Adres E-mail]", receiver.getEmail());
             contentMap.put("[Nowe Imie]", receiver.getFirstName());
@@ -158,6 +160,7 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
+
     @Async
     public void sendChangeTicketStatusEmail(Ticket ticket) {
         try {
@@ -182,7 +185,8 @@ public class EmailSendingService {
     }
 
     @Async
-    public void sendDeleteAccountEmail(User receiver, String administratorUsername, String administratorEmail) {
+    public void sendDeleteAccountEmail(
+            User receiver, String administratorUsername, String administratorEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -205,7 +209,8 @@ public class EmailSendingService {
     }
 
     @Async
-    public void sendDisableAccountEmail(User receiver,  String administratorUsername, String administratorEmail) {
+    public void sendDisableAccountEmail(
+            User receiver, String administratorUsername, String administratorEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -226,8 +231,10 @@ public class EmailSendingService {
             throw new RuntimeException(e);
         }
     }
+
     @Async
-    public void sendEnableAccountEmail(User receiver, String administratorUsername, String administratorEmail) {
+    public void sendEnableAccountEmail(
+            User receiver, String administratorUsername, String administratorEmail) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
