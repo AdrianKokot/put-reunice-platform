@@ -1,17 +1,14 @@
 package com.example.cms.user;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+
 import com.example.cms.SearchCriteria;
 import com.example.cms.SearchSpecification;
 import com.example.cms.security.Role;
-import com.example.cms.university.University;
-import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
 import java.util.Set;
-
-import static java.lang.Boolean.parseBoolean;
-import static java.lang.Integer.parseInt;
+import javax.persistence.criteria.*;
+import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecification extends SearchSpecification implements Specification<User> {
 
@@ -20,16 +17,18 @@ public class UserSpecification extends SearchSpecification implements Specificat
     }
 
     @Override
-    public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(
+            Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
         if (criteria.getOperation().equalsIgnoreCase("ct")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
+                return criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get(criteria.getKey())),
+                        "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.equal(
-                        root.<String>get(criteria.getKey()), criteria.getValue());
+                return criteriaBuilder.equal(root.<String>get(criteria.getKey()), criteria.getValue());
             }
 
             if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
@@ -45,8 +44,7 @@ public class UserSpecification extends SearchSpecification implements Specificat
             if (root.get(criteria.getKey()).getJavaType() == Role.class) {
                 try {
                     Role searchRole = Role.valueOf(criteria.getValue().toString().toUpperCase());
-                    return criteriaBuilder.equal(
-                            root.<String>get(criteria.getKey()), searchRole);
+                    return criteriaBuilder.equal(root.<String>get(criteria.getKey()), searchRole);
                 } catch (Exception e) {
                     return criteriaBuilder.disjunction();
                 }

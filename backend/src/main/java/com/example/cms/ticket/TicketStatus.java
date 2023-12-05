@@ -1,7 +1,6 @@
 package com.example.cms.ticket;
 
 import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
-
 import java.util.List;
 
 public enum TicketStatus {
@@ -13,7 +12,7 @@ public enum TicketStatus {
 
     private final List<TicketStatus> allowedStatusChanges;
 
-    private TicketStatus(TicketStatus ...allowedStatusChanges) {
+    private TicketStatus(TicketStatus... allowedStatusChanges) {
         this.allowedStatusChanges = List.of(allowedStatusChanges);
     }
 

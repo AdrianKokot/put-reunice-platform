@@ -1,13 +1,12 @@
 package com.example.cms.keywords;
 
+import java.util.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.Objects;
 
 @Entity
 @Table(name = "keyWords")

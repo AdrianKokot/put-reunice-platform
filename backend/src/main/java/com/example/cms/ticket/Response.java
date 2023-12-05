@@ -1,18 +1,19 @@
 package com.example.cms.ticket;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.Instant;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
-import java.time.Instant;
-
 @Entity
-@Table(name="responses")
+@Table(name = "responses")
 @Getter
 public class Response {
-    public Response() {};
+    public Response() {}
+    ;
+
     public Response(String author, String content) {
         this.author = author;
         this.content = content;
@@ -23,8 +24,7 @@ public class Response {
     private Long id;
 
     private String author;
-    @CreationTimestamp
-    private Instant responseTime;
+    @CreationTimestamp private Instant responseTime;
     private String content;
 
     @Setter

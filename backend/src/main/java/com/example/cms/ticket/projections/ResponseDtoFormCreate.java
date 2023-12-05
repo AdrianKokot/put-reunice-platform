@@ -7,6 +7,7 @@ import lombok.Getter;
 public class ResponseDtoFormCreate {
     String author;
     String content;
+
     public Response toResponse() {
         return new Response(this.author, this.content);
     }

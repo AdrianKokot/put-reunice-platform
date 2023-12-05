@@ -2,14 +2,13 @@ package com.example.cms.university;
 
 import com.example.cms.page.Page;
 import com.example.cms.user.User;
-import lombok.*;
-import org.hibernate.Hibernate;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "universities")
@@ -22,12 +21,13 @@ public class University {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_enrolled",
             joinColumns = @JoinColumn(name = "university_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> enrolledUsers = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -37,6 +37,7 @@ public class University {
     @Column(unique = true)
     @NotBlank(message = "ERRORS.UNIVERSITY.400.NAME_EMPTY")
     private String name;
+
     @Column(unique = true)
     @NotBlank(message = "ERRORS.UNIVERSITY.400.SHORT_NAME_EMPTY")
     private String shortName;
@@ -46,18 +47,25 @@ public class University {
 
     @NotBlank(message = "ERRORS.UNIVERSITY.400.DESCRIPTION_EMPTY")
     private String description;
+
     private boolean hidden;
 
     private String image;
 
     @Override
     public String toString() {
-        return "University{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", shortName='" + shortName + '\'' +
-                ", isHidden=" + hidden +
-                '}';
+        return "University{"
+                + "id="
+                + id
+                + ", name='"
+                + name
+                + '\''
+                + ", shortName='"
+                + shortName
+                + '\''
+                + ", isHidden="
+                + hidden
+                + '}';
     }
 
     public void enrollUsers(User user) {
@@ -76,5 +84,4 @@ public class University {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }
