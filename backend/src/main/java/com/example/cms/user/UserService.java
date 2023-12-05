@@ -135,10 +135,9 @@ public class UserService {
         }
     }
 
-    @Secured("ROLE_USER")
-    public UserDtoDetailed updateUser(Long id, UserDtoFormUpdate form) {
+    private User validateUserAndForm(Long id, UserDtoFormUpdate form) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        boolean nothingChangedToInfromWithEmail = false;
+
         if (securityService.isForbiddenUser(user)) {
             throw new UserForbiddenException();
         }
@@ -147,22 +146,27 @@ public class UserService {
                 && !user.getUsername().equals(form.getUsername())) {
             throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
-        String oldEmail = user.getEmail();
 
-        if (user.getUsername().equals(form.getUsername())
+        return user;
+    }
+
+    private boolean mainDataNotChanged(User user, UserDtoFormUpdate form) {
+        return user.getUsername().equals(form.getUsername())
                 && user.getFirstName().equals(form.getFirstName())
                 && user.getEmail().equals(form.getEmail())
-                && user.getLastName().equals(form.getLastName())) {
-            nothingChangedToInfromWithEmail = true;
-        }
+                && user.getLastName().equals(form.getLastName());
+    }
 
+    private void updateUserDetails(User user, UserDtoFormUpdate form) {
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
         user.setEmail(form.getEmail());
         user.setPhoneNumber(form.getPhoneNumber());
         user.setDescription(form.getDescription());
         user.setUsername(form.getUsername());
+    }
 
+    private void handleUpdateAccountStatus(User user, UserDtoFormUpdate form) {
         if (securityService.hasHigherRoleThan(Role.USER)) {
             if (!form.isEnabled() && user.isEnabled()) {
                 emailService.sendDisableAccountEmail(user, "Administrator", "administrator@reunice.pl");
@@ -179,6 +183,15 @@ public class UserService {
                 user.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
             }
         }
+    }
+
+    @Secured("ROLE_USER")
+    public UserDtoDetailed updateUser(Long id, UserDtoFormUpdate form) {
+        User user = validateUserAndForm(id, form);
+        boolean mainDataNotChanged = mainDataNotChanged(user, form);
+        String oldEmail = user.getEmail();
+        updateUserDetails(user, form);
+        handleUpdateAccountStatus(user, form);
 
         if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
             validatePassword(form.getPassword());
@@ -186,7 +199,7 @@ public class UserService {
             emailService.sendEditUserAccountMail(
                     oldEmail, user, "administrator@reunice.pl", "admin", form.getPassword());
         } else {
-            if (!nothingChangedToInfromWithEmail) {
+            if (!mainDataNotChanged) {
                 emailService.sendEditUserAccountMail(oldEmail, user, "administrator@reunice.pl", "admin");
             }
         }
