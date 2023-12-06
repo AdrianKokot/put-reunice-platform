@@ -142,11 +142,12 @@ public class UserService {
             throw new UserForbiddenException();
         }
 
-        if (userRepository.existsByUsername(form.getUsername())
-                && !user.getUsername().equals(form.getUsername())) {
-            throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
+        if (userRepository.existsByUsername(form.getUsername())) {
+            User newUser = userRepository.findByUsername(form.getUsername()).orElse(null);
+            if(!newUser.getId().equals(user.getId())) {
+                throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
+            }
         }
-
         return user;
     }
 
