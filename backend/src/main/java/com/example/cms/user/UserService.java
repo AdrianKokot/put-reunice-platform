@@ -144,7 +144,7 @@ public class UserService {
 
         if (userRepository.existsByUsername(form.getUsername())) {
             User newUser = userRepository.findByUsername(form.getUsername()).orElse(null);
-            if(!newUser.getId().equals(user.getId())) {
+            if (!newUser.getId().equals(user.getId())) {
                 throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
             }
         }
