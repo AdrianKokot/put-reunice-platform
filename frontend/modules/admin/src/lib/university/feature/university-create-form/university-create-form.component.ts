@@ -21,7 +21,10 @@ export class UniversityCreateFormComponent {
     name: ['', [Validators.required, Validators.maxLength(255)]],
     shortName: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
+    address: ['', [Validators.maxLength(255)]],
+    website: ['', [Validators.maxLength(255)]],
   });
+
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.create(value),
     successAlertMessage: 'UNIVERSITY_CREATE_SUCCESS',
