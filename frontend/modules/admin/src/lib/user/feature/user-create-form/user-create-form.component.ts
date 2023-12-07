@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Optional,
+} from '@angular/core';
 import {
   AccountTypeEnum,
   UniversityService,
@@ -82,8 +87,8 @@ export class UserCreateFormComponent {
     'name',
   );
 
-  constructor(routeSnapshot: ActivatedRouteSnapshot) {
-    if (routeSnapshot.queryParamMap.has('universityId')) {
+  constructor(@Optional() routeSnapshot?: ActivatedRouteSnapshot) {
+    if (routeSnapshot?.queryParamMap.has('universityId')) {
       this.form.patchValue({
         enrolledUniversities: Number(
           routeSnapshot.queryParamMap.get('universityId'),
