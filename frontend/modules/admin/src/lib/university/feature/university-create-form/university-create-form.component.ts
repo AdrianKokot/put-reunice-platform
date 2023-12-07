@@ -6,11 +6,12 @@ import {
   BaseFormImportsModule,
   navigateToResourceDetails,
 } from '../../../shared';
+import { ConfirmDirective } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-university-create-form',
   standalone: true,
-  imports: [BaseFormImportsModule],
+  imports: [BaseFormImportsModule, ConfirmDirective],
   templateUrl: './university-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

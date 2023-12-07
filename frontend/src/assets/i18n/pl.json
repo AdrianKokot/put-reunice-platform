@@ -213,6 +213,7 @@
   "UNIVERSITIES_MANAGEMENT": "Zarządzanie uniwersytetami",
   "UNIVERSITIES_WE_WORK_WITH": "Uniwersytety, z którymi współpracujemy",
   "UNIVERSITY": "Uniwersytet",
+  "UNIVERSITY_CREATE_DESCRIPTION": "Czy na pewno chcesz utworzyć uniwersytet <strong>{{name}}</strong>?",
   "UNIVERSITY_DELETE_DESCRIPTION": "Czy na pewno chcesz usunąć ten uniwersytet?",
   "UNIVERSITY_DETAILS": "Szczegóły uniwersytetu",
   "UNIVERSITY_IMAGE": "Zdjęcie uniwersytetu",
