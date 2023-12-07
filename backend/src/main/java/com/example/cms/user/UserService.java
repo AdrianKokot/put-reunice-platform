@@ -1,6 +1,7 @@
 package com.example.cms.user;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.email.EmailSendingService;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -16,6 +17,7 @@ import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +42,7 @@ public class UserService {
     private final PageRepository pageRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecurityService securityService;
+    private final EmailSendingService emailService;
 
     public UserDtoDetailed getUser(Long id) {
         return userRepository
@@ -105,6 +108,11 @@ public class UserService {
         newUser.setAccountType(form.getAccountType());
         newUser.setEnabled(form.isEnabled());
 
+        try {
+            emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (!newUser.getAccountType().equals(Role.ADMIN)) {
             newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
         }
@@ -127,25 +135,46 @@ public class UserService {
         }
     }
 
-    @Secured("ROLE_USER")
-    public UserDtoDetailed updateUser(Long id, UserDtoFormUpdate form) {
+    private User validateUserAndForm(Long id, UserDtoFormUpdate form) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+
         if (securityService.isForbiddenUser(user)) {
             throw new UserForbiddenException();
         }
 
         if (userRepository.existsByUsername(form.getUsername())) {
-            throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
+            User newUser = userRepository.findByUsername(form.getUsername()).orElse(null);
+            if (!newUser.getId().equals(user.getId())) {
+                throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
+            }
         }
+        return user;
+    }
 
+    private boolean mainDataNotChanged(User user, UserDtoFormUpdate form) {
+        return user.getUsername().equals(form.getUsername())
+                && user.getFirstName().equals(form.getFirstName())
+                && user.getEmail().equals(form.getEmail())
+                && user.getLastName().equals(form.getLastName());
+    }
+
+    private void updateUserDetails(User user, UserDtoFormUpdate form) {
         user.setFirstName(form.getFirstName());
         user.setLastName(form.getLastName());
         user.setEmail(form.getEmail());
         user.setPhoneNumber(form.getPhoneNumber());
         user.setDescription(form.getDescription());
         user.setUsername(form.getUsername());
+    }
 
+    private void handleUpdateAccountStatus(User user, UserDtoFormUpdate form) {
         if (securityService.hasHigherRoleThan(Role.USER)) {
+            if (!form.isEnabled() && user.isEnabled()) {
+                emailService.sendDisableAccountEmail(user, "Administrator", "administrator@reunice.pl");
+            } else if (form.isEnabled() && !user.isEnabled()) {
+                emailService.sendEnableAccountEmail(user, "Administrator", "administrator@reunice.pl");
+            }
+
             user.setEnabled(form.isEnabled());
             user.setAccountType(form.getAccountType());
 
@@ -155,10 +184,25 @@ public class UserService {
                 user.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
             }
         }
+    }
+
+    @Secured("ROLE_USER")
+    public UserDtoDetailed updateUser(Long id, UserDtoFormUpdate form) {
+        User user = validateUserAndForm(id, form);
+        boolean mainDataNotChanged = mainDataNotChanged(user, form);
+        String oldEmail = user.getEmail();
+        updateUserDetails(user, form);
+        handleUpdateAccountStatus(user, form);
 
         if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
             validatePassword(form.getPassword());
             user.setPassword(passwordEncoder.encode(form.getPassword()));
+            emailService.sendEditUserAccountMail(
+                    oldEmail, user, "administrator@reunice.pl", "admin", form.getPassword());
+        } else {
+            if (!mainDataNotChanged) {
+                emailService.sendEditUserAccountMail(oldEmail, user, "administrator@reunice.pl", "admin");
+            }
         }
 
         return UserDtoDetailed.of(userRepository.save(user));
@@ -231,6 +275,7 @@ public class UserService {
         }
 
         user.setEnabled(enabled);
+
         userRepository.save(user);
     }
 
@@ -299,7 +344,7 @@ public class UserService {
             throw new UserForbiddenException();
         }
         validateForDelete(user);
-
+        emailService.sendDeleteAccountEmail(user, "Administrator", "admin@reunice.pl");
         userRepository.delete(user);
     }
 
