@@ -18,6 +18,7 @@ import {
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'reunice-user-create-form',
@@ -80,4 +81,14 @@ export class UserCreateFormComponent {
     'search',
     'name',
   );
+
+  constructor(routeSnapshot: ActivatedRouteSnapshot) {
+    if (routeSnapshot.queryParamMap.has('universityId')) {
+      this.form.patchValue({
+        enrolledUniversities: Number(
+          routeSnapshot.queryParamMap.get('universityId'),
+        ),
+      });
+    }
+  }
 }
