@@ -8,6 +8,7 @@ import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
+import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
@@ -63,12 +64,12 @@ public class TicketService {
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
-
+        //TODO: TicketUserStatus lastSeenOn na optional
         Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
         ticket.setTicketHandlers(
                 page.getHandlers().stream().map(handler -> {
                     TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                    ticketUserStatus.setLastSeenOn(Instant.now());
+                    ticketUserStatus.setLastSeenOn(Instant.EPOCH);
                     ticketUserStatus.setUser(handler);
                     ticketUserStatus.setTicket(ticket);
                     ticketUserStatusRepository.save(ticketUserStatus);
@@ -76,6 +77,10 @@ public class TicketService {
                 }).collect(Collectors.toSet()));
 
         return ticket.getId();
+    }
+
+    public UUID createTicket(TicketDtoFormCreate ticketDto) {
+        return createTicket(ticketDto.getRequesterEmail(), ticketDto.getTitle(), ticketDto.getDescription(), ticketDto.getPageId());
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {
@@ -96,18 +101,25 @@ public class TicketService {
         Role role = null;
         Collection<Long> handlesPages = null;
         String email = null;
+        Long id = null;
 
         if (loggedUserOptional.isPresent()) {
             LoggedUser loggedUser = loggedUserOptional.get();
             role = loggedUser.getAccountType();
             handlesPages = loggedUser.getHandlesPages();
             email = loggedUser.getEmail();
+            id = loggedUser.getId();
         }
 
         Specification<Ticket> combinedSpecification = Specification.where(
                 new TicketRoleSpecification(role,
                         handlesPages,
                         email));
+
+        if (filterVars.containsKey("unseen")) {
+            filterVars.remove("unseen");
+            combinedSpecification = combinedSpecification.and(new UnseenTicketSpecification(id));
+        }
 
         if (!filterVars.isEmpty()) {
             List<TicketSpecification> specifications = filterVars.entrySet().stream()
@@ -142,7 +154,8 @@ public class TicketService {
     }
 
     public Ticket getTicketById(UUID id) {
-        return getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
-                .get().collect(Collectors.toList()).get(0);
+        List<Ticket> ticketList = getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
+                .get().collect(Collectors.toList());
+        return ticketList.get(0);
     }
 }
