@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Optional,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AccountTypeEnum,
   UniversityService,
@@ -23,7 +18,7 @@ import {
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'reunice-user-create-form',
@@ -87,11 +82,11 @@ export class UserCreateFormComponent {
     'name',
   );
 
-  constructor(@Optional() routeSnapshot?: ActivatedRouteSnapshot) {
-    if (routeSnapshot?.queryParamMap.has('universityId')) {
+  constructor(route: ActivatedRoute) {
+    if (route.snapshot.queryParamMap.has('universityId')) {
       this.form.patchValue({
         enrolledUniversities: Number(
-          routeSnapshot.queryParamMap.get('universityId'),
+          route.snapshot.queryParamMap.get('universityId'),
         ),
       });
     }

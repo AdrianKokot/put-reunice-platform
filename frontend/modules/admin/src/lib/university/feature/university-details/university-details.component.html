@@ -1,10 +1,16 @@
 <div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
   <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'UNIVERSITY_NAME' | translate"
+      class="tui-form__multi-field"
+    >
       {{ item?.name ?? '—' }}
     </label>
 
-    <label [tuiLabel]="'SHORT_NAME' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'UNIVERSITY_SHORT_NAME' | translate"
+      class="tui-form__multi-field"
+    >
       {{ item?.shortName ?? '—' }}
     </label>
 
