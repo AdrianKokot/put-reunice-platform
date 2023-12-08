@@ -5,7 +5,10 @@
     (ngSubmit)="handler.submit()"
   >
     <div class="tui-form__row tui-form__row_multi-fields">
-      <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
+      <label
+        [tuiLabel]="'UNIVERSITY_NAME' | translate"
+        class="tui-form__multi-field"
+      >
         <tui-input
           formControlName="name"
           tuiTextfieldSize="m"
@@ -21,7 +24,7 @@
       </label>
 
       <label
-        [tuiLabel]="'SHORT_NAME' | translate"
+        [tuiLabel]="'UNIVERSITY_SHORT_NAME' | translate"
         class="tui-form__multi-field"
       >
         <tui-input

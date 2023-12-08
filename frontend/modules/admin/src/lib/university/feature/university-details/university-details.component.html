@@ -1,10 +1,16 @@
 <div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
   <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'UNIVERSITY_NAME' | translate"
+      class="tui-form__multi-field"
+    >
       {{ item?.name ?? '—' }}
     </label>
 
-    <label [tuiLabel]="'SHORT_NAME' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'UNIVERSITY_SHORT_NAME' | translate"
+      class="tui-form__multi-field"
+    >
       {{ item?.shortName ?? '—' }}
     </label>
 
@@ -46,34 +52,46 @@
     class="tui-form__buttons tui-form__buttons_align_end"
     *ngIf="item !== null"
   >
-    <button
-      *reuniceUserControlsResource="item"
-      tuiButton
-      type="button"
-      appearance="flat-destructive"
-      class="tui-form__button"
-      [reuniceConfirm]="'UNIVERSITY_DELETE_DESCRIPTION' | translate"
-      [showLoader]="(deleteHandler.loading$ | async) ?? false"
-      [disabled]="
-        !item.hidden ||
-        item.mainPage.children.length > 0 ||
-        item.enrolledUsers.length > 0
-      "
-      [tuiHint]="
-        (!item.hidden
-          ? 'CANNOT_DELETE_VISIBLE_UNIVERSITY'
-          : item.mainPage.children.length > 0
-          ? 'CANNOT_DELETE_UNIVERSITY_WITH_PAGES'
-          : item.enrolledUsers.length > 0
-          ? 'CANNOT_DELETE_UNIVERSITY_WITH_ENROLLED_USERS'
-          : ''
-        ) | translate
-      "
-      (confirm)="deleteHandler.delete(item.id)"
-      data-test="delete-button"
-    >
-      {{ 'DELETE' | translate }}
-    </button>
+    <ng-container *reuniceUserControlsResource="item">
+      <a
+        tuiButton
+        [routerLink]="['../../users/new']"
+        [queryParams]="{ universityId: item.id }"
+        type="button"
+        appearance="flat"
+        class="tui-form__button"
+      >
+        {{ 'CREATE_UNIVERSITY_USER' | translate }}
+      </a>
+
+      <button
+        tuiButton
+        type="button"
+        appearance="flat-destructive"
+        class="tui-form__button"
+        [reuniceConfirm]="'UNIVERSITY_DELETE_DESCRIPTION' | translate"
+        [showLoader]="(deleteHandler.loading$ | async) ?? false"
+        [disabled]="
+          !item.hidden ||
+          item.mainPage.children.length > 0 ||
+          item.enrolledUsers.length > 0
+        "
+        [tuiHint]="
+          (!item.hidden
+            ? 'CANNOT_DELETE_VISIBLE_UNIVERSITY'
+            : item.mainPage.children.length > 0
+            ? 'CANNOT_DELETE_UNIVERSITY_WITH_PAGES'
+            : item.enrolledUsers.length > 0
+            ? 'CANNOT_DELETE_UNIVERSITY_WITH_ENROLLED_USERS'
+            : ''
+          ) | translate
+        "
+        (confirm)="deleteHandler.delete(item.id)"
+        data-test="delete-button"
+      >
+        {{ 'DELETE' | translate }}
+      </button>
+    </ng-container>
 
     <a
       [routerLink]="['edit']"

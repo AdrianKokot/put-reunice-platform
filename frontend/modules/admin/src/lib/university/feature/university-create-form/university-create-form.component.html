@@ -1,6 +1,9 @@
 <form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
   <div class="tui-form__row tui-form__row_multi-fields">
-    <label [tuiLabel]="'NAME' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'UNIVERSITY_NAME' | translate"
+      class="tui-form__multi-field"
+    >
       <tui-input
         formControlName="name"
         tuiTextfieldSize="m"
@@ -15,7 +18,10 @@
       ></tui-error>
     </label>
 
-    <label [tuiLabel]="'SHORT_NAME' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'UNIVERSITY_SHORT_NAME' | translate"
+      class="tui-form__multi-field"
+    >
       <tui-input
         formControlName="shortName"
         tuiTextfieldSize="m"
@@ -26,6 +32,44 @@
 
       <tui-error
         formControlName="shortName"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </div>
+
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label
+      [tuiLabel]="'ADDRESS' | translate"
+      class="tui-form__multi-field _optional"
+    >
+      <tui-input
+        formControlName="address"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="address"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
+    <label
+      [tuiLabel]="'WEBSITE' | translate"
+      class="tui-form__multi-field _optional"
+    >
+      <tui-input
+        formControlName="website"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" />
+      </tui-input>
+
+      <tui-error
+        formControlName="website"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
     </label>
@@ -64,6 +108,11 @@
       type="submit"
       class="tui-form__button"
       [showLoader]="(handler.loading$ | async) ?? false"
+      [reuniceConfirm]="
+        'UNIVERSITY_CREATE_DESCRIPTION'
+          | translate: { name: handler.form.controls.name.value }
+      "
+      (confirm)="handler.submit()"
     >
       {{ 'SAVE' | translate }}
     </button>
