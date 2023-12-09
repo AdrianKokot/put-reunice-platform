@@ -10,12 +10,16 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.example.cms.validation.exceptions.ForbiddenException;
+import com.example.cms.validation.exceptions.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,7 +61,7 @@ public class UniversityController {
                                 form.getName(),
                                 form.getShortName(),
                                 form.getDescription(),
-                                securityService.getPrincipal().get().getId(),
+                                securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId(),
                                 form.getAddress(),
                                 form.getWebsite()));
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
