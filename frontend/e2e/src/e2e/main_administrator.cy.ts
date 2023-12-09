@@ -1,5 +1,5 @@
 import { E2EUser } from '../support/commands';
-import { Form, Resource } from '../support/pages/common.constants';
+import { Dialog, Form, Resource } from '../support/pages/common.constants';
 import { AdminUniversityPage } from '../support/pages/university.constants';
 import {
   clickOnTile,
@@ -26,6 +26,7 @@ describe('Main Administrator', () => {
       shortName: `TU_${testTimestamp}`,
     });
     Form.submit();
+    Dialog.confirm();
 
     waitForResponse('@createUniversity', 201);
 
