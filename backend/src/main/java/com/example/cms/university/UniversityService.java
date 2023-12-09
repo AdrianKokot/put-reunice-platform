@@ -217,8 +217,7 @@ public class UniversityService {
         }
 
         validateForDelete(university);
-        if (university.getMainPage() != null)
-            pageRepository.delete(university.getMainPage());
+        if (university.getMainPage() != null) pageRepository.delete(university.getMainPage());
         universityRepository.delete(university);
     }
 

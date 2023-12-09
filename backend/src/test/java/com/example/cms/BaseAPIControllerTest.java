@@ -1,10 +1,13 @@
 package com.example.cms;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import com.example.cms.development.CustomAuthenticationToken;
 import com.example.cms.security.Role;
 import com.example.cms.user.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +23,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Set;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("secured, h2")
@@ -32,23 +31,18 @@ public class BaseAPIControllerTest {
         return getUrl() + "/" + id;
     }
 
-    /**
-     * @return API base url
-     */
+    /** @return API base url */
     protected String getUrl() {
         return "";
     }
 
-    @Autowired
-    protected UserRepository userRepository;
-    @Autowired
-    protected WebApplicationContext webApplicationContext;
+    @Autowired protected UserRepository userRepository;
+    @Autowired protected WebApplicationContext webApplicationContext;
 
     protected MockMvc mvc;
     protected SecurityContext ctx;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
+    @Autowired protected ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() {
@@ -60,37 +54,35 @@ public class BaseAPIControllerTest {
         this.setupData();
     }
 
-    /**
-     * This method is used to set up data for the test
-     */
-    protected void setupData() {
-    }
+    /** This method is used to set up data for the test */
+    protected void setupData() {}
 
     /**
      * This method is used to get the value of a response body
      *
      * @param resultActions ResultActions object
-     * @param valueTypeRef  TypeReference object
+     * @param valueTypeRef TypeReference object
      * @return T object
      */
-    protected <T> T getValue(ResultActions resultActions, TypeReference<T> valueTypeRef) throws Exception {
-        return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), valueTypeRef);
+    protected <T> T getValue(ResultActions resultActions, TypeReference<T> valueTypeRef)
+            throws Exception {
+        return objectMapper.readValue(
+                resultActions.andReturn().getResponse().getContentAsString(), valueTypeRef);
     }
 
     /**
      * This method is used to get the value of a response body
      *
      * @param resultActions ResultActions object
-     * @param valueTypeRef  TypeReference object
+     * @param valueTypeRef TypeReference object
      * @return T object
      */
     protected <T> T getValue(ResultActions resultActions, Class<T> valueTypeRef) throws Exception {
-        return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), valueTypeRef);
+        return objectMapper.readValue(
+                resultActions.andReturn().getResponse().getContentAsString(), valueTypeRef);
     }
 
-    /**
-     * @return Perform APPLICATION_JSON GET request to the API url returned by getUrl()
-     */
+    /** @return Perform APPLICATION_JSON GET request to the API url returned by getUrl() */
     protected ResultActions performGet() throws Exception {
         return mvc.perform(get(getUrl()).contentType(MediaType.APPLICATION_JSON));
     }
@@ -116,16 +108,22 @@ public class BaseAPIControllerTest {
      * @return Perform APPLICATION_JSON POST request to the API url returned by getUrl()
      */
     protected ResultActions performPost(Object object) throws Exception {
-        return mvc.perform(post(getUrl()).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(object)));
+        return mvc.perform(
+                post(getUrl())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(object)));
     }
 
     /**
-     * @param id     ID of the object to be updated
+     * @param id ID of the object to be updated
      * @param object Object to be updated
      * @return Perform APPLICATION_JSON PUT request to the API url returned by getUrl(id)
      */
     protected ResultActions performPut(Long id, Object object) throws Exception {
-        return mvc.perform(put(getUrl(id)).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(object)));
+        return mvc.perform(
+                put(getUrl(id))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(object)));
     }
 
     /**
@@ -136,9 +134,7 @@ public class BaseAPIControllerTest {
         return mvc.perform(delete(getUrl(id)).contentType(MediaType.APPLICATION_JSON));
     }
 
-    /**
-     * Set the current user to anonymous (guest)
-     */
+    /** Set the current user to anonymous (guest) */
     protected void performAsGuest() {
         ctx.setAuthentication(new TestingAuthenticationToken(null, null));
     }
@@ -155,9 +151,8 @@ public class BaseAPIControllerTest {
     /**
      * Set the current user to the given role and user
      *
-     * @param role   Role of the user
-     * @param userId ID of the user.
-     *               User will be updated to match the given role
+     * @param role Role of the user
+     * @param userId ID of the user. User will be updated to match the given role
      */
     protected void performAs(Role role, Long userId) {
         performAs(role, Set.of(), userId);
@@ -166,10 +161,9 @@ public class BaseAPIControllerTest {
     /**
      * Set the current user to the given role, user and universities
      *
-     * @param role         Role of the user
+     * @param role Role of the user
      * @param universities Universities of the user
-     * @param userId       ID of the user.
-     *                     User will be updated to match the given role
+     * @param userId ID of the user. User will be updated to match the given role
      */
     protected void performAs(Role role, Set<Long> universities, Long userId) {
         if (userRepository.existsById(userId)) {
@@ -184,7 +178,7 @@ public class BaseAPIControllerTest {
     /**
      * Set the current user to the given role and universities
      *
-     * @param role         Role of the user
+     * @param role Role of the user
      * @param universities Universities of the user
      */
     protected void performAs(Role role, Set<Long> universities) {

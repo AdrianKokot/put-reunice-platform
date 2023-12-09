@@ -1,5 +1,6 @@
 package com.example.cms.university;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.cms.BaseAPIControllerTest;
 import com.example.cms.security.Role;
@@ -7,21 +8,16 @@ import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.user.User;
+import java.time.Instant;
+import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Instant;
-import java.util.Set;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
 class UniversityControllerTest extends BaseAPIControllerTest {
-    @Autowired
-    private UniversityRepository universityRepository;
+    @Autowired private UniversityRepository universityRepository;
 
     private Long userId = 99L;
     private Long universityId = 99L;
@@ -54,15 +50,23 @@ class UniversityControllerTest extends BaseAPIControllerTest {
 
         var university =
                 new University(
-                        null, null, null, "TEST_UNIVERSITY" + Instant.now().toString(), "TST_U" + Instant.now().toString(), null, null, "TEST_UNIVERSITY", false, "");
+                        null,
+                        null,
+                        null,
+                        "TEST_UNIVERSITY" + Instant.now().toString(),
+                        "TST_U" + Instant.now().toString(),
+                        null,
+                        null,
+                        "TEST_UNIVERSITY",
+                        false,
+                        "");
         university = universityRepository.save(university);
         this.universityId = university.getId();
     }
 
     @AfterEach
     public void cleanup() {
-        if (userRepository.existsById(this.userId))
-            userRepository.deleteById(this.userId);
+        if (userRepository.existsById(this.userId)) userRepository.deleteById(this.userId);
         if (universityRepository.existsById(this.universityId))
             universityRepository.deleteById(this.universityId);
     }
@@ -73,14 +77,14 @@ class UniversityControllerTest extends BaseAPIControllerTest {
 
         @BeforeEach
         public void setup() {
-            dto = new UniversityDtoFormCreate(
-                    "TEST_UNIVERSITY" + Instant.now().toString(),
-                    "TU" + Instant.now().toString(),
-                    "TEST_UNIVERSITY_DESCRIPTION",
-                    userId,
-                    "TEST_UNIVERSITY_ADDRESS",
-                    "TEST_UNIVERSITY_WEBSITE"
-            );
+            dto =
+                    new UniversityDtoFormCreate(
+                            "TEST_UNIVERSITY" + Instant.now().toString(),
+                            "TU" + Instant.now().toString(),
+                            "TEST_UNIVERSITY_DESCRIPTION",
+                            userId,
+                            "TEST_UNIVERSITY_ADDRESS",
+                            "TEST_UNIVERSITY_WEBSITE");
         }
 
         @Test
@@ -105,9 +109,9 @@ class UniversityControllerTest extends BaseAPIControllerTest {
         void create_Administrator_Success() throws Exception {
             performAs(Role.ADMIN, userId);
 
-            var createdUniversityDto = getValue(performPost(dto).andExpect(status().is2xxSuccessful())
-                    ,
-                    UniversityDtoDetailed.class);
+            var createdUniversityDto =
+                    getValue(
+                            performPost(dto).andExpect(status().is2xxSuccessful()), UniversityDtoDetailed.class);
 
             try {
                 performDelete(createdUniversityDto.getId()).andExpect(status().is2xxSuccessful());
@@ -122,14 +126,14 @@ class UniversityControllerTest extends BaseAPIControllerTest {
 
         @BeforeEach
         public void setup() {
-            dto = new UniversityDtoFormUpdate(
-                    "TEST_UNIVERSITY" + Instant.now().toString(),
-                    "TU" + Instant.now().toString(),
-                    "TEST_UNIVERSITY_DESCRIPTION",
-                    "TEST_UNIVERSITY_ADDRESS",
-                    "TEST_UNIVERSITY_WEBSITE",
-                    false
-            );
+            dto =
+                    new UniversityDtoFormUpdate(
+                            "TEST_UNIVERSITY" + Instant.now().toString(),
+                            "TU" + Instant.now().toString(),
+                            "TEST_UNIVERSITY_DESCRIPTION",
+                            "TEST_UNIVERSITY_ADDRESS",
+                            "TEST_UNIVERSITY_WEBSITE",
+                            false);
         }
 
         @Test
@@ -195,18 +199,18 @@ class UniversityControllerTest extends BaseAPIControllerTest {
 
             var universityDto =
                     getValue(
-                            performGet(universityId).andExpect(status().isOk()),
-                            UniversityDtoDetailed.class
-                    );
+                            performGet(universityId).andExpect(status().isOk()), UniversityDtoDetailed.class);
 
-            performPut(universityId, new UniversityDtoFormUpdate(
-                    universityDto.getName(),
-                    universityDto.getShortName(),
-                    universityDto.getDescription(),
-                    universityDto.getAddress(),
-                    universityDto.getWebsite(),
-                    true
-            )).andExpect(status().is2xxSuccessful());
+            performPut(
+                            universityId,
+                            new UniversityDtoFormUpdate(
+                                    universityDto.getName(),
+                                    universityDto.getShortName(),
+                                    universityDto.getDescription(),
+                                    universityDto.getAddress(),
+                                    universityDto.getWebsite(),
+                                    true))
+                    .andExpect(status().is2xxSuccessful());
 
             performDelete(universityId).andExpect(status().is2xxSuccessful());
         }

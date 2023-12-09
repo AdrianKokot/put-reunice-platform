@@ -1,5 +1,9 @@
 package com.example.cms.page;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.example.cms.BaseAPIControllerTest;
 import com.example.cms.page.projections.PageDtoDetailed;
 import com.example.cms.page.projections.PageDtoFormUpdate;
@@ -8,26 +12,19 @@ import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 class PageControllerTest extends BaseAPIControllerTest {
-    @Autowired
-    private UniversityRepository universityRepository;
+    @Autowired private UniversityRepository universityRepository;
 
-    @Autowired
-    private PageRepository pageRepository;
+    @Autowired private PageRepository pageRepository;
 
     private Long universityId = 99L;
     private Long pageId = 99L;
@@ -86,8 +83,7 @@ class PageControllerTest extends BaseAPIControllerTest {
 
     @AfterEach
     public void cleanup() {
-        if (pageRepository.existsById(this.pageId))
-            pageRepository.deleteById(this.pageId);
+        if (pageRepository.existsById(this.pageId)) pageRepository.deleteById(this.pageId);
         if (universityRepository.existsById(this.universityId))
             universityRepository.deleteById(this.universityId);
         if (userRepository.existsById(this.userId)) userRepository.deleteById(this.userId);
@@ -222,8 +218,7 @@ class PageControllerTest extends BaseAPIControllerTest {
                 var items =
                         getValue(
                                 performGet("?hidden_eq=false").andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {
-                                });
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(items, everyItem(hasProperty("hidden", is(false))));
             }
@@ -235,8 +230,7 @@ class PageControllerTest extends BaseAPIControllerTest {
                 var items =
                         getValue(
                                 performGet("?hidden_eq=true").andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {
-                                });
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(items, everyItem(hasProperty("hidden", is(true))));
             }
@@ -249,8 +243,10 @@ class PageControllerTest extends BaseAPIControllerTest {
                     throws Exception {
                 performAs(Role.MODERATOR, Set.of(universityId));
 
-                var items = getValue(performGet().andExpect(status().isOk()), new TypeReference<List<PageDtoDetailed>>() {
-                });
+                var items =
+                        getValue(
+                                performGet().andExpect(status().isOk()),
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(
                         items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
@@ -260,8 +256,10 @@ class PageControllerTest extends BaseAPIControllerTest {
             void getAll_ModeratorRole_WithUniversityAccess_FilterOnlyVisible_Success() throws Exception {
                 performAs(Role.MODERATOR, Set.of(universityId));
 
-                var items = getValue(performGet("?hidden_eq=false").andExpect(status().isOk()), new TypeReference<List<PageDtoDetailed>>() {
-                });
+                var items =
+                        getValue(
+                                performGet("?hidden_eq=false").andExpect(status().isOk()),
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(
                         items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
@@ -272,8 +270,10 @@ class PageControllerTest extends BaseAPIControllerTest {
             void getAll_ModeratorRole_WithoutUniversityAccess_Success_EmptyList() throws Exception {
                 performAs(Role.MODERATOR);
 
-                var items = getValue(performGet().andExpect(status().isOk()), new TypeReference<List<PageDtoDetailed>>() {
-                });
+                var items =
+                        getValue(
+                                performGet().andExpect(status().isOk()),
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(items, is(empty()));
             }
@@ -286,8 +286,10 @@ class PageControllerTest extends BaseAPIControllerTest {
                     throws Exception {
                 performAs(Role.USER, Set.of(universityId));
 
-                var items = getValue(performGet().andExpect(status().isOk()), new TypeReference<List<PageDtoDetailed>>() {
-                });
+                var items =
+                        getValue(
+                                performGet().andExpect(status().isOk()),
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(
                         items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
@@ -297,8 +299,10 @@ class PageControllerTest extends BaseAPIControllerTest {
             void getAll_UserRole_WithUniversityAccess_FilterOnlyVisible_Success() throws Exception {
                 performAs(Role.USER, Set.of(universityId));
 
-                var items = getValue(performGet("?hidden_eq=false").andExpect(status().isOk()), new TypeReference<List<PageDtoDetailed>>() {
-                });
+                var items =
+                        getValue(
+                                performGet("?hidden_eq=false").andExpect(status().isOk()),
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(
                         items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
@@ -309,8 +313,10 @@ class PageControllerTest extends BaseAPIControllerTest {
             void getAll_UserRole_WithoutUniversityAccess_Success_EmptyList() throws Exception {
                 performAs(Role.USER);
 
-                var items = getValue(performGet().andExpect(status().isOk()), new TypeReference<List<PageDtoDetailed>>() {
-                });
+                var items =
+                        getValue(
+                                performGet().andExpect(status().isOk()),
+                                new TypeReference<List<PageDtoDetailed>>() {});
 
                 assertThat(items, is(empty()));
             }
