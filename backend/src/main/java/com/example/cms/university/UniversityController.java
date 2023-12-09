@@ -6,6 +6,7 @@ import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.validation.FilterPathVariableValidator;
+import com.example.cms.validation.exceptions.UnauthorizedException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class UniversityController {
                                 form.getName(),
                                 form.getShortName(),
                                 form.getDescription(),
-                                securityService.getPrincipal().get().getId(),
+                                securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId(),
                                 form.getAddress(),
                                 form.getWebsite()));
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
