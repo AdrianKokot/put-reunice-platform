@@ -1,25 +1,28 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import {
   TuiAvatarModule,
   TuiIslandModule,
   tuiAvatarOptionsProvider,
+  TuiTextareaModule,
+  TuiBadgeModule,
 } from '@taiga-ui/kit';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TuiTextareaModule } from '@taiga-ui/kit';
-import { TuiGroupModule } from '@taiga-ui/core';
-import { TuiButtonModule } from '@taiga-ui/core';
-import {
-  FormSubmitWrapper,
-  resourceIdFromRoute,
-  toResourceFromId,
-} from '@reunice/modules/shared/util';
+import { TuiGroupModule, TuiButtonModule } from '@taiga-ui/core';
+import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
-import { TicketService } from '@reunice/modules/shared/data-access';
+import {
+  Ticket,
+  TicketResponse,
+  TicketService,
+} from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { TuiBadgeModule } from '@taiga-ui/kit';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
-import { of } from 'rxjs';
+import { Subject, combineLatest, merge, switchMap } from 'rxjs';
 import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -50,50 +53,45 @@ export class TicketComponent {
   private readonly _id$ = resourceIdFromRoute();
   private readonly _service = inject(TicketService);
 
+  private readonly _changeStatusRequest$ = new Subject<Ticket['status']>();
+  private readonly _sendResponseRequest$ = new Subject<
+    TicketResponse['content']
+  >();
+
+  readonly _changeStatus$ = combineLatest([
+    this._id$,
+    this._changeStatusRequest$,
+  ]).pipe(switchMap(([id, status]) => this._service.changeStatus(id, status)));
+
+  readonly _sendResponse$ = combineLatest([
+    this._id$,
+    this._sendResponseRequest$,
+  ]).pipe(
+    switchMap(([id, content]) => this._service.sendResponse({ id, content })),
+  );
+
+  ticket$ = merge(this._id$, this._changeStatus$).pipe(
+    switchMap(() => this._id$),
+    switchMap((id) => this._service.get(id)),
+  );
+
+  responses$ = merge(this._id$, this._sendResponse$).pipe(
+    switchMap(() => this._id$),
+    switchMap((id) => this._service.getResponses(id)),
+  );
+
   readonly responseForm = inject(FormBuilder).nonNullable.group({
-    id: ['1', [Validators.required]],
     content: ['', [Validators.required]],
   });
 
-  readonly changeStatusForm = inject(FormBuilder).nonNullable.group({
-    id: ['1', [Validators.required]],
-  });
+  sendResponse = () => {
+    const { content } = this.responseForm.value;
+    if (content) {
+      this._sendResponseRequest$.next(content);
+      this.responseForm.reset();
+    }
+  };
 
-  readonly ticket$ = this._id$.pipe(
-    toResourceFromId(this._service, (item) => {
-      this.responseForm.patchValue({ ...item });
-      this.changeStatusForm.patchValue({ ...item });
-    }),
-  );
-
-  readonly sendHandler = new FormSubmitWrapper(this.responseForm, {
-    submit: (values) => this._service.send(values),
-    effect: (response) => {
-      this.responseForm.reset({ content: '', id: this.responseForm.value.id });
-      return of(response);
-    },
-    successAlertMessage: 'TICKET_REPLY_SUCCESS',
-  });
-
-  readonly sendAndResolveHandler = new FormSubmitWrapper(this.responseForm, {
-    submit: (values) => this._service.sendAndResolve(values),
-    effect: (response) => {
-      this.responseForm.reset({ content: '', id: this.responseForm.value.id });
-      return of(response);
-    },
-    successAlertMessage: 'TICKET_REPLY_AND_RESOLVE_SUCCESS',
-  });
-
-  readonly markAsIrrelevantHandler = new FormSubmitWrapper(
-    this.changeStatusForm,
-    {
-      submit: (values) => this._service.markAsIrrelevant(values.id),
-      successAlertMessage: 'TICKET_MARK_IRRELEVANT_SUCCESS',
-    },
-  );
-
-  readonly markAsDeletedHandler = new FormSubmitWrapper(this.changeStatusForm, {
-    submit: (values) => this._service.markAsDeleted(values.id),
-    successAlertMessage: 'TICKET_MARK_DELETED_SUCCESS',
-  });
+  changeStatus = (status: Ticket['status']) =>
+    this._changeStatusRequest$.next(status);
 }

@@ -20,8 +20,8 @@
 
   <hr />
 
-  <ng-container *tuiLet="ticket$ | async as ticket">
-    <ng-container *ngFor="let message of ticket?.responses">
+  <ng-container *tuiLet="responses$ | async as responses">
+    <ng-container *ngFor="let message of responses">
       <div class="d-flex gap-4 tui-space_top-4">
         <tui-avatar
           [text]="message.author"
@@ -39,14 +39,11 @@
     </ng-container>
   </ng-container>
 
-  <form
-    [formGroup]="responseForm"
-    class="tui-space_top-4 tui-space_bottom-4"
-    (ngSubmit)="sendAndResolveHandler.submit()"
-  >
+  <form class="tui-space_top-4 tui-space_bottom-4" [formGroup]="responseForm">
     <tui-textarea
       formControlName="content"
       [expandable]="true"
+      [pseudoInvalid]="false"
       *ngIf="ticket?.status === 'NEW' || ticket?.status === 'HANDLED'"
     >
       {{ 'TICKET_LEAVE_REPLY' | translate }}
@@ -58,7 +55,7 @@
         tuiButton
         type="button"
         appearance="secondary-destructive"
-        (click)="markAsIrrelevantHandler.submit()"
+        (click)="changeStatus('IRRELEVANT')"
       >
         {{ 'TICKET_MARK_IRRELEVANT' | translate }}
       </button>
@@ -67,7 +64,7 @@
         tuiButton
         type="button"
         appearance="secondary-destructive"
-        (click)="markAsDeletedHandler.submit()"
+        (click)="changeStatus('DELETED')"
       >
         {{ 'TICKET_MARK_DELETED' | translate }}
       </button>
@@ -81,19 +78,13 @@
           type="button"
           appearance="secondary"
           class="tui-group__auto-width-item"
-          [disabled]="!responseForm.valid"
-          (click)="sendHandler.submit()"
-          [showLoader]="(sendHandler.loading$ | async) ?? false"
+          [disabled]="responseForm.invalid"
+          (click)="sendResponse()"
         >
           {{ 'TICKET_REPLY' | translate }}
         </button>
-        <button
-          tuiButton
-          type="submit"
-          [disabled]="!responseForm.valid"
-          [showLoader]="(sendAndResolveHandler.loading$ | async) ?? false"
-        >
-          {{ 'TICKET_REPLY_AND_RESOLVE' | translate }}
+        <button tuiButton type="submit" (click)="changeStatus('RESOLVED')">
+          {{ 'TICKET_RESOLVE' | translate }}
         </button>
       </div>
     </div>
