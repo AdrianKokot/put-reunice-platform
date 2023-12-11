@@ -92,14 +92,16 @@ export class TicketComponent {
     switchMap((id) => this._service.get(id).pipe(startWith(null))),
     shareReplay(),
   );
-  ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => !!data));
+  ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => Boolean(data)));
 
   responses$ = merge(this._id$, this._sendResponse$).pipe(
     switchMap(() => this._id$),
     switchMap((id) => this._service.getResponses(id).pipe(startWith(null))),
     shareReplay(),
   );
-  responsesKeepPrevious$ = this.responses$.pipe(filter((data) => !!data));
+  responsesKeepPrevious$ = this.responses$.pipe(
+    filter((data) => Boolean(data)),
+  );
 
   loading$ = combineLatest([
     this.ticket$,
