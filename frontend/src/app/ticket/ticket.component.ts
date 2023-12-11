@@ -22,7 +22,16 @@ import {
 } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
-import { Subject, combineLatest, merge, switchMap } from 'rxjs';
+import {
+  Subject,
+  combineLatest,
+  filter,
+  map,
+  merge,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -61,23 +70,46 @@ export class TicketComponent {
   readonly _changeStatus$ = combineLatest([
     this._id$,
     this._changeStatusRequest$,
-  ]).pipe(switchMap(([id, status]) => this._service.changeStatus(id, status)));
+  ]).pipe(
+    switchMap(([id, status]) =>
+      this._service.changeStatus(id, status).pipe(startWith(null)),
+    ),
+    shareReplay(),
+  );
 
   readonly _sendResponse$ = combineLatest([
     this._id$,
     this._sendResponseRequest$,
   ]).pipe(
-    switchMap(([id, content]) => this._service.sendResponse({ id, content })),
+    switchMap(([id, content]) =>
+      this._service.sendResponse(id, content).pipe(startWith(null)),
+    ),
+    shareReplay(),
   );
 
   ticket$ = merge(this._id$, this._changeStatus$).pipe(
     switchMap(() => this._id$),
-    switchMap((id) => this._service.get(id)),
+    switchMap((id) => this._service.get(id).pipe(startWith(null))),
+    shareReplay(),
   );
+  ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => !!data));
 
   responses$ = merge(this._id$, this._sendResponse$).pipe(
     switchMap(() => this._id$),
-    switchMap((id) => this._service.getResponses(id)),
+    switchMap((id) => this._service.getResponses(id).pipe(startWith(null))),
+    shareReplay(),
+  );
+  responsesKeepPrevious$ = this.responses$.pipe(filter((data) => !!data));
+
+  loading$ = combineLatest([
+    this.ticket$,
+    this._changeStatus$.pipe(startWith('up-to-date')),
+    this.responses$,
+    this._sendResponse$.pipe(startWith('up-to-date')),
+  ]).pipe(
+    map((requests) => requests.some((request) => !request)),
+    startWith(false),
+    shareReplay(),
   );
 
   readonly responseForm = inject(FormBuilder).nonNullable.group({
