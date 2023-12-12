@@ -3,7 +3,6 @@ package com.example.cms.search.services;
 import com.example.cms.page.Page;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
-
 import java.util.Collection;
 import java.util.List;
 import org.springframework.context.annotation.Profile;

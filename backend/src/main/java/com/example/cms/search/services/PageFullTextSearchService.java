@@ -5,6 +5,8 @@ import com.example.cms.page.Page;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.university.University;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.java.Log;
 import net.htmlparser.jericho.Source;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,6 @@ import org.springframework.stereotype.Service;
 import org.typesense.api.FieldTypes;
 import org.typesense.api.exceptions.RequestMalformed;
 import org.typesense.model.*;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Log
@@ -44,9 +43,12 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         if (!isConnected()) return;
 
         try {
-            client.collections("pages").documents().import_(
-                    pages.stream().map(this::pageToMap).collect(Collectors.toList()),
-                    new ImportDocumentsParameters().action("upsert"));
+            client
+                    .collections("pages")
+                    .documents()
+                    .import_(
+                            pages.stream().map(this::pageToMap).collect(Collectors.toList()),
+                            new ImportDocumentsParameters().action("upsert"));
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while upserting document collection", e);
         }
@@ -139,7 +141,8 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
 
         University university = page.getUniversity();
 
-        var pageTextContent = new Source(page.getContent().getPageContent()).getTextExtractor().toString();
+        var pageTextContent =
+                new Source(page.getContent().getPageContent()).getTextExtractor().toString();
 
         map.put("id", page.getId().toString());
         map.put("pageId", page.getId());
@@ -152,12 +155,12 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         map.put(
                 "university",
                 university.getName()
-                + " "
-                + university.getShortName()
-                + " "
-                + university.getAddress()
-                + " "
-                + university.getDescription());
+                        + " "
+                        + university.getShortName()
+                        + " "
+                        + university.getAddress()
+                        + " "
+                        + university.getDescription());
         map.put("universityName", university.getName());
 
         return map;

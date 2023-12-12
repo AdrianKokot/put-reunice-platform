@@ -148,7 +148,7 @@ public class UniversityService {
 
         form.updateUniversity(university);
 
-        var result =UniversityDtoDetailed.of(universityRepository.save(university));
+        var result = UniversityDtoDetailed.of(universityRepository.save(university));
 
         searchService.upsert(pageRepository.findAllByUniversity(university));
 

@@ -13,6 +13,7 @@ public interface PageRepository extends JpaRepository<Page, Long>, JpaSpecificat
     boolean existsByParent(Page parent);
 
     List<Page> findAllByParent(Pageable pageable, Page parent);
+
     List<Page> findAllByUniversity(University university);
 
     boolean existsByCreator(User creator);
