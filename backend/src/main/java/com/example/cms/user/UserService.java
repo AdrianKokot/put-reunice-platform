@@ -3,6 +3,7 @@ package com.example.cms.user;
 import com.example.cms.SearchCriteria;
 import com.example.cms.email.EmailSendingService;
 import com.example.cms.page.PageRepository;
+import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.university.University;
@@ -108,19 +109,26 @@ public class UserService {
         newUser.setAccountType(form.getAccountType());
         newUser.setEnabled(form.isEnabled());
 
+
+        if (!newUser.getAccountType().equals(Role.ADMIN)) {
+            newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
+        }
+
+        if (!securityService.hasHigherOrEqualRoleThan(newUser.getAccountType())) {
+            throw new UserForbiddenException();
+        }
+
+        LoggedUser loggedUser = securityService.getPrincipal().orElseThrow();
+        if(newUser.getAccountType()!=Role.ADMIN){
+            if(loggedUser.getAccountType() == Role.MODERATOR && loggedUser.getUniversities().toArray().equals(form.getEnrolledUniversities().toArray())){
+                throw new UserForbiddenException();
+            }
+        }
         try {
             emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (!newUser.getAccountType().equals(Role.ADMIN)) {
-            newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
-        }
-
-        if (!securityService.hasHigherRoleThan(newUser.getAccountType())) {
-            throw new UserForbiddenException();
-        }
-
         return UserDtoDetailed.of(userRepository.save(newUser));
     }
 
@@ -340,7 +348,7 @@ public class UserService {
     @Secured("ROLE_MODERATOR")
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(user, true)) {
+        if (securityService.isForbiddenUserToDelete(user, true)) {
             throw new UserForbiddenException();
         }
         validateForDelete(user);
