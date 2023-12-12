@@ -3,6 +3,8 @@ package com.example.cms.search.services;
 import com.example.cms.page.Page;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
+
+import java.util.Collection;
 import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class DummyPageFullTextSearchService
 
     @Override
     public void upsert(Page item) {}
+
+    @Override
+    public void upsert(Collection<Page> item) {}
 
     @Override
     public void delete(Page item) {}

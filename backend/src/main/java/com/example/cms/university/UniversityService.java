@@ -4,6 +4,8 @@ import com.example.cms.SearchCriteria;
 import com.example.cms.file.FileService;
 import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
+import com.example.cms.search.FullTextSearchService;
+import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -44,6 +46,7 @@ public class UniversityService {
     private final TemplateRepository templateRepository;
     private final SecurityService securityService;
     private final FileService fileService;
+    private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> searchService;
 
     public UniversityDtoDetailed getUniversity(Long id) {
         return universityRepository
@@ -141,9 +144,15 @@ public class UniversityService {
             throw new UniversityForbiddenException();
         }
 
+        var isVisibilityChanged = university.isHidden() != form.getHidden();
+
         form.updateUniversity(university);
 
-        return UniversityDtoDetailed.of(universityRepository.save(university));
+        var result =UniversityDtoDetailed.of(universityRepository.save(university));
+
+        searchService.upsert(pageRepository.findAllByUniversity(university));
+
+        return result;
     }
 
     @Secured("ROLE_MODERATOR")

@@ -14,10 +14,7 @@ import org.typesense.api.FieldTypes;
 import org.typesense.api.exceptions.RequestMalformed;
 import org.typesense.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +37,18 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
             client.collections("pages").documents().upsert(pageToMap(page));
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while upserting document", e);
+        }
+    }
+
+    public void upsert(Collection<Page> pages) {
+        if (!isConnected()) return;
+
+        try {
+            client.collections("pages").documents().import_(
+                    pages.stream().map(this::pageToMap).collect(Collectors.toList()),
+                    new ImportDocumentsParameters().action("upsert"));
+        } catch (Exception e) {
+            log.log(java.util.logging.Level.SEVERE, "Error while upserting document collection", e);
         }
     }
 
@@ -143,12 +152,12 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         map.put(
                 "university",
                 university.getName()
-                        + " "
-                        + university.getShortName()
-                        + " "
-                        + university.getAddress()
-                        + " "
-                        + university.getDescription());
+                + " "
+                + university.getShortName()
+                + " "
+                + university.getAddress()
+                + " "
+                + university.getDescription());
         map.put("universityName", university.getName());
 
         return map;
