@@ -1,5 +1,7 @@
 package com.example.cms.university;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.cms.BaseAPIControllerTest;
@@ -7,8 +9,11 @@ import com.example.cms.security.Role;
 import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
+import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.User;
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,8 +84,8 @@ class UniversityControllerTest extends BaseAPIControllerTest {
         public void setup() {
             dto =
                     new UniversityDtoFormCreate(
-                            "TEST_UNIVERSITY" + Instant.now().toString(),
-                            "TU" + Instant.now().toString(),
+                            "TEST_UNIVERSITY" + Instant.now().toEpochMilli(),
+                            "TU" + Instant.now().toEpochMilli(),
                             "TEST_UNIVERSITY_DESCRIPTION",
                             userId,
                             "TEST_UNIVERSITY_ADDRESS",
@@ -213,6 +218,273 @@ class UniversityControllerTest extends BaseAPIControllerTest {
                     .andExpect(status().is2xxSuccessful());
 
             performDelete(universityId).andExpect(status().is2xxSuccessful());
+        }
+    }
+
+    @Nested
+    class GetUniversityTestClass {
+
+        @Nested
+        class VisibleUniversityTestClass {
+            @BeforeEach
+            void setupData() {
+                var university = universityRepository.findById(universityId).get();
+                university.setHidden(false);
+                universityRepository.save(university);
+            }
+
+            @Test
+            void get_visibleUniversity_GuestUser_Success() throws Exception {
+                performAsGuest();
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_visibleUniversity_UniversityUser_Success() throws Exception {
+                performAs(Role.USER, Set.of(universityId));
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_visibleUniversity_UniversityUserOfOtherUniversity_Success() throws Exception {
+                performAs(Role.USER, Set.of(0L));
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_visibleUniversity_UniversityAdministrator_Success() throws Exception {
+                performAs(Role.MODERATOR, Set.of(universityId), userId);
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_visibleUniversity_UniversityAdministratorOfOtherUniversity_Success()
+                    throws Exception {
+                performAs(Role.MODERATOR, Set.of(0L), userId);
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_visibleUniversity_Administrator_Success() throws Exception {
+                performAs(Role.ADMIN);
+                performGet(universityId).andExpect(status().isOk());
+            }
+        }
+
+        @Nested
+        class HiddenUniversityTestClass {
+            @BeforeEach
+            void setupData() {
+                var university = universityRepository.findById(universityId).get();
+                university.setHidden(true);
+                universityRepository.save(university);
+            }
+
+            @Test
+            void get_hiddenUniversity_GuestUser_NotFound() throws Exception {
+                performAsGuest();
+                performGet(universityId).andExpect(status().isNotFound());
+            }
+
+            @Test
+            void get_hiddenUniversity_UniversityUser_Success() throws Exception {
+                performAs(Role.USER, Set.of(universityId));
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_hiddenUniversity_UniversityUserOfOtherUniversity_NotFound() throws Exception {
+                performAs(Role.USER, Set.of(0L));
+                performGet(universityId).andExpect(status().isNotFound());
+            }
+
+            @Test
+            void get_hiddenUniversity_UniversityAdministrator_Success() throws Exception {
+                performAs(Role.MODERATOR, Set.of(universityId), userId);
+                performGet(universityId).andExpect(status().isOk());
+            }
+
+            @Test
+            void get_hiddenUniversity_UniversityAdministratorOfOtherUniversity_NotFound()
+                    throws Exception {
+                performAs(Role.MODERATOR, Set.of(0L), userId);
+                performGet(universityId).andExpect(status().isNotFound());
+            }
+
+            @Test
+            void get_hiddenUniversity_Administrator_Success() throws Exception {
+                performAs(Role.ADMIN);
+                performGet(universityId).andExpect(status().isOk());
+            }
+        }
+    }
+
+    @Nested
+    class GetAllUniversitiesTestClass {
+
+        @Test
+        void get_allUniversities_GuestUser_SuccessOnlyVisible() throws Exception {
+            performAsGuest();
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_allUniversities_UniversityUser_SuccessOnlyVisibleAndMyUniversity() throws Exception {
+            performAs(Role.USER, Set.of(universityId));
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(
+                    items,
+                    everyItem(
+                            either(hasProperty("hidden", is(false))).or(hasProperty("id", is(universityId)))));
+        }
+
+        @Test
+        void get_allUniversities_UniversityUserOfOtherUniversity_SuccessOnlyVisible() throws Exception {
+            performAs(Role.USER, Set.of(0L));
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_allUniversities_UniversityAdministrator_SuccessOnlyVisibleAndMyUniversity()
+                throws Exception {
+            performAs(Role.MODERATOR, Set.of(universityId), userId);
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(
+                    items,
+                    everyItem(
+                            either(hasProperty("hidden", is(false))).or(hasProperty("id", is(universityId)))));
+        }
+
+        @Test
+        void get_allUniversities_UniversityAdministratorOfOtherUniversity_SuccessOnlyVisible()
+                throws Exception {
+            performAs(Role.MODERATOR, Set.of(0L), userId);
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_allUniversities_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(
+                    items,
+                    everyItem(either(hasProperty("hidden", is(false))).or(hasProperty("hidden", is(true)))));
+        }
+    }
+
+    @Nested
+    class GetAllUniversitiesWithFiltersTestClass {
+
+        @Test
+        void get_HiddenOnly() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?hidden_eq=true").andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("hidden", is(true))));
+        }
+
+        @Test
+        void get_VisibleOnly() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?hidden_eq=false").andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_ShortNameContainsP() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?shortName_ct=P").andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("shortName", containsString("P"))));
+        }
+
+        @Test
+        void get_ShortNameContainsPAndHiddenOnly() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?shortName_ct=P&hidden_eq=true").andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(
+                    items,
+                    everyItem(
+                            allOf(
+                                    hasProperty("shortName", containsString("P")), hasProperty("hidden", is(true)))));
+        }
+
+        @Test
+        void get_NameContainsPAndVisibleOnly() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?name_ct=P&hidden_eq=false").andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(
+                    items,
+                    everyItem(
+                            allOf(hasProperty("name", containsString("P")), hasProperty("hidden", is(false)))));
+        }
+
+        @Test
+        void get_IdContains1() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?id_eq=1").andExpect(status().isOk()),
+                            new TypeReference<List<UniversityDtoSimple>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("id", is(1L))));
         }
     }
 }

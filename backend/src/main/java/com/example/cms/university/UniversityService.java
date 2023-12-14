@@ -54,7 +54,7 @@ public class UniversityService {
                 .map(
                         university -> {
                             if (!isUniversityVisible(university)) {
-                                throw new UniversityForbiddenException();
+                                throw new UniversityNotFoundException();
                             }
 
                             return UniversityDtoDetailed.of(university);
@@ -101,8 +101,17 @@ public class UniversityService {
     }
 
     private boolean isUniversityVisible(University university) {
-        return university != null
-                && !(university.isHidden() && securityService.isForbiddenUniversity(university));
+        if (university == null) return false;
+
+        if (!university.isHidden()) return true;
+
+        var principal = securityService.getPrincipal();
+
+        if (principal.isEmpty()) return false;
+
+        if (principal.get().getAccountType().equals(Role.ADMIN)) return true;
+
+        return securityService.hasUniversity(university.getId());
     }
 
     @Secured("ROLE_ADMIN")
