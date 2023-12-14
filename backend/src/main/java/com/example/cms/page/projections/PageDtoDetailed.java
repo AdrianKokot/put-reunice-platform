@@ -3,14 +3,12 @@ package com.example.cms.page.projections;
 import com.example.cms.page.Page;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.projections.UserDtoSimple;
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -57,7 +55,8 @@ public class PageDtoDetailed {
 
         createdOn = page.getCreatedOn().toInstant();
         updatedOn = page.getUpdatedOn().toInstant();
-        contactRequestHandlers = page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
+        contactRequestHandlers =
+                page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
         hasContactRequestHandler = !contactRequestHandlers.isEmpty();
     }
 }

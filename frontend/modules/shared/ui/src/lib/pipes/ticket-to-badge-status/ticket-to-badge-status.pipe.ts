@@ -10,9 +10,17 @@ export class TicketToBadgeStatusPipe implements PipeTransform {
   transform({ status }: Ticket): TuiStatus {
     switch (status) {
       case 'NEW':
+        return 'info';
+      case 'HANDLED':
+        return 'neutral';
+      case 'IRRELEVANT':
+        return 'warning';
+      case 'DELETED':
+        return 'error';
+      case 'RESOLVED':
         return 'success';
       default:
-        return 'info';
+        return 'neutral';
     }
   }
 }

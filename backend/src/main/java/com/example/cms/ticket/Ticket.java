@@ -2,16 +2,14 @@ package com.example.cms.ticket;
 
 import com.example.cms.page.Page;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
+import java.time.Instant;
+import java.util.*;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
-import java.util.*;
-
 
 @Entity
 @Setter
@@ -30,42 +28,67 @@ public class Ticket {
         this.responses = new HashSet<>();
         this.status = TicketStatus.NEW;
     }
-    @ManyToOne
-    private Page page;
+
+    @ManyToOne private Page page;
+
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<TicketUserStatus> ticketHandlers;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     private UUID id;
+
     @NotEmpty(message = "ERRORS.TICKET.400.REQUESTER_EMAIL_EMPTY")
     private String requesterEmail;
-    @CreationTimestamp
-    private Instant requestedTime;
-    @UpdateTimestamp
-    private Instant lastUpdateTime;
+
+    @CreationTimestamp private Instant requestedTime;
+    @UpdateTimestamp private Instant lastUpdateTime;
+
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
+
     private String title;
     private String description;
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+
+    @OneToMany(
+            mappedBy = "ticket",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     private Set<Response> responses;
     private String requestedToken;
     private String contentRequestHandlerToken;
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", requesterEmail='" + requesterEmail + '\'' +
-                ", pageId='" + this.page.getId() + '\'' +
-                ", requestedTime='" + requestedTime + '\'' +
-                ", status='" + status + '\'' +
-                ", title='" + title + '\'' +
-                ", content='" + description + '\'' +
-                ", requestedToken='" + requestedToken + '\'' +
-                ", contentRequestHandlerToken='" + contentRequestHandlerToken +
-                '}';
+        return "User{"
+                + "id="
+                + id
+                + ", requesterEmail='"
+                + requesterEmail
+                + '\''
+                + ", pageId='"
+                + this.page.getId()
+                + '\''
+                + ", requestedTime='"
+                + requestedTime
+                + '\''
+                + ", status='"
+                + status
+                + '\''
+                + ", title='"
+                + title
+                + '\''
+                + ", content='"
+                + description
+                + '\''
+                + ", requestedToken='"
+                + requestedToken
+                + '\''
+                + ", contentRequestHandlerToken='"
+                + contentRequestHandlerToken
+                + '}';
     }
 
     public void addResponse(Response response) {

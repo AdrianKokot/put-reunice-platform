@@ -1,15 +1,13 @@
 package com.example.cms.university.projections;
 
 import com.example.cms.page.projections.PageDtoDetailed;
-import com.example.cms.page.projections.PageDtoSimple;
 import com.example.cms.university.University;
 import com.example.cms.user.projections.UserDtoSimple;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -39,7 +37,8 @@ public class UniversityDtoDetailed {
         shortName = university.getShortName();
         description = university.getDescription();
         hidden = university.isHidden();
-        enrolledUsers = university.getEnrolledUsers().stream().map(UserDtoSimple::of).collect(Collectors.toSet());
+        enrolledUsers =
+                university.getEnrolledUsers().stream().map(UserDtoSimple::of).collect(Collectors.toSet());
         mainPage = PageDtoDetailed.of(university.getMainPage());
         address = university.getAddress();
         website = university.getWebsite();

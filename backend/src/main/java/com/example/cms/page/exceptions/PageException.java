@@ -1,6 +1,5 @@
 package com.example.cms.page.exceptions;
 
-
 import com.example.cms.validation.exceptions.BadRequestException;
 
 public class PageException extends BadRequestException {

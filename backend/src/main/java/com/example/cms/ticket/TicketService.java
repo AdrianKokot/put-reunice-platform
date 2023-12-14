@@ -11,20 +11,19 @@ import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
 import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
+import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-
-import java.lang.annotation.Documented;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,32 +35,35 @@ public class TicketService {
 
     private Optional<TicketUserStatus> getIfLoggedUserIsHandler(Ticket ticket) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        return loggedUserOptional.flatMap(loggedUser -> ticket.getTicketHandlers().stream()
-                .filter(item -> item.getUser()
-                        .getId()
-                        .equals(loggedUser.getId()))
-                .findFirst());
+        return loggedUserOptional.flatMap(
+                loggedUser ->
+                        ticket.getTicketHandlers().stream()
+                                .filter(item -> item.getUser().getId().equals(loggedUser.getId()))
+                                .findFirst());
     }
 
     public void addResponse(UUID ticketId, String content) {
         Ticket ticket = getTicketById(ticketId);
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
-        String author = loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
+        String author =
+                loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
         if (userStatusOptional.isPresent()) {
             try {
                 ticket.setStatus(ticket.getStatus().transition(TicketStatus.HANDLED));
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+            }
         }
-  
+
         ticket.addResponse(new Response(author, content));
         ticketRepository.save(ticket);
     }
 
     public UUID createTicket(String requesterEmail, String title, String description, Long pageId) {
-        com.example.cms.page.Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
+        com.example.cms.page.Page page =
+                pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
@@ -111,10 +113,8 @@ public class TicketService {
             id = loggedUser.getId();
         }
 
-        Specification<Ticket> combinedSpecification = Specification.where(
-                new TicketRoleSpecification(role,
-                        handlesPages,
-                        email));
+        Specification<Ticket> combinedSpecification =
+                Specification.where(new TicketRoleSpecification(role, handlesPages, email));
 
         if (filterVars.containsKey("unseen")) {
             filterVars.remove("unseen");
@@ -122,16 +122,17 @@ public class TicketService {
         }
 
         if (!filterVars.isEmpty()) {
-            List<TicketSpecification> specifications = filterVars.entrySet().stream()
-                    .map(entries -> {
-                        String[] filterBy = entries.getKey().split("_");
+            List<TicketSpecification> specifications =
+                    filterVars.entrySet().stream()
+                            .map(
+                                    entries -> {
+                                        String[] filterBy = entries.getKey().split("_");
 
-                        return new TicketSpecification(new SearchCriteria(
-                                filterBy[0],
-                                filterBy[filterBy.length - 1],
-                                entries.getValue()
-                        ));
-                    }).collect(Collectors.toList());
+                                        return new TicketSpecification(
+                                                new SearchCriteria(
+                                                        filterBy[0], filterBy[filterBy.length - 1], entries.getValue()));
+                                    })
+                            .collect(Collectors.toList());
 
             for (Specification<Ticket> spec : specifications) {
                 combinedSpecification = combinedSpecification.and(spec);

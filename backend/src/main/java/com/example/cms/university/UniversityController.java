@@ -6,6 +6,11 @@ import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.validation.FilterPathVariableValidator;
+import com.example.cms.validation.exceptions.UnauthorizedException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,11 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,11 +33,12 @@ public class UniversityController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UniversityDtoSimple>> getUniversities(Pageable pageable, @RequestParam Map<String, String> vars) {
+    public ResponseEntity<List<UniversityDtoSimple>> getUniversities(
+            Pageable pageable, @RequestParam Map<String, String> vars) {
 
-        Page<University> responsePage = service.getUniversities(
-                pageable,
-                FilterPathVariableValidator.validate(vars, University.class));
+        Page<University> responsePage =
+                service.getUniversities(
+                        pageable, FilterPathVariableValidator.validate(vars, University.class));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
@@ -49,50 +50,48 @@ public class UniversityController {
     }
 
     @PostMapping
-    public ResponseEntity<UniversityDtoDetailed> registerNewUniversity(@RequestBody UniversityDtoFormCreate form) {
-        UniversityDtoDetailed result = service.addNewUniversity(new UniversityDtoFormCreate(
-                form.getName(),
-                form.getShortName(),
-                form.getDescription(),
-                securityService.getPrincipal().get().getId(),
-                form.getAddress(),
-                form.getWebsite()
-        ));
+    public ResponseEntity<UniversityDtoDetailed> registerNewUniversity(
+            @RequestBody UniversityDtoFormCreate form) {
+        UniversityDtoDetailed result =
+                service.addNewUniversity(
+                        new UniversityDtoFormCreate(
+                                form.getName(),
+                                form.getShortName(),
+                                form.getDescription(),
+                                securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId(),
+                                form.getAddress(),
+                                form.getWebsite()));
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
 
     @PutMapping("/{universityId}")
     UniversityDtoDetailed updateUniversity(
-            @PathVariable long universityId,
-            @RequestBody UniversityDtoFormUpdate form) {
+            @PathVariable long universityId, @RequestBody UniversityDtoFormUpdate form) {
         return service.update(universityId, form);
     }
 
     @PostMapping("/{universityId}/image")
     public ResponseEntity<Void> uploadUniversityImage(
-            @PathVariable long universityId,
-            @RequestBody MultipartFile file) {
+            @PathVariable long universityId, @RequestBody MultipartFile file) {
         service.uploadUniversityImage(universityId, file);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{universityId}/users/{userId}")
     public UniversityDtoDetailed enrollUsersToUniversity(
-            @PathVariable long universityId,
-            @PathVariable long userId) {
+            @PathVariable long universityId, @PathVariable long userId) {
         return service.enrollUsersToUniversity(universityId, userId);
     }
 
     @PatchMapping("/{id}/hidden")
-    public ResponseEntity<Void> modifyUniversityHiddenField(@PathVariable Long id,
-                                                            @RequestBody boolean hidden) {
+    public ResponseEntity<Void> modifyUniversityHiddenField(
+            @PathVariable Long id, @RequestBody boolean hidden) {
         service.modifyHiddenField(id, hidden);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUniversity(
-            @PathVariable Long id) {
+    public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
         service.deleteUniversity(id);
         return ResponseEntity.noContent().build();
     }

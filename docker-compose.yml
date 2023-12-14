@@ -24,13 +24,14 @@ services:
         SMTP_PORT: ${SMTP_PORT}
         SMTP_USERNAME: ${SMTP_USERNAME}
         SMTP_PASSWORD: ${SMTP_PASSWORD}
-        UPLOADS_DIRECTORY: ${UPLOADS_DIRECTORY}
+        UPLOADS_DIRECTORY: /uploads/
+        BACKUPS_DIRECTORY: /db-resources/
     container_name: backend
     env_file:
       - ./.env
     volumes:
       - ./db-resources:/db-resources
-      - ./uploads:${UPLOADS_DIRECTORY}
+      - ./uploads:/uploads
     ports:
       - "8080:8080"
     depends_on:

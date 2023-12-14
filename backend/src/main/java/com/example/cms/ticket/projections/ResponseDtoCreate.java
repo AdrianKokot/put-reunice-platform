@@ -1,7 +1,6 @@
 package com.example.cms.ticket.projections;
 
 import com.example.cms.ticket.Response;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

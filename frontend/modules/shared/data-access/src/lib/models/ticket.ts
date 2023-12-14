@@ -6,7 +6,7 @@ export interface Ticket {
   pageId: Page['id'];
   requestedTime: string;
   requesterEmail: string;
-  status: string;
+  status: 'NEW' | 'HANDLED' | 'IRRELEVANT' | 'RESOLVED' | 'DELETED';
   title: string;
 }
 

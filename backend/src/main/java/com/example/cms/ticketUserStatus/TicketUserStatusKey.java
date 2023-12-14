@@ -1,11 +1,10 @@
 package com.example.cms.ticketUserStatus;
 
-import lombok.Data;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import lombok.Data;
 
 @Data
 @Embeddable

@@ -3,8 +3,12 @@ package com.example.cms.ticket;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.Root;
 
 public class UnseenTicketSpecification implements Specification<Ticket> {
     private final Long userId;

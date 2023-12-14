@@ -1,13 +1,13 @@
 package com.example.cms.ticketUserStatus;
 
-import com.example.cms.user.User;
 import com.example.cms.ticket.Ticket;
-import lombok.*;
-
+import com.example.cms.user.User;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Optional;
+
 
 @Entity
 @Data

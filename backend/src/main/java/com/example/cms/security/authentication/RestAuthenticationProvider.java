@@ -35,8 +35,8 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
                 throw new DisabledException("ERRORS.LOGIN.401.DISABLED");
             }
             if (passwordEncoder.matches(password, loggedUser.getPassword())) {
-                return new UsernamePasswordAuthenticationToken(new LoggedUser(user), password,
-                        loggedUser.getAuthorities());
+                return new UsernamePasswordAuthenticationToken(
+                        new LoggedUser(user), password, loggedUser.getAuthorities());
             } else {
                 throw new BadCredentialsException("ERRORS.LOGIN.401.WRONG_CREDENTIALS");
             }

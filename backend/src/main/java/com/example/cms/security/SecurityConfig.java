@@ -2,6 +2,10 @@ package com.example.cms.security;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.security.authentication.RestSessionInformationExpiredStrategy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,20 +38,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Executor;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig implements AsyncConfigurer {
 
-    @Autowired
-    private ApplicationConfigurationProvider applicationConfigurationProvider;
+    @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
@@ -60,8 +57,8 @@ public class SecurityConfig implements AsyncConfigurer {
     }
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http, AuthenticationProvider authenticationProvider)
-            throws Exception {
+    public AuthenticationManager authManager(
+            HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .authenticationProvider(authenticationProvider)
                 .build();
@@ -75,7 +72,8 @@ public class SecurityConfig implements AsyncConfigurer {
     @Bean
     public CompositeSessionAuthenticationStrategy concurrentSession(SessionRegistry sessionRegistry) {
 
-        ConcurrentSessionControlAuthenticationStrategy concurrentAuthenticationStrategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+        ConcurrentSessionControlAuthenticationStrategy concurrentAuthenticationStrategy =
+                new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
         List<SessionAuthenticationStrategy> delegateStrategies = new ArrayList<>();
         delegateStrategies.add(concurrentAuthenticationStrategy);
         delegateStrategies.add(new SessionFixationProtectionStrategy());
@@ -92,12 +90,20 @@ public class SecurityConfig implements AsyncConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins(List.of(/*"http://localhost:4200", */applicationConfigurationProvider.getApplicationServer(), "http://localhost")); //MSz changed origins
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", applicationConfigurationProvider.getApplicationServer(), "http://localhost")); //MSz changed origins
+        // configuration.setAllowedOrigins(List.of(/*"http://localhost:4200",
+        // */applicationConfigurationProvider.getApplicationServer(), "http://localhost")); //MSz
+        // changed origins
+        configuration.setAllowedOrigins(
+                List.of(
+                        "http://localhost:4200",
+                        applicationConfigurationProvider.getApplicationServer(),
+                        "http://localhost")); // MSz changed origins
         configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "File-Name"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "File-Name"));
+        configuration.setAllowedHeaders(
+                Arrays.asList("Authorization", "Cache-Control", "Content-Type", "File-Name"));
+        configuration.setExposedHeaders(
+                Arrays.asList("Authorization", "Cache-Control", "Content-Type", "File-Name"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -106,12 +112,16 @@ public class SecurityConfig implements AsyncConfigurer {
     @Bean
     @Profile("secured")
     public SecurityFilterChain securedFilterChain(
-            UsernamePasswordAuthenticationFilter authenticationFilter, HttpSecurity http,
-            AuthenticationEntryPoint authenticationEntryPoint, AccessDeniedHandler accessDeniedHandler,
-            SessionRegistry sessionRegistry) throws Exception {
+            UsernamePasswordAuthenticationFilter authenticationFilter,
+            HttpSecurity http,
+            AuthenticationEntryPoint authenticationEntryPoint,
+            AccessDeniedHandler accessDeniedHandler,
+            SessionRegistry sessionRegistry)
+            throws Exception {
 
         http.sessionManagement()
-                .maximumSessions(1).sessionRegistry(sessionRegistry)
+                .maximumSessions(1)
+                .sessionRegistry(sessionRegistry)
                 .maxSessionsPreventsLogin(false)
                 .expiredSessionStrategy(sessionInformationExpiredStrategy());
 
@@ -119,7 +129,8 @@ public class SecurityConfig implements AsyncConfigurer {
         http.cors();
 
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/")
+                .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/api/logout")
