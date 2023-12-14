@@ -2,7 +2,6 @@ package com.example.cms;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.development.CustomAuthenticationToken;
 import com.example.cms.security.Role;
 import com.example.cms.user.UserRepository;
@@ -20,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("secured, h2")
+@ActiveProfiles(profiles = {"h2", "secured"})
 @ContextConfiguration(classes = {CmsApplication.class})
 public class BaseAPIControllerTest {
     protected String getUrl(Long id) {

@@ -401,7 +401,6 @@ class UniversityControllerTest extends BaseAPIControllerTest {
 
     @Nested
     class GetAllUniversitiesWithFiltersTestClass {
-
         @Test
         void get_HiddenOnly() throws Exception {
             performAs(Role.ADMIN);
