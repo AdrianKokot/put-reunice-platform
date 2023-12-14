@@ -5,12 +5,10 @@ import com.example.cms.page.Page;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.university.University;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.java.Log;
+import net.htmlparser.jericho.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -38,6 +36,21 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
             client.collections("pages").documents().upsert(pageToMap(page));
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while upserting document", e);
+        }
+    }
+
+    public void upsert(Collection<Page> pages) {
+        if (!isConnected()) return;
+
+        try {
+            client
+                    .collections("pages")
+                    .documents()
+                    .import_(
+                            pages.stream().map(this::pageToMap).collect(Collectors.toList()),
+                            new ImportDocumentsParameters().action("upsert"));
+        } catch (Exception e) {
+            log.log(java.util.logging.Level.SEVERE, "Error while upserting document collection", e);
         }
     }
 
@@ -128,12 +141,15 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
 
         University university = page.getUniversity();
 
+        var pageTextContent =
+                new Source(page.getContent().getPageContent()).getTextExtractor().toString();
+
         map.put("id", page.getId().toString());
         map.put("pageId", page.getId());
         map.put("universityId", page.getUniversity().getId());
         map.put("title", page.getTitle());
         map.put("description", page.getDescription());
-        map.put("content", page.getContent().getPageContent());
+        map.put("content", pageTextContent);
         map.put("hidden", page.isHidden() || page.getUniversity().isHidden());
         map.put("creator", page.getCreator().getFirstName() + " " + page.getCreator().getLastName());
         map.put(
