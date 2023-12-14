@@ -115,8 +115,7 @@ public class SecurityConfig implements AsyncConfigurer {
                 .maxSessionsPreventsLogin(false)
                 .expiredSessionStrategy(sessionInformationExpiredStrategy());
 
-//        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        http.csrf().disable();
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.cors();
 
         http.authorizeRequests()

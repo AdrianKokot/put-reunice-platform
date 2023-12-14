@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Documented;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class TicketService {
     }
 
     public void addResponse(UUID ticketId, String content) {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+        Ticket ticket = getTicketById(ticketId);
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         String author = loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
@@ -64,12 +65,11 @@ public class TicketService {
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
-        //TODO: TicketUserStatus lastSeenOn na optional
         Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
         ticket.setTicketHandlers(
                 page.getHandlers().stream().map(handler -> {
                     TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                    ticketUserStatus.setLastSeenOn(Instant.EPOCH);
+                    ticketUserStatus.setLastSeenOn(null);
                     ticketUserStatus.setUser(handler);
                     ticketUserStatus.setTicket(ticket);
                     ticketUserStatusRepository.save(ticketUserStatus);
@@ -143,7 +143,7 @@ public class TicketService {
 
     @Secured("ROLE_USER")
     public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidStatusChangeException {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+        Ticket ticket = getTicketById(ticketId);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 
         if (userStatusOptional.isEmpty()) {
@@ -154,8 +154,6 @@ public class TicketService {
     }
 
     public Ticket getTicketById(UUID id) {
-        List<Ticket> ticketList = getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
-                .get().collect(Collectors.toList());
-        return ticketList.get(0);
+        return ticketRepository.findById(id).orElseThrow(TicketNotFoundException::new);
     }
 }

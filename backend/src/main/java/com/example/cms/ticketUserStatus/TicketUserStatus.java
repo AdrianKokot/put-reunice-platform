@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Optional;
 
 @Entity
 @Data
@@ -25,4 +26,8 @@ public class TicketUserStatus {
     Ticket ticket;
 
     Instant lastSeenOn;
+
+    public Optional<Instant> getLastSeenOn() {
+        return Optional.ofNullable(lastSeenOn);
+    }
 }

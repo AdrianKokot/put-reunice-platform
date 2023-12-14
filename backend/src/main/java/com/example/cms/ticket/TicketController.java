@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class TicketController {
     private final TicketService service;
 
-    //TODO: 500 Index 0 out of bounds przy getTicktDetailed ze złym ID
     @GetMapping
     public ResponseEntity<List<TicketDto>> getTickets(
             Pageable pageable,
