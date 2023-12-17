@@ -10,6 +10,7 @@ import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
+import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
@@ -41,7 +42,7 @@ public class TicketService {
     }
 
     public void addResponse(UUID ticketId, String content) {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+        Ticket ticket = getTicketById(ticketId);
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         String author =
@@ -65,14 +66,13 @@ public class TicketService {
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
-
         Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
         ticket.setTicketHandlers(
                 page.getHandlers().stream()
                         .map(
                                 handler -> {
                                     TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                                    ticketUserStatus.setLastSeenOn(Instant.now());
+                                    ticketUserStatus.setLastSeenOn(null);
                                     ticketUserStatus.setUser(handler);
                                     ticketUserStatus.setTicket(ticket);
                                     ticketUserStatusRepository.save(ticketUserStatus);
@@ -81,6 +81,14 @@ public class TicketService {
                         .collect(Collectors.toSet()));
 
         return ticket.getId();
+    }
+
+    public UUID createTicket(TicketDtoFormCreate ticketDto) {
+        return createTicket(
+                ticketDto.getRequesterEmail(),
+                ticketDto.getTitle(),
+                ticketDto.getDescription(),
+                ticketDto.getPageId());
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {
@@ -101,16 +109,23 @@ public class TicketService {
         Role role = null;
         Collection<Long> handlesPages = null;
         String email = null;
+        Long id = null;
 
         if (loggedUserOptional.isPresent()) {
             LoggedUser loggedUser = loggedUserOptional.get();
             role = loggedUser.getAccountType();
             handlesPages = loggedUser.getHandlesPages();
             email = loggedUser.getEmail();
+            id = loggedUser.getId();
         }
 
         Specification<Ticket> combinedSpecification =
                 Specification.where(new TicketRoleSpecification(role, handlesPages, email));
+
+        if (filterVars.containsKey("unseen")) {
+            filterVars.remove("unseen");
+            combinedSpecification = combinedSpecification.and(new UnseenTicketSpecification(id));
+        }
 
         if (!filterVars.isEmpty()) {
             List<TicketSpecification> specifications =
@@ -136,7 +151,7 @@ public class TicketService {
     @Secured("ROLE_USER")
     public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId)
             throws InvalidStatusChangeException {
-        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+        Ticket ticket = getTicketById(ticketId);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 
         if (userStatusOptional.isEmpty()) {
@@ -147,9 +162,6 @@ public class TicketService {
     }
 
     public Ticket getTicketById(UUID id) {
-        return getTickets(Pageable.ofSize(1), Map.of("id_eq", id.toString()))
-                .get()
-                .collect(Collectors.toList())
-                .get(0);
+        return ticketRepository.findById(id).orElseThrow(TicketNotFoundException::new);
     }
 }

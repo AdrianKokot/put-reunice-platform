@@ -5,6 +5,7 @@ import com.example.cms.ticket.TicketStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class TicketDtoDetailed {
     private TicketStatus status;
     private String title;
     private String description;
-    private Map<String, Instant> lastSeenOn;
+    private Map<String, Optional<Instant>> lastSeenOn;
 
     public static TicketDtoDetailed of(Ticket ticket) {
         if (ticket == null) {

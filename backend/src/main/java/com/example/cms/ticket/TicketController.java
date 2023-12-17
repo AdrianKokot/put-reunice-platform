@@ -3,6 +3,7 @@ package com.example.cms.ticket;
 import com.example.cms.ticket.projections.ResponseDtoCreate;
 import com.example.cms.ticket.projections.TicketDto;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
+import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.validation.FilterPathVariableValidator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +26,8 @@ public class TicketController {
             Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<Ticket> responsePage =
-                service.getTickets(pageable, FilterPathVariableValidator.validate(vars, Ticket.class));
+                service.getTickets(
+                        pageable, FilterPathVariableValidator.validate(vars, Ticket.class, "unseen"));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
@@ -34,6 +36,14 @@ public class TicketController {
                 responsePage.stream().map(TicketDto::of).collect(Collectors.toList()),
                 httpHeaders,
                 HttpStatus.OK);
+    }
+
+    @PostMapping()
+    public ResponseEntity<UUID> createTicket(@RequestBody TicketDtoFormCreate ticketDto) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", "1");
+
+        return new ResponseEntity<>(service.createTicket(ticketDto), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/{ticketId}")
@@ -47,10 +57,10 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}/responses")
-    public ResponseEntity<List<Response>> getTicketResponses(
+    public ResponseEntity<Set<Response>> getTicketResponses(
             Pageable pageable, @PathVariable UUID ticketId) {
         Ticket ticket = service.getTicketById(ticketId);
-        List<Response> responses = ticket.getResponses();
+        Set<Response> responses = ticket.getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
@@ -70,11 +80,11 @@ public class TicketController {
     }
 
     @PostMapping("/{ticketId}/responses")
-    public ResponseEntity<List<Response>> addResponse(
+    public ResponseEntity<Set<Response>> addResponse(
             @PathVariable UUID ticketId, @RequestBody ResponseDtoCreate responseDtoCreate) {
         service.addResponse(ticketId, responseDtoCreate.getContent());
 
-        List<Response> responses = service.getTicketById(ticketId).getResponses();
+        Set<Response> responses = service.getTicketById(ticketId).getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));

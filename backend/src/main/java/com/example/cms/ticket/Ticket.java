@@ -25,7 +25,7 @@ public class Ticket {
         this.page = page;
 
         this.ticketHandlers = new HashSet<>();
-        this.responses = new ArrayList<>();
+        this.responses = new HashSet<>();
         this.status = TicketStatus.NEW;
     }
 
@@ -56,7 +56,7 @@ public class Ticket {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
-    private List<Response> responses;
+    private Set<Response> responses;
 
     private String requestedToken;
     private String contentRequestHandlerToken;

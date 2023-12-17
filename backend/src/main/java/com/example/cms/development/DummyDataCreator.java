@@ -1217,7 +1217,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.assignUsersToPage(List.of(5L, 7L), 1L);
         pageService.assignUsersToPage(List.of(5L, 6L, 7L), 2L);
         pageService.assignUsersToPage(List.of(5L, 7L, 4L), 3L);
-        pageService.assignUsersToPage(List.of(5L, 6L, 4L), 4L);
+        pageService.assignUsersToPage(List.of(5L, 6L, 4L, 7L), 4L);
         pageService.assignUsersToPage(List.of(5L, 22L), 5L);
 
         UUID ticketId1 =
