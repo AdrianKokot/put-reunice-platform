@@ -28,7 +28,8 @@ public class FilterPathVariableValidator {
         return classFields;
     }
 
-    public static Map<String, String> validate(Map<String, String> vars, Class klass, String... specificExtraFields) {
+    public static Map<String, String> validate(
+            Map<String, String> vars, Class klass, String... specificExtraFields) {
         Set<String> validFields = classPossibleFields(klass);
         validFields.addAll(extraFields);
         validFields.addAll(Set.of(specificExtraFields));

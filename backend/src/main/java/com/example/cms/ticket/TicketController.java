@@ -1,9 +1,9 @@
 package com.example.cms.ticket;
 
 import com.example.cms.ticket.projections.ResponseDtoCreate;
-import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticket.projections.TicketDto;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
+import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.validation.FilterPathVariableValidator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,8 +26,8 @@ public class TicketController {
             Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<Ticket> responsePage =
-                service.getTickets(pageable, FilterPathVariableValidator
-                        .validate(vars, Ticket.class, "unseen"));
+                service.getTickets(
+                        pageable, FilterPathVariableValidator.validate(vars, Ticket.class, "unseen"));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
@@ -43,10 +43,7 @@ public class TicketController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", "1");
 
-        return new ResponseEntity<>(
-                service.createTicket(ticketDto),
-                httpHeaders,
-                HttpStatus.OK);
+        return new ResponseEntity<>(service.createTicket(ticketDto), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/{ticketId}")

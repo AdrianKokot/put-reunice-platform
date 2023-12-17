@@ -8,10 +8,9 @@ import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
-import com.example.cms.ticket.projections.TicketDtoFormCreate;
-import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
+import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
@@ -69,20 +68,27 @@ public class TicketService {
         }
         Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
         ticket.setTicketHandlers(
-                page.getHandlers().stream().map(handler -> {
-                    TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                    ticketUserStatus.setLastSeenOn(null);
-                    ticketUserStatus.setUser(handler);
-                    ticketUserStatus.setTicket(ticket);
-                    ticketUserStatusRepository.save(ticketUserStatus);
-                    return ticketUserStatus;
-                }).collect(Collectors.toSet()));
+                page.getHandlers().stream()
+                        .map(
+                                handler -> {
+                                    TicketUserStatus ticketUserStatus = new TicketUserStatus();
+                                    ticketUserStatus.setLastSeenOn(null);
+                                    ticketUserStatus.setUser(handler);
+                                    ticketUserStatus.setTicket(ticket);
+                                    ticketUserStatusRepository.save(ticketUserStatus);
+                                    return ticketUserStatus;
+                                })
+                        .collect(Collectors.toSet()));
 
         return ticket.getId();
     }
 
     public UUID createTicket(TicketDtoFormCreate ticketDto) {
-        return createTicket(ticketDto.getRequesterEmail(), ticketDto.getTitle(), ticketDto.getDescription(), ticketDto.getPageId());
+        return createTicket(
+                ticketDto.getRequesterEmail(),
+                ticketDto.getTitle(),
+                ticketDto.getDescription(),
+                ticketDto.getPageId());
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {
@@ -143,7 +149,8 @@ public class TicketService {
     }
 
     @Secured("ROLE_USER")
-    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId) throws InvalidStatusChangeException {
+    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId)
+            throws InvalidStatusChangeException {
         Ticket ticket = getTicketById(ticketId);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 

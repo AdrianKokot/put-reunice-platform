@@ -57,6 +57,7 @@ public class Ticket {
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private Set<Response> responses;
+
     private String requestedToken;
     private String contentRequestHandlerToken;
 
