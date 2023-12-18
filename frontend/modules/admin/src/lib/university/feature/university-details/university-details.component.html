@@ -55,11 +55,23 @@
     <ng-container *reuniceUserControlsResource="item">
       <a
         tuiButton
+        [routerLink]="['../../pages', item.mainPage.id, 'edit']"
+        type="button"
+        appearance="flat"
+        class="tui-form__button"
+        data-test="edit-main-page-button"
+      >
+        {{ 'EDIT_UNIVERSITY_MAIN_PAGE' | translate }}
+      </a>
+
+      <a
+        tuiButton
         [routerLink]="['../../users/new']"
         [queryParams]="{ universityId: item.id }"
         type="button"
         appearance="flat"
         class="tui-form__button"
+        data-test="create-university-user-button"
       >
         {{ 'CREATE_UNIVERSITY_USER' | translate }}
       </a>
@@ -99,6 +111,7 @@
       type="button"
       appearance="secondary"
       class="tui-form__button"
+      data-test="edit-button"
     >
       {{ 'EDIT' | translate }}
     </a>

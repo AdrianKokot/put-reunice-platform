@@ -31,10 +31,8 @@ import {
 } from '@taiga-ui/kit';
 import {
   combineLatest,
-  debounceTime,
   distinctUntilChanged,
   map,
-  share,
   shareReplay,
   startWith,
   switchMap,
@@ -112,20 +110,16 @@ export class PageEditFormComponent {
 
   readonly confirmText$ = combineLatest([
     this.item$,
-    this.form.valueChanges,
+    this.form.controls.hidden.valueChanges,
   ]).pipe(
-    debounceTime(100),
-    map(([item, formValue]) => {
-      if (item?.hidden !== formValue.hidden) {
-        return formValue.hidden
-          ? 'PAGE_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
-          : 'PAGE_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
-      }
+    map(([item, hidden]) => {
+      if (item?.hidden === hidden) return null;
 
-      return null;
+      return hidden
+        ? 'PAGE_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
+        : 'PAGE_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
     }),
     distinctUntilChanged(),
-    share(),
   );
 
   handler = new FormSubmitWrapper(this.form, {
