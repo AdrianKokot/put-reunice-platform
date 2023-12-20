@@ -58,32 +58,6 @@ public class TemplateController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{templateID}/universities/{universityID}")
-    TemplateDtoDetailed addUniversityToTemplate(
-            @PathVariable long templateID, @PathVariable long universityID) {
-        return service.addUniversity(templateID, universityID);
-    }
-
-    @DeleteMapping("/{templateID}/universities/{universityID}")
-    TemplateDtoDetailed removeUniversityFromTemplate(
-            @PathVariable long templateID, @PathVariable long universityID) {
-        return service.removeUniversity(templateID, universityID);
-    }
-
-    //TODO: czy modify musi być tu nie może być update
-    @PatchMapping("/{id}/content")
-    ResponseEntity<Void> modifyPageContentField(@PathVariable long id, @RequestBody String content) {
-        service.modifyContentField(id, content);
-        return ResponseEntity.noContent().build();
-    }
-
-    //TODO: czy modify musi być tu nie może być update
-    @PatchMapping("/{id}/name")
-    ResponseEntity<Void> modifyPageNameField(@PathVariable long id, @RequestBody String name) {
-        service.modifyNameField(id, name);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteTemplate(@PathVariable long id) {
         service.delete(id);

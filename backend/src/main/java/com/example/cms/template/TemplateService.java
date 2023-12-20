@@ -28,8 +28,6 @@ public class TemplateService {
     private final UniversityRepository universityRepository;
     private final SecurityService securityService;
 
-    //TODO: po zmianach w controllerze sprawdzić czy nie można czegoś wywalić
-
     public TemplateService(
             TemplateRepository templateRepository,
             UniversityRepository universityRepository,
@@ -80,69 +78,12 @@ public class TemplateService {
         return templateRepository.findAll(combinedSpecification, pageable);
     }
 
-    @Secured("ROLE_ADMIN")
-    public TemplateDtoDetailed save(String name) {
-        Template template = new Template();
-        template.setName(name);
-        template.setContent("");
-
-        return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
     @Secured("ROLE_MODERATOR")
     public TemplateDtoDetailed save(TemplateDtoFormCreate form) {
         Template template = form.toTemplate();
         attachUniversities(template, form.getUniversities());
 
         return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
-    @Secured("ROLE_MODERATOR")
-    @Transactional
-    public TemplateDtoDetailed addUniversity(Long templateID, Long universityID) {
-        Template template =
-                templateRepository.findById(templateID).orElseThrow(TemplateNotFoundException::new);
-        University university =
-                universityRepository.findById(universityID).orElseThrow(UniversityNotFoundException::new);
-
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        template.getUniversities().add(university);
-        return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
-    @Secured("ROLE_MODERATOR")
-    @Transactional
-    public TemplateDtoDetailed removeUniversity(Long templateID, Long universityID) {
-        Template template =
-                templateRepository.findById(templateID).orElseThrow(TemplateNotFoundException::new);
-        University university =
-                universityRepository.findById(universityID).orElseThrow(UniversityNotFoundException::new);
-
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        template.getUniversities().remove(university);
-        return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
-    @Secured("ROLE_ADMIN")
-    public void modifyNameField(Long id, String name) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
-
-        template.setName(name);
-        templateRepository.save(template);
-    }
-
-    @Secured("ROLE_ADMIN")
-    public void modifyContentField(Long id, String content) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
-
-        template.setContent(content);
-        templateRepository.save(template);
     }
 
     @Secured("ROLE_ADMIN")
