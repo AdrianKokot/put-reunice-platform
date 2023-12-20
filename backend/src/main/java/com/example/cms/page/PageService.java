@@ -116,7 +116,7 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
-    //TODO:  Can be replaced with getPages with with given parrent Id filter
+    //TODO: Can be replaced with getAllVisible with given parent Id if null would be read as main page
     public List<PageDtoSimple> getSubpagesByParentPage(Pageable pageable, Long parentId) {
         Page parent =
                 Optional.ofNullable(parentId)
@@ -128,7 +128,6 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
-    //TODO: remove if above is met
     private List<Page> findVisibleSubpages(Pageable pageable, Page page) {
         return pageRepository.findAllByParent(pageable, page).stream()
                 .filter(this::isPageVisible)

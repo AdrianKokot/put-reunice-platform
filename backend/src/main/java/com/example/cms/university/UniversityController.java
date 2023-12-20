@@ -1,6 +1,7 @@
 package com.example.cms.university;
 
 import com.example.cms.security.SecurityService;
+import com.example.cms.university.exceptions.UniversityNotFoundException;
 import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
@@ -28,8 +29,15 @@ public class UniversityController {
     private final SecurityService securityService;
 
     @GetMapping("/{id}")
-    public UniversityDtoDetailed getUniversity(@PathVariable long id) {
-        return service.getUniversity(id);
+    public ResponseEntity<UniversityDtoDetailed> getUniversity(@PathVariable long id) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", "1");
+
+        return new ResponseEntity<>(
+                service.getUniversity(id),
+                httpHeaders,
+                HttpStatus.OK);
     }
 
     @GetMapping

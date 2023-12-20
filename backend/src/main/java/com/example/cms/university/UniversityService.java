@@ -48,19 +48,9 @@ public class UniversityService {
     private final FileService fileService;
     private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> searchService;
 
-    // TODO: wywalić to i zamiast tego zrobić getUniversity gdzie będzie getUniversities z id jako filtr? Wtedy isUniversityVisible też wyleci
     public UniversityDtoDetailed getUniversity(Long id) {
-        return universityRepository
-                .findById(id)
-                .map(
-                        university -> {
-                            if (!isUniversityVisible(university)) {
-                                throw new UniversityNotFoundException();
-                            }
-
-                            return UniversityDtoDetailed.of(university);
-                        })
-                .orElseThrow(UniversityNotFoundException::new);
+        return getUniversities(Pageable.ofSize(0), Map.of("id_eq", id.toString()))
+                .stream().map(UniversityDtoDetailed::of).findFirst().orElseThrow(UniversityNotFoundException::new);
     }
 
     public Page<University> getUniversities(Pageable pageable, Map<String, String> filterVars) {
@@ -99,20 +89,6 @@ public class UniversityService {
         }
 
         return universityRepository.findAll(combinedSpecification, pageable);
-    }
-
-    private boolean isUniversityVisible(University university) {
-        if (university == null) return false;
-
-        if (!university.isHidden()) return true;
-
-        var principal = securityService.getPrincipal();
-
-        if (principal.isEmpty()) return false;
-
-        if (principal.get().getAccountType().equals(Role.ADMIN)) return true;
-
-        return securityService.hasUniversity(university.getId());
     }
 
     @Secured("ROLE_ADMIN")

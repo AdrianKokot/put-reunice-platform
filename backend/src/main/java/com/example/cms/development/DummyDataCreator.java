@@ -707,12 +707,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         universityService.update(9L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
         universityService.update(10L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
 
-//        universityService.modifyHiddenField(2L, false);
-//        universityService.modifyHiddenField(3L, false);
-//        universityService.modifyHiddenField(5L, false);
-//        universityService.modifyHiddenField(6L, false);
-//        universityService.modifyHiddenField(8L, false);
-//        universityService.modifyHiddenField(10L, false);
 
         universityService.enrollUsersToUniversity(1L, 4L);
         universityService.enrollUsersToUniversity(1L, 17L);
