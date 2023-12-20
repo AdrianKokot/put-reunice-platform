@@ -1,7 +1,6 @@
 package com.example.cms.university;
 
 import com.example.cms.security.SecurityService;
-import com.example.cms.university.exceptions.UniversityNotFoundException;
 import com.example.cms.university.projections.UniversityDtoDetailed;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
@@ -34,10 +33,7 @@ public class UniversityController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", "1");
 
-        return new ResponseEntity<>(
-                service.getUniversity(id),
-                httpHeaders,
-                HttpStatus.OK);
+        return new ResponseEntity<>(service.getUniversity(id), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping

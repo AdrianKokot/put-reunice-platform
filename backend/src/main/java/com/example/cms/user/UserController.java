@@ -1,6 +1,5 @@
 package com.example.cms.user;
 
-import com.example.cms.security.Role;
 import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;

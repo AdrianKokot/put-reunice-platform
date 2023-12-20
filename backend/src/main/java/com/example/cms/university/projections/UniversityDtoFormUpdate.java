@@ -3,8 +3,6 @@ package com.example.cms.university.projections;
 import com.example.cms.university.University;
 import lombok.Value;
 
-import java.lang.reflect.Field;
-
 @Value
 public class UniversityDtoFormUpdate {
     String name;

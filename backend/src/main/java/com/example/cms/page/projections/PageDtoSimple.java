@@ -20,6 +20,7 @@ public class PageDtoSimple {
     private boolean hidden;
     private Instant createdOn;
     private Instant updatedOn;
+
     public static PageDtoSimple of(Page page) {
         if (page == null) {
             return null;

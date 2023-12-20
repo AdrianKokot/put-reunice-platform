@@ -11,7 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 @Table(name = "responses")
 @Getter
 public class Response {
-    public Response() {};
+    public Response() {}
+    ;
 
     public Response(String author, String content) {
         this.author = author;

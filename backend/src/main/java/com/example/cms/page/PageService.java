@@ -116,7 +116,8 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
-    //TODO: Can be replaced with getAllVisible with given parent Id if null would be read as main page
+    // TODO: Can be replaced with getAllVisible with given parent Id if null would be read as main
+    // page
     public List<PageDtoSimple> getSubpagesByParentPage(Pageable pageable, Long parentId) {
         Page parent =
                 Optional.ofNullable(parentId)

@@ -2,7 +2,6 @@ package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.exceptions.PageForbiddenException;
 import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
@@ -64,7 +63,13 @@ public class TicketService {
         com.example.cms.page.Page page =
                 pageRepository.findById(ticketDto.getPageId()).orElseThrow(PageNotFoundException::new);
 
-        Ticket ticket = ticketRepository.save(new Ticket(ticketDto.getRequesterEmail(), ticketDto.getTitle(), ticketDto.getDescription(), page));
+        Ticket ticket =
+                ticketRepository.save(
+                        new Ticket(
+                                ticketDto.getRequesterEmail(),
+                                ticketDto.getTitle(),
+                                ticketDto.getDescription(),
+                                page));
         ticket.setTicketHandlers(
                 page.getHandlers().stream()
                         .map(

@@ -8,8 +8,6 @@ import com.example.cms.template.projections.TemplateDtoFormCreate;
 import com.example.cms.template.projections.TemplateDtoFormUpdate;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
-import com.example.cms.university.exceptions.UniversityForbiddenException;
-import com.example.cms.university.exceptions.UniversityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TemplateService {
