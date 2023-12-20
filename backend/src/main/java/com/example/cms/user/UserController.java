@@ -62,38 +62,10 @@ public class UserController {
         return service.updateUser(id, form);
     }
 
-    @PutMapping("/{userId}/universities")
-    public UserDtoDetailed updateUserEnrolledUniversities(
-            @PathVariable long userId, @RequestBody List<Long> universitiesId) {
-        return service.updateEnrolledUniversities(userId, universitiesId);
-    }
-
-    @PatchMapping("/{id}/enabled")
-    ResponseEntity<Void> modifyUserEnabledField(@PathVariable long id, @RequestBody boolean enabled) {
-        service.modifyEnabledField(id, enabled);
-        return ResponseEntity.noContent().build();
-    }
-
-    // TODO: remove? ale chyba nie lub zmieniamy że przy każdym update usera musi stare hasło podać
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/{id}")
     ResponseEntity<Void> modifyUserPasswordField(
             @PathVariable long id, @RequestBody Map<String, String> passwordMap) {
         service.modifyPasswordField(id, passwordMap);
-        return ResponseEntity.noContent().build();
-    }
-
-    // TODO: remove?
-    @PatchMapping("/{id}/username")
-    ResponseEntity<Void> modifyUserUsernameField(
-            @PathVariable long id, @RequestBody String username) {
-        service.modifyUsernameField(id, username);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/accountType")
-    ResponseEntity<Void> modifyUserAccountTypeField(
-            @PathVariable long id, @RequestBody Map<String, Role> accountType) {
-        service.modifyAccountTypeField(id, accountType);
         return ResponseEntity.noContent().build();
     }
 

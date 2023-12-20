@@ -38,6 +38,5 @@ public class TicketDto {
         title = ticket.getTitle();
         description = ticket.getDescription();
         requestedToken = ticket.getRequestedToken();
-        contentRequestHandlerToken = ticket.getContentRequestHandlerToken();
     }
 }

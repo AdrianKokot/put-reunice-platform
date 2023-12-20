@@ -13,6 +13,7 @@ import com.example.cms.ticket.TicketService;
 import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.university.UniversityService;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
+import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.user.UserService;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.validation.exceptions.WrongParameterException;
@@ -695,13 +696,23 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "https://www.us.szc.pl/"));
         universityService.setUniversityImage(10L, "/static/us_logo.jpg");
 
-        universityService.modifyHiddenField(1L, false);
-        universityService.modifyHiddenField(2L, false);
-        universityService.modifyHiddenField(3L, false);
-        universityService.modifyHiddenField(5L, false);
-        universityService.modifyHiddenField(6L, false);
-        universityService.modifyHiddenField(8L, false);
-        universityService.modifyHiddenField(10L, false);
+        universityService.update(1L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(2L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(3L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(4L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(5L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(6L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(7L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(8L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(9L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(10L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+
+//        universityService.modifyHiddenField(2L, false);
+//        universityService.modifyHiddenField(3L, false);
+//        universityService.modifyHiddenField(5L, false);
+//        universityService.modifyHiddenField(6L, false);
+//        universityService.modifyHiddenField(8L, false);
+//        universityService.modifyHiddenField(10L, false);
 
         universityService.enrollUsersToUniversity(1L, 4L);
         universityService.enrollUsersToUniversity(1L, 17L);
