@@ -20,8 +20,6 @@ public class PageDtoSimple {
     private boolean hidden;
     private Instant createdOn;
     private Instant updatedOn;
-    private String keyWords;
-
     public static PageDtoSimple of(Page page) {
         if (page == null) {
             return null;
@@ -38,6 +36,5 @@ public class PageDtoSimple {
         hidden = page.isHidden();
         createdOn = page.getCreatedOn().toInstant();
         updatedOn = page.getUpdatedOn().toInstant();
-        keyWords = page.getKeyWords();
     }
 }

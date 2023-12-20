@@ -37,12 +37,6 @@ export const adminRoutes: Route[] = [
         loadChildren: () => import('./user/user.module'),
       },
       {
-        title: translatedTitle('KEYWORDS'),
-        path: 'keywords',
-        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
-        loadChildren: () => import('./keyword/keyword.module'),
-      },
-      {
         title: translatedTitle('BACKUPS'),
         path: 'backups',
         canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],

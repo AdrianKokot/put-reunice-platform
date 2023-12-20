@@ -73,12 +73,14 @@ public class PageController {
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: cant be done in update
     @PatchMapping("/{id}/hidden")
     ResponseEntity<Void> modifyPageHiddenField(@PathVariable long id, @RequestBody boolean hidden) {
         service.modifyHiddenField(id, hidden);
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: cant be done in update
     @PatchMapping("/{id}/content")
     ResponseEntity<Void> modifyPageContentField(
             @PathVariable long id, @RequestBody(required = false) String content) {
@@ -92,18 +94,14 @@ public class PageController {
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: cant be done in update
     @PatchMapping("/{id}/creator")
     ResponseEntity<Void> modifyPageCreatorField(@PathVariable long id, @RequestBody String username) {
         service.modifyCreatorField(id, username);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/keyWords")
-    ResponseEntity<Void> modifyPageKeyWords(@PathVariable long id, @RequestBody String keyWords) {
-        service.modifyKeyWordsField(id, keyWords);
-        return ResponseEntity.noContent().build();
-    }
-
+    // TODO: cant be done in update
     @PutMapping("/{id}/handlers")
     ResponseEntity<Void> addPageHandlers(
             @PathVariable long id, @RequestBody List<Long> pageHandlers) {

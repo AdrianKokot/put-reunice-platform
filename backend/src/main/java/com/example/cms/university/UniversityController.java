@@ -83,6 +83,7 @@ public class UniversityController {
         return service.enrollUsersToUniversity(universityId, userId);
     }
 
+    // TODO: remove skoro i tak tylko mod może edytować?
     @PatchMapping("/{id}/hidden")
     public ResponseEntity<Void> modifyUniversityHiddenField(
             @PathVariable Long id, @RequestBody boolean hidden) {

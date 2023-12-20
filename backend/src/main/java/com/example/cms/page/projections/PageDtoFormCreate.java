@@ -12,7 +12,6 @@ public class PageDtoFormCreate {
     String content;
     Long creatorId;
     Long parentId;
-    String keyWords;
     Boolean hidden;
 
     public Page toPage(Page parent, User creator) {
@@ -23,7 +22,6 @@ public class PageDtoFormCreate {
         page.setParent(parent);
         page.setUniversity(parent.getUniversity());
         page.setCreator(creator);
-        page.setKeyWords(keyWords);
         page.setHidden(hidden);
         return page;
     }

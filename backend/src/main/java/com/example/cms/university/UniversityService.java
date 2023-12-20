@@ -48,6 +48,7 @@ public class UniversityService {
     private final FileService fileService;
     private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> searchService;
 
+    // TODO: wywalić to i zamiast tego zrobić getUniversity gdzie będzie getUniversities z id jako filtr? Wtedy isUniversityVisible też wyleci
     public UniversityDtoDetailed getUniversity(Long id) {
         return universityRepository
                 .findById(id)
@@ -153,6 +154,7 @@ public class UniversityService {
             throw new UniversityForbiddenException();
         }
 
+        // TODO: co z tym (jak będzie hidden wywalony jako endpiont to będzie to tu edytowane)
         var isVisibilityChanged = university.isHidden() != form.getHidden();
 
         form.updateUniversity(university);
@@ -200,6 +202,7 @@ public class UniversityService {
         universityRepository.save(university);
     }
 
+    //TODO: czemu to ma wylecieć?
     @Transactional
     @Secured("ROLE_ADMIN") // TODO: remove UniversityService#enrollUsersToUniversity
     public UniversityDtoDetailed enrollUsersToUniversity(Long universityId, Long userId) {
@@ -213,6 +216,7 @@ public class UniversityService {
         return UniversityDtoDetailed.of(result);
     }
 
+    //TODO: wyleci jeśli endpoint wyleci
     @Secured("ROLE_MODERATOR")
     public void modifyHiddenField(Long id, boolean hidden) {
         University university =

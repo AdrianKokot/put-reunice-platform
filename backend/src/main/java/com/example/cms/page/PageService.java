@@ -116,6 +116,7 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
+    //TODO:  Can be replaced with getPages with with given parrent Id filter
     public List<PageDtoSimple> getSubpagesByParentPage(Pageable pageable, Long parentId) {
         Page parent =
                 Optional.ofNullable(parentId)
@@ -127,6 +128,7 @@ public class PageService {
                 .collect(Collectors.toList());
     }
 
+    //TODO: remove if above is met
     private List<Page> findVisibleSubpages(Pageable pageable, Page page) {
         return pageRepository.findAllByParent(pageable, page).stream()
                 .filter(this::isPageVisible)
@@ -248,17 +250,6 @@ public class PageService {
         }
 
         page.setCreator(creator);
-        save(page);
-    }
-
-    @Secured("ROLE_USER")
-    public void modifyKeyWordsField(Long id, String keyWords) {
-        Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
-        }
-
-        page.setKeyWords(keyWords);
         save(page);
     }
 

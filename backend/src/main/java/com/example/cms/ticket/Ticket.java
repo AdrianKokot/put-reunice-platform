@@ -59,11 +59,12 @@ public class Ticket {
     private Set<Response> responses;
 
     private String requestedToken;
+    // TODO: to chyba do wywalenia bo handler musi być z konta
     private String contentRequestHandlerToken;
 
     @Override
     public String toString() {
-        return "User{"
+        return "Ticket{"
                 + "id="
                 + id
                 + ", requesterEmail='"

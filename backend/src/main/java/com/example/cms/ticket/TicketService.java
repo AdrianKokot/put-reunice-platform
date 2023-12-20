@@ -60,6 +60,7 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
+    // TODO: to chyba do wywalenia i przez DTO będzie robione
     public UUID createTicket(String requesterEmail, String title, String description, Long pageId) {
         com.example.cms.page.Page page =
                 pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);

@@ -68,6 +68,7 @@ public class TicketController {
         return new ResponseEntity<>(responses, httpHeaders, HttpStatus.OK);
     }
 
+    // TODO: coś aby to się nie świeciło?
     @PutMapping("/{ticketId}")
     public ResponseEntity updateTicketStatus(
             @PathVariable UUID ticketId, @RequestBody TicketStatus ticketStatusToChangeTo) {

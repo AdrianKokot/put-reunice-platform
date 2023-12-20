@@ -74,6 +74,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: remove? ale chyba nie lub zmieniamy że przy każdym update usera musi stare hasło podać
     @PatchMapping("/{id}/password")
     ResponseEntity<Void> modifyUserPasswordField(
             @PathVariable long id, @RequestBody Map<String, String> passwordMap) {
@@ -81,6 +82,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: remove?
     @PatchMapping("/{id}/username")
     ResponseEntity<Void> modifyUserUsernameField(
             @PathVariable long id, @RequestBody String username) {

@@ -28,6 +28,8 @@ public class TemplateService {
     private final UniversityRepository universityRepository;
     private final SecurityService securityService;
 
+    //TODO: po zmianach w controllerze sprawdzić czy nie można czegoś wywalić
+
     public TemplateService(
             TemplateRepository templateRepository,
             UniversityRepository universityRepository,
