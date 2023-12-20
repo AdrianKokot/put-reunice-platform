@@ -77,20 +77,6 @@ public class UniversityController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{universityId}/users/{userId}")
-    public UniversityDtoDetailed enrollUsersToUniversity(
-            @PathVariable long universityId, @PathVariable long userId) {
-        return service.enrollUsersToUniversity(universityId, userId);
-    }
-
-    // TODO: remove skoro i tak tylko mod może edytować?
-    @PatchMapping("/{id}/hidden")
-    public ResponseEntity<Void> modifyUniversityHiddenField(
-            @PathVariable Long id, @RequestBody boolean hidden) {
-        service.modifyHiddenField(id, hidden);
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
         service.deleteUniversity(id);

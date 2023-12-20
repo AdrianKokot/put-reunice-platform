@@ -154,9 +154,6 @@ public class UniversityService {
             throw new UniversityForbiddenException();
         }
 
-        // TODO: co z tym (jak będzie hidden wywalony jako endpiont to będzie to tu edytowane)
-        var isVisibilityChanged = university.isHidden() != form.getHidden();
-
         form.updateUniversity(university);
 
         var result = UniversityDtoDetailed.of(universityRepository.save(university));
@@ -202,7 +199,6 @@ public class UniversityService {
         universityRepository.save(university);
     }
 
-    //TODO: czemu to ma wylecieć?
     @Transactional
     @Secured("ROLE_ADMIN") // TODO: remove UniversityService#enrollUsersToUniversity
     public UniversityDtoDetailed enrollUsersToUniversity(Long universityId, Long userId) {
@@ -214,19 +210,6 @@ public class UniversityService {
         university.enrollUsers(user);
         University result = universityRepository.save(university);
         return UniversityDtoDetailed.of(result);
-    }
-
-    //TODO: wyleci jeśli endpoint wyleci
-    @Secured("ROLE_MODERATOR")
-    public void modifyHiddenField(Long id, boolean hidden) {
-        University university =
-                universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        university.setHidden(hidden);
-        universityRepository.save(university);
     }
 
     @Secured("ROLE_ADMIN")

@@ -216,44 +216,6 @@ public class PageService {
     }
 
     @Secured("ROLE_USER")
-    public void modifyHiddenField(Long id, boolean hidden) {
-        Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
-        }
-
-        page.setHidden(hidden);
-        save(page);
-    }
-
-    @Secured("ROLE_USER")
-    public void modifyContentField(Long id, String content) {
-        Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
-        }
-
-        page.getContent().setPageContent(Optional.ofNullable(content).orElse(""));
-        save(page);
-    }
-
-    @Secured("ROLE_MODERATOR")
-    public void modifyCreatorField(Long id, String username) {
-        Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
-        }
-
-        User creator = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(creator)) {
-            throw new UserForbiddenException();
-        }
-
-        page.setCreator(creator);
-        save(page);
-    }
-
-    @Secured("ROLE_USER")
     public void delete(Long id) {
         Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
@@ -271,29 +233,5 @@ public class PageService {
         University university =
                 universityRepository.findById(universityId).orElseThrow(PageNotFoundException::new);
         return PageDtoHierarchy.of(university.getMainPage(), securityService);
-    }
-
-    @Secured({"ROLE_ADMIN", "ROLE_MODERATOR"})
-    public void assignUsersToPage(List<Long> userIds, Long pageId) {
-        com.example.cms.page.Page page = pageRepository.findById(pageId).orElse(null);
-
-        if (page == null) {
-            throw new PageNotFoundException();
-        }
-
-        Set<User> usersToAssign = new HashSet<>();
-
-        userIds.forEach(
-                id -> {
-                    User user = userRepository.findById(id).orElse(null);
-                    if (user == null) {
-                        throw new UserNotFoundException(id);
-                    }
-
-                    usersToAssign.add(user);
-                });
-
-        page.setHandlers(usersToAssign);
-        pageRepository.save(page);
     }
 }
