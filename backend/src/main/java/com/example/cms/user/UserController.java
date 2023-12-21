@@ -1,6 +1,5 @@
 package com.example.cms.user;
 
-import com.example.cms.security.Role;
 import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
@@ -62,36 +61,10 @@ public class UserController {
         return service.updateUser(id, form);
     }
 
-    @PutMapping("/{userId}/universities")
-    public UserDtoDetailed updateUserEnrolledUniversities(
-            @PathVariable long userId, @RequestBody List<Long> universitiesId) {
-        return service.updateEnrolledUniversities(userId, universitiesId);
-    }
-
-    @PatchMapping("/{id}/enabled")
-    ResponseEntity<Void> modifyUserEnabledField(@PathVariable long id, @RequestBody boolean enabled) {
-        service.modifyEnabledField(id, enabled);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/{id}")
     ResponseEntity<Void> modifyUserPasswordField(
             @PathVariable long id, @RequestBody Map<String, String> passwordMap) {
         service.modifyPasswordField(id, passwordMap);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/username")
-    ResponseEntity<Void> modifyUserUsernameField(
-            @PathVariable long id, @RequestBody String username) {
-        service.modifyUsernameField(id, username);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}/accountType")
-    ResponseEntity<Void> modifyUserAccountTypeField(
-            @PathVariable long id, @RequestBody Map<String, Role> accountType) {
-        service.modifyAccountTypeField(id, accountType);
         return ResponseEntity.noContent().build();
     }
 

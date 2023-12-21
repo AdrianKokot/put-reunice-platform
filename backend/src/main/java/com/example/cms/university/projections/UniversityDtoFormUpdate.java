@@ -13,11 +13,11 @@ public class UniversityDtoFormUpdate {
     Boolean hidden;
 
     public void updateUniversity(University university) {
-        university.setName(name);
-        university.setShortName(shortName);
-        university.setDescription(description);
-        university.setAddress(address);
-        university.setWebsite(website);
-        university.setHidden(hidden);
+        university.setName(name == null ? university.getName() : name);
+        university.setShortName(shortName == null ? university.getShortName() : shortName);
+        university.setDescription(description == null ? university.getDescription() : description);
+        university.setAddress(address == null ? university.getAddress() : address);
+        university.setWebsite(website == null ? university.getWebsite() : website);
+        university.setHidden(hidden == null ? university.isHidden() : hidden);
     }
 }

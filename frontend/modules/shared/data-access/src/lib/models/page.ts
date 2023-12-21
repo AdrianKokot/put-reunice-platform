@@ -13,7 +13,6 @@ export interface Page {
   children: Page[];
   createdOn: string;
   updatedOn: string;
-  keyWords: string;
   contactRequestHandlers: User[];
   hasContactRequestHandler: boolean;
 }

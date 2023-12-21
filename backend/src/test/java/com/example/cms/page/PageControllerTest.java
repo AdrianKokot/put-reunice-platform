@@ -75,7 +75,6 @@ class PageControllerTest extends BaseAPIControllerTest {
                         null,
                         null,
                         null,
-                        null,
                         null);
         page = pageRepository.save(page);
         this.pageId = page.getId();

@@ -38,7 +38,7 @@ public class TicketController {
                 HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<UUID> createTicket(@RequestBody TicketDtoFormCreate ticketDto) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", "1");
@@ -69,7 +69,7 @@ public class TicketController {
     }
 
     @PutMapping("/{ticketId}")
-    public ResponseEntity updateTicketStatus(
+    public ResponseEntity<?> updateTicketStatus(
             @PathVariable UUID ticketId, @RequestBody TicketStatus ticketStatusToChangeTo) {
         TicketDtoDetailed ticketDtoDetailed =
                 service.updateTicketStatus(ticketStatusToChangeTo, ticketId);

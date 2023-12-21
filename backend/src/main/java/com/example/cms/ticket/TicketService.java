@@ -2,7 +2,6 @@ package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.exceptions.PageForbiddenException;
 import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
@@ -60,13 +59,17 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public UUID createTicket(String requesterEmail, String title, String description, Long pageId) {
+    public UUID createTicket(TicketDtoFormCreate ticketDto) {
         com.example.cms.page.Page page =
-                pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
-        }
-        Ticket ticket = ticketRepository.save(new Ticket(requesterEmail, title, description, page));
+                pageRepository.findById(ticketDto.getPageId()).orElseThrow(PageNotFoundException::new);
+
+        Ticket ticket =
+                ticketRepository.save(
+                        new Ticket(
+                                ticketDto.getRequesterEmail(),
+                                ticketDto.getTitle(),
+                                ticketDto.getDescription(),
+                                page));
         ticket.setTicketHandlers(
                 page.getHandlers().stream()
                         .map(
@@ -81,14 +84,6 @@ public class TicketService {
                         .collect(Collectors.toSet()));
 
         return ticket.getId();
-    }
-
-    public UUID createTicket(TicketDtoFormCreate ticketDto) {
-        return createTicket(
-                ticketDto.getRequesterEmail(),
-                ticketDto.getTitle(),
-                ticketDto.getDescription(),
-                ticketDto.getPageId());
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {

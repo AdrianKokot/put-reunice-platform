@@ -28,8 +28,12 @@ public class UniversityController {
     private final SecurityService securityService;
 
     @GetMapping("/{id}")
-    public UniversityDtoDetailed getUniversity(@PathVariable long id) {
-        return service.getUniversity(id);
+    public ResponseEntity<UniversityDtoDetailed> getUniversity(@PathVariable long id) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Whole-Content-Length", "1");
+
+        return new ResponseEntity<>(service.getUniversity(id), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping
@@ -75,19 +79,6 @@ public class UniversityController {
             @PathVariable long universityId, @RequestBody MultipartFile file) {
         service.uploadUniversityImage(universityId, file);
         return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/{universityId}/users/{userId}")
-    public UniversityDtoDetailed enrollUsersToUniversity(
-            @PathVariable long universityId, @PathVariable long userId) {
-        return service.enrollUsersToUniversity(universityId, userId);
-    }
-
-    @PatchMapping("/{id}/hidden")
-    public ResponseEntity<Void> modifyUniversityHiddenField(
-            @PathVariable Long id, @RequestBody boolean hidden) {
-        service.modifyHiddenField(id, hidden);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

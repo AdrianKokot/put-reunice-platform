@@ -49,16 +49,9 @@ public class UniversityService {
     private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> searchService;
 
     public UniversityDtoDetailed getUniversity(Long id) {
-        return universityRepository
-                .findById(id)
-                .map(
-                        university -> {
-                            if (!isUniversityVisible(university)) {
-                                throw new UniversityNotFoundException();
-                            }
-
-                            return UniversityDtoDetailed.of(university);
-                        })
+        return getUniversities(Pageable.ofSize(1), Map.of("id_eq", id.toString())).stream()
+                .map(UniversityDtoDetailed::of)
+                .findFirst()
                 .orElseThrow(UniversityNotFoundException::new);
     }
 
@@ -100,20 +93,6 @@ public class UniversityService {
         return universityRepository.findAll(combinedSpecification, pageable);
     }
 
-    private boolean isUniversityVisible(University university) {
-        if (university == null) return false;
-
-        if (!university.isHidden()) return true;
-
-        var principal = securityService.getPrincipal();
-
-        if (principal.isEmpty()) return false;
-
-        if (principal.get().getAccountType().equals(Role.ADMIN)) return true;
-
-        return securityService.hasUniversity(university.getId());
-    }
-
     @Secured("ROLE_ADMIN")
     public UniversityDtoDetailed addNewUniversity(UniversityDtoFormCreate form) {
         if (universityRepository.existsByNameOrShortName(form.getName(), form.getShortName())) {
@@ -152,8 +131,6 @@ public class UniversityService {
         if (securityService.isForbiddenUniversity(university)) {
             throw new UniversityForbiddenException();
         }
-
-        var isVisibilityChanged = university.isHidden() != form.getHidden();
 
         form.updateUniversity(university);
 
@@ -211,18 +188,6 @@ public class UniversityService {
         university.enrollUsers(user);
         University result = universityRepository.save(university);
         return UniversityDtoDetailed.of(result);
-    }
-
-    @Secured("ROLE_MODERATOR")
-    public void modifyHiddenField(Long id, boolean hidden) {
-        University university =
-                universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        university.setHidden(hidden);
-        universityRepository.save(university);
     }
 
     @Secured("ROLE_ADMIN")

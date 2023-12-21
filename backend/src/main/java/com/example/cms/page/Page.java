@@ -62,7 +62,6 @@ public class Page {
 
     private Timestamp createdOn;
     private Timestamp updatedOn;
-    private String keyWords;
 
     @PrePersist
     private void prePersist() {

@@ -5,12 +5,15 @@ import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
+import com.example.cms.page.projections.PageDtoFormUpdate;
 import com.example.cms.security.Role;
 import com.example.cms.template.TemplateService;
 import com.example.cms.template.projections.TemplateDtoFormCreate;
 import com.example.cms.ticket.TicketService;
+import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.university.UniversityService;
 import com.example.cms.university.projections.UniversityDtoFormCreate;
+import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.user.UserService;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.validation.exceptions.WrongParameterException;
@@ -150,7 +153,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
 
     /**
      * Creates some dummy data to be presented in the running application, so it can be tested
-     * manually in a browser (users, universities, user enrollments, pages, keywords, and a template).
+     * manually in a browser (users, universities, user enrollments, pages, and a template).
      */
     private void createDummyData() {
         userService.createUser(
@@ -693,13 +696,16 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "https://www.us.szc.pl/"));
         universityService.setUniversityImage(10L, "/static/us_logo.jpg");
 
-        universityService.modifyHiddenField(1L, false);
-        universityService.modifyHiddenField(2L, false);
-        universityService.modifyHiddenField(3L, false);
-        universityService.modifyHiddenField(5L, false);
-        universityService.modifyHiddenField(6L, false);
-        universityService.modifyHiddenField(8L, false);
-        universityService.modifyHiddenField(10L, false);
+        universityService.update(1L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(2L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(3L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(4L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(5L, new UniversityDtoFormUpdate(null, null, null, null, null, true));
+        universityService.update(6L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(7L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(8L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
+        universityService.update(9L, new UniversityDtoFormUpdate(null, null, null, null, null, true));
+        universityService.update(10L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
 
         universityService.enrollUsersToUniversity(1L, 4L);
         universityService.enrollUsersToUniversity(1L, 17L);
@@ -756,7 +762,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         4L,
                         1L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -781,7 +786,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         4L,
                         11L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -807,7 +811,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         4L,
                         12L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -833,7 +836,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         4L,
                         12L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -857,7 +859,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         4L,
                         11L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -882,7 +883,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         4L,
                         1L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -898,7 +898,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         17L,
                         1L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -919,7 +918,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         17L,
                         1L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -935,7 +933,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         18L,
                         1L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -961,14 +958,12 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "    </section>",
                         18L,
                         1L,
-                        "",
                         false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 5L, 2L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 5L, 2L, false));
         pageService.save(
-                new PageDtoFormCreate(
-                        "Students", "News, education, work, sport...", "", 5L, 2L, "", false));
+                new PageDtoFormCreate("Students", "News, education, work, sport...", "", 5L, 2L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -976,28 +971,18 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         5L,
                         2L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 19L, 2L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 19L, 2L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 19L, 2L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 19L, 2L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 20L, 2L, "", false));
+                        "Contact", "This page contains contact information.", "", 20L, 2L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 20L, 2L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("News", "News for our students.", "", 5L, 22L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 20L, 2L, false));
+        pageService.save(new PageDtoFormCreate("News", "News for our students.", "", 5L, 22L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Academic Calendar",
-                        "Periods of academic education and days off",
-                        "",
-                        5L,
-                        22L,
-                        "",
-                        false));
+                        "Academic Calendar", "Periods of academic education and days off", "", 5L, 22L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Student Offices",
@@ -1005,7 +990,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         5L,
                         22L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -1014,7 +998,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         5L,
                         23L,
-                        "",
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -1023,11 +1006,10 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         5L,
                         23L,
-                        "",
                         false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 6L, 3L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 6L, 3L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1035,20 +1017,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         6L,
                         3L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 21L, 3L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 21L, 3L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 21L, 3L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 21L, 3L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 22L, 3L, "", false));
+                        "Contact", "This page contains contact information.", "", 22L, 3L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 22L, 3L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 22L, 3L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 7L, 4L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 7L, 4L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1056,20 +1035,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         7L,
                         4L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 23L, 4L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 23L, 4L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 23L, 4L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 23L, 4L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 24L, 4L, "", false));
+                        "Contact", "This page contains contact information.", "", 24L, 4L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 24L, 4L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 24L, 4L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 8L, 5L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 8L, 5L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1077,20 +1053,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         8L,
                         5L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 25L, 5L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 25L, 5L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 25L, 5L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 25L, 5L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 26L, 5L, "", false));
+                        "Contact", "This page contains contact information.", "", 26L, 5L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 26L, 5L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 26L, 5L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 9L, 6L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 9L, 6L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1098,21 +1071,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         9L,
                         6L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 27L, 6L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 27L, 6L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 27L, 6L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 27L, 6L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 28L, 6L, "", false));
+                        "Contact", "This page contains contact information.", "", 28L, 6L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 28L, 6L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 28L, 6L, false));
 
         pageService.save(
-                new PageDtoFormCreate(
-                        "Education", "The list of courses we offer.", "", 10L, 7L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 10L, 7L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1120,21 +1089,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         10L,
                         7L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 29L, 7L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 29L, 7L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 29L, 7L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 29L, 7L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 30L, 7L, "", false));
+                        "Contact", "This page contains contact information.", "", 30L, 7L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 30L, 7L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 30L, 7L, false));
 
         pageService.save(
-                new PageDtoFormCreate(
-                        "Education", "The list of courses we offer.", "", 11L, 8L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 11L, 8L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1142,21 +1107,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         11L,
                         8L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 31L, 8L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 31L, 8L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 31L, 8L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 31L, 8L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 32L, 8L, "", false));
+                        "Contact", "This page contains contact information.", "", 32L, 8L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 32L, 8L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 32L, 8L, false));
 
         pageService.save(
-                new PageDtoFormCreate(
-                        "Education", "The list of courses we offer.", "", 12L, 9L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 12L, 9L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1164,21 +1125,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         12L,
                         9L,
-                        "",
                         false));
-        pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 33L, 9L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 33L, 9L, "", false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 33L, 9L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 33L, 9L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 34L, 9L, "", false));
+                        "Contact", "This page contains contact information.", "", 34L, 9L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 34L, 9L, "", false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 34L, 9L, false));
 
         pageService.save(
-                new PageDtoFormCreate(
-                        "Education", "The list of courses we offer.", "", 13L, 10L, "", false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 13L, 10L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
@@ -1186,26 +1143,247 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "",
                         13L,
                         10L,
-                        "",
                         false));
         pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 35L, 10L, "", false));
-        pageService.save(
-                new PageDtoFormCreate("Staff", "The list of our staff.", "", 35L, 10L, "", false));
-        pageService.save(
-                new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 36L, 10L, "", false));
+                new PageDtoFormCreate("Business", "Services and experts", "", 35L, 10L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 35L, 10L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "History", "The history of our university.", "", 36L, 10L, "", false));
+                        "Contact", "This page contains contact information.", "", 36L, 10L, false));
+        pageService.save(
+                new PageDtoFormCreate("History", "The history of our university.", "", 36L, 10L, false));
 
-        pageService.modifyHiddenField(1L, false);
-        pageService.modifyHiddenField(2L, false);
-        pageService.modifyHiddenField(3L, false);
-        pageService.modifyHiddenField(5L, false);
-        pageService.modifyHiddenField(6L, false);
-        pageService.modifyHiddenField(8L, false);
-        pageService.modifyHiddenField(10L, false);
+        pageService.update(
+                1L,
+                new PageDtoFormUpdate(
+                        "Education",
+                        "The list of courses we offer.",
+                        "<section>\n"
+                                + "        <h2>Undergraduate Programs</h2>\n"
+                                + "        <p>Discover our range of undergraduate programs in engineering and technology fields.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Computer Science</li>\n"
+                                + "            <li>Electrical Engineering</li>\n"
+                                + "            <li>Civil Engineering</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Graduate Programs</h2>\n"
+                                + "        <p>Explore advanced studies in various engineering disciplines.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Mechanical Engineering</li>\n"
+                                + "            <li>Chemical Engineering</li>\n"
+                                + "            <li>Architecture</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(5L, 7L),
+                        4L));
+        pageService.update(
+                2L,
+                new PageDtoFormUpdate(
+                        "Computer Science",
+                        "The Bachelor of Science in Computer Science program at Poznań University of Technology provides a comprehensive foundation in computer science theory and practical programming skills.",
+                        " <section>\n"
+                                + "        <h2>Program Overview</h2>\n"
+                                + "        <p>Students will study a range of subjects including algorithms, data structures, software engineering, and database systems. The program also emphasizes hands-on projects and collaborative learning.</p>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Key Courses</h2>\n"
+                                + "        <ul>\n"
+                                + "            <li>Introduction to Algorithms</li>\n"
+                                + "            <li>Object-Oriented Programming</li>\n"
+                                + "            <li>Database Systems</li>\n"
+                                + "            <li>Software Engineering</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Career Opportunities</h2>\n"
+                                + "        <p>Graduates of this program are well-equipped for roles in software development, web development, database administration, and more.</p>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(5L, 6L, 7L),
+                        4L));
+        pageService.update(
+                3L,
+                new PageDtoFormUpdate(
+                        "Undergraduate Programs",
+                        "Undergraduate Programs",
+                        "    <section>\n"
+                                + "        <h2>Bachelor of Science in Computer Science</h2>\n"
+                                + "        <p>Explore the foundational principles of computer science and gain practical programming skills.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Introduction to Algorithms</li>\n"
+                                + "            <li>Object-Oriented Programming</li>\n"
+                                + "            <li>Database Systems</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Bachelor of Engineering in Electrical Engineering</h2>\n"
+                                + "        <p>Study the core concepts of electrical engineering and specialize in areas like power systems or electronics.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Electric Circuits</li>\n"
+                                + "            <li>Signals and Systems</li>\n"
+                                + "            <li>Power Electronics</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(5L, 7L, 4L),
+                        4L));
+        pageService.update(
+                4L,
+                new PageDtoFormUpdate(
+                        "Undergraduate Programs",
+                        "Undergraduate Programs",
+                        "    <section>\n"
+                                + "        <h2>Bachelor of Science in Computer Science</h2>\n"
+                                + "        <p>Explore the foundational principles of computer science and gain practical programming skills.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Introduction to Algorithms</li>\n"
+                                + "            <li>Object-Oriented Programming</li>\n"
+                                + "            <li>Database Systems</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Bachelor of Engineering in Electrical Engineering</h2>\n"
+                                + "        <p>Study the core concepts of electrical engineering and specialize in areas like power systems or electronics.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Electric Circuits</li>\n"
+                                + "            <li>Signals and Systems</li>\n"
+                                + "            <li>Power Electronics</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(5L, 6L, 4L, 7L),
+                        4L));
+        pageService.update(
+                5L,
+                new PageDtoFormUpdate(
+                        "Graduate Programs",
+                        "Graduate Programs",
+                        " <section>\n"
+                                + "        <h2>Master of Science in Mechanical Engineering</h2>\n"
+                                + "        <p>Deepen your knowledge in mechanical engineering with advanced coursework and research opportunities.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Finite Element Analysis</li>\n"
+                                + "            <li>Advanced Thermodynamics</li>\n"
+                                + "            <li>Robotics and Automation</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Master of Engineering in Chemical Engineering</h2>\n"
+                                + "        <p>Specialize in chemical process engineering or materials engineering with advanced coursework and projects.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Chemical Reactor Design</li>\n"
+                                + "            <li>Polymer Science</li>\n"
+                                + "            <li>Process Safety</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(5L, 22L),
+                        4L));
+        pageService.update(
+                6L,
+                new PageDtoFormUpdate(
+                        "Engineering in Electrical Engineering",
+                        "The Bachelor of Engineering in Electrical Engineering program at Poznań University of Technology offers a solid foundation in electrical engineering principles and specialized knowledge in areas like power systems or electronics.",
+                        "<section>\n"
+                                + "        <h2>Program Overview</h2>\n"
+                                + "        <p>Students will study subjects including electric circuits, signals and systems, and power electronics. The program also includes hands-on labs and practical projects.</p>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Specializations</h2>\n"
+                                + "        <ul>\n"
+                                + "            <li>Power Systems</li>\n"
+                                + "            <li>Electronics</li>\n"
+                                + "            <li>Control Systems</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Career Paths</h2>\n"
+                                + "        <p>Graduates are prepared for careers in power generation and distribution, electronics design, control systems engineering, and more.</p>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(),
+                        4L));
+        pageService.update(
+                7L,
+                new PageDtoFormUpdate(
+                        "Research",
+                        "At Poznań University of Technology, we're dedicated to cutting-edge research that drives innovation.",
+                        "<section>\n"
+                                + "        <h2>Research Areas</h2>\n"
+                                + "        <ul>\n"
+                                + "            <li>Artificial Intelligence</li>\n"
+                                + "            <li>Green Energy Technologies</li>\n"
+                                + "            <li>Advanced Materials</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Research Facilities</h2>\n"
+                                + "        <p>Explore our state-of-the-art labs and centers for scientific discovery.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Robotics Lab</li>\n"
+                                + "            <li>Nanotechnology Center</li>\n"
+                                + "            <li>Environmental Engineering Lab</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(),
+                        4L));
+        pageService.update(
+                8L,
+                new PageDtoFormUpdate(
+                        "International Programs",
+                        "Explore opportunities for international students to study at Poznań University of Technology.",
+                        "<section>\n"
+                                + "        <h2>Exchange Programs</h2>\n"
+                                + "        <p>Information on exchange partnerships and study abroad opportunities.</p>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>English-Taught Programs</h2>\n"
+                                + "        <p>Discover programs offered in English for international students.</p>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(),
+                        17L));
+        pageService.update(
+                9L,
+                new PageDtoFormUpdate(
+                        "Facilities",
+                        "Facilities",
+                        "    <section>\n"
+                                + "        <h2>Libraries</h2>\n"
+                                + "        <p>Explore our well-equipped libraries with extensive collections of engineering and technology resources.</p>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>Laboratories</h2>\n"
+                                + "        <p>Information about specialized labs supporting hands-on learning and research.</p>\n"
+                                + "        <ul>\n"
+                                + "            <li>Advanced Materials Lab</li>\n"
+                                + "            <li>Robotics and Automation Lab</li>\n"
+                                + "            <li>Fluid Dynamics Lab</li>\n"
+                                + "        </ul>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(),
+                        17L));
+        pageService.update(
+                10L,
+                new PageDtoFormUpdate(
+                        "Contact",
+                        "Get in touch with us for inquiries, admissions, and general information about Poznań University of Technology.",
+                        "<section>\n"
+                                + "        <h2>Admissions Office</h2>\n"
+                                + "        <p>Contact details for the admissions office for prospective students.</p>\n"
+                                + "    </section>\n"
+                                + "    <section>\n"
+                                + "        <h2>General Inquiries</h2>\n"
+                                + "        <p>For any other questions or information, feel free to reach out to our main office.</p>\n"
+                                + "    </section>",
+                        false,
+                        Set.of(),
+                        18L));
 
         templateService.save(
                 new TemplateDtoFormCreate(
@@ -1214,42 +1392,41 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken("admin", "51D7k4F8"));
 
-        pageService.assignUsersToPage(List.of(5L, 7L), 1L);
-        pageService.assignUsersToPage(List.of(5L, 6L, 7L), 2L);
-        pageService.assignUsersToPage(List.of(5L, 7L, 4L), 3L);
-        pageService.assignUsersToPage(List.of(5L, 6L, 4L, 7L), 4L);
-        pageService.assignUsersToPage(List.of(5L, 22L), 5L);
-
         UUID ticketId1 =
                 ticketService.createTicket(
-                        "michal.wazowski9020@gmail.com",
-                        "Problem to page 1",
-                        "This is description to my ticket. I have a problem with page 1",
-                        1L);
+                        new TicketDtoFormCreate(
+                                1L,
+                                "michal.wazowski9020@gmail.com",
+                                "Problem to page 1",
+                                "This is description to my ticket. I have a problem with page 1"));
         UUID ticketId2 =
                 ticketService.createTicket(
-                        "requester2@email.com",
-                        "Problem to page 2",
-                        "This is description to my ticket. I have a problem with page 2",
-                        2L);
+                        new TicketDtoFormCreate(
+                                2L,
+                                "requester2@email.com",
+                                "Problem to page 2",
+                                "This is description to my ticket. I have a problem with page 2"));
         UUID ticketId3 =
                 ticketService.createTicket(
-                        "requester3@email.com",
-                        "Problem to page 3",
-                        "This is description to my ticket. I have a problem with page 3",
-                        3L);
+                        new TicketDtoFormCreate(
+                                3L,
+                                "requester3@email.com",
+                                "Problem to page 3",
+                                "This is description to my ticket. I have a problem with page 3"));
         UUID ticketId4 =
                 ticketService.createTicket(
-                        "requester4@email.com",
-                        "Problem to page 4",
-                        "This is description to my ticket. I have a problem with page 4",
-                        4L);
+                        new TicketDtoFormCreate(
+                                4L,
+                                "requester4@email.com",
+                                "Problem to page 4",
+                                "This is description to my ticket. I have a problem with page 4"));
         UUID ticketId5 =
                 ticketService.createTicket(
-                        "requester5@email.com",
-                        "Second problem to page 4",
-                        "This is description to my ticket. I have a second problem with page 5",
-                        4L);
+                        new TicketDtoFormCreate(
+                                4L,
+                                "requester5@email.com",
+                                "Second problem to page 4",
+                                "This is description to my ticket. I have a second problem with page 5"));
 
         ticketService.addResponse(ticketId1, "message content to ticket 1 from author1");
         ticketService.addResponse(ticketId1, "another message content to ticket 1 from author1");

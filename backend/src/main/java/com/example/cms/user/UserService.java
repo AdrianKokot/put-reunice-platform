@@ -228,57 +228,6 @@ public class UserService {
         return newUniversities;
     }
 
-    @Secured("ROLE_MODERATOR")
-    public UserDtoDetailed updateEnrolledUniversities(long userId, List<Long> universitiesId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (!securityService.hasHigherRoleThan(user.getAccountType())
-                || user.getAccountType().equals(Role.ADMIN)) {
-            throw new UserForbiddenException();
-        }
-
-        Set<University> oldUniversities = user.getEnrolledUniversities();
-        Set<University> newUniversities =
-                universitiesId.stream()
-                        .map(
-                                id ->
-                                        universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new))
-                        .collect(Collectors.toSet());
-
-        Set<University> modifiedUniversities = new HashSet<>();
-        modifiedUniversities.addAll(
-                oldUniversities.stream()
-                        .filter(university -> !newUniversities.contains(university))
-                        .collect(Collectors.toSet()));
-        modifiedUniversities.addAll(
-                newUniversities.stream()
-                        .filter(university -> !oldUniversities.contains(university))
-                        .collect(Collectors.toSet()));
-
-        modifiedUniversities.forEach(
-                university -> {
-                    if (securityService.isForbiddenUniversity(university)) {
-                        throw new UniversityForbiddenException();
-                    }
-                });
-
-        user.setEnrolledUniversities(newUniversities);
-
-        securityService.invalidateUserSession(userId);
-        return UserDtoDetailed.of(userRepository.save(user));
-    }
-
-    @Secured("ROLE_MODERATOR")
-    public void modifyEnabledField(long id, boolean enabled) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(user, true)) {
-            throw new UserForbiddenException();
-        }
-
-        user.setEnabled(enabled);
-
-        userRepository.save(user);
-    }
-
     @Secured("ROLE_USER")
     public void modifyPasswordField(long id, Map<String, String> passwordMap) {
         if (!passwordMap.containsKey("oldPassword") || !passwordMap.containsKey("newPassword")) {
@@ -303,37 +252,6 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-
-    @Secured("ROLE_USER")
-    public void modifyUsernameField(long id, String username) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(user)) {
-            throw new UserForbiddenException();
-        }
-
-        if (userRepository.existsByUsername(username)) {
-            throw new UserException(UserExceptionType.USERNAME_TAKEN);
-        }
-        user.setUsername(username);
-
-        userRepository.save(user);
-    }
-
-    @Secured("ROLE_ADMIN")
-    public void modifyAccountTypeField(long id, Map<String, Role> accountType) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(user, true)) {
-            throw new UserForbiddenException();
-        }
-        if (!accountType.containsKey("accountType")) {
-            throw new WrongDataStructureException();
-        }
-
-        user.setAccountType(accountType.get("accountType"));
-
-        securityService.invalidateUserSession(id);
         userRepository.save(user);
     }
 

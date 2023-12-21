@@ -40,6 +40,10 @@ public class PageSpecification extends SearchSpecification implements Specificat
                 return criteriaBuilder.equal(root.get("creator").get("id"), criteria.getValue());
             }
 
+            if (criteria.getKey().equalsIgnoreCase("parent")) {
+                return criteriaBuilder.equal(root.get("parent").get("id"), criteria.getValue());
+            }
+
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.equal(root.<String>get(criteria.getKey()), criteria.getValue());
             }
