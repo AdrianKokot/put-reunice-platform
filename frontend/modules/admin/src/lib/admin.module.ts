@@ -21,7 +21,7 @@ import { provideDeactivateForm } from '@reunice/modules/shared/util';
           './shared/editor-extensions/load-template/load-template.extension'
         ).then((m) => m.LoadTemplateExtension),
         import(
-          '././shared/editor-extensions/html-editor/html-editor.extension'
+          './shared/editor-extensions/html-editor/html-editor.extension'
         ).then((m) => m.HtmlEditorExtension),
       ],
     },
