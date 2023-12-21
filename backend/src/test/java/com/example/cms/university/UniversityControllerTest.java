@@ -454,7 +454,8 @@ class UniversityControllerTest extends BaseAPIControllerTest {
                     items,
                     everyItem(
                             allOf(
-                                    hasProperty("shortName", containsStringIgnoringCase("P")), hasProperty("hidden", is(true)))));
+                                    hasProperty("shortName", containsStringIgnoringCase("P")),
+                                    hasProperty("hidden", is(true)))));
         }
 
         @Test
@@ -470,7 +471,9 @@ class UniversityControllerTest extends BaseAPIControllerTest {
             assertThat(
                     items,
                     everyItem(
-                            allOf(hasProperty("name", containsStringIgnoringCase("p")), hasProperty("hidden", is(false)))));
+                            allOf(
+                                    hasProperty("name", containsStringIgnoringCase("p")),
+                                    hasProperty("hidden", is(false)))));
         }
 
         @Test
