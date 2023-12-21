@@ -24,11 +24,9 @@ import {
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import {
   combineLatest,
-  debounceTime,
   distinctUntilChanged,
   filter,
   map,
-  share,
   startWith,
 } from 'rxjs';
 import { TuiHintModule } from '@taiga-ui/core';
@@ -105,20 +103,15 @@ export class UserEditFormComponent {
 
   readonly confirmText$ = combineLatest([
     this.item$,
-    this.form.valueChanges,
+    this.form.controls.enabled.valueChanges,
   ]).pipe(
-    debounceTime(100),
-    map(([item, formValue]) => {
-      if (item?.enabled !== formValue.enabled) {
-        return formValue.enabled
-          ? 'USER_CHANGE_TO_ENABLED_CONFIRMATION'
-          : 'USER_CHANGE_TO_DISABLED_CONFIRMATION';
-      }
-
-      return null;
+    map(([item, enabled]) => {
+      if (item?.enabled === enabled) return null;
+      return enabled
+        ? 'USER_CHANGE_TO_ENABLED_CONFIRMATION'
+        : 'USER_CHANGE_TO_DISABLED_CONFIRMATION';
     }),
     distinctUntilChanged(),
-    share(),
   );
 
   readonly allFieldsReadonly$ = this.item$.pipe(

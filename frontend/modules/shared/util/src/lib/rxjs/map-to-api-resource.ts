@@ -65,4 +65,9 @@ export const formResourceFromRoute = <TResult extends BaseResource>(
   service: AbstractApiService<TResult, unknown, unknown>,
   form: FormGroup,
   paramKey: keyof TResult & string = 'id',
-) => resourceFromRoute(service, (item) => form.patchValue(item), paramKey);
+) =>
+  resourceFromRoute(
+    service,
+    (item) => form.patchValue(item, { emitEvent: true }),
+    paramKey,
+  );

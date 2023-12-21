@@ -64,9 +64,8 @@ export class LoadTemplateComponent {
     this._editor
       .getOriginTiptapEditor()
       .chain()
+      .setContent(template.content)
       .focus()
-      .clearContent()
-      .insertContent(template.content)
       .run();
   }
 }
