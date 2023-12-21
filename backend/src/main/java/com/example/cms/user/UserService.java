@@ -202,17 +202,20 @@ public class UserService {
         updateUserDetails(user, form);
         handleUpdateAccountStatus(user, form);
 
-        if (securityService.hasHigherRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
-            validatePassword(form.getPassword());
-            user.setPassword(passwordEncoder.encode(form.getPassword()));
-            emailService.sendEditUserAccountMail(
-                    oldEmail, user, "administrator@reunice.pl", "admin", form.getPassword());
+        if (securityService.hasHigherOrEqualRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
+            if(user.getAccountType()==Role.ADMIN && getLoggedUser().getAccountType() == Role.MODERATOR){
+                throw new UserForbiddenException();
+            } else {
+                validatePassword(form.getPassword());
+                user.setPassword(passwordEncoder.encode(form.getPassword()));
+                emailService.sendEditUserAccountMail(
+                        oldEmail, user, "administrator@reunice.pl", "admin", form.getPassword());
+            }
         } else {
             if (!mainDataNotChanged) {
                 emailService.sendEditUserAccountMail(oldEmail, user, "administrator@reunice.pl", "admin");
             }
         }
-
         return UserDtoDetailed.of(userRepository.save(user));
     }
 

@@ -134,6 +134,21 @@ public class BaseAPIControllerTest {
         return mvc.perform(delete(getUrl(id)).contentType(MediaType.APPLICATION_JSON));
     }
 
+
+    /**
+     * Update an object using the PATCH method.
+     *
+     * @param id     ID of the object to be updated
+     * @param object Object containing the fields to be updated
+     * @return ResultActions after performing the PATCH request
+     * @throws Exception if there is an error performing the request
+     */
+    protected ResultActions performPatch(Long id, String endpoint, Object object) throws Exception {
+        return mvc.perform(
+                patch(getUrl(id)+endpoint)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(object)));
+    }
     /** Set the current user to anonymous (guest) */
     protected void performAsGuest() {
         ctx.setAuthentication(new TestingAuthenticationToken(null, null));
