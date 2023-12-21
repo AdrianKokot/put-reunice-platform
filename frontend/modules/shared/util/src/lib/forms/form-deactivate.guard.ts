@@ -24,7 +24,7 @@ export const DeactivateFormGuard =
 
     return dialog.open<boolean>(TUI_PROMPT, {
       label: label ? translate.instant(label) : label,
-      size: size,
+      size: size ? size : 's',
       data: {
         content:
           typeof promptContent === 'string' && promptContent
