@@ -4,7 +4,10 @@ import { UniversityListComponent } from './feature/university-list/university-li
 import { UniversityEditFormComponent } from './feature/university-edit-form/university-edit-form.component';
 import { UniversityCreateFormComponent } from './feature/university-create-form/university-create-form.component';
 import { UniversityDetailsComponent } from './feature/university-details/university-details.component';
-import { translatedTitle } from '@reunice/modules/shared/util';
+import {
+  DeactivateFormGuard,
+  translatedTitle,
+} from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -15,6 +18,7 @@ const routes: Routes = [
     title: translatedTitle('NEW_UNIVERSITY'),
     path: 'new',
     component: UniversityCreateFormComponent,
+    canDeactivate: [DeactivateFormGuard('form')],
   },
   {
     title: translatedTitle('UNIVERSITY_DETAILS'),
@@ -29,6 +33,7 @@ const routes: Routes = [
         title: translatedTitle('EDIT_UNIVERSITY'),
         path: 'edit',
         component: UniversityEditFormComponent,
+        canDeactivate: [DeactivateFormGuard('form')],
       },
     ],
   },
