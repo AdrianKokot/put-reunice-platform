@@ -46,6 +46,7 @@
   "DISCARD_FORM_CHANGES_DESCRIPTION": "You have unsaved changes. Are you sure you want to discard them?",
   "DOWNLOAD": "Download",
   "EDIT": "Edit",
+  "EDIT_HTML": "Edit HTML",
   "EDIT_KEYWORD": "Edit keyword",
   "EDIT_PAGE": "Edit page",
   "EDIT_TEMPLATE": "Edit template",

@@ -16,9 +16,13 @@ import { provideDeactivateForm } from '@reunice/modules/shared/util';
       provide: TUI_EDITOR_EXTENSIONS,
       useValue: [
         ...defaultEditorExtensions,
+        import('@tiptap/extension-typography').then((m) => m.Typography),
         import(
           './shared/editor-extensions/load-template/load-template.extension'
         ).then((m) => m.LoadTemplateExtension),
+        import(
+          './shared/editor-extensions/html-editor/html-editor.extension'
+        ).then((m) => m.HtmlEditorExtension),
       ],
     },
   ],
