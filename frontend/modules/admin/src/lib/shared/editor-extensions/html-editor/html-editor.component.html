@@ -1,0 +1,40 @@
+<button
+  tuiIconButton
+  [icon]="'tuiIconCodeLarge'"
+  [tuiHint]="'EDIT_HTML' | translate"
+  tuiHintDirection="top"
+  type="button"
+  size="s"
+  appearance="icon"
+  class="tool-button"
+  (click)="openDialog()"
+></button>
+
+<ng-template
+  let-observer
+  [tuiDialogOptions]="{ label: 'EDIT_HTML' | translate, size: 'l' }"
+  [(tuiDialog)]="open"
+>
+  <form class="tui-form" [formGroup]="form" (ngSubmit)="submit()">
+    <tui-text-area
+      formControlName="content"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      [expandable]="true"
+    >
+    </tui-text-area>
+    <div class="tui-form__buttons tui-form__buttons_align_end">
+      <button tuiButton type="submit" class="tui-space_right-3">
+        {{ 'SAVE' | translate }}
+      </button>
+      <button
+        appearance="secondary"
+        tuiButton
+        type="button"
+        (click)="observer.complete()"
+      >
+        {{ 'CANCEL' | translate }}
+      </button>
+    </div>
+  </form>
+</ng-template>

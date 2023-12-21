@@ -110,6 +110,10 @@ export class FormSubmitWrapper<
           })
           .subscribe();
       }
+
+      if (typeof result !== 'symbol') {
+        this.form.markAsPristine();
+      }
     }),
     mergeMap((result) => {
       if (this.functions.effect && typeof result !== 'symbol') {

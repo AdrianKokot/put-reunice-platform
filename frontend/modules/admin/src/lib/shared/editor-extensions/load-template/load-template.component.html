@@ -28,7 +28,7 @@
         <button
           tuiOption
           *ngFor="let template of templates ?? []"
-          (click)="loadTemplate(template); close()"
+          (click)="loadTemplate(template)"
         >
           {{ template.name }}
         </button>
