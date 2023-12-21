@@ -142,9 +142,7 @@ export class UserControlsResourceDirective<
     return new Set([resource.id]);
   }
 
-  static ngTemplateContextGuard<
-    T extends User | Page | University | Template,
-  >(
+  static ngTemplateContextGuard<T extends User | Page | University | Template>(
     dir: UserControlsResourceDirective<T>,
     ctx: unknown,
   ): ctx is UserControlsResourceContext<
