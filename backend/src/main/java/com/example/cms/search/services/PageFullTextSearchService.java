@@ -72,7 +72,8 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
                         .queryByWeights("1,2,2,1,1")
                         .perPage(10)
                         .highlightFields("title,description")
-                        .useCache(true)
+                        .useCache(this.applicationConfigurationProvider.isTypesenseCacheEnabled())
+                        .cacheTtl(this.applicationConfigurationProvider.getTypesenseCacheTtl())
                         .filterBy("hidden:=false");
 
         List<SearchResultHit> list = List.of();

@@ -6,6 +6,8 @@ typesenseApiKey: ${TYPESENSE_API_KEY:devapikey}
 typesenseHost: ${TYPESENSE_HOST:localhost}
 uploadsDirectory: ${UPLOADS_DIRECTORY:/uploads/}
 backupsDirectory: ${BACKUPS_DIRECTORY:/db-resources/}
+typesenseCacheEnabled: ${TYPESENSE_CACHE_ENABLED:true}
+typesenseCacheTtl: ${TYPESENSE_CACHE_TTL:60000}
 
 server:
   servlet:
