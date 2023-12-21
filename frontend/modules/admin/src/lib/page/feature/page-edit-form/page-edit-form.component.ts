@@ -46,6 +46,7 @@ import {
   ConfirmDirective,
   LocalizedPipeModule,
 } from '@reunice/modules/shared/ui';
+import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-editor/html-editor.component';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -64,6 +65,7 @@ import {
     TuiComboBoxModule,
     UserControlsResourceDirective,
     UserDirective,
+    HtmlEditorComponent,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
