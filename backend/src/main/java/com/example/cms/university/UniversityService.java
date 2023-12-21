@@ -49,7 +49,7 @@ public class UniversityService {
     private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> searchService;
 
     public UniversityDtoDetailed getUniversity(Long id) {
-        return getUniversities(Pageable.ofSize(0), Map.of("id_eq", id.toString())).stream()
+        return getUniversities(Pageable.ofSize(1), Map.of("id_eq", id.toString())).stream()
                 .map(UniversityDtoDetailed::of)
                 .findFirst()
                 .orElseThrow(UniversityNotFoundException::new);
