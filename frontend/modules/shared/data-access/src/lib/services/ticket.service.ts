@@ -3,7 +3,7 @@ import { AbstractApiService } from './abstract-api.service';
 import { Ticket, TicketResponse } from '../models/ticket';
 import { Observable } from 'rxjs';
 
-type CreateTicketDto = Pick<
+type TicketCreatePayload = Pick<
   Ticket,
   'pageId' | 'title' | 'description' | 'requesterEmail'
 >;
@@ -11,7 +11,10 @@ type CreateTicketDto = Pick<
 @Injectable({
   providedIn: 'root',
 })
-export class TicketService extends AbstractApiService<Ticket> {
+export class TicketService extends AbstractApiService<
+  Ticket,
+  TicketCreatePayload
+> {
   constructor() {
     super('/api/tickets');
   }
@@ -44,9 +47,5 @@ export class TicketService extends AbstractApiService<Ticket> {
     return this._http.put(`${this._resourceUrl}/${id}`, `"${status}"`, {
       headers: { 'Content-Type': 'application/json' },
     });
-  }
-
-  createTicket(newTicket: CreateTicketDto) {
-    return this._http.post(`${this._resourceUrl}`, newTicket);
   }
 }

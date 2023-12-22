@@ -56,14 +56,14 @@ export class PageContactFormComponent {
       '',
       [Validators.required, Validators.maxLength(255), Validators.email],
     ],
-    description: ['', [Validators.required, Validators.maxLength(2000)]],
+    description: ['', [Validators.required, Validators.maxLength(255)]],
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) =>
       this._pageId$.pipe(
         switchMap((pageId) =>
-          this._service.createTicket({
+          this._service.create({
             ...value,
             pageId: parseInt(pageId),
           }),
