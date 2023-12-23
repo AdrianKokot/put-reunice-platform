@@ -3,12 +3,18 @@ import { AbstractApiService } from './abstract-api.service';
 import { Ticket, TicketResponse } from '../models/ticket';
 import { Observable } from 'rxjs';
 
-type TicketWithResponses = Ticket & { responses: TicketResponse[] };
+type TicketCreatePayload = Pick<
+  Ticket,
+  'pageId' | 'title' | 'description' | 'requesterEmail'
+>;
 
 @Injectable({
   providedIn: 'root',
 })
-export class TicketService extends AbstractApiService<TicketWithResponses> {
+export class TicketService extends AbstractApiService<
+  Ticket,
+  TicketCreatePayload
+> {
   constructor() {
     super('/api/tickets');
   }

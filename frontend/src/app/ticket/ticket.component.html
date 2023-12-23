@@ -20,6 +20,21 @@
 
   <hr />
 
+  <div class="d-flex gap-4 tui-space_top-4">
+    <tui-avatar
+      [text]="ticket?.requesterEmail || ''"
+      class="tui-space_top-1"
+    ></tui-avatar>
+    <tui-island class="w-full">
+      <div class="tui-text_body-s message-info">
+        {{ ticket?.requesterEmail }}
+        -
+        {{ ticket?.requestedTime | localizedDate }}
+      </div>
+      {{ ticket?.description }}
+    </tui-island>
+  </div>
+
   <ng-container *tuiLet="responsesKeepPrevious$ | async as responses">
     <ng-container *ngFor="let message of responses">
       <div class="d-flex gap-4 tui-space_top-4">
