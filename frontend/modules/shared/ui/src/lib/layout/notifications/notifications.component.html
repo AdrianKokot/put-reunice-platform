@@ -1,0 +1,41 @@
+<ng-container *tuiLet="tickets$ | async as tickets">
+  <tui-hosted-dropdown
+    tuiDropdownAlign="right"
+    [content]="content"
+    [tuiDropdownMaxHeight]="300"
+    [(open)]="open"
+  >
+    <tui-badged-content [contentTop]="tickets?.items?.length" [rounded]="true">
+      <button icon="tuiIconBell" tuiIconButton type="button"></button>
+    </tui-badged-content>
+  </tui-hosted-dropdown>
+
+  <ng-template #content>
+    <ng-container>
+      <tui-data-list *ngIf="tickets !== null; else loading">
+        <a
+          *ngFor="let ticket of tickets.items"
+          tuiOption
+          tuiElement
+          [routerLink]="['tickets', ticket.id]"
+          (click)="open = false"
+        >
+          <div>
+            <div class="tui-space_bottom-1">
+              <tui-badge
+                *ngIf="ticket"
+                [status]="ticket | ticketToBadgeStatus"
+                [value]="'TICKET_STATUS_' + ticket.status | translate"
+              ></tui-badge>
+            </div>
+            {{ ticket.title }}
+          </div>
+        </a>
+      </tui-data-list>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #loading>
+    <tui-loader size="s" class="t-loader"></tui-loader>
+  </ng-template>
+</ng-container>
