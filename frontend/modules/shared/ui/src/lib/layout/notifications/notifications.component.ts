@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TuiButtonModule } from '@taiga-ui/core';
 import { TuiBadgeModule, TuiBadgedContentModule } from '@taiga-ui/kit';
-import { TuiDataListModule } from '@taiga-ui/core';
-import { TuiHostedDropdownModule, TuiLoaderModule } from '@taiga-ui/core';
+import {
+  TuiButtonModule,
+  TuiHostedDropdownModule,
+  TuiLoaderModule,
+  TuiDataListModule,
+} from '@taiga-ui/core';
 import { TicketService } from '@reunice/modules/shared/data-access';
 import { RouterLink } from '@angular/router';
 import { TuiLetModule } from '@taiga-ui/cdk';
