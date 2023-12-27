@@ -1,24 +1,24 @@
-<ng-container *tuiLet="tickets$ | async as tickets">
+<ng-container *tuiLet="optimisticTickets$ | async as tickets">
   <tui-hosted-dropdown
     tuiDropdownAlign="right"
     [content]="content"
     [tuiDropdownMaxHeight]="300"
     [(open)]="open"
   >
-    <tui-badged-content [contentTop]="tickets?.items?.length" [rounded]="true">
+    <tui-badged-content [contentTop]="tickets?.length" [rounded]="true">
       <button icon="tuiIconBell" tuiIconButton type="button"></button>
     </tui-badged-content>
   </tui-hosted-dropdown>
 
   <ng-template #content>
-    <ng-container>
+    <div class="w-300">
       <tui-data-list *ngIf="tickets !== null; else loading">
         <a
-          *ngFor="let ticket of tickets.items"
+          *ngFor="let ticket of tickets"
           tuiOption
           tuiElement
           [routerLink]="['tickets', ticket.id]"
-          (click)="open = false"
+          (click)="clickedNotifications$.next(ticket.id)"
         >
           <div>
             <div class="tui-space_bottom-1">
@@ -32,7 +32,7 @@
           </div>
         </a>
       </tui-data-list>
-    </ng-container>
+    </div>
   </ng-template>
 
   <ng-template #loading>

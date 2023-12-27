@@ -7,7 +7,7 @@ import { TuiHostedDropdownModule, TuiLoaderModule } from '@taiga-ui/core';
 import { TicketService } from '@reunice/modules/shared/data-access';
 import { RouterLink } from '@angular/router';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { delay, share } from 'rxjs';
+import { Subject, combineLatest, map, scan, share, startWith, tap } from 'rxjs';
 import { TicketToBadgeStatusModule } from '../../pipes/ticket-to-badge-status/ticket-to-badge-status.module';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -28,25 +28,29 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
   ],
   templateUrl: './notifications.component.html',
+  styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationsComponent {
   private readonly _service = inject(TicketService);
-  tickets$ = this._service.getAll().pipe(delay(3000), share());
 
   open = false;
 
-  onClick(): void {
-    this.open = !this.open;
-  }
+  clickedNotifications$ = new Subject<string>();
+  recentlyViewedIds$ = this.clickedNotifications$.pipe(
+    tap(() => (this.open = false)),
+    scan((acc, id) => [...acc, id], [] as string[]),
+    startWith([] as string[]),
+    share(),
+  );
 
-  onObscured(obscured: boolean): void {
-    if (obscured) {
-      this.open = false;
-    }
-  }
-
-  onActiveZone(active: boolean): void {
-    this.open = active && this.open;
-  }
+  tickets$ = this._service.getAll({ unseen: true });
+  optimisticTickets$ = combineLatest([
+    this.tickets$,
+    this.recentlyViewedIds$,
+  ]).pipe(
+    map(([tickets, recentlyViewedIds]) =>
+      tickets.items.filter(({ id }) => !recentlyViewedIds.includes(id)),
+    ),
+  );
 }
