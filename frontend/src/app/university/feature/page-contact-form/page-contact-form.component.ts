@@ -23,7 +23,7 @@ import {
   FormSubmitWrapper,
   resourceIdFromRoute,
 } from '@reunice/modules/shared/util';
-import { PageService } from '@reunice/modules/shared/data-access';
+import { TicketService } from '@reunice/modules/shared/data-access';
 import { first, switchMap } from 'rxjs';
 
 @Component({
@@ -47,24 +47,27 @@ import { first, switchMap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageContactFormComponent {
-  private readonly _service = inject(PageService);
+  private readonly _service = inject(TicketService);
   private readonly _pageId$ = resourceIdFromRoute('pageId');
 
   readonly form = inject(FormBuilder).nonNullable.group({
-    pageId: [],
-    name: ['', [Validators.required, Validators.maxLength(255)]],
-    subject: ['', [Validators.required, Validators.maxLength(255)]],
-    email: [
+    title: ['', [Validators.required, Validators.maxLength(255)]],
+    requesterEmail: [
       '',
       [Validators.required, Validators.maxLength(255), Validators.email],
     ],
-    content: ['', [Validators.required, Validators.maxLength(255)]],
+    description: ['', [Validators.required, Validators.maxLength(255)]],
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) =>
       this._pageId$.pipe(
-        switchMap((pageId) => this._service.sendQuestion(pageId, value)),
+        switchMap((pageId) =>
+          this._service.create({
+            ...value,
+            pageId: parseInt(pageId),
+          }),
+        ),
         first(),
       ),
     successAlertMessage: 'SEND_QUESTION_SUCCESS',

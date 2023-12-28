@@ -4,7 +4,10 @@ import { PageEditFormComponent } from './feature/page-edit-form/page-edit-form.c
 import { PageListComponent } from './feature/page-list/page-list.component';
 import { PageCreateFormComponent } from './feature/page-create-form/page-create-form.component';
 import { PageDetailsComponent } from './feature/page-details/page-details.component';
-import { translatedTitle } from '@reunice/modules/shared/util';
+import {
+  DeactivateFormGuard,
+  translatedTitle,
+} from '@reunice/modules/shared/util';
 
 const routes: Routes = [
   {
@@ -15,6 +18,7 @@ const routes: Routes = [
     title: translatedTitle('NEW_PAGE'),
     path: 'new',
     component: PageCreateFormComponent,
+    canDeactivate: [DeactivateFormGuard('form')],
   },
   {
     title: translatedTitle('PAGE_DETAILS'),
@@ -29,6 +33,7 @@ const routes: Routes = [
         title: translatedTitle('EDIT_PAGE'),
         path: 'edit',
         component: PageEditFormComponent,
+        canDeactivate: [DeactivateFormGuard('form')],
       },
     ],
   },

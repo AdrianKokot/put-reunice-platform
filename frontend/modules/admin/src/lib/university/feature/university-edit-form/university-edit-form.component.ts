@@ -10,16 +10,7 @@ import {
   navigateToResourceDetails,
 } from '../../../shared';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import {
-  combineLatest,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  of,
-  share,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, of, switchMap } from 'rxjs';
 import { ConfirmDirective } from '@reunice/modules/shared/ui';
 import { TuiInputFilesModule } from '@taiga-ui/kit';
 
@@ -53,20 +44,16 @@ export class UniversityEditFormComponent {
 
   readonly confirmText$ = combineLatest([
     this.item$,
-    this.form.valueChanges,
+    this.form.controls.hidden.valueChanges,
   ]).pipe(
-    debounceTime(100),
-    map(([item, formValue]) => {
-      if (item?.hidden !== formValue.hidden) {
-        return formValue.hidden
-          ? 'UNIVERSITY_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
-          : 'UNIVERSITY_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
-      }
+    map(([item, hidden]) => {
+      if (item?.hidden === hidden) return null;
 
-      return null;
+      return hidden
+        ? 'UNIVERSITY_VISIBILITY_CHANGE_TO_HIDDEN_CONFIRMATION'
+        : 'UNIVERSITY_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION';
     }),
     distinctUntilChanged(),
-    share(),
   );
 
   readonly handler = new FormSubmitWrapper(this.form, {
@@ -85,6 +72,4 @@ export class UniversityEditFormComponent {
     successAlertMessage: 'UNIVERSITY_UPDATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
-
-  readonly state$ = this.form.controls.file.valueChanges.pipe(startWith(null));
 }

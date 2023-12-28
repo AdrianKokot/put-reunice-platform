@@ -8,8 +8,6 @@ import com.example.cms.template.projections.TemplateDtoFormCreate;
 import com.example.cms.template.projections.TemplateDtoFormUpdate;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
-import com.example.cms.university.exceptions.UniversityForbiddenException;
-import com.example.cms.university.exceptions.UniversityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TemplateService {
@@ -78,69 +75,12 @@ public class TemplateService {
         return templateRepository.findAll(combinedSpecification, pageable);
     }
 
-    @Secured("ROLE_ADMIN")
-    public TemplateDtoDetailed save(String name) {
-        Template template = new Template();
-        template.setName(name);
-        template.setContent("");
-
-        return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
     @Secured("ROLE_MODERATOR")
     public TemplateDtoDetailed save(TemplateDtoFormCreate form) {
         Template template = form.toTemplate();
         attachUniversities(template, form.getUniversities());
 
         return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
-    @Secured("ROLE_MODERATOR")
-    @Transactional
-    public TemplateDtoDetailed addUniversity(Long templateID, Long universityID) {
-        Template template =
-                templateRepository.findById(templateID).orElseThrow(TemplateNotFoundException::new);
-        University university =
-                universityRepository.findById(universityID).orElseThrow(UniversityNotFoundException::new);
-
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        template.getUniversities().add(university);
-        return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
-    @Secured("ROLE_MODERATOR")
-    @Transactional
-    public TemplateDtoDetailed removeUniversity(Long templateID, Long universityID) {
-        Template template =
-                templateRepository.findById(templateID).orElseThrow(TemplateNotFoundException::new);
-        University university =
-                universityRepository.findById(universityID).orElseThrow(UniversityNotFoundException::new);
-
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        template.getUniversities().remove(university);
-        return TemplateDtoDetailed.of(templateRepository.save(template));
-    }
-
-    @Secured("ROLE_ADMIN")
-    public void modifyNameField(Long id, String name) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
-
-        template.setName(name);
-        templateRepository.save(template);
-    }
-
-    @Secured("ROLE_ADMIN")
-    public void modifyContentField(Long id, String content) {
-        Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
-
-        template.setContent(content);
-        templateRepository.save(template);
     }
 
     @Secured("ROLE_ADMIN")

@@ -12,7 +12,6 @@ import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ExtendedAccountTypeEnum,
-  Keyword,
   Page,
   Template,
   University,
@@ -49,7 +48,7 @@ class UserControlsResourceContext<T = unknown> {
   standalone: true,
 })
 export class UserControlsResourceDirective<
-  T extends User | Page | University | Template | Keyword,
+  T extends User | Page | University | Template,
 > implements OnChanges
 {
   private readonly _trigger$ = new Subject<void>();
@@ -100,7 +99,7 @@ export class UserControlsResourceDirective<
 
   private static isUserAuthorizedToControlResource(
     user: User,
-    resource: User | Page | University | Template | Keyword | null,
+    resource: User | Page | University | Template | null,
   ): boolean {
     if (resource === null) {
       return false;
@@ -127,7 +126,7 @@ export class UserControlsResourceDirective<
   }
 
   private static getUniversityIdFromResource(
-    resource: User | Page | University | Template | Keyword,
+    resource: User | Page | University | Template,
   ) {
     if ('university' in resource) {
       return new Set([resource.university.id]);
@@ -143,9 +142,7 @@ export class UserControlsResourceDirective<
     return new Set([resource.id]);
   }
 
-  static ngTemplateContextGuard<
-    T extends User | Page | University | Template | Keyword,
-  >(
+  static ngTemplateContextGuard<T extends User | Page | University | Template>(
     dir: UserControlsResourceDirective<T>,
     ctx: unknown,
   ): ctx is UserControlsResourceContext<

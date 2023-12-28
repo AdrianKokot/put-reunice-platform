@@ -1,5 +1,6 @@
 package com.example.cms.page;
 
+import com.example.cms.university.University;
 import com.example.cms.user.User;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,8 @@ public interface PageRepository extends JpaRepository<Page, Long>, JpaSpecificat
     boolean existsByParent(Page parent);
 
     List<Page> findAllByParent(Pageable pageable, Page parent);
+
+    List<Page> findAllByUniversity(University university);
 
     boolean existsByCreator(User creator);
 

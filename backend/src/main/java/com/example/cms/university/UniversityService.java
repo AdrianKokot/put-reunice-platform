@@ -4,6 +4,8 @@ import com.example.cms.SearchCriteria;
 import com.example.cms.file.FileService;
 import com.example.cms.file.FileUtils;
 import com.example.cms.page.PageRepository;
+import com.example.cms.search.FullTextSearchService;
+import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -44,18 +46,12 @@ public class UniversityService {
     private final TemplateRepository templateRepository;
     private final SecurityService securityService;
     private final FileService fileService;
+    private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto> searchService;
 
     public UniversityDtoDetailed getUniversity(Long id) {
-        return universityRepository
-                .findById(id)
-                .map(
-                        university -> {
-                            if (!isUniversityVisible(university)) {
-                                throw new UniversityForbiddenException();
-                            }
-
-                            return UniversityDtoDetailed.of(university);
-                        })
+        return getUniversities(Pageable.ofSize(1), Map.of("id_eq", id.toString())).stream()
+                .map(UniversityDtoDetailed::of)
+                .findFirst()
                 .orElseThrow(UniversityNotFoundException::new);
     }
 
@@ -95,11 +91,6 @@ public class UniversityService {
         }
 
         return universityRepository.findAll(combinedSpecification, pageable);
-    }
-
-    private boolean isUniversityVisible(University university) {
-        return university != null
-                && !(university.isHidden() && securityService.isForbiddenUniversity(university));
     }
 
     @Secured("ROLE_ADMIN")
@@ -143,7 +134,11 @@ public class UniversityService {
 
         form.updateUniversity(university);
 
-        return UniversityDtoDetailed.of(universityRepository.save(university));
+        var result = UniversityDtoDetailed.of(universityRepository.save(university));
+
+        searchService.upsert(pageRepository.findAllByUniversity(university));
+
+        return result;
     }
 
     @Secured("ROLE_MODERATOR")
@@ -193,18 +188,6 @@ public class UniversityService {
         university.enrollUsers(user);
         University result = universityRepository.save(university);
         return UniversityDtoDetailed.of(result);
-    }
-
-    @Secured("ROLE_MODERATOR")
-    public void modifyHiddenField(Long id, boolean hidden) {
-        University university =
-                universityRepository.findById(id).orElseThrow(UniversityNotFoundException::new);
-        if (securityService.isForbiddenUniversity(university)) {
-            throw new UniversityForbiddenException();
-        }
-
-        university.setHidden(hidden);
-        universityRepository.save(university);
     }
 
     @Secured("ROLE_ADMIN")

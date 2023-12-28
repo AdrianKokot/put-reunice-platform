@@ -25,7 +25,6 @@ public class PageDtoDetailed {
     private List<PageDtoSimple> children;
     private Instant createdOn;
     private Instant updatedOn;
-    private String keyWords;
     private List<UserDtoSimple> contactRequestHandlers;
     private Boolean hasContactRequestHandler;
 
@@ -49,7 +48,6 @@ public class PageDtoDetailed {
         content = page.getContent().getPageContent();
         university = UniversityDtoSimple.of(page.getUniversity());
         parent = PageDtoSimple.of(page.getParent());
-        keyWords = page.getKeyWords();
 
         this.children = children.stream().map(PageDtoSimple::of).collect(Collectors.toList());
 

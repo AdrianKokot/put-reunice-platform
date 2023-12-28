@@ -21,6 +21,8 @@ public class ApplicationConfigurationProvider {
     private final String typesenseHost;
     private final Path uploadsDirectory;
     private final Path backupsDirectory;
+    private final boolean typesenseCacheEnabled;
+    private final int typesenseCacheTtl;
 
     /**
      * Constructs this application configuration provider.
@@ -37,13 +39,17 @@ public class ApplicationConfigurationProvider {
             @Value("${typesenseApiKey}") String typesenseApiKey,
             @Value("${typesenseHost}") String typesenseHost,
             @Value("${uploadsDirectory}") String uploadsDirectory,
-            @Value("${backupsDirectory}") String backupsDirectory)
+            @Value("${backupsDirectory}") String backupsDirectory,
+            @Value("${typesenseCacheEnabled}") String typesenseCacheEnabled,
+            @Value("${typesenseCacheTtl}") String typesenseCacheTtl)
             throws IOException {
         this.applicationServer = applicationServer;
         this.databaseSchemaHandlingOnStartup = databaseSchemaHandlingOnStartup;
         this.databaseSchemaCreateType = databaseSchemaCreateType;
         this.typesenseApiKey = typesenseApiKey;
         this.typesenseHost = typesenseHost;
+        this.typesenseCacheEnabled = typesenseCacheEnabled.equals("true");
+        this.typesenseCacheTtl = this.typesenseCacheEnabled ? Integer.parseInt(typesenseCacheTtl) : 0;
 
         this.uploadsDirectory = Path.of(uploadsDirectory).toAbsolutePath().normalize();
         this.backupsDirectory = Path.of(backupsDirectory).toAbsolutePath().normalize();
@@ -56,6 +62,12 @@ public class ApplicationConfigurationProvider {
         System.out.println("** databaseSchemaCreateType = " + this.databaseSchemaCreateType);
         System.out.println("** uploadsDirectory = " + this.uploadsDirectory);
         System.out.println("** backupsDirectory = " + this.backupsDirectory);
+
+        System.out.println("** -- Typesense");
+        System.out.println("** host = " + this.typesenseHost);
+        System.out.println("** cacheEnabled = " + this.typesenseCacheEnabled);
+        if (this.typesenseCacheEnabled) System.out.println("** cacheTtl = " + this.typesenseCacheTtl);
+
         System.out.println("** --");
     }
 }
