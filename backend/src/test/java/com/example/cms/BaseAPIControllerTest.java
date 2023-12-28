@@ -145,9 +145,9 @@ public class BaseAPIControllerTest {
      * @return ResultActions after performing the PATCH request
      * @throws Exception if there is an error performing the request
      */
-    protected ResultActions performPatch(Long id, String endpoint, Object object) throws Exception {
+    protected ResultActions performPatch(Long id,  Object object) throws Exception {
         return mvc.perform(
-                patch(getUrl(id)+endpoint)
+                patch(getUrl(id))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(object)));
     }

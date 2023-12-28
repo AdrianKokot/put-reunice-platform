@@ -411,9 +411,8 @@ class UserControllerTest extends BaseAPIControllerTest {
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
     }
-
     @Nested
-    class DisAbleUserTestClass {
+    class EnableUpdateUserTestClass {
         private User userToUpdate;
         @BeforeEach
         public void setup() {
@@ -438,56 +437,105 @@ class UserControllerTest extends BaseAPIControllerTest {
             userToUpdate.setEnrolledUniversities(Set.of(universityRepository.findById(universityId).orElseThrow()));
             userToUpdate = userRepository.save(userToUpdate);
         }
+        public UserDtoFormUpdate getUpdateForm() {
+
+            return new UserDtoFormUpdate(
+                    userToUpdate.getFirstName(),
+                    userToUpdate.getLastName(),
+                    userToUpdate.getEmail(),
+                    userToUpdate.getPhoneNumber(),
+                    userToUpdate.getDescription(),
+                    Set.of(universityId.longValue()),
+                    userToUpdate.isEnabled(),
+                    userToUpdate.getAccountType(),
+                    userToUpdate.getUsername(),
+                    userToUpdate.getPassword()
+            );
+        }
 
         @Test
-        public void enable_User_Forbidden() throws Exception {
+        public void update_UniversityUser_Forbidden() throws Exception {
             performAs(Role.USER, userId);
-            boolean enabled = true;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().isForbidden());
+            userToUpdate.setEnabled(true);
+            performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().isForbidden());
         }
 
         @Test
-        public void enable_UniversityUser_Forbidden() throws Exception {
+        public void update_UniversityAdministrator_otherUniversityUser_Forbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
-            boolean enabled = true;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().isForbidden());
+            userToUpdate.setEnabled(true);
+            performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().isForbidden());
         }
+
         @Test
-        public void enable_UniversityUser_Success() throws Exception {
-            performAs(Role.MODERATOR, Set.of(universityId), userId);
-            boolean enabled = true;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().is2xxSuccessful());
+        public void update_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+            userToUpdate.setEnabled(true);
+            performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
-        @Test
-        public void enable_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN, userId);
-            boolean enabled = true;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().is2xxSuccessful());
+    }
+
+    @Nested
+    class DisableUpdateUserTestClass {
+        private User userToUpdate;
+        @BeforeEach
+        public void setup() {
+
+            userToUpdate = new User(
+                    null,
+                    null,
+                    null,
+                    null,
+                    "TEST_USER"+Instant.now().toString(),
+                    "TEST_user1!"+Instant.now().toString(),
+                    "TEST_USER",
+                    "null",
+                    null,
+                    "null@wp.pl",
+                    "000000000",
+                    "null",
+                    Role.USER,
+                    true
+            );
+            userToUpdate = userRepository.save(userToUpdate);
+            userToUpdate.setEnrolledUniversities(Set.of(universityRepository.findById(universityId).orElseThrow()));
+            userToUpdate = userRepository.save(userToUpdate);
         }
+        public UserDtoFormUpdate getUpdateForm() {
+
+            return new UserDtoFormUpdate(
+                    userToUpdate.getFirstName(),
+                    userToUpdate.getLastName(),
+                    userToUpdate.getEmail(),
+                    userToUpdate.getPhoneNumber(),
+                    userToUpdate.getDescription(),
+                    Set.of(universityId.longValue()),
+                    userToUpdate.isEnabled(),
+                    userToUpdate.getAccountType(),
+                    userToUpdate.getUsername(),
+                    userToUpdate.getPassword()
+            );
+        }
+
         @Test
-        public void disable_User_Forbidden() throws Exception {
+        public void update_UniversityUser_Forbidden() throws Exception {
             performAs(Role.USER, userId);
-            boolean enabled = false;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().isForbidden());
+            userToUpdate.setEnabled(false);
+            performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().isForbidden());
         }
 
         @Test
-        public void disable_UniversityUser_Forbidden() throws Exception {
+        public void update_UniversityAdministrator_otherUniversityUser_Forbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
-            boolean enabled = false;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().isForbidden());
+            userToUpdate.setEnabled(false);
+            performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().isForbidden());
         }
+
         @Test
-        public void disable_UniversityUser_Success() throws Exception {
-            performAs(Role.MODERATOR, Set.of(universityId), userId);
-            boolean enabled = false;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().is2xxSuccessful());
-        }
-        @Test
-        public void disable_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN, userId);
-            boolean enabled = false;
-            performPatch(userToUpdate.getId(),"/enabled", enabled).andExpect(status().is2xxSuccessful());
+        public void update_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+            userToUpdate.setEnabled(false);
+            performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
     }
 }
