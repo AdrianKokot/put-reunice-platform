@@ -109,7 +109,6 @@ public class UserService {
         newUser.setAccountType(form.getAccountType());
         newUser.setEnabled(form.isEnabled());
 
-
         if (!newUser.getAccountType().equals(Role.ADMIN)) {
             newUser.setEnrolledUniversities(this.validateUniversities(form.getEnrolledUniversities()));
         }
@@ -119,8 +118,12 @@ public class UserService {
         }
 
         LoggedUser loggedUser = securityService.getPrincipal().orElseThrow();
-        if(newUser.getAccountType()!=Role.ADMIN){
-            if(loggedUser.getAccountType() == Role.MODERATOR && loggedUser.getUniversities().toArray().equals(form.getEnrolledUniversities().toArray())){
+        if (newUser.getAccountType() != Role.ADMIN) {
+            if (loggedUser.getAccountType() == Role.MODERATOR
+                    && loggedUser
+                            .getUniversities()
+                            .toArray()
+                            .equals(form.getEnrolledUniversities().toArray())) {
                 throw new UserForbiddenException();
             }
         }
@@ -203,7 +206,8 @@ public class UserService {
         handleUpdateAccountStatus(user, form);
 
         if (securityService.hasHigherOrEqualRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
-            if(user.getAccountType()==Role.ADMIN && getLoggedUser().getAccountType() == Role.MODERATOR){
+            if (user.getAccountType() == Role.ADMIN
+                    && getLoggedUser().getAccountType() == Role.MODERATOR) {
                 throw new UserForbiddenException();
             } else {
                 validatePassword(form.getPassword());

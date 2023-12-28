@@ -102,6 +102,7 @@ public class SecurityService {
                         })
                 .orElse(true);
     }
+
     public boolean isForbiddenUserToDelete(User user, boolean onlyDifferentUser) {
         return getPrincipal()
                 .map(
@@ -127,9 +128,9 @@ public class SecurityService {
                                             && // moderator does not perform action with respect to him(her)self
                                             (!hasHigherOrEqualRoleThan(user.getAccountType())
                                                     || !hasUniversity(
-                                                    user.getEnrolledUniversities().stream()
-                                                            .map(University::getId)
-                                                            .collect(Collectors.toList())));
+                                                            user.getEnrolledUniversities().stream()
+                                                                    .map(University::getId)
+                                                                    .collect(Collectors.toList())));
                                 case USER:
                                     return !loggedUser.getId().equals(user.getId());
                             }
@@ -219,15 +220,16 @@ public class SecurityService {
     public boolean hasHigherOrEqualRoleThan(Role userRole, Role role) {
         switch (role) {
             case ADMIN:
-                return  userRole.equals(Role.ADMIN);
+                return userRole.equals(Role.ADMIN);
             case MODERATOR:
                 return userRole.equals(Role.ADMIN) || userRole.equals(Role.MODERATOR);
             case USER:
-                return userRole.equals(Role.ADMIN) || userRole.equals(Role.MODERATOR) || userRole.equals(Role.USER);
+                return userRole.equals(Role.ADMIN)
+                        || userRole.equals(Role.MODERATOR)
+                        || userRole.equals(Role.USER);
         }
         return false;
     }
-
 
     /**
      * Tells if the role of the currently logged user is higher that the given role.

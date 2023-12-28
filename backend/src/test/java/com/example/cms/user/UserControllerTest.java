@@ -1,5 +1,7 @@
 package com.example.cms.user;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.example.cms.BaseAPIControllerTest;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
@@ -8,18 +10,15 @@ import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserControllerTest extends BaseAPIControllerTest {
 
@@ -69,7 +68,6 @@ class UserControllerTest extends BaseAPIControllerTest {
         this.userId = user.getId();
 
         this.universityId = university.getId();
-
     }
 
     @AfterEach
@@ -85,28 +83,31 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @BeforeEach
         public void setup() {
-            dto = new UserDtoFormCreate(
-                    "TEST_USER" + Instant.now().toString(),
-                    "Password123!",
-                    "John",
-                    "Doe",
-                    "test@example.com",
-                    "123456789",
-                    true,
-                    Role.ADMIN,
-                    null
-            );
+            dto =
+                    new UserDtoFormCreate(
+                            "TEST_USER" + Instant.now().toString(),
+                            "Password123!",
+                            "John",
+                            "Doe",
+                            "test@example.com",
+                            "123456789",
+                            true,
+                            Role.ADMIN,
+                            null);
         }
+
         @Test
         void create_User_Forbidden() throws Exception {
             performAs(Role.USER, userId);
             performPost(dto).andExpect(status().isForbidden());
         }
+
         @Test
         void create_UniversityAdministrator_Forbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
             performPost(dto).andExpect(status().isForbidden());
         }
+
         @Test
         void create_Administrator_Created() throws Exception {
             performAs(Role.ADMIN, userId);
@@ -120,72 +121,82 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @BeforeEach
         public void setup() {
-            dto = new UserDtoFormCreate(
-                    "TEST_USER" + Instant.now().toString(),
-                    "Password123!",
-                    "John",
-                    "Doe",
-                    "test@example.com",
-                    "123456789",
-                    true,
-                    Role.MODERATOR,
-                    Collections.singleton(universityId)
-            );
+            dto =
+                    new UserDtoFormCreate(
+                            "TEST_USER" + Instant.now().toString(),
+                            "Password123!",
+                            "John",
+                            "Doe",
+                            "test@example.com",
+                            "123456789",
+                            true,
+                            Role.MODERATOR,
+                            Collections.singleton(universityId));
         }
+
         @Test
         void create_User_Forbidden() throws Exception {
             performAs(Role.USER, userId);
             performPost(dto).andExpect(status().isForbidden());
         }
+
         @Test
         void create_UniversityAdministrator_Forbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
             performPost(dto).andExpect(status().isForbidden());
         }
+
         @Test
         void create_UniversityAdministrator_Created() throws Exception {
             performAs(Role.MODERATOR, Set.of(universityId), userId);
             performPost(dto).andExpect(status().isCreated());
         }
+
         @Test
         void create_Administrator_Created() throws Exception {
             performAs(Role.ADMIN, userId);
             performPost(dto).andExpect(status().isCreated());
         }
     }
+
     @Nested
     class CreateUserTestClass {
         private UserDtoFormCreate dto;
+
         @BeforeEach
         public void setup() {
 
-            dto = new UserDtoFormCreate(
-                    "TEST_USER" + Instant.now().toString(),
-                    "Password123!",
-                    "John",
-                    "Doe",
-                    "test@example.com",
-                    "123456789",
-                    true,
-                    Role.USER,
-                    Collections.singleton(universityId)
-            );
+            dto =
+                    new UserDtoFormCreate(
+                            "TEST_USER" + Instant.now().toString(),
+                            "Password123!",
+                            "John",
+                            "Doe",
+                            "test@example.com",
+                            "123456789",
+                            true,
+                            Role.USER,
+                            Collections.singleton(universityId));
         }
+
         @Test
         void create_User_Forbidden() throws Exception {
             performAs(Role.USER, userId);
             performPost(dto).andExpect(status().isForbidden());
         }
+
         @Test
         void create_UniversityAdministrator_Created() throws Exception {
             performAs(Role.MODERATOR, Set.of(universityId), userId);
             performPost(dto).andExpect(status().isCreated());
         }
+
         @Test
         void create_UniversityAdministrator_IsForbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
             performPost(dto).andExpect(status().isForbidden());
         }
+
         @Test
         void create_Administrator_Created() throws Exception {
             performAs(Role.ADMIN, userId);
@@ -208,23 +219,22 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_NAME"+Instant.now().toString(),
-                            "SHORT_NAME"+Instant.now().toString(),
+                            "TEST_NAME" + Instant.now().toString(),
+                            "SHORT_NAME" + Instant.now().toString(),
                             null,
                             null,
-                            "TEST_DESCRIPTION"+Instant.now().toString(),
+                            "TEST_DESCRIPTION" + Instant.now().toString(),
                             false,
-                            null
-                            );
-            newUniversity =  universityRepository.save(newUniversity);
+                            null);
+            newUniversity = universityRepository.save(newUniversity);
             var newUser =
                     new User(
                             null,
                             null,
                             null,
                             null,
-                            "TEST_USER"+Instant.now().toString(),
-                            "TEST_USER"+Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toString(),
                             null,
                             null,
                             null,
@@ -232,16 +242,15 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             Role.USER,
-                            false
-                    );
+                            false);
             var newModerator =
                     new User(
                             null,
                             null,
                             null,
                             null,
-                            "TEST_MODERATOR"+Instant.now().toString(),
-                            "TEST_MODERATOR"+Instant.now().toString(),
+                            "TEST_MODERATOR" + Instant.now().toString(),
+                            "TEST_MODERATOR" + Instant.now().toString(),
                             null,
                             null,
                             null,
@@ -249,21 +258,22 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             Role.MODERATOR,
-                            true
-                    );
+                            true);
             newUser = userRepository.save(newUser);
             newModerator = userRepository.save(newModerator);
-            newUniversity.setEnrolledUsers(Set.of(newUser,newModerator));
+            newUniversity.setEnrolledUsers(Set.of(newUser, newModerator));
 
             universityRepository.save(newUniversity);
             performAs(Role.MODERATOR, Set.of(newUniversity.getId()), newModerator.getId());
             performDelete(newUser.getId()).andExpect(status().is2xxSuccessful());
         }
+
         @Test
         void delete_UniversityAdministrator_IsForbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
             performDelete(userId).andExpect(status().isForbidden());
         }
+
         @Test
         void delete_Administrator_Ok() throws Exception {
             var newUser =
@@ -272,7 +282,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER"+Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toString(),
                             "TEST_USER",
                             null,
                             null,
@@ -281,8 +291,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             Role.USER,
-                            false
-                    );
+                            false);
             newUser = userRepository.save(newUser);
             performAs(Role.ADMIN, userId);
             performDelete(newUser.getId()).andExpect(status().is2xxSuccessful());
@@ -292,12 +301,12 @@ class UserControllerTest extends BaseAPIControllerTest {
         void delete_Administrator_Error() throws Exception {
             var newUser =
                     new User(
-                           null,
                             null,
                             null,
                             null,
-                            "TEST_USER"+Instant.now().toString(),
-                            "TEST_USER"+Instant.now().toString(),
+                            null,
+                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toString(),
                             null,
                             null,
                             null,
@@ -305,16 +314,16 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             Role.USER,
-                            true
-                    );
+                            true);
             newUser = userRepository.save(newUser);
             performAs(Role.ADMIN, userId);
             performDelete(newUser.getId()).andExpect(status().is4xxClientError());
         }
     }
+
     @Nested
     class ViewUsersListTestClass {
-        //tu coś jest źle, każdy widzi wszystko
+        // tu coś jest źle, każdy widzi wszystko
         @Test
         void getUserList_User_Approve() throws Exception {
             performAs(Role.USER, userId);
@@ -323,16 +332,19 @@ class UserControllerTest extends BaseAPIControllerTest {
                             performGet().andExpect(status().isOk()),
                             new TypeReference<List<UserDtoDetailed>>() {});
         }
+
         @Test
         void getUserList_UniversityAdmin_Approve() throws Exception {
             performAs(Role.MODERATOR, userId);
             performGet(userId).andExpect(status().is2xxSuccessful());
         }
+
         @Test
         void getUserList_UniversityAdmin_Forbidden() throws Exception {
             performAs(Role.MODERATOR, userId);
             performGet(userId).andExpect(status().is2xxSuccessful());
         }
+
         @Test
         void getUserList_Admin_Approve() throws Exception {
             performAs(Role.ADMIN, userId);
@@ -343,29 +355,32 @@ class UserControllerTest extends BaseAPIControllerTest {
     @Nested
     class UpdateUserTestClass {
         private User userToUpdate;
+
         @BeforeEach
         public void setup() {
 
-            userToUpdate = new User(
-                    null,
-                    null,
-                    null,
-                    null,
-                    "TEST_USER"+Instant.now().toString(),
-                    "TEST_user1!"+Instant.now().toString(),
-                    "TEST_USER",
-                    "null",
-                    null,
-                    "null@wp.pl",
-                    "000000000",
-                    "null",
-                    Role.USER,
-                    false
-            );
+            userToUpdate =
+                    new User(
+                            null,
+                            null,
+                            null,
+                            null,
+                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_user1!" + Instant.now().toString(),
+                            "TEST_USER",
+                            "null",
+                            null,
+                            "null@wp.pl",
+                            "000000000",
+                            "null",
+                            Role.USER,
+                            false);
             userToUpdate = userRepository.save(userToUpdate);
-            userToUpdate.setEnrolledUniversities(Set.of(universityRepository.findById(universityId).orElseThrow()));
+            userToUpdate.setEnrolledUniversities(
+                    Set.of(universityRepository.findById(universityId).orElseThrow()));
             userToUpdate = userRepository.save(userToUpdate);
         }
+
         public UserDtoFormUpdate getUpdateForm() {
 
             return new UserDtoFormUpdate(
@@ -378,8 +393,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                     userToUpdate.isEnabled(),
                     userToUpdate.getAccountType(),
                     userToUpdate.getUsername(),
-                    userToUpdate.getPassword()
-                    );
+                    userToUpdate.getPassword());
         }
 
         @Test
@@ -393,12 +407,14 @@ class UserControllerTest extends BaseAPIControllerTest {
             performAs(Role.MODERATOR, userId);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().isForbidden());
         }
+
         @Test
         public void updateToAdmin_UniversityAdministrator_Forbidden() throws Exception {
             performAs(Role.MODERATOR, Set.of(universityId), userId);
             userToUpdate.setAccountType(Role.ADMIN);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().isForbidden());
         }
+
         @Test
         public void update_UniversityAdministrator_Success() throws Exception {
             performAs(Role.MODERATOR, Set.of(universityId));
@@ -411,32 +427,36 @@ class UserControllerTest extends BaseAPIControllerTest {
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
     }
+
     @Nested
     class EnableUpdateUserTestClass {
         private User userToUpdate;
+
         @BeforeEach
         public void setup() {
 
-            userToUpdate = new User(
-                    null,
-                    null,
-                    null,
-                    null,
-                    "TEST_USER"+Instant.now().toString(),
-                    "TEST_user1!"+Instant.now().toString(),
-                    "TEST_USER",
-                    "null",
-                    null,
-                    "null@wp.pl",
-                    "000000000",
-                    "null",
-                    Role.USER,
-                    false
-            );
+            userToUpdate =
+                    new User(
+                            null,
+                            null,
+                            null,
+                            null,
+                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_user1!" + Instant.now().toString(),
+                            "TEST_USER",
+                            "null",
+                            null,
+                            "null@wp.pl",
+                            "000000000",
+                            "null",
+                            Role.USER,
+                            false);
             userToUpdate = userRepository.save(userToUpdate);
-            userToUpdate.setEnrolledUniversities(Set.of(universityRepository.findById(universityId).orElseThrow()));
+            userToUpdate.setEnrolledUniversities(
+                    Set.of(universityRepository.findById(universityId).orElseThrow()));
             userToUpdate = userRepository.save(userToUpdate);
         }
+
         public UserDtoFormUpdate getUpdateForm() {
 
             return new UserDtoFormUpdate(
@@ -449,8 +469,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                     userToUpdate.isEnabled(),
                     userToUpdate.getAccountType(),
                     userToUpdate.getUsername(),
-                    userToUpdate.getPassword()
-            );
+                    userToUpdate.getPassword());
         }
 
         @Test
@@ -478,29 +497,32 @@ class UserControllerTest extends BaseAPIControllerTest {
     @Nested
     class DisableUpdateUserTestClass {
         private User userToUpdate;
+
         @BeforeEach
         public void setup() {
 
-            userToUpdate = new User(
-                    null,
-                    null,
-                    null,
-                    null,
-                    "TEST_USER"+Instant.now().toString(),
-                    "TEST_user1!"+Instant.now().toString(),
-                    "TEST_USER",
-                    "null",
-                    null,
-                    "null@wp.pl",
-                    "000000000",
-                    "null",
-                    Role.USER,
-                    true
-            );
+            userToUpdate =
+                    new User(
+                            null,
+                            null,
+                            null,
+                            null,
+                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_user1!" + Instant.now().toString(),
+                            "TEST_USER",
+                            "null",
+                            null,
+                            "null@wp.pl",
+                            "000000000",
+                            "null",
+                            Role.USER,
+                            true);
             userToUpdate = userRepository.save(userToUpdate);
-            userToUpdate.setEnrolledUniversities(Set.of(universityRepository.findById(universityId).orElseThrow()));
+            userToUpdate.setEnrolledUniversities(
+                    Set.of(universityRepository.findById(universityId).orElseThrow()));
             userToUpdate = userRepository.save(userToUpdate);
         }
+
         public UserDtoFormUpdate getUpdateForm() {
 
             return new UserDtoFormUpdate(
@@ -513,8 +535,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                     userToUpdate.isEnabled(),
                     userToUpdate.getAccountType(),
                     userToUpdate.getUsername(),
-                    userToUpdate.getPassword()
-            );
+                    userToUpdate.getPassword());
         }
 
         @Test
