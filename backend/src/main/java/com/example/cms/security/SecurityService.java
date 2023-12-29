@@ -65,26 +65,6 @@ public class SecurityService {
                                 case MODERATOR:
                                 case USER:
                                     return !hasUniversity(page.getUniversity().getId());
-                                    //                                    return
-                                    // (!page.getCreator().getId().equals(loggedUser.getId())
-                                    //                                            &&
-                                    // !hasUniversity(page.getUniversity().getId()));
-                            }
-                            return true;
-                        })
-                .orElse(true);
-    }
-
-    public boolean isForbiddenPageParent(Page parent) {
-        return getPrincipal()
-                .map(
-                        loggedUser -> {
-                            switch (loggedUser.getAccountType()) {
-                                case ADMIN:
-                                    return false;
-                                case MODERATOR:
-                                case USER:
-                                    return !hasUniversity(parent.getUniversity().getId());
                             }
                             return true;
                         })
