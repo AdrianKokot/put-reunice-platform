@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UniversityRepository
         extends JpaRepository<University, Long>, JpaSpecificationExecutor<University> {
     boolean existsByNameOrShortName(String name, String shortName);
+
+    boolean existsUniversityById_AndEnrolledUsers_Id(Long id, Long userId);
 }

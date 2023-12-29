@@ -17,6 +17,7 @@ import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
 import com.example.cms.user.exceptions.UserForbiddenException;
 import com.example.cms.user.exceptions.UserNotFoundException;
+import com.example.cms.validation.exceptions.UnauthorizedException;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -151,6 +152,36 @@ public class PageService {
         searchService.delete(page);
     }
 
+    private boolean isCreatorValid(User creator, Page parent) {
+        if (securityService
+                .getPrincipal()
+                .orElseThrow(UnauthorizedException::new)
+                .getId()
+                .equals(creator.getId())) {
+            return !securityService.isForbiddenPageParent(parent);
+        }
+
+        if (!creator.isEnabled()) return false;
+
+        return universityRepository.existsUniversityById_AndEnrolledUsers_Id(
+                parent.getUniversity().getId(), creator.getId());
+    }
+
+    private boolean isCreatorUpdateValid(User creator, Page page) {
+        if (securityService
+                .getPrincipal()
+                .orElseThrow(UnauthorizedException::new)
+                .getId()
+                .equals(creator.getId())) {
+            return !securityService.isForbiddenPage(page);
+        }
+
+        if (!creator.isEnabled()) return false;
+
+        return universityRepository.existsUniversityById_AndEnrolledUsers_Id(
+                page.getUniversity().getId(), creator.getId());
+    }
+
     @Secured("ROLE_USER")
     public PageDtoDetailed save(PageDtoFormCreate form) {
         if (form.getParentId() == null) {
@@ -159,20 +190,18 @@ public class PageService {
 
         Page parent =
                 pageRepository.findById(form.getParentId()).orElseThrow(PageNotFoundException::new);
-        if (parent.isHidden() && securityService.isForbiddenPage(parent)) {
+        if (securityService.isForbiddenPageParent(parent)) {
             throw new PageForbiddenException();
         }
 
         User creator =
                 userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(creator)) {
+
+        if (!isCreatorValid(creator, parent)) {
             throw new UserForbiddenException();
         }
 
         Page newPage = form.toPage(parent, creator);
-        if (securityService.isForbiddenPage(newPage)) {
-            throw new PageForbiddenException();
-        }
 
         return PageDtoDetailed.of(save(newPage));
     }
@@ -183,6 +212,7 @@ public class PageService {
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
+        // Parent == null ? University main page
         if (page.getParent() == null && !securityService.hasHigherRoleThan(Role.USER)) {
             throw new PageForbiddenException();
         }
@@ -192,9 +222,13 @@ public class PageService {
         page.setHidden(form.getHidden());
         page.setContent(Content.of(form.getContent()));
 
-        if (securityService.hasHigherRoleThan(Role.USER)) {
-            page.setCreator(
-                    userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new));
+        if (!page.getCreator().getId().equals(form.getCreatorId())) {
+            var creator =
+                    userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
+            //            if (!isCreatorUpdateValid(creator, page)) {
+            //                throw new UserForbiddenException();
+            //            }
+            page.setCreator(creator);
         }
 
         Set<User> usersToAssign = new HashSet<>();
