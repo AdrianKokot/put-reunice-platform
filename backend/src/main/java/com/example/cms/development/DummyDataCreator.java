@@ -1381,7 +1381,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        <h2>General Inquiries</h2>\n"
                                 + "        <p>For any other questions or information, feel free to reach out to our main office.</p>\n"
                                 + "    </section>",
-                        false,
+                        true,
                         Set.of(),
                         18L));
 

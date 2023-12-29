@@ -43,7 +43,7 @@ public class PageService {
                 .map(
                         page -> {
                             if (!isPageVisible(page)) {
-                                throw new PageForbiddenException();
+                                throw new PageNotFoundException();
                             }
                             if (!isPageVisible(page.getParent())) {
                                 page.setParent(null);
