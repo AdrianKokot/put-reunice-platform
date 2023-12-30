@@ -20,10 +20,7 @@
 
     <h3 class="tui-island__title tui-space_bottom-1">{{ page.title }}</h3>
     <p class="tui-island__paragraph">
-      <tui-line-clamp
-        [content]="page.description"
-        [linesLimit]="2"
-      ></tui-line-clamp>
+      <tui-line-clamp [content]="page.description" [linesLimit]="2" />
     </p>
     <p class="tui-island__category">{{ page.university.address }}</p>
   </a>
@@ -32,16 +29,14 @@
 <ng-template #loading>
   <tui-island *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="">
     <figure class="tui-island__figure tui-skeleton"></figure>
-    <h3 class="tui-island__title tui-space_bottom-1 tui-skeleton">
-      placeholder text
-    </h3>
-    <p class="tui-island__paragraph tui-skeleton">placeholder text</p>
-    <p class="tui-island__category tui-skeleton">placeholder text</p>
+    <h3 class="tui-island__title tui-space_bottom-1 tui-skeleton">-</h3>
+    <p class="tui-island__paragraph tui-skeleton">-</p>
+    <p class="tui-island__category tui-skeleton">-</p>
   </tui-island>
 </ng-template>
 
 <ng-template #blank>
-  <p class="text-center no-universities tui-text_body-m">
+  <p class="text-center col-span-full tui-text_body-m">
     {{ 'NO_UNIVERSITIES' | translate }}
   </p>
 </ng-template>
