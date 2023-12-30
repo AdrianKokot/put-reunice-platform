@@ -15,10 +15,8 @@ import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.exceptions.UserForbiddenException;
 import com.example.cms.user.exceptions.UserNotFoundException;
 import com.example.cms.validation.exceptions.UnauthorizedException;
-import com.example.cms.validation.exceptions.WrongDataStructureException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -162,8 +160,6 @@ public class PageService {
             return !securityService.isForbiddenPage(page);
         }
 
-        if (!creator.isEnabled()) return false;
-
         return universityRepository.existsUniversityById_AndEnrolledUsers_Id(
                 page.getUniversity().getId(), creator.getId());
     }
@@ -172,7 +168,7 @@ public class PageService {
     @Transactional
     public PageDtoDetailed save(PageDtoFormCreate form) {
         if (form.getParentId() == null) {
-            throw new WrongDataStructureException();
+            throw new PageException(PageExceptionType.PARENT_NOT_FOUND);
         }
 
         Page parent =
@@ -185,7 +181,7 @@ public class PageService {
                 userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
 
         if (!isCreatorValid(creator, parent)) {
-            throw new UserForbiddenException();
+            throw new PageException(PageExceptionType.CREATOR_NOT_VALID);
         }
 
         Page newPage = form.toPage(parent, creator);
@@ -214,7 +210,7 @@ public class PageService {
             var creator =
                     userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
             if (!isCreatorValid(creator, page)) {
-                throw new UserForbiddenException();
+                throw new PageException(PageExceptionType.CREATOR_NOT_VALID);
             }
             page.setCreator(creator);
         }

@@ -467,6 +467,33 @@ class PageControllerTest extends BaseAPIControllerTest {
                 performPut(pageId, getUpdateForm()).andExpect(status().is2xxSuccessful());
             }
         }
+
+        @Nested
+        class UpdatePageCreatorTestClass {
+            public PageDtoFormUpdate getUpdateForm(Long creatorId) {
+                var page = pageRepository.findById(pageId).get();
+
+                return new PageDtoFormUpdate(
+                        page.getTitle(),
+                        page.getDescription(),
+                        "TEST_CONTENT",
+                        page.isHidden(),
+                        page.getHandlers().stream().map(User::getId).collect(Collectors.toSet()),
+                        creatorId);
+            }
+
+            @Test
+            public void update_CreatorInTheSameUniversityAsPage_Success() throws Exception {
+                performAs(Role.ADMIN);
+                performPut(pageId, getUpdateForm(userId)).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            public void update_CreatorNotInTheSameUniversityAsPage_BadRequest() throws Exception {
+                performAs(Role.ADMIN);
+                performPut(pageId, getUpdateForm(1L)).andExpect(status().isBadRequest());
+            }
+        }
     }
 
     @Nested
@@ -519,6 +546,20 @@ class PageControllerTest extends BaseAPIControllerTest {
         void create_Administrator_Success() throws Exception {
             performAs(Role.ADMIN);
             performPost(dto).andExpect(status().is2xxSuccessful());
+        }
+
+        @Test
+        void create_WithNoParent_BadRequest() throws Exception {
+            performAs(Role.ADMIN);
+            var dtoNoParent =
+                    new PageDtoFormCreate(
+                            dto.getTitle(),
+                            dto.getDescription(),
+                            dto.getContent(),
+                            dto.getCreatorId(),
+                            null,
+                            dto.getHidden());
+            performPost(dtoNoParent).andExpect(status().isBadRequest());
         }
     }
 
