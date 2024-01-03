@@ -58,7 +58,9 @@ public class Ticket {
             fetch = FetchType.EAGER)
     private Set<Response> responses;
 
-    private String requestedToken;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "uuid")
+    private UUID requesterToken;
 
     @Override
     public String toString() {
@@ -84,12 +86,17 @@ public class Ticket {
                 + description
                 + '\''
                 + ", requestedToken='"
-                + requestedToken
+                + requesterToken
                 + '}';
     }
 
     public void addResponse(Response response) {
         response.setTicket(this);
         this.responses.add(response);
+    }
+
+    @PrePersist
+    private void onCreate() {
+        this.requesterToken = UUID.randomUUID();
     }
 }

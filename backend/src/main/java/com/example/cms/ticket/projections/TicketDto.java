@@ -19,8 +19,6 @@ public class TicketDto {
     private TicketStatus status;
     private String title;
     private String description;
-    private String requestedToken;
-    private String contentRequestHandlerToken;
 
     public static TicketDto of(Ticket ticket) {
         if (ticket == null) {
@@ -37,6 +35,5 @@ public class TicketDto {
         status = ticket.getStatus();
         title = ticket.getTitle();
         description = ticket.getDescription();
-        requestedToken = ticket.getRequestedToken();
     }
 }

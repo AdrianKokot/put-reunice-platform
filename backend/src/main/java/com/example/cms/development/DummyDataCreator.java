@@ -1398,35 +1398,35 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 1L,
                                 "michal.wazowski9020@gmail.com",
                                 "Problem to page 1",
-                                "This is description to my ticket. I have a problem with page 1"));
+                                "This is description to my ticket. I have a problem with page 1")).get("id");
         UUID ticketId2 =
                 ticketService.createTicket(
                         new TicketDtoFormCreate(
                                 2L,
                                 "requester2@email.com",
                                 "Problem to page 2",
-                                "This is description to my ticket. I have a problem with page 2"));
+                                "This is description to my ticket. I have a problem with page 2")).get("id");
         UUID ticketId3 =
                 ticketService.createTicket(
                         new TicketDtoFormCreate(
                                 3L,
                                 "requester3@email.com",
                                 "Problem to page 3",
-                                "This is description to my ticket. I have a problem with page 3"));
+                                "This is description to my ticket. I have a problem with page 3")).get("id");
         UUID ticketId4 =
                 ticketService.createTicket(
                         new TicketDtoFormCreate(
                                 4L,
                                 "requester4@email.com",
                                 "Problem to page 4",
-                                "This is description to my ticket. I have a problem with page 4"));
+                                "This is description to my ticket. I have a problem with page 4")).get("id");
         UUID ticketId5 =
                 ticketService.createTicket(
                         new TicketDtoFormCreate(
                                 4L,
                                 "requester5@email.com",
                                 "Second problem to page 4",
-                                "This is description to my ticket. I have a second problem with page 5"));
+                                "This is description to my ticket. I have a second problem with page 5")).get("id");
 
         ticketService.addResponse(ticketId1, "message content to ticket 1 from author1");
         ticketService.addResponse(ticketId1, "another message content to ticket 1 from author1");

@@ -39,7 +39,7 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> createTicket(@RequestBody TicketDtoFormCreate ticketDto) {
+    public ResponseEntity<Map<String, UUID>> createTicket(@RequestBody TicketDtoFormCreate ticketDto) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", "1");
 

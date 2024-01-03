@@ -59,7 +59,7 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public UUID createTicket(TicketDtoFormCreate ticketDto) {
+    public Map<String, UUID> createTicket(TicketDtoFormCreate ticketDto) {
         com.example.cms.page.Page page =
                 pageRepository.findById(ticketDto.getPageId()).orElseThrow(PageNotFoundException::new);
 
@@ -83,7 +83,7 @@ public class TicketService {
                                 })
                         .collect(Collectors.toSet()));
 
-        return ticket.getId();
+        return Map.of("id", ticket.getId(), "token", ticket.getRequesterToken());
     }
 
     public Ticket getTicketDetailed(UUID ticketId) {
