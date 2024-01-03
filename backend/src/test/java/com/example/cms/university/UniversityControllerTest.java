@@ -477,7 +477,7 @@ class UniversityControllerTest extends BaseAPIControllerTest {
         }
 
         @Test
-        void get_IdContains1() throws Exception {
+        void get_IdEquals1() throws Exception {
             performAs(Role.ADMIN);
 
             var items =
