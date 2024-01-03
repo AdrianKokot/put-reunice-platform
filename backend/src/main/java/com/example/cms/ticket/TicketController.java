@@ -47,8 +47,8 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}")
-    public ResponseEntity<TicketDtoDetailed> getTicketDetailed(@PathVariable UUID ticketId) {
-        Ticket ticket = service.getTicketDetailed(ticketId);
+    public ResponseEntity<TicketDtoDetailed> getTicketDetailed(@PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+        Ticket ticket = service.getTicketDetailed(ticketId, token);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));

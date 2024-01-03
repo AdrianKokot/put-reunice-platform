@@ -86,7 +86,7 @@ public class TicketService {
         return Map.of("id", ticket.getId(), "token", ticket.getRequesterToken());
     }
 
-    public Ticket getTicketDetailed(UUID ticketId) {
+    public Ticket getTicketDetailed(UUID ticketId, Optional<UUID> token) {
         Ticket ticket = this.getTicketById(ticketId);
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
@@ -94,9 +94,20 @@ public class TicketService {
             TicketUserStatus userStatus = userStatusOptional.get();
             userStatus.setLastSeenOn(Instant.now());
             ticketUserStatusRepository.save(userStatus);
+
+            return ticket;
         }
 
-        return ticket;
+        if (token.isPresent())
+            if (ticket.getRequesterToken().equals(token.get()))
+                return ticket;
+
+        Optional<LoggedUser> optionalLoggedUser = securityService.getPrincipal();
+        if (optionalLoggedUser.isPresent())
+            if (optionalLoggedUser.get().getAccountType().equals(Role.ADMIN))
+                return ticket;
+
+        throw new TicketAccessForbiddenException();
     }
 
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {
