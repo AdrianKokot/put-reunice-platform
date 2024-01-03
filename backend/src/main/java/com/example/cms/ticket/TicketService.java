@@ -98,14 +98,11 @@ public class TicketService {
             return ticket;
         }
 
-        if (token.isPresent())
-            if (ticket.getRequesterToken().equals(token.get()))
-                return ticket;
+        if (token.isPresent()) if (ticket.getRequesterToken().equals(token.get())) return ticket;
 
         Optional<LoggedUser> optionalLoggedUser = securityService.getPrincipal();
         if (optionalLoggedUser.isPresent())
-            if (optionalLoggedUser.get().getAccountType().equals(Role.ADMIN))
-                return ticket;
+            if (optionalLoggedUser.get().getAccountType().equals(Role.ADMIN)) return ticket;
 
         throw new TicketAccessForbiddenException();
     }

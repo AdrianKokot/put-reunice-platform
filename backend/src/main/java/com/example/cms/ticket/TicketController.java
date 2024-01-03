@@ -39,7 +39,8 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, UUID>> createTicket(@RequestBody TicketDtoFormCreate ticketDto) {
+    public ResponseEntity<Map<String, UUID>> createTicket(
+            @RequestBody TicketDtoFormCreate ticketDto) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", "1");
 
@@ -47,7 +48,8 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}")
-    public ResponseEntity<TicketDtoDetailed> getTicketDetailed(@PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+    public ResponseEntity<TicketDtoDetailed> getTicketDetailed(
+            @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
         Ticket ticket = service.getTicketDetailed(ticketId, token);
 
         HttpHeaders httpHeaders = new HttpHeaders();
