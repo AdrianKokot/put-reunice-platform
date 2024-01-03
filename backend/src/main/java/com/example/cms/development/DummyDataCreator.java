@@ -3,6 +3,8 @@ package com.example.cms.development;
 import com.example.cms.backup.BackupService;
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
+import com.example.cms.configuration.DatabaseSchemaCreateType;
+import com.example.cms.configuration.DatabaseSchemaHandlingOnStartup;
 import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
@@ -16,10 +18,12 @@ import com.example.cms.university.projections.UniversityDtoFormCreate;
 import com.example.cms.university.projections.UniversityDtoFormUpdate;
 import com.example.cms.user.UserService;
 import com.example.cms.user.projections.UserDtoFormCreate;
-import com.example.cms.validation.exceptions.WrongParameterException;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +40,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
-
-    private enum DatabaseSchemaCreateType {
-        INITIALIZE, // create only main admin so the data can be added manually (e.g., using a frontend
-        // application)
-        POPULATE // insert dummy data to demonstrate the application
-    }
 
     private final PageService pageService;
     private final UserService userService;
@@ -69,18 +67,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                     String.format(
                             "** databaseSchemaHandlingOnStartup read from properties file: %s",
                             applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()));
-            if (applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup().equals("create")) {
-                if (applicationConfigurationProvider
-                        .getDatabaseSchemaCreateType()
-                        .equalsIgnoreCase("populate")) {
-                    tryToRestoreDatabase(DatabaseSchemaCreateType.POPULATE);
-                } else if (applicationConfigurationProvider
-                        .getDatabaseSchemaCreateType()
-                        .equalsIgnoreCase("initialize")) {
-                    tryToRestoreDatabase(DatabaseSchemaCreateType.INITIALIZE);
-                } else {
-                    throw new WrongParameterException("Invalid value of parameter databaseSchemaCreateType.");
-                }
+            if (applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()
+                    == DatabaseSchemaHandlingOnStartup.CREATE) {
+                tryToRestoreDatabase(applicationConfigurationProvider.getDatabaseSchemaCreateType());
             } else {
                 log.info("** Using encountered database schema.");
             }

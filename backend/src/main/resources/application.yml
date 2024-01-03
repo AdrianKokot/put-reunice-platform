@@ -1,13 +1,20 @@
-# Address of the aplication server (including protocol, domain name, and optionally port number), read from an environmental variable
-applicationServer: ${APPLICATION_SERVER:http://localhost}
-databaseSchemaHandlingOnStartup: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP:create} #none|validate|update|create
-databaseSchemaCreateType: ${DATABASE_SCHEMA_CREATE_TYPE:populate} #populate|initialize
-typesenseApiKey: ${TYPESENSE_API_KEY:devapikey}
-typesenseHost: ${TYPESENSE_HOST:localhost}
-uploadsDirectory: ${UPLOADS_DIRECTORY:/uploads/}
-backupsDirectory: ${BACKUPS_DIRECTORY:/db-resources/}
-typesenseCacheEnabled: ${TYPESENSE_CACHE_ENABLED:true}
-typesenseCacheTtl: ${TYPESENSE_CACHE_TTL:60000}
+app:
+  url: ${APP_URL:http://localhost}
+  typesense:
+    cache:
+      enabled: ${TYPESENSE_CACHE_ENABLED:true}
+      ttl: ${TYPESENSE_CACHE_TTL:60000}
+    host: ${TYPESENSE_HOST:localhost}
+    key: ${TYPESENSE_API_KEY:devapikey}
+  path:
+    backups: ${BACKUPS_DIRECTORY:/db-resources/}
+    uploads: ${UPLOADS_DIRECTORY:/uploads/}
+  database:
+    schema:
+      create-type: ${DATABASE_SCHEMA_CREATE_TYPE:populate}
+      handling-on-startup: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP:create}
+
+---
 
 server:
   servlet:
@@ -17,7 +24,6 @@ server:
         secure: true
       timeout: 30m
 
-# Here we define active profiles
 spring:
   data:
     web:
@@ -68,7 +74,7 @@ spring:
   jpa:
     database: postgresql
     hibernate:
-      ddl-auto: ${databaseSchemaHandlingOnStartup}
+      ddl-auto: ${app.database.schema.handling-on-startup}
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -95,8 +101,8 @@ spring:
     password: ${SMTP_PASSWORD:none}
     protocol: smtp
     properties.mail.smtp:
-      auth: true
-      starttls.enable: true
+      auth: ${SMTP_USE_AUTH:true}
+      starttls.enable: ${SMTP_USE_TLS:true}
 
 
   jackson:
