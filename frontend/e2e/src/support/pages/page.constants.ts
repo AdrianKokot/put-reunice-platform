@@ -61,7 +61,7 @@ export const PagePage = {
   },
   selectCRH(search: string) {
     const searchAlias = `search_${Date.now()}`;
-    cy.intercept('GET', '/api/*?*' + search.replaceAll(' ', '%20') + '*').as(
+    cy.intercept('GET', `/api/*?*${search.replaceAll(' ', '%20')}*`).as(
       searchAlias,
     );
     cy.get(PagePage.inputs.contactRequestHandlers)

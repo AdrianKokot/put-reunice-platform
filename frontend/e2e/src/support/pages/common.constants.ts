@@ -40,7 +40,7 @@ export const Resource = {
   },
   search(value: string) {
     const searchAlias = `search_${Date.now()}`;
-    cy.intercept('GET', '/api/*?*' + value.replaceAll(' ', '%20') + '*').as(
+    cy.intercept('GET', `/api/*?*${value.replaceAll(' ', '%20')}*`).as(
       searchAlias,
     );
     cy.get(Resource.input.search).type(value);

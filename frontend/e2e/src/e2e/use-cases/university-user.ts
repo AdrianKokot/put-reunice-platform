@@ -129,7 +129,7 @@ export const ucuu7 = (testTimestamp: string) => {
 
     waitForResponse('@getPage', 200);
 
-    PagePage.selectCRH('ua_user' + testTimestamp);
+    PagePage.selectCRH(`ua_user${testTimestamp}`);
 
     Form.submit();
     waitForResponse('@editPage', 204);

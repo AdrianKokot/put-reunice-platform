@@ -97,7 +97,7 @@ export const ucua5 = (testTimestamp: string) => {
     cy.intercept('GET', '/api/users/*').as('getUser');
     cy.intercept('PUT', '/api/users/*').as('editUser');
 
-    Resource.search('user' + testTimestamp);
+    Resource.search(`user${testTimestamp}`);
     Resource.edit();
 
     UserPage.fillForm({
@@ -123,7 +123,7 @@ const setUserState = (state: 'enabled' | 'disabled', testTimestamp: string) => {
   cy.intercept('GET', '/api/users/*').as('getUser');
   cy.intercept('PUT', '/api/users/*').as('editUser');
 
-  Resource.search('ua_user' + testTimestamp);
+  Resource.search(`ua_user${testTimestamp}`);
   Resource.edit();
 
   waitForResponse('@getUser', 200);

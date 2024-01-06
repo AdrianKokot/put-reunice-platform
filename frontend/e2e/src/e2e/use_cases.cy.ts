@@ -18,6 +18,7 @@ import {
   ucuu5,
   ucuu7,
 } from './use-cases/university-user';
+import { ucan2, ucan3 } from './use-cases/anonymous-user';
 
 const testTimestamp = Date.now().toString();
 describe('Use Cases', () => {
@@ -65,5 +66,14 @@ describe('Use Cases', () => {
     ucuu5(testTimestamp);
     ucuu7(testTimestamp);
     ucuu12(testTimestamp);
+  });
+
+  describe('4. Anonymous', () => {
+    beforeEach(() => {
+      cy.visit('/');
+    });
+
+    ucan2();
+    ucan3(testTimestamp);
   });
 });

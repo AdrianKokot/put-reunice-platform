@@ -173,7 +173,7 @@ export const uca_7_8_9 = (testTimestamp: string) => {
       cy.intercept('GET', '/api/users/*').as('getUser');
       cy.intercept('PUT', '/api/users/*').as('editUser');
 
-      Resource.search('user' + testTimestamp);
+      Resource.search(`user${testTimestamp}`);
       Resource.edit();
 
       UserPage.fillForm({
@@ -200,7 +200,7 @@ export const uca_7_8_9 = (testTimestamp: string) => {
         cy.intercept('GET', '/api/users/*').as('getUser');
         cy.intercept('PUT', '/api/users/*').as('editUser');
 
-        Resource.search('user' + testTimestamp);
+        Resource.search(`user${testTimestamp}`);
         Resource.edit();
 
         waitForResponse('@getUser', 200);

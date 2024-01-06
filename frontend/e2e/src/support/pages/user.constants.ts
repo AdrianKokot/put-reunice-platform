@@ -87,7 +87,7 @@ export const UserPage = {
   },
   setUniversity(search: string) {
     const searchAlias = `search_${Date.now()}`;
-    cy.intercept('GET', '/api/*?*' + search.replaceAll(' ', '%20') + '*').as(
+    cy.intercept('GET', `/api/*?*${search.replaceAll(' ', '%20')}*`).as(
       searchAlias,
     );
     cy.get(UserPage.inputs.universtiy).should('be.visible').type(search);
