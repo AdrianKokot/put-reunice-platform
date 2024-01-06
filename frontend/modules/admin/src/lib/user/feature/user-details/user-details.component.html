@@ -9,7 +9,7 @@
     <button tuiTab>
       {{ 'USER_FILES_TAB' | translate }}
     </button>
-    <button tuiTab>
+    <button tuiTab data-test="responsibility-tab">
       {{ 'USER_RESPONSIBILITY_TAB' | translate }}
     </button>
   </tui-tabs>
@@ -42,6 +42,7 @@
           ) | translate
         "
         (confirm)="deleteHandler.delete(item.id)"
+        data-test="delete-button"
       >
         {{ 'DELETE' | translate }}
       </button>
@@ -52,6 +53,7 @@
         type="button"
         appearance="secondary"
         class="tui-form__button"
+        data-test="edit-button"
       >
         {{ 'EDIT' | translate }}
       </a>

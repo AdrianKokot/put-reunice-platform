@@ -38,7 +38,7 @@ export const dashboardTiles: DashboardTile[] = [
     url: ['users'],
     icon: 'tuiIconUsers',
     description: 'ACCOUNTS_AND_ROLES_MANAGEMENT',
-    role: ExtendedAccountTypeEnum.ADMINISTRATIVE,
+    role: ExtendedAccountTypeEnum.AUTHORIZED,
   },
   {
     title: 'BACKUPS',

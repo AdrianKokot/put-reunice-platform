@@ -53,7 +53,7 @@ export class UserCreateFormComponent {
     accountType: [this.accountType.USER, [Validators.required]],
     enabled: [true, [Validators.required]],
     enrolledUniversities: [
-      this._user?.enrolledUniversities?.map((u) => u.id)?.at(0),
+      this._user?.universityId,
       [
         (control: AbstractControl) =>
           control.parent?.get('accountType')?.value !== this.accountType.ADMIN

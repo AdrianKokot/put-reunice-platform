@@ -6,7 +6,7 @@ import {
   UserService,
 } from '@reunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
-import { UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@reunice/modules/shared/security';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
@@ -29,6 +29,7 @@ import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
   providers: [provideReuniceTable(UserService)],
 })
 export class UserListComponent extends ReuniceAbstractTable<User> {
+  private readonly _user = inject(AuthService).userSnapshot;
   readonly columns: Array<keyof User | string> = [
     'username',
     'firstName',
@@ -40,6 +41,7 @@ export class UserListComponent extends ReuniceAbstractTable<User> {
 
   readonly filtersForm = inject(FormBuilder).group({
     search: [''],
+    enrolledUniversities_eq: [this._user?.universityId],
     accountType_eq: [null as AccountType | null],
     enabled_eq: [null as boolean | null],
   });

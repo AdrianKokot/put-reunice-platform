@@ -1,3 +1,5 @@
+import { waitForResponse } from '../app';
+
 export const Form = {
   submit: () => cy.get('button[type="submit"]').click(),
 } as const;
@@ -35,5 +37,13 @@ export const Resource = {
   details() {
     cy.get(Resource.buttons.details).first().click();
     cy.url().should('match', /\/\d+$/);
+  },
+  search(value: string) {
+    const searchAlias = `search_${Date.now()}`;
+    cy.intercept('GET', '/api/*?*' + value.replaceAll(' ', '%20') + '*').as(
+      searchAlias,
+    );
+    cy.get(Resource.input.search).type(value);
+    waitForResponse(`@${searchAlias}`, 200);
   },
 } as const;

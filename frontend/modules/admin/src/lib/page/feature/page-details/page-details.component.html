@@ -8,6 +8,7 @@
         {{ 'PAGE_CONTENT_TAB' | translate }}
       </button>
       <button
+        data-test="responsibility-tab"
         tuiTab
         *ngIf="item === null || item.contactRequestHandlers.length > 0"
       >
