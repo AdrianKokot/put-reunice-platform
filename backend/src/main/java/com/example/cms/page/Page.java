@@ -57,7 +57,7 @@ public class Page {
     @ManyToOne(fetch = FetchType.LAZY)
     private Page parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Page> children = new HashSet<>();
 
     private Timestamp createdOn;

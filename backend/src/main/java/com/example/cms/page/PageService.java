@@ -15,9 +15,8 @@ import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.exceptions.UserForbiddenException;
 import com.example.cms.user.exceptions.UserNotFoundException;
-import com.example.cms.validation.exceptions.WrongDataStructureException;
+import com.example.cms.validation.exceptions.UnauthorizedException;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class PageService {
                 .map(
                         page -> {
                             if (!isPageVisible(page)) {
-                                throw new PageForbiddenException();
+                                throw new PageNotFoundException();
                             }
                             if (!isPageVisible(page.getParent())) {
                                 page.setParent(null);
@@ -151,38 +151,52 @@ public class PageService {
         searchService.delete(page);
     }
 
+    private boolean isCreatorValid(User creator, Page page) {
+        if (securityService
+                .getPrincipal()
+                .orElseThrow(UnauthorizedException::new)
+                .getId()
+                .equals(creator.getId())) {
+            return !securityService.isForbiddenPage(page);
+        }
+
+        return universityRepository.existsUniversityById_AndEnrolledUsers_Id(
+                page.getUniversity().getId(), creator.getId());
+    }
+
     @Secured("ROLE_USER")
+    @Transactional
     public PageDtoDetailed save(PageDtoFormCreate form) {
         if (form.getParentId() == null) {
-            throw new WrongDataStructureException();
+            throw new PageException(PageExceptionType.PARENT_NOT_FOUND);
         }
 
         Page parent =
                 pageRepository.findById(form.getParentId()).orElseThrow(PageNotFoundException::new);
-        if (parent.isHidden() && securityService.isForbiddenPage(parent)) {
+        if (securityService.isForbiddenPage(parent)) {
             throw new PageForbiddenException();
         }
 
         User creator =
                 userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
-        if (securityService.isForbiddenUser(creator)) {
-            throw new UserForbiddenException();
+
+        if (!isCreatorValid(creator, parent)) {
+            throw new PageException(PageExceptionType.CREATOR_NOT_VALID);
         }
 
         Page newPage = form.toPage(parent, creator);
-        if (securityService.isForbiddenPage(newPage)) {
-            throw new PageForbiddenException();
-        }
 
         return PageDtoDetailed.of(save(newPage));
     }
 
     @Secured("ROLE_USER")
+    @Transactional
     public void update(Long id, PageDtoFormUpdate form) {
         Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
+        // Parent == null ? University main page
         if (page.getParent() == null && !securityService.hasHigherRoleThan(Role.USER)) {
             throw new PageForbiddenException();
         }
@@ -192,9 +206,13 @@ public class PageService {
         page.setHidden(form.getHidden());
         page.setContent(Content.of(form.getContent()));
 
-        if (securityService.hasHigherRoleThan(Role.USER)) {
-            page.setCreator(
-                    userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new));
+        if (form.getCreatorId() != null && !page.getCreator().getId().equals(form.getCreatorId())) {
+            var creator =
+                    userRepository.findById(form.getCreatorId()).orElseThrow(UserNotFoundException::new);
+            if (!isCreatorValid(creator, page)) {
+                throw new PageException(PageExceptionType.CREATOR_NOT_VALID);
+            }
+            page.setCreator(creator);
         }
 
         Set<User> usersToAssign = new HashSet<>();

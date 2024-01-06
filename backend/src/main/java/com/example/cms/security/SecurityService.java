@@ -63,10 +63,8 @@ public class SecurityService {
                                 case ADMIN:
                                     return false;
                                 case MODERATOR:
-                                    return !hasUniversity(page.getUniversity().getId());
                                 case USER:
-                                    return (!page.getCreator().getId().equals(loggedUser.getId())
-                                            && !hasUniversity(page.getUniversity().getId()));
+                                    return !hasUniversity(page.getUniversity().getId());
                             }
                             return true;
                         })
@@ -99,6 +97,42 @@ public class SecurityService {
                             } else {
                                 return isForbiddenUser(user);
                             }
+                        })
+                .orElse(true);
+    }
+
+    public boolean isForbiddenUserToDelete(User user, boolean onlyDifferentUser) {
+        return getPrincipal()
+                .map(
+                        loggedUser -> {
+                            if (onlyDifferentUser && loggedUser.getId().equals(user.getId())) {
+                                return true;
+                            } else {
+                                return isForbiddenUserToDelete(user);
+                            }
+                        })
+                .orElse(true);
+    }
+
+    public boolean isForbiddenUserToDelete(User user) {
+        return getPrincipal()
+                .map(
+                        loggedUser -> {
+                            switch (loggedUser.getAccountType()) {
+                                case ADMIN:
+                                    return false;
+                                case MODERATOR:
+                                    return !loggedUser.getId().equals(user.getId())
+                                            && // moderator does not perform action with respect to him(her)self
+                                            (!hasHigherOrEqualRoleThan(user.getAccountType())
+                                                    || !hasUniversity(
+                                                            user.getEnrolledUniversities().stream()
+                                                                    .map(University::getId)
+                                                                    .collect(Collectors.toList())));
+                                case USER:
+                                    return !loggedUser.getId().equals(user.getId());
+                            }
+                            return true;
                         })
                 .orElse(true);
     }
@@ -181,6 +215,20 @@ public class SecurityService {
         return false;
     }
 
+    public boolean hasHigherOrEqualRoleThan(Role userRole, Role role) {
+        switch (role) {
+            case ADMIN:
+                return userRole.equals(Role.ADMIN);
+            case MODERATOR:
+                return userRole.equals(Role.ADMIN) || userRole.equals(Role.MODERATOR);
+            case USER:
+                return userRole.equals(Role.ADMIN)
+                        || userRole.equals(Role.MODERATOR)
+                        || userRole.equals(Role.USER);
+        }
+        return false;
+    }
+
     /**
      * Tells if the role of the currently logged user is higher that the given role.
      *
@@ -191,5 +239,10 @@ public class SecurityService {
     public boolean hasHigherRoleThan(Role role) {
         LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);
         return hasHigherRoleThan(loggedUser.getAccountType(), role);
+    }
+
+    public boolean hasHigherOrEqualRoleThan(Role role) {
+        LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);
+        return hasHigherOrEqualRoleThan(loggedUser.getAccountType(), role);
     }
 }

@@ -6,12 +6,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.cms.BaseAPIControllerTest;
 import com.example.cms.page.projections.PageDtoDetailed;
+import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ class PageControllerTest extends BaseAPIControllerTest {
     @Autowired private PageRepository pageRepository;
 
     private Long universityId = 99L;
+    private Long mainPageId = 99L;
     private Long pageId = 99L;
     private Long userId = 99L;
 
@@ -62,6 +65,26 @@ class PageControllerTest extends BaseAPIControllerTest {
         university = universityRepository.save(university);
         this.universityId = university.getId();
 
+        university.setEnrolledUsers(Set.of(user));
+        university = universityRepository.save(university);
+
+        var mainPage =
+                new Page(
+                        null,
+                        null,
+                        "TEST_MAIN_PAGE",
+                        "TEST_MAIN_PAGE",
+                        new Content(null, "TEST_CONTENT"),
+                        false,
+                        user,
+                        university,
+                        null,
+                        null,
+                        null,
+                        null);
+        mainPage = pageRepository.save(mainPage);
+        this.mainPageId = mainPage.getId();
+
         var page =
                 new Page(
                         null,
@@ -72,7 +95,7 @@ class PageControllerTest extends BaseAPIControllerTest {
                         false,
                         user,
                         university,
-                        null,
+                        mainPage,
                         null,
                         null,
                         null);
@@ -82,9 +105,11 @@ class PageControllerTest extends BaseAPIControllerTest {
 
     @AfterEach
     public void cleanup() {
-        if (pageRepository.existsById(this.pageId)) pageRepository.deleteById(this.pageId);
+        if (pageRepository.existsById(this.mainPageId)) pageRepository.deleteById(this.mainPageId);
+
         if (universityRepository.existsById(this.universityId))
             universityRepository.deleteById(this.universityId);
+
         if (userRepository.existsById(this.userId)) userRepository.deleteById(this.userId);
     }
 
@@ -93,55 +118,62 @@ class PageControllerTest extends BaseAPIControllerTest {
         @Nested
         class VisiblePageTestClass {
             @Test
-            void get_GuestUser_DetailsHidden() throws Exception {
+            void get_visiblePage_GuestUser_DetailsHidden() throws Exception {
                 performAsGuest();
 
-                var dto = getValue(performGet(pageId).andExpect(status().isOk()), PageDtoDetailed.class);
+                var dto =
+                        getValue(performGet(mainPageId).andExpect(status().isOk()), PageDtoDetailed.class);
 
                 assertThat(dto.getContactRequestHandlers(), is(nullValue()));
             }
 
             @Test
-            void get_AdminRole_DetailsVisible() throws Exception {
+            void get_visiblePage_Administrator_DetailsVisible() throws Exception {
                 performAs(Role.ADMIN);
 
-                var dto = getValue(performGet(pageId).andExpect(status().isOk()), PageDtoDetailed.class);
+                var dto =
+                        getValue(performGet(mainPageId).andExpect(status().isOk()), PageDtoDetailed.class);
 
                 assertThat(dto.getContactRequestHandlers(), is(notNullValue()));
             }
 
             @Test
-            void get_ModeratorRole_WithUniversityAccess_DetailsVisible() throws Exception {
+            void get_visiblePage_UniversityAdministrator_DetailsVisible() throws Exception {
                 performAs(Role.MODERATOR, Set.of(universityId));
 
-                var dto = getValue(performGet(pageId).andExpect(status().isOk()), PageDtoDetailed.class);
+                var dto =
+                        getValue(performGet(mainPageId).andExpect(status().isOk()), PageDtoDetailed.class);
 
                 assertThat(dto.getContactRequestHandlers(), is(notNullValue()));
             }
 
             @Test
-            void get_ModeratorRole_WithoutUniversityAccess_DetailsHidden() throws Exception {
+            void get_visiblePage_UniversityAdministratorOfNoneUniversity_DetailsHidden()
+                    throws Exception {
                 performAs(Role.MODERATOR, Set.of());
 
-                var dto = getValue(performGet(pageId).andExpect(status().isOk()), PageDtoDetailed.class);
+                var dto =
+                        getValue(performGet(mainPageId).andExpect(status().isOk()), PageDtoDetailed.class);
 
                 assertThat(dto.getContactRequestHandlers(), is(nullValue()));
             }
 
             @Test
-            void get_UserRole_WithUniversityAccessAndPageCreator_DetailsVisible() throws Exception {
+            void get_visiblePage_UniversityUserAndPageCreator_DetailsVisible() throws Exception {
                 performAs(Role.MODERATOR, Set.of(universityId), userId);
 
-                var dto = getValue(performGet(pageId).andExpect(status().isOk()), PageDtoDetailed.class);
+                var dto =
+                        getValue(performGet(mainPageId).andExpect(status().isOk()), PageDtoDetailed.class);
 
                 assertThat(dto.getContactRequestHandlers(), is(notNullValue()));
             }
 
             @Test
-            void get_UserRole_WithUniversityAccessAndNotPageCreator_DetailsVisible() throws Exception {
+            void get_visiblePage_UniversityUserNotPageCreator_DetailsVisible() throws Exception {
                 performAs(Role.USER, Set.of(universityId), userId + 1);
 
-                var dto = getValue(performGet(pageId).andExpect(status().isOk()), PageDtoDetailed.class);
+                var dto =
+                        getValue(performGet(mainPageId).andExpect(status().isOk()), PageDtoDetailed.class);
 
                 assertThat(dto.getContactRequestHandlers(), is(notNullValue()));
             }
@@ -151,174 +183,219 @@ class PageControllerTest extends BaseAPIControllerTest {
         class NotVisiblePageTestClass {
             @BeforeEach
             public void setup() {
-                var page = pageRepository.findById(pageId).get();
+                var page = pageRepository.findById(mainPageId).get();
                 page.setHidden(true);
                 pageRepository.save(page);
             }
 
             @Test
-            void get_GuestUser_Forbidden() throws Exception {
+            void get_hiddenPage_GuestUser_NotFound() throws Exception {
                 performAsGuest();
-                performGet(pageId).andExpect(status().isForbidden());
+                performGet(mainPageId).andExpect(status().isNotFound());
             }
 
             @Test
-            void get_AdminRole_Success() throws Exception {
+            void get_hiddenPage_Administrator_Success() throws Exception {
                 performAs(Role.ADMIN);
-                performGet(pageId).andExpect(status().isOk());
+                performGet(mainPageId).andExpect(status().isOk());
             }
 
             @Test
-            void get_ModeratorRole_WithUniversityAccess_Success() throws Exception {
+            void get_hiddenPage_UniversityAdministrator_Success() throws Exception {
                 performAs(Role.MODERATOR, Set.of(universityId));
-                performGet(pageId).andExpect(status().isOk());
+                performGet(mainPageId).andExpect(status().isOk());
             }
 
             @Test
-            void get_ModeratorRole_WithoutUniversityAccess_Forbidden() throws Exception {
+            void get_hiddenPage_UniversityAdministratorOfNoneUniversity_NotFound() throws Exception {
                 performAs(Role.MODERATOR);
-                performGet(pageId).andExpect(status().isForbidden());
+                performGet(mainPageId).andExpect(status().isNotFound());
             }
 
             @Test
-            void get_UserRole_WithUniversityAccessAndPageCreator_Success() throws Exception {
+            void get_hiddenPage_UniversityUserAndPageCreator_Success() throws Exception {
                 performAs(Role.USER, Set.of(universityId), userId);
-                performGet(pageId).andExpect(status().isOk());
+                performGet(mainPageId).andExpect(status().isOk());
             }
 
             @Test
-            void get_UserRole_WithUniversityAccessAndNotPageCreator_Success() throws Exception {
+            void get_hiddenPage_UniversityUserNotPageCreator_Success() throws Exception {
                 performAs(Role.USER, Set.of(universityId), userId + 1);
-                performGet(pageId).andExpect(status().isOk());
+                performGet(mainPageId).andExpect(status().isOk());
             }
         }
     }
 
     @Nested
-    class GetPagesTestClass {
+    class GetAllPagesWithFiltersTestClass {
         @Test
-        void getAll_GuestUser_Forbidden() throws Exception {
+        void get_VisibleOnly_UniversityUser_SuccessOnlyVisibleAndAssignedUniversity() throws Exception {
+            performAs(Role.USER, Set.of(universityId));
+
+            var items =
+                    getValue(
+                            performGet("?hidden_eq=false").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_VisibleOnly_UniversityAdministrator_SuccessOnlyVisibleAndAssignedUniversity()
+                throws Exception {
+            performAs(Role.MODERATOR, Set.of(universityId));
+
+            var items =
+                    getValue(
+                            performGet("?hidden_eq=false").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_VisibleOnly_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?hidden_eq=false").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+        }
+
+        @Test
+        void get_HiddenOnly_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?hidden_eq=true").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("hidden", is(true))));
+        }
+
+        @Test
+        void get_TitleContainsP_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?title_ct=P").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("title", containsStringIgnoringCase("P"))));
+        }
+
+        @Test
+        void get_TitleContainsPAndVisibleOnly_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?title_ct=P&hidden_eq=false").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
+            assertThat(items, everyItem(hasProperty("title", containsStringIgnoringCase("P"))));
+        }
+
+        @Test
+        void get_IdEquals1_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?id_eq=1").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("id", is(1L))));
+        }
+
+        @Test
+        void get_UniversityIdEquals1_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+
+            var items =
+                    getValue(
+                            performGet("?university_eq=1").andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items.size(), greaterThan(0));
+            assertThat(items, everyItem(hasProperty("university", hasProperty("id", is(1L)))));
+        }
+    }
+
+    @Nested
+    class GetAllPagesTestClass {
+        @Test
+        void get_allPages_UniversityUser_SuccessOnlyAssignedUniversity() throws Exception {
+            performAs(Role.USER, Set.of(universityId));
+
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
+        }
+
+        @Test
+        void get_allPages_UniversityUserOfNoneUniversity_SuccessEmptyList() throws Exception {
+            performAs(Role.USER);
+
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+
+            assertThat(items, is(empty()));
+        }
+
+        @Test
+        void get_allPages_Guest_Unauthorized() throws Exception {
             performAsGuest();
             performGet().andExpect(status().isUnauthorized());
         }
 
-        @Nested
-        class GetPagesAdminRoleTestClass {
-            @Test
-            void getAll_AdminRole_Success() throws Exception {
-                performAs(Role.ADMIN);
-                performGet().andExpect(status().isOk());
-            }
-
-            @Test
-            void getAll_AdminRole_FilterOnlyVisible_Success() throws Exception {
-                performAs(Role.ADMIN);
-
-                var items =
-                        getValue(
-                                performGet("?hidden_eq=false").andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
-
-                assertThat(items, everyItem(hasProperty("hidden", is(false))));
-            }
-
-            @Test
-            void getAll_AdminRole_FilterOnlyHidden_Success() throws Exception {
-                performAs(Role.ADMIN);
-
-                var items =
-                        getValue(
-                                performGet("?hidden_eq=true").andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
-
-                assertThat(items, everyItem(hasProperty("hidden", is(true))));
-            }
+        @Test
+        void get_allPages_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+            performGet().andExpect(status().isOk());
         }
 
-        @Nested
-        class GetPagesModeratorRoleTestClass {
-            @Test
-            void getAll_ModeratorRole_WithUniversityAccess_Success_OnlyForAssignedUniversity()
-                    throws Exception {
-                performAs(Role.MODERATOR, Set.of(universityId));
+        @Test
+        void get_allPages_UniversityAdministrator_SuccessOnlyAssignedUniversity() throws Exception {
+            performAs(Role.MODERATOR, Set.of(universityId));
 
-                var items =
-                        getValue(
-                                performGet().andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
 
-                assertThat(
-                        items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
-            }
-
-            @Test
-            void getAll_ModeratorRole_WithUniversityAccess_FilterOnlyVisible_Success() throws Exception {
-                performAs(Role.MODERATOR, Set.of(universityId));
-
-                var items =
-                        getValue(
-                                performGet("?hidden_eq=false").andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
-
-                assertThat(
-                        items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
-                assertThat(items, everyItem(hasProperty("hidden", is(false))));
-            }
-
-            @Test
-            void getAll_ModeratorRole_WithoutUniversityAccess_Success_EmptyList() throws Exception {
-                performAs(Role.MODERATOR);
-
-                var items =
-                        getValue(
-                                performGet().andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
-
-                assertThat(items, is(empty()));
-            }
+            assertThat(items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
         }
 
-        @Nested
-        class GetPagesUserRoleTestClass {
-            @Test
-            void getAll_UserRole_WithUniversityAccess_Success_OnlyForAssignedUniversity()
-                    throws Exception {
-                performAs(Role.USER, Set.of(universityId));
+        @Test
+        void get_allPages_UniversityAdministratorOfNoneUniversity_SuccessEmptyList() throws Exception {
+            performAs(Role.MODERATOR);
 
-                var items =
-                        getValue(
-                                performGet().andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
 
-                assertThat(
-                        items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
-            }
-
-            @Test
-            void getAll_UserRole_WithUniversityAccess_FilterOnlyVisible_Success() throws Exception {
-                performAs(Role.USER, Set.of(universityId));
-
-                var items =
-                        getValue(
-                                performGet("?hidden_eq=false").andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
-
-                assertThat(
-                        items, everyItem(hasProperty("university", hasProperty("id", is(universityId)))));
-                assertThat(items, everyItem(hasProperty("hidden", is(false))));
-            }
-
-            @Test
-            void getAll_UserRole_WithoutUniversityAccess_Success_EmptyList() throws Exception {
-                performAs(Role.USER);
-
-                var items =
-                        getValue(
-                                performGet().andExpect(status().isOk()),
-                                new TypeReference<List<PageDtoDetailed>>() {});
-
-                assertThat(items, is(empty()));
-            }
+            assertThat(items, is(empty()));
         }
     }
 
@@ -328,7 +405,7 @@ class PageControllerTest extends BaseAPIControllerTest {
         @Nested
         class UpdateUniversityMainPageTestClass {
             public PageDtoFormUpdate getUpdateForm() {
-                var page = pageRepository.findById(pageId).get();
+                var page = pageRepository.findById(mainPageId).get();
 
                 return new PageDtoFormUpdate(
                         page.getTitle(),
@@ -342,20 +419,174 @@ class PageControllerTest extends BaseAPIControllerTest {
             @Test
             public void update_UniversityUser_Forbidden() throws Exception {
                 performAs(Role.USER, Set.of(universityId));
-                performPut(pageId, getUpdateForm()).andExpect(status().isForbidden());
+                performPut(mainPageId, getUpdateForm()).andExpect(status().isForbidden());
             }
 
             @Test
             public void update_UniversityAdministrator_Success() throws Exception {
                 performAs(Role.MODERATOR, Set.of(universityId));
-                performPut(pageId, getUpdateForm()).andExpect(status().isNoContent());
+                performPut(mainPageId, getUpdateForm()).andExpect(status().isNoContent());
             }
 
             @Test
             public void update_Administrator_Success() throws Exception {
                 performAs(Role.ADMIN);
-                performPut(pageId, getUpdateForm()).andExpect(status().isNoContent());
+                performPut(mainPageId, getUpdateForm()).andExpect(status().isNoContent());
             }
+        }
+
+        @Nested
+        class UpdateNotUniversityMainPageTestClass {
+            public PageDtoFormUpdate getUpdateForm() {
+                var page = pageRepository.findById(pageId).get();
+
+                return new PageDtoFormUpdate(
+                        page.getTitle(),
+                        page.getDescription(),
+                        "TEST_UPDATED_CONTENT",
+                        page.isHidden(),
+                        page.getHandlers().stream().map(User::getId).collect(Collectors.toSet()),
+                        page.getCreator().getId());
+            }
+
+            @Test
+            public void update_UniversityUser_Success() throws Exception {
+                performAs(Role.USER, Set.of(universityId));
+                performPut(pageId, getUpdateForm()).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            public void update_UniversityAdministrator_Success() throws Exception {
+                performAs(Role.MODERATOR, Set.of(universityId));
+                performPut(pageId, getUpdateForm()).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            public void update_Administrator_Success() throws Exception {
+                performAs(Role.ADMIN);
+                performPut(pageId, getUpdateForm()).andExpect(status().is2xxSuccessful());
+            }
+        }
+
+        @Nested
+        class UpdatePageCreatorTestClass {
+            public PageDtoFormUpdate getUpdateForm(Long creatorId) {
+                var page = pageRepository.findById(pageId).get();
+
+                return new PageDtoFormUpdate(
+                        page.getTitle(),
+                        page.getDescription(),
+                        "TEST_CONTENT",
+                        page.isHidden(),
+                        page.getHandlers().stream().map(User::getId).collect(Collectors.toSet()),
+                        creatorId);
+            }
+
+            @Test
+            public void update_CreatorInTheSameUniversityAsPage_Success() throws Exception {
+                performAs(Role.ADMIN);
+                performPut(pageId, getUpdateForm(userId)).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            public void update_CreatorNotInTheSameUniversityAsPage_BadRequest() throws Exception {
+                performAs(Role.ADMIN);
+                performPut(pageId, getUpdateForm(1L)).andExpect(status().isBadRequest());
+            }
+        }
+    }
+
+    @Nested
+    class CreatePageTestClass {
+        private PageDtoFormCreate dto;
+
+        @BeforeEach
+        public void setup() {
+            dto =
+                    new PageDtoFormCreate(
+                            "TEST_PAGE" + Instant.now().toEpochMilli(),
+                            "TEST_PAGE_DESCRIPTION",
+                            "TEST_PAGE_CONTENT",
+                            userId,
+                            mainPageId,
+                            false);
+        }
+
+        @Test
+        void create_GuestUser_Unauthorized() throws Exception {
+            performAsGuest();
+            performPost(dto).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void create_UniversityUserOfNoneUniversity_Forbidden() throws Exception {
+            performAs(Role.USER);
+            performPost(dto).andExpect(status().isForbidden());
+        }
+
+        @Test
+        void create_UniversityUser_Success() throws Exception {
+            performAs(Role.USER, Set.of(universityId));
+            performPost(dto).andExpect(status().is2xxSuccessful());
+        }
+
+        @Test
+        void create_UniversityAdministratorOfNoneUniversity_Forbidden() throws Exception {
+            performAs(Role.MODERATOR);
+            performPost(dto).andExpect(status().isForbidden());
+        }
+
+        @Test
+        void create_UniversityAdministrator_Success() throws Exception {
+            performAs(Role.MODERATOR, Set.of(universityId));
+            performPost(dto).andExpect(status().is2xxSuccessful());
+        }
+
+        @Test
+        void create_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+            performPost(dto).andExpect(status().is2xxSuccessful());
+        }
+
+        @Test
+        void create_WithNoParent_BadRequest() throws Exception {
+            performAs(Role.ADMIN);
+            var dtoNoParent =
+                    new PageDtoFormCreate(
+                            dto.getTitle(),
+                            dto.getDescription(),
+                            dto.getContent(),
+                            dto.getCreatorId(),
+                            null,
+                            dto.getHidden());
+            performPost(dtoNoParent).andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    class DeletePageTestClass {
+        @Test
+        void delete_GuestUser_Unauthorized() throws Exception {
+            performAsGuest();
+            performDelete(pageId).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void delete_UniversityUser_Success() throws Exception {
+            performAs(Role.USER, Set.of(universityId));
+            performDelete(pageId).andExpect(status().is2xxSuccessful());
+        }
+
+        @Test
+        void delete_UniversityAdministrator_Success() throws Exception {
+            performAs(Role.MODERATOR, Set.of(universityId));
+            performDelete(pageId).andExpect(status().is2xxSuccessful());
+        }
+
+        @Test
+        void delete_Administrator_Success() throws Exception {
+            performAs(Role.ADMIN);
+            performDelete(pageId).andExpect(status().is2xxSuccessful());
         }
     }
 }

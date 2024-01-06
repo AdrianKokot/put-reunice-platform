@@ -9,7 +9,6 @@ import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
-import com.example.cms.template.Template;
 import com.example.cms.template.TemplateRepository;
 import com.example.cms.university.exceptions.UniversityException;
 import com.example.cms.university.exceptions.UniversityExceptionType;
@@ -110,11 +109,7 @@ public class UniversityService {
             throw new UserForbiddenException();
         }
 
-        String content =
-                templateRepository
-                        .findByName("UniversityTemplate")
-                        .map(Template::getContent)
-                        .orElse("Default university page content");
+        String content = "";
 
         University newUniversity = form.toUniversity(creator, content);
         if (securityService.isForbiddenUniversity(newUniversity)) {

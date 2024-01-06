@@ -1,0 +1,49 @@
+{
+  "properties": [
+    {
+      "name": "app.url",
+      "type": "java.lang.String",
+      "description": "URL of the application. Used for generating links and CORS."
+    },
+    {
+      "name": "app.database.schema.handling-on-startup",
+      "type": "com.example.cms.configuration.DatabaseSchemaHandlingOnStartup",
+      "description": "How to handle database schema on application startup."
+    },
+    {
+      "name": "app.database.schema.create-type",
+      "type": "com.example.cms.configuration.DatabaseSchemaCreateType",
+      "description": "How to handle database schema creation when app.database.schema.handling-on-startup=create."
+    },
+    {
+      "name": "app.typesense.key",
+      "type": "java.lang.String",
+      "description": "API Key for typesense server."
+    },
+    {
+      "name": "app.typesense.host",
+      "type": "java.lang.String",
+      "description": "Typesense server host."
+    },
+    {
+      "name": "app.path.uploads",
+      "type": "java.lang.String",
+      "description": "Path for uploaded graphics."
+    },
+    {
+      "name": "app.path.backups",
+      "type": "java.lang.String",
+      "description": "Path for backups."
+    },
+    {
+      "name": "app.typesense.cache.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Determine whether to use cache for typesense."
+    },
+    {
+      "name": "app.typesense.cache.ttl",
+      "type": "java.lang.Integer",
+      "description": "Determine Typesense cache TTL when app.typesense.cache.enabled=true."
+    }
+  ]
+}
