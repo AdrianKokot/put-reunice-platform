@@ -23,7 +23,7 @@
             [tuiTextfieldLabelOutside]="true"
             [readOnly]="readOnly"
           >
-            <input tuiTextfield type="text" />
+            <input tuiTextfield type="text" name="firstName" />
           </tui-input>
 
           <tui-error
@@ -42,7 +42,7 @@
             [tuiTextfieldLabelOutside]="true"
             [readOnly]="readOnly"
           >
-            <input tuiTextfield type="text" />
+            <input tuiTextfield type="text" name="lastName" />
           </tui-input>
 
           <tui-error
@@ -60,7 +60,7 @@
             [tuiTextfieldLabelOutside]="true"
             [readOnly]="readOnly"
           >
-            <input tuiTextfield type="email" />
+            <input tuiTextfield type="email" name="email" />
           </tui-input>
 
           <tui-error
@@ -79,7 +79,7 @@
             [tuiTextfieldLabelOutside]="true"
             [readOnly]="readOnly"
           >
-            <input tuiTextfield type="tel" />
+            <input tuiTextfield type="tel" name="phoneNumber" />
           </tui-input>
 
           <tui-error
@@ -100,7 +100,7 @@
           [tuiTextfieldLabelOutside]="true"
           [readOnly]="readOnly"
         >
-          <input tuiTextfield type="text" />
+          <input tuiTextfield type="text" name="username" />
         </tui-input>
 
         <tui-error
@@ -122,12 +122,13 @@
                 ? ('CANNOT_DEACTIVATE_OWN_ACCOUNT' | translate)
                 : undefined
             "
+            data-test="state-select"
           >
-            <tui-data-list *tuiDataList>
-              <button tuiOption [value]="true">
+            <tui-data-list *tuiDataList data-test="state-select-options">
+              <button tuiOption [value]="true" data-test="state-enabled">
                 {{ 'ACTIVE' | translate }}
               </button>
-              <button tuiOption [value]="false">
+              <button tuiOption [value]="false" data-test="state-disabled">
                 {{ 'DEACTIVATED' | translate }}
               </button>
             </tui-data-list>
@@ -150,19 +151,29 @@
             [valueContent]="accountTypeValueContent"
             [tuiTextfieldLabelOutside]="true"
             [readOnly]="readOnly"
+            data-test="role-select"
           >
-            <tui-data-list *tuiDataList>
+            <tui-data-list *tuiDataList data-test="role-select-options">
               <button
                 tuiOption
                 [value]="accountType.ADMIN"
                 *reuniceUser="accountType.ADMIN"
+                data-test="role-admin"
               >
                 {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
               </button>
-              <button tuiOption [value]="accountType.MODERATOR">
+              <button
+                tuiOption
+                [value]="accountType.MODERATOR"
+                data-test="role-moderator"
+              >
                 {{ 'ACCOUNT_TYPE_' + accountType.MODERATOR | translate }}
               </button>
-              <button tuiOption [value]="accountType.USER">
+              <button
+                tuiOption
+                [value]="accountType.USER"
+                data-test="role-user"
+              >
                 {{ 'ACCOUNT_TYPE_' + accountType.USER | translate }}
               </button>
             </tui-data-list>
@@ -195,8 +206,10 @@
           (searchChange)="universitySearch.search($event)"
           [stringify]="(universitySearch.stringify$ | async)!"
           [readOnly]="readOnly"
+          data-test="university-select"
         >
           <tui-data-list-wrapper
+            data-test="university-select-options"
             *tuiDataList
             [items]="items"
             [itemContent]="(universitySearch.stringify$ | async)!"
@@ -223,7 +236,12 @@
           [tuiTextfieldLabelOutside]="true"
           [readOnly]="readOnly"
         >
-          <input tuiTextfield type="password" autocomplete="new-password" />
+          <input
+            tuiTextfield
+            type="password"
+            autocomplete="new-password"
+            name="password"
+          />
         </tui-input-password>
         <div class="tui-form__field-note">
           {{ 'FILL_ONLY_IN_ORDER_TO_CHANGE_PASSWORD' | translate }}

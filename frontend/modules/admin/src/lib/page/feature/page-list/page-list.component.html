@@ -8,7 +8,7 @@
       [tuiTextfieldCleaner]="true"
     >
       {{ 'SEARCH' | translate }}
-      <input tuiTextfield type="text" />
+      <input tuiTextfield type="text" name="search" />
     </tui-input>
   </label>
 
@@ -21,7 +21,13 @@
     *ngIf="((filtersForm | notEmptyValues | async) ?? 0) > 0"
   ></button>
 
-  <a [routerLink]="['new']" appearance="primary" tuiButton type="button">
+  <a
+    [routerLink]="['new']"
+    appearance="primary"
+    tuiButton
+    type="button"
+    data-test="new-button"
+  >
     {{ 'NEW_PAGE' | translate }}
   </a>
 </div>
@@ -144,6 +150,7 @@
             [icon]="'tuiIconInfo'"
             shape="rounded"
             [tuiHint]="'SEE_DETAILS' | translate"
+            data-test="details-button"
           >
           </a>
 
@@ -155,6 +162,7 @@
             [icon]="'tuiIconEdit'"
             shape="rounded"
             [tuiHint]="'EDIT' | translate"
+            data-test="edit-button"
           >
           </a>
         </td>

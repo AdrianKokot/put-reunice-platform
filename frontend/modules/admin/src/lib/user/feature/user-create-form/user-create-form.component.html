@@ -10,7 +10,7 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="text" />
+        <input tuiTextfield type="text" name="firstName" />
       </tui-input>
 
       <tui-error
@@ -25,7 +25,7 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="text" />
+        <input tuiTextfield type="text" name="lastName" />
       </tui-input>
 
       <tui-error
@@ -42,7 +42,7 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="email" />
+        <input tuiTextfield type="email" name="email" />
       </tui-input>
 
       <tui-error
@@ -60,7 +60,7 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="tel" />
+        <input tuiTextfield type="tel" name="phoneNumber" />
       </tui-input>
 
       <tui-error
@@ -81,7 +81,12 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="text" autocomplete="new-password" />
+        <input
+          tuiTextfield
+          type="text"
+          name="username"
+          autocomplete="new-password"
+        />
       </tui-input>
 
       <tui-error
@@ -99,7 +104,12 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="password" autocomplete="new-password" />
+        <input
+          tuiTextfield
+          type="password"
+          name="password"
+          autocomplete="new-password"
+        />
       </tui-input-password>
 
       <tui-error
@@ -141,21 +151,27 @@
       <tui-select
         formControlName="accountType"
         tuiTextfieldSize="m"
+        data-test="role-select"
         [valueContent]="accountTypeValueContent"
         [tuiTextfieldLabelOutside]="true"
       >
-        <tui-data-list *tuiDataList>
+        <tui-data-list *tuiDataList data-test="role-select-options">
           <button
             tuiOption
             [value]="accountType.ADMIN"
             *reuniceUser="accountType.ADMIN"
+            data-test="role-admin"
           >
             {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
           </button>
-          <button tuiOption [value]="accountType.MODERATOR">
+          <button
+            tuiOption
+            [value]="accountType.MODERATOR"
+            data-test="role-moderator"
+          >
             {{ 'ACCOUNT_TYPE_' + accountType.MODERATOR | translate }}
           </button>
-          <button tuiOption [value]="accountType.USER">
+          <button tuiOption [value]="accountType.USER" data-test="role-user">
             {{ 'ACCOUNT_TYPE_' + accountType.USER | translate }}
           </button>
         </tui-data-list>
@@ -188,8 +204,10 @@
         [tuiTextfieldLabelOutside]="true"
         (searchChange)="universitySearch.search($event)"
         [stringify]="(universitySearch.stringify$ | async)!"
+        data-test="university-select"
       >
         <tui-data-list-wrapper
+          data-test="university-select-options"
           *tuiDataList
           [items]="items"
           [itemContent]="(universitySearch.stringify$ | async)!"

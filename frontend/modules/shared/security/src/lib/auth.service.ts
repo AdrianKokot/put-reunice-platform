@@ -10,7 +10,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { User } from '@reunice/modules/shared/data-access';
+import { LoggedUser, User } from '@reunice/modules/shared/data-access';
 import { throwError } from '@reunice/modules/shared/util';
 
 @Injectable({
@@ -21,9 +21,12 @@ export class AuthService {
   private readonly _http = inject(HttpClient);
   private readonly _user$ = new Subject<User | null>();
 
-  private _userSnapshot: User | null = null;
+  private _userSnapshot: LoggedUser | null = null;
   readonly user$ = merge(this._user$, this.getUser()).pipe(
-    tap((user) => (this._userSnapshot = user)),
+    tap(
+      (user) =>
+        (this._userSnapshot = user === null ? null : new LoggedUser(user)),
+    ),
     shareReplay(1),
   );
 
