@@ -158,6 +158,7 @@
       >
         {{ 'VIEW_PAGE' | translate }}
       </a>
+
       <button
         *reuniceUserControlsResource="item"
         tuiButton
@@ -179,6 +180,17 @@
       >
         {{ 'DELETE' | translate }}
       </button>
+
+      <a
+        [routerLink]="['..', 'new']"
+        [queryParams]="{ universityId: item.university.id, parentId: item.id }"
+        tuiButton
+        type="button"
+        appearance="secondary"
+        class="tui-form__button"
+      >
+        {{ 'ADD_SUBPAGE' | translate }}
+      </a>
 
       <a
         [routerLink]="cantEdit ? null : ['edit']"
