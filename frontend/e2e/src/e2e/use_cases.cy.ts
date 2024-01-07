@@ -1,9 +1,17 @@
-import { uca10, uca11, uca5, uca_7_8_9 } from './use-cases/main-administrator';
+import {
+  deleteUser,
+  uca10,
+  uca11,
+  uca12,
+  uca5,
+  uca_7_8_9,
+} from './use-cases/main-administrator';
 import { E2EUser, login, loginWith, UserPage } from '../support';
 import {
   ucua1,
   ucua2,
-  ucua3, ucua4,
+  ucua3,
+  ucua4,
   ucua5,
   ucua6,
   ucua7,
@@ -20,9 +28,8 @@ import {
 } from './use-cases/university-user';
 import { ucan2, ucan3 } from './use-cases/anonymous-user';
 
-const testTimestamp = '123123123123';//Date.now().toString();
+const testTimestamp = Date.now().toString();
 describe('Use Cases', () => {
-if (false) {
   uc1();
 
   describe('1. Main Administrator', () => {
@@ -39,8 +46,8 @@ if (false) {
   describe('2. University Administrator', () => {
     beforeEach(() => {
       loginWith(
-          `moderator${testTimestamp}`,
-          UserPage.defaultFormValue.password,
+        `moderator${testTimestamp}`,
+        UserPage.defaultFormValue.password,
       );
     });
 
@@ -55,8 +62,8 @@ if (false) {
   describe('3. University User', () => {
     beforeEach(() => {
       loginWith(
-          `edited_ua_user${testTimestamp}`,
-          UserPage.defaultFormValue.password,
+        `edited_ua_user${testTimestamp}`,
+        UserPage.defaultFormValue.password,
       );
     });
 
@@ -77,15 +84,33 @@ if (false) {
     ucan2();
     ucan3(testTimestamp);
   });
-}
-  describe('5. University Administrator', () => {
+
+  describe('5. Contact request handler', () => {
     beforeEach(() => {
       loginWith(
-          `moderator${testTimestamp}`,
-          UserPage.defaultFormValue.password,
+        `edited_ua_user${testTimestamp}`,
+        UserPage.defaultFormValue.password,
+      );
+    });
+  });
+
+  describe('6. University Administrator', () => {
+    beforeEach(() => {
+      loginWith(
+        `moderator${testTimestamp}`,
+        UserPage.defaultFormValue.password,
       );
     });
 
     ucua4(testTimestamp);
+  });
+
+  describe('7. Main Administrator', () => {
+    beforeEach(() => {
+      login(E2EUser.MAIN_ADMIN);
+    });
+
+    deleteUser(testTimestamp);
+    uca12(testTimestamp);
   });
 });

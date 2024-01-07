@@ -19,7 +19,11 @@ export const uca12 = (testTimestamp: string) => {
   it('UC-A12. Delete university', () => {
     goToTile(TILES.Universities);
     Resource.search(testTimestamp);
-    Resource.details();
+    Resource.edit();
+
+    UniversityPage.setVisibility('hidden');
+    Form.submit();
+    Dialog.confirm();
 
     cy.intercept('DELETE', '/api/universities/*').as('deleteUniversity');
     Resource.delete();
@@ -166,6 +170,33 @@ export const uca5 = (testTimestamp: string) => {
   });
 };
 
+const setUserState = (
+  state: 'enabled' | 'disabled',
+  testTimestamp: string,
+  username = 'user',
+) => {
+  goToTile(TILES.Users);
+  cy.intercept('GET', '/api/users/*').as('getUser');
+  cy.intercept('PUT', '/api/users/*').as('editUser');
+
+  Resource.search(`${username}${testTimestamp}`);
+  Resource.edit();
+
+  waitForResponse('@getUser', 200);
+
+  UserPage.setState(state);
+
+  Form.submit();
+  Dialog.confirm();
+  waitForResponse('@editUser', 200);
+  cy.url().should('match', /users\/\d+/);
+
+  cy.get('label .t-content').should(
+    'contain.text',
+    state[0].toUpperCase() + state.slice(1),
+  );
+};
+
 export const uca_7_8_9 = (testTimestamp: string) => {
   describe('UC-A7, UC-A8, UC-A9. Edit user', () => {
     it('UC-A7. Edit user', () => {
@@ -195,31 +226,8 @@ export const uca_7_8_9 = (testTimestamp: string) => {
     });
 
     describe('UC-A8, UC-A9. Change user state', () => {
-      const setUserState = (state: 'enabled' | 'disabled') => {
-        goToTile(TILES.Users);
-        cy.intercept('GET', '/api/users/*').as('getUser');
-        cy.intercept('PUT', '/api/users/*').as('editUser');
-
-        Resource.search(`user${testTimestamp}`);
-        Resource.edit();
-
-        waitForResponse('@getUser', 200);
-
-        UserPage.setState(state);
-
-        Form.submit();
-        Dialog.confirm();
-        waitForResponse('@editUser', 200);
-        cy.url().should('match', /users\/\d+/);
-
-        cy.get('label .t-content').should(
-          'contain.text',
-          state[0].toUpperCase() + state.slice(1),
-        );
-      };
-
       it('UC-A8. Disable user', () => {
-        setUserState('disabled');
+        setUserState('disabled', testTimestamp);
       });
 
       it('Disabled user should not be able to login', () => {
@@ -238,11 +246,11 @@ export const uca_7_8_9 = (testTimestamp: string) => {
       });
 
       it('UC-A9. Enable user', () => {
-        setUserState('enabled');
+        setUserState('enabled', testTimestamp);
       });
 
       it('Delete user', () => {
-        setUserState('disabled');
+        setUserState('disabled', testTimestamp);
         cy.intercept('DELETE', '/api/users/*').as('deleteUser');
 
         Resource.delete();
@@ -252,5 +260,19 @@ export const uca_7_8_9 = (testTimestamp: string) => {
         cy.url().should('match', /\/admin\/users$/);
       });
     });
+  });
+};
+
+export const deleteUser = (testTimestamp: string) => {
+  it('Delete user', () => {
+    setUserState('disabled', testTimestamp, 'moderator');
+
+    cy.intercept('DELETE', '/api/users/*').as('deleteUser');
+    Resource.delete();
+    Dialog.confirm();
+
+    waitForResponse('@deleteUser', 204);
+
+    cy.url().should('match', /users$/);
   });
 };
