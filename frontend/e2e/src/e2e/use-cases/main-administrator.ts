@@ -19,13 +19,23 @@ export const uca12 = (testTimestamp: string) => {
   it('UC-A12. Delete university', () => {
     goToTile(TILES.Universities);
     Resource.search(testTimestamp);
+
+    cy.intercept('GET', '/api/universities/*').as('getUniversity');
+    cy.intercept('PUT', '/api/universities/*').as('editUniversity');
+    cy.intercept('DELETE', '/api/universities/*').as('deleteUniversity');
+
     Resource.edit();
+
+    waitForResponse('@getUniversity', 200);
 
     UniversityPage.setVisibility('hidden');
     Form.submit();
     Dialog.confirm();
 
-    cy.intercept('DELETE', '/api/universities/*').as('deleteUniversity');
+    waitForResponse('@editUniversity', 200);
+
+    waitForResponse('@getUniversity2', 200);
+
     Resource.delete();
 
     waitForResponse('@deleteUniversity', 204);
