@@ -44,6 +44,9 @@ export const UserPage = {
     responsibility() {
       cy.get('[data-test="responsibility-tab"]').click();
     },
+    pages() {
+        cy.get('[data-test="pages-tab"]').click();
+    }
   },
   fillForm: (user: Partial<UserForm>) => {
     const form: UserForm = {

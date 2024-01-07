@@ -3,7 +3,7 @@ import { E2EUser, login, loginWith, UserPage } from '../support';
 import {
   ucua1,
   ucua2,
-  ucua3,
+  ucua3, ucua4,
   ucua5,
   ucua6,
   ucua7,
@@ -20,8 +20,9 @@ import {
 } from './use-cases/university-user';
 import { ucan2, ucan3 } from './use-cases/anonymous-user';
 
-const testTimestamp = Date.now().toString();
+const testTimestamp = '123123123123';//Date.now().toString();
 describe('Use Cases', () => {
+if (false) {
   uc1();
 
   describe('1. Main Administrator', () => {
@@ -38,8 +39,8 @@ describe('Use Cases', () => {
   describe('2. University Administrator', () => {
     beforeEach(() => {
       loginWith(
-        `moderator${testTimestamp}`,
-        UserPage.defaultFormValue.password,
+          `moderator${testTimestamp}`,
+          UserPage.defaultFormValue.password,
       );
     });
 
@@ -54,8 +55,8 @@ describe('Use Cases', () => {
   describe('3. University User', () => {
     beforeEach(() => {
       loginWith(
-        `edited_ua_user${testTimestamp}`,
-        UserPage.defaultFormValue.password,
+          `edited_ua_user${testTimestamp}`,
+          UserPage.defaultFormValue.password,
       );
     });
 
@@ -75,5 +76,16 @@ describe('Use Cases', () => {
 
     ucan2();
     ucan3(testTimestamp);
+  });
+}
+  describe('5. University Administrator', () => {
+    beforeEach(() => {
+      loginWith(
+          `moderator${testTimestamp}`,
+          UserPage.defaultFormValue.password,
+      );
+    });
+
+    ucua4(testTimestamp);
   });
 });

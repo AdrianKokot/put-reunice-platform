@@ -177,6 +177,7 @@
           ) | translate
         "
         (confirm)="deleteHandler.delete(item.id)"
+        data-test="delete-button"
       >
         {{ 'DELETE' | translate }}
       </button>
@@ -205,6 +206,7 @@
         [tuiHint]="
           (cantEdit ? 'CANNOT_EDIT_UNIVERSITY_LANDING_PAGE' : '') | translate
         "
+        data-test="edit-button"
       >
         {{ 'EDIT' | translate }}
       </a>
