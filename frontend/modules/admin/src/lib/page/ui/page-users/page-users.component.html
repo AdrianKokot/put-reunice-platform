@@ -23,7 +23,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'NAME' | translate }}
+          {{ 'USER_NAME' | translate }}
         </th>
         <th
           *tuiHead="'email'"
@@ -60,12 +60,7 @@
         <td *tuiCell="'firstName'" tuiTd>
           {{ item.firstName }} {{ item.lastName }}
         </td>
-        <td
-          *tuiCell="'email'"
-          tuiTd
-          class="text-ellipsis column-md"
-          [title]="item.email"
-        >
+        <td *tuiCell="'email'" tuiTd [title]="item.email">
           {{ item.email }}
         </td>
 

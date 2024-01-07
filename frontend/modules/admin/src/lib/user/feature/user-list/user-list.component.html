@@ -57,7 +57,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'NAME' | translate }}
+          {{ 'USER_NAME' | translate }}
         </th>
         <th
           *tuiHead="'email'"
@@ -101,14 +101,14 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'ENABLED' | translate }}
+          {{ 'USER_STATE' | translate }}
           <reunice-table-filter formControlName="enabled_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="true">
-                {{ 'ACTIVE' | translate }}
+                {{ 'USER_STATE_ACTIVE' | translate }}
               </button>
               <button tuiOption [value]="false">
-                {{ 'DEACTIVATED' | translate }}
+                {{ 'USER_STATE_DEACTIVATED' | translate }}
               </button>
             </tui-data-list>
           </reunice-table-filter>
@@ -139,19 +139,17 @@
         <td *tuiCell="'firstName'" tuiTd>
           {{ item.firstName }} {{ item.lastName }}
         </td>
-        <td
-          *tuiCell="'email'"
-          tuiTd
-          class="text-ellipsis column-md"
-          [title]="item.email"
-        >
+        <td *tuiCell="'email'" tuiTd [title]="item.email">
           {{ item.email }}
         </td>
         <td *tuiCell="'accountType'" tuiTd>
           {{ 'ACCOUNT_TYPE_' + item.accountType | translate }}
         </td>
         <td *tuiCell="'enabled'" tuiTd>
-          {{ item.enabled }}
+          {{
+            (item.enabled ? 'USER_STATE_ACTIVE' : 'USER_STATE_DEACTIVATED')
+              | translate
+          }}
         </td>
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
           <a

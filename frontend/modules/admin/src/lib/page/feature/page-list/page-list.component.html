@@ -92,15 +92,15 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'HIDDEN' | translate }}
+          {{ 'PAGE_VISIBILITY' | translate }}
 
           <reunice-table-filter formControlName="hidden_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="false">
-                {{ 'VISIBLE' | translate }}
+                {{ 'PAGE_VISIBLE' | translate }}
               </button>
               <button tuiOption [value]="true">
-                {{ 'HIDDEN' | translate }}
+                {{ 'PAGE_HIDDEN' | translate }}
               </button>
             </tui-data-list>
           </reunice-table-filter>
@@ -138,7 +138,7 @@
           {{ item.creator.firstName }} {{ item.creator.lastName }}
         </td>
         <td *tuiCell="'hidden'" tuiTd>
-          {{ (item.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+          {{ (item.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
         </td>
 
         <td class="column-actions" *tuiCell="'actions'" tuiTd>

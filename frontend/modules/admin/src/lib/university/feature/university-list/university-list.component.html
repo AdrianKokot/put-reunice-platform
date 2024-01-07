@@ -66,15 +66,15 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'VISIBILITY' | translate }}
+          {{ 'UNIVERSITY_VISIBILITY' | translate }}
 
           <reunice-table-filter formControlName="hidden_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="false">
-                {{ 'VISIBLE' | translate }}
+                {{ 'UNIVERSITY_VISIBLE' | translate }}
               </button>
               <button tuiOption [value]="true">
-                {{ 'HIDDEN' | translate }}
+                {{ 'UNIVERSITY_HIDDEN' | translate }}
               </button>
             </tui-data-list>
           </reunice-table-filter>
@@ -106,7 +106,10 @@
           {{ item.shortName }}
         </td>
         <td *tuiCell="'hidden'" tuiTd>
-          {{ (item.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+          {{
+            (item.hidden ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE')
+              | translate
+          }}
         </td>
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
           <a

@@ -97,7 +97,10 @@
       ></tui-error>
     </label>
 
-    <label [tuiLabel]="'VISIBILITY' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'PAGE_VISIBILITY' | translate"
+      class="tui-form__multi-field"
+    >
       <tui-select
         formControlName="hidden"
         tuiTextfieldSize="m"
@@ -107,16 +110,16 @@
       >
         <tui-data-list *tuiDataList data-test="visibility-select-options">
           <button tuiOption [value]="false" data-test="visibility-visible">
-            {{ 'VISIBLE' | translate }}
+            {{ 'PAGE_VISIBLE' | translate }}
           </button>
           <button tuiOption [value]="true" data-test="visibility-hidden">
-            {{ 'HIDDEN' | translate }}
+            {{ 'PAGE_HIDDEN' | translate }}
           </button>
         </tui-data-list>
       </tui-select>
 
       <ng-template #valueContent let-item>
-        {{ (item ? 'HIDDEN' : 'VISIBLE') | translate }}
+        {{ (item ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
       </ng-template>
 
       <tui-error
