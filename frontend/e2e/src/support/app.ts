@@ -43,8 +43,11 @@ export enum E2EUser {
 export const loginWith = (username: string, password: string) => {
   cy.clearAllCookies();
   LoginPage.visit();
+  const testAlias = `login${Date.now()}`;
+  cy.intercept('POST', '/api/login').as(testAlias);
   LoginPage.fillForm(username, password);
   cy.get(LoginPage.loginButton).click();
+  waitForResponse(`@${testAlias}`, 200);
   cy.url().should('contain', '/universities');
 };
 
