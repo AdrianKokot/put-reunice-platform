@@ -254,7 +254,6 @@ export const uca_7_8_9 = (testTimestamp: string) => {
         cy.intercept('DELETE', '/api/users/*').as('deleteUser');
 
         Resource.delete();
-        Dialog.confirm();
         waitForResponse('@deleteUser', 204);
 
         cy.url().should('match', /\/admin\/users$/);
@@ -269,7 +268,6 @@ export const deleteUser = (testTimestamp: string) => {
 
     cy.intercept('DELETE', '/api/users/*').as('deleteUser');
     Resource.delete();
-    Dialog.confirm();
 
     waitForResponse('@deleteUser', 204);
 

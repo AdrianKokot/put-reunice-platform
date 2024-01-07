@@ -159,6 +159,8 @@ export const ucua4 = (testTimestamp: string) => {
     setUserState('disabled', testTimestamp);
 
     cy.intercept('GET', '/api/pages/*').as('getPage');
+    cy.intercept('DELETE', '/api/pages/*').as('deletePage');
+    cy.intercept('DELETE', '/api/users/*').as('deleteUser');
     cy.intercept('GET', '/api/users/*').as('getUserDetails');
     UserPage.tabs.pages();
     let userUrl = '';
@@ -174,16 +176,18 @@ export const ucua4 = (testTimestamp: string) => {
     Dialog.confirm();
 
     waitForResponse('@getPage', 200);
+
     Resource.delete();
-    Dialog.confirm();
+
+    waitForResponse('@deletePage', 204);
 
     cy.then(() => cy.visit(userUrl));
 
     waitForResponse('@getUserDetails', 200);
 
     Resource.delete();
-    Dialog.confirm();
 
+    waitForResponse('@deleteUser', 204);
     cy.url().should('match', /users$/);
   });
 };
