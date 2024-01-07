@@ -14,7 +14,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'USERNAME' | translate }}
+          <span>{{ 'USERNAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'firstName'"
@@ -23,7 +23,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'USER_NAME' | translate }}
+          <span>{{ 'USER_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'email'"
@@ -32,7 +32,7 @@
           [sticky]="true"
           class="column-md"
         >
-          {{ 'EMAIL' | translate }}
+          <span>{{ 'EMAIL' | translate }}</span>
         </th>
         <th
           *tuiHead="'actions'"
@@ -54,13 +54,13 @@
         "
         tuiTr
       >
-        <td *tuiCell="'username'" tuiTd>
+        <td *tuiCell="'username'" tuiTd class="column-sm">
           {{ item.username }}
         </td>
-        <td *tuiCell="'firstName'" tuiTd>
+        <td *tuiCell="'firstName'" tuiTd class="column-rest">
           {{ item.firstName }} {{ item.lastName }}
         </td>
-        <td *tuiCell="'email'" tuiTd [title]="item.email">
+        <td *tuiCell="'email'" tuiTd [title]="item.email" class="column-md">
           {{ item.email }}
         </td>
 

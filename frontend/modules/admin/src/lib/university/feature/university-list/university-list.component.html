@@ -48,7 +48,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'UNIVERSITY_NAME' | translate }}
+          <span>{{ 'UNIVERSITY_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'shortName'"
@@ -57,7 +57,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'UNIVERSITY_SHORT_NAME' | translate }}
+          <span>{{ 'UNIVERSITY_SHORT_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'hidden'"
@@ -66,7 +66,7 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'UNIVERSITY_VISIBILITY' | translate }}
+          <span>{{ 'UNIVERSITY_VISIBILITY' | translate }}</span>
 
           <reunice-table-filter formControlName="hidden_eq">
             <tui-data-list *tuiDataList size="s">
@@ -99,13 +99,13 @@
         "
         tuiTr
       >
-        <td *tuiCell="'name'" tuiTd>
+        <td *tuiCell="'name'" tuiTd class="column-rest">
           {{ item.name }}
         </td>
-        <td *tuiCell="'shortName'" tuiTd>
+        <td *tuiCell="'shortName'" tuiTd class="column-sm">
           {{ item.shortName }}
         </td>
-        <td *tuiCell="'hidden'" tuiTd>
+        <td *tuiCell="'hidden'" tuiTd class="column-xs">
           {{
             (item.hidden ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE')
               | translate
