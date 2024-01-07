@@ -32,6 +32,7 @@ export const uca12 = (testTimestamp: string) => {
     Form.submit();
     Dialog.confirm();
 
+    cy.intercept('GET', '/api/universities/*').as('getUniversity2');
     waitForResponse('@editUniversity', 200);
 
     waitForResponse('@getUniversity2', 200);
