@@ -57,3 +57,19 @@ export const login = (user: E2EUser) => {
       throw new Error(`Unknown user ${user}`);
   }
 };
+
+export const rememberLogin = (loginFn: () => void) => {
+  let appCookies: Cypress.Cookie[];
+
+  before(() => {
+    loginFn();
+    cy.getAllCookies().then((cookies) => {
+      appCookies = cookies.filter((cookie) => cookie.name !== 'XSRF-TOKEN');
+    });
+  });
+
+  beforeEach(() => {
+    cy.clearAllCookies();
+    appCookies.forEach((cookie) => cy.setCookie(cookie.name, cookie.value));
+  });
+};

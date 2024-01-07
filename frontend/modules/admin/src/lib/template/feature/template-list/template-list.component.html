@@ -42,7 +42,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'NAME' | translate }}
+          <span>{{ 'TEMPLATE_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'actions'"
@@ -64,7 +64,7 @@
         "
         tuiTr
       >
-        <td *tuiCell="'name'" tuiTd>
+        <td *tuiCell="'name'" tuiTd class="column-rest">
           {{ item.name }}
         </td>
 

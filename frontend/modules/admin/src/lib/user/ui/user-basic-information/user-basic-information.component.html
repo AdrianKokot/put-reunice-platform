@@ -20,8 +20,11 @@
   <label [tuiLabel]="'USERNAME' | translate" class="tui-form__multi-field">
     {{ user?.username ?? '—' }}
   </label>
-  <label [tuiLabel]="'STATE' | translate" class="tui-form__multi-field">
-    {{ (user?.enabled ? 'ACTIVE' : 'DEACTIVATED') | translate }}
+  <label [tuiLabel]="'USER_STATE' | translate" class="tui-form__multi-field">
+    {{
+      (user?.enabled ? 'USER_STATE_ACTIVE' : 'USER_STATE_DEACTIVATED')
+        | translate
+    }}
   </label>
 
   <label [tuiLabel]="'ROLE' | translate" class="tui-form__multi-field">

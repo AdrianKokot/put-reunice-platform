@@ -48,7 +48,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'TITLE' | translate }}
+          <span>{{ 'TITLE' | translate }}</span>
         </th>
         <th
           *tuiHead="'createdOn'"
@@ -57,7 +57,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'CREATED_ON' | translate }}
+          <span>{{ 'CREATED_ON' | translate }}</span>
         </th>
         <th
           *tuiHead="'university'"
@@ -66,7 +66,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'UNIVERSITY' | translate }}
+          <span>{{ 'UNIVERSITY' | translate }}</span>
           <reunice-table-filter
             formControlName="university_eq"
             [searchWrapper]="universitySearch"
@@ -79,7 +79,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'AUTHOR' | translate }}
+          <span>{{ 'AUTHOR' | translate }}</span>
           <reunice-table-filter
             formControlName="creator_eq"
             [searchWrapper]="userSearch"
@@ -92,15 +92,15 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'HIDDEN' | translate }}
+          <span>{{ 'PAGE_VISIBILITY' | translate }}</span>
 
           <reunice-table-filter formControlName="hidden_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="false">
-                {{ 'VISIBLE' | translate }}
+                {{ 'PAGE_VISIBLE' | translate }}
               </button>
               <button tuiOption [value]="true">
-                {{ 'HIDDEN' | translate }}
+                {{ 'PAGE_HIDDEN' | translate }}
               </button>
             </tui-data-list>
           </reunice-table-filter>
@@ -125,20 +125,20 @@
         "
         tuiTr
       >
-        <td *tuiCell="'title'" tuiTd>
+        <td *tuiCell="'title'" tuiTd class="column-rest">
           {{ item.title }}
         </td>
-        <td *tuiCell="'createdOn'" tuiTd>
+        <td *tuiCell="'createdOn'" tuiTd class="column-sm">
           {{ item.createdOn | localizedDate }}
         </td>
-        <td *tuiCell="'university'" tuiTd>
+        <td *tuiCell="'university'" tuiTd class="column-sm">
           {{ item.university.name }}
         </td>
-        <td *tuiCell="'creator'" tuiTd>
+        <td *tuiCell="'creator'" tuiTd class="column-sm">
           {{ item.creator.firstName }} {{ item.creator.lastName }}
         </td>
-        <td *tuiCell="'hidden'" tuiTd>
-          {{ (item.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+        <td *tuiCell="'hidden'" tuiTd class="column-xs">
+          {{ (item.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
         </td>
 
         <td class="column-actions" *tuiCell="'actions'" tuiTd>

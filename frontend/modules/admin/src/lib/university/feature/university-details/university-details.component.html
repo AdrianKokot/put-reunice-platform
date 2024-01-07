@@ -14,8 +14,13 @@
       {{ item?.shortName ?? '—' }}
     </label>
 
-    <label [tuiLabel]="'VISIBILITY' | translate" class="tui-form__multi-field">
-      {{ (item?.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+    <label
+      [tuiLabel]="'UNIVERSITY_VISIBILITY' | translate"
+      class="tui-form__multi-field"
+    >
+      {{
+        (item?.hidden ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE') | translate
+      }}
     </label>
   </div>
 

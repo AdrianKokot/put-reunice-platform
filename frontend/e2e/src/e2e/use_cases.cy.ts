@@ -6,7 +6,7 @@ import {
   uca5,
   uca_7_8_9,
 } from './use-cases/main-administrator';
-import { E2EUser, login, loginWith, UserPage } from '../support';
+import { E2EUser, login, loginWith, rememberLogin, UserPage } from '../support';
 import {
   ucua1,
   ucua2,
@@ -29,13 +29,12 @@ import {
 import { ucan2, ucan3 } from './use-cases/anonymous-user';
 
 const testTimestamp = Date.now().toString();
+
 describe('Use Cases', () => {
   uc1();
 
   describe('1. Main Administrator', () => {
-    beforeEach(() => {
-      login(E2EUser.MAIN_ADMIN);
-    });
+    rememberLogin(() => login(E2EUser.MAIN_ADMIN));
 
     uca10(testTimestamp);
     uca11(testTimestamp);
@@ -44,12 +43,12 @@ describe('Use Cases', () => {
   });
 
   describe('2. University Administrator', () => {
-    beforeEach(() => {
+    rememberLogin(() =>
       loginWith(
         `moderator${testTimestamp}`,
         UserPage.defaultFormValue.password,
-      );
-    });
+      ),
+    );
 
     ucua1(testTimestamp);
     ucua2(testTimestamp);
@@ -60,7 +59,7 @@ describe('Use Cases', () => {
   });
 
   describe('3. University User', () => {
-    beforeEach(() => {
+    rememberLogin(() => {
       loginWith(
         `edited_ua_user${testTimestamp}`,
         UserPage.defaultFormValue.password,
@@ -86,7 +85,7 @@ describe('Use Cases', () => {
   });
 
   describe('5. Contact request handler', () => {
-    beforeEach(() => {
+    rememberLogin(() => {
       loginWith(
         `edited_ua_user${testTimestamp}`,
         UserPage.defaultFormValue.password,
@@ -95,7 +94,7 @@ describe('Use Cases', () => {
   });
 
   describe('6. University Administrator', () => {
-    beforeEach(() => {
+    rememberLogin(() => {
       loginWith(
         `moderator${testTimestamp}`,
         UserPage.defaultFormValue.password,
@@ -106,7 +105,7 @@ describe('Use Cases', () => {
   });
 
   describe('7. Main Administrator', () => {
-    beforeEach(() => {
+    rememberLogin(() => {
       login(E2EUser.MAIN_ADMIN);
     });
 

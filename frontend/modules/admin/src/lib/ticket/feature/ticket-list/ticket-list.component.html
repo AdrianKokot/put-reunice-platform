@@ -38,7 +38,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'TITLE' | translate }}
+          <span>{{ 'TITLE' | translate }}</span>
         </th>
 
         <th
@@ -48,7 +48,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'CREATED_ON' | translate }}
+          <span>{{ 'CREATED_ON' | translate }}</span>
         </th>
 
         <th
@@ -58,7 +58,7 @@
           [sticky]="true"
           class="column-md"
         >
-          {{ 'REQUESTER_EMAIL' | translate }}
+          <span>{{ 'REQUESTER_EMAIL' | translate }}</span>
         </th>
 
         <th
@@ -66,9 +66,9 @@
           tuiTh
           tuiSortable
           [sticky]="true"
-          class="column-sm"
+          class="column-xs"
         >
-          {{ 'TICKET_STATUS' | translate }}
+          <span>{{ 'TICKET_STATUS' | translate }}</span>
 
           <reunice-table-filter formControlName="status_eq">
             <tui-data-list *tuiDataList size="s">
@@ -111,7 +111,7 @@
           {{ item.requesterEmail }}
         </td>
 
-        <td *tuiCell="'status'" tuiTd class="column-sm">
+        <td *tuiCell="'status'" tuiTd class="column-xs">
           <tui-badge
             [status]="item | ticketToBadgeStatus"
             [value]="'TICKET_STATUS_' + item.status | translate"

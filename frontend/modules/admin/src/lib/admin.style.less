@@ -1,5 +1,11 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.less';
 
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .reunice-table-wrapper {
   --table-max-height: 65vh;
   --table-row-height: var(--tui-height-m);
@@ -34,6 +40,13 @@
 
     th {
       white-space: nowrap;
+
+      .t-sort {
+        max-width: calc(100% - var(--tui-height-s) + 1rem);
+        & > span {
+          .text-ellipsis;
+        }
+      }
     }
 
     td,
@@ -59,9 +72,15 @@
       }
     }
 
+    [class^='column-'] {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .column-xs {
-      min-width: 120px;
-      max-width: 120px;
+      min-width: 148px;
+      max-width: 148px;
     }
 
     .column-sm {
@@ -83,6 +102,7 @@
     .column-rest {
       width: 100%;
       min-width: 100%;
+      max-width: 20vw;
     }
 
     .column-actions {
@@ -138,4 +158,12 @@ reunice-dashboard-shell {
       margin-top: 0;
     }
   }
+}
+
+label.tui-form__multi-field .t-content {
+  word-break: break-all;
+}
+
+.w-md {
+  width: 250px;
 }

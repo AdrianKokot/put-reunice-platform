@@ -14,7 +14,7 @@
           [sticky]="true"
           class="column-md"
         >
-          {{ 'FILE_NAME' | translate }}
+          <span>{{ 'FILE_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'pageTitle'"
@@ -23,7 +23,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'PAGE_TITLE' | translate }}
+          <span>{{ 'PAGE_TITLE' | translate }}</span>
         </th>
         <th
           *tuiHead="'lastModified'"
@@ -32,7 +32,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'CREATED_ON' | translate }}
+          <span>{{ 'CREATED_ON' | translate }}</span>
         </th>
         <th
           *tuiHead="'actions'"
@@ -54,13 +54,13 @@
         "
         tuiTr
       >
-        <td *tuiCell="'name'" tuiTd>
+        <td *tuiCell="'name'" tuiTd class="column-md">
           {{ item.name }}
         </td>
-        <td *tuiCell="'pageTitle'" tuiTd>
+        <td *tuiCell="'pageTitle'" tuiTd class="column-rest">
           {{ item.page.title }}
         </td>
-        <td *tuiCell="'lastModified'" tuiTd>
+        <td *tuiCell="'lastModified'" tuiTd class="column-sm">
           {{ item.lastModified | localizedDate }}
         </td>
 

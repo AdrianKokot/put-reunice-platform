@@ -12,13 +12,36 @@
     </tui-input>
   </label>
 
+  <label class="w-md" *reuniceUser="'ADMIN'">
+    <tui-combo-box
+      tuiTextfieldSize="m"
+      class="no-shadow"
+      *tuiLet="universitySearch.itemIds$ | async as items"
+      formControlName="enrolledUniversities_eq"
+      [tuiTextfieldLabelOutside]="true"
+      (searchChange)="universitySearch.search($event)"
+      [stringify]="(universitySearch.stringify$ | async)!"
+    >
+      {{ 'UNIVERSITY' | translate }}
+
+      <tui-data-list-wrapper
+        *tuiDataList
+        [items]="items"
+        [itemContent]="(universitySearch.stringify$ | async)!"
+      ></tui-data-list-wrapper>
+    </tui-combo-box>
+  </label>
+
   <button
     tuiIconButton
     [tuiHint]="'CLEAR_FILTERS' | translate"
     [icon]="'tuiIconXCircle'"
     appearance="outline"
     (click)="filtersForm.reset()"
-    *ngIf="((filtersForm | notEmptyValues | async) ?? 0) > 0"
+    *ngIf="
+      ((filtersForm | notEmptyValues | async) ?? 1) >
+      (user?.accountType === accountType.ADMIN ? 0 : 1)
+    "
   ></button>
 
   <a
@@ -48,7 +71,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'USERNAME' | translate }}
+          <span>{{ 'USERNAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'firstName'"
@@ -57,7 +80,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'NAME' | translate }}
+          <span>{{ 'USER_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'email'"
@@ -66,7 +89,7 @@
           [sticky]="true"
           class="column-md"
         >
-          {{ 'EMAIL' | translate }}
+          <span>{{ 'EMAIL' | translate }}</span>
         </th>
         <th
           *tuiHead="'accountType'"
@@ -75,7 +98,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'ROLE' | translate }}
+          <span>{{ 'ROLE' | translate }}</span>
           <reunice-table-filter formControlName="accountType_eq">
             <tui-data-list *tuiDataList size="s">
               <button
@@ -101,14 +124,14 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'ENABLED' | translate }}
+          <span>{{ 'USER_STATE' | translate }}</span>
           <reunice-table-filter formControlName="enabled_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="true">
-                {{ 'ACTIVE' | translate }}
+                {{ 'USER_STATE_ACTIVE' | translate }}
               </button>
               <button tuiOption [value]="false">
-                {{ 'DEACTIVATED' | translate }}
+                {{ 'USER_STATE_DEACTIVATED' | translate }}
               </button>
             </tui-data-list>
           </reunice-table-filter>
@@ -133,25 +156,23 @@
         "
         tuiTr
       >
-        <td *tuiCell="'username'" tuiTd>
+        <td *tuiCell="'username'" tuiTd class="column-sm">
           {{ item.username }}
         </td>
-        <td *tuiCell="'firstName'" tuiTd>
+        <td *tuiCell="'firstName'" tuiTd class="column-rest">
           {{ item.firstName }} {{ item.lastName }}
         </td>
-        <td
-          *tuiCell="'email'"
-          tuiTd
-          class="text-ellipsis column-md"
-          [title]="item.email"
-        >
+        <td *tuiCell="'email'" tuiTd [title]="item.email" class="column-md">
           {{ item.email }}
         </td>
-        <td *tuiCell="'accountType'" tuiTd>
+        <td *tuiCell="'accountType'" tuiTd class="column-sm">
           {{ 'ACCOUNT_TYPE_' + item.accountType | translate }}
         </td>
-        <td *tuiCell="'enabled'" tuiTd>
-          {{ item.enabled }}
+        <td *tuiCell="'enabled'" tuiTd class="column-xs">
+          {{
+            (item.enabled ? 'USER_STATE_ACTIVE' : 'USER_STATE_DEACTIVATED')
+              | translate
+          }}
         </td>
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
           <a

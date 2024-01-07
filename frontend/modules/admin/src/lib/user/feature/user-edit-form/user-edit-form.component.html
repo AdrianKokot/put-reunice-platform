@@ -110,7 +110,10 @@
       </label>
 
       <div class="tui-form__row tui-form__row_multi-fields">
-        <label [tuiLabel]="'STATE' | translate" class="tui-form__multi-field">
+        <label
+          [tuiLabel]="'USER_STATE' | translate"
+          class="tui-form__multi-field"
+        >
           <tui-select
             formControlName="enabled"
             tuiTextfieldSize="m"
@@ -126,16 +129,19 @@
           >
             <tui-data-list *tuiDataList data-test="state-select-options">
               <button tuiOption [value]="true" data-test="state-enabled">
-                {{ 'ACTIVE' | translate }}
+                {{ 'USER_STATE_ACTIVE' | translate }}
               </button>
               <button tuiOption [value]="false" data-test="state-disabled">
-                {{ 'DEACTIVATED' | translate }}
+                {{ 'USER_STATE_DEACTIVATED' | translate }}
               </button>
             </tui-data-list>
           </tui-select>
 
           <ng-template #stateValueContent let-item>
-            {{ (item ? 'ACTIVE' : 'DEACTIVATED') | translate }}
+            {{
+              (item ? 'USER_STATE_ACTIVE' : 'USER_STATE_DEACTIVATED')
+                | translate
+            }}
           </ng-template>
 
           <tui-error

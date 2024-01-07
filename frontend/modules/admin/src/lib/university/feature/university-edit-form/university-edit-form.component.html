@@ -42,7 +42,7 @@
       </label>
 
       <label
-        [tuiLabel]="'VISIBILITY' | translate"
+        [tuiLabel]="'UNIVERSITY_VISIBILITY' | translate"
         class="tui-form__multi-field"
       >
         <tui-select
@@ -54,16 +54,16 @@
         >
           <tui-data-list *tuiDataList data-test="visibility-options">
             <button tuiOption [value]="false" data-test="visibility-visible">
-              {{ 'VISIBLE' | translate }}
+              {{ 'UNIVERSITY_VISIBLE' | translate }}
             </button>
             <button tuiOption [value]="true" data-test="visibility-hidden">
-              {{ 'HIDDEN' | translate }}
+              {{ 'UNIVERSITY_HIDDEN' | translate }}
             </button>
           </tui-data-list>
         </tui-select>
 
         <ng-template #valueContent let-item>
-          {{ (item ? 'HIDDEN' : 'VISIBLE') | translate }}
+          {{ (item ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE') | translate }}
         </ng-template>
 
         <tui-error
