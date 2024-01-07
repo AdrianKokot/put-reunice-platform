@@ -1,5 +1,11 @@
 @import '@taiga-ui/core/styles/taiga-ui-local.less';
 
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .reunice-table-wrapper {
   --table-max-height: 65vh;
   --table-row-height: var(--tui-height-m);
@@ -138,4 +144,8 @@ reunice-dashboard-shell {
       margin-top: 0;
     }
   }
+}
+
+label.tui-form__multi-field .t-content {
+  word-break: break-all;
 }

@@ -43,8 +43,8 @@
       (keydown)="onKeyDown($event.key, input.nativeFocusableElement)"
     >
       <ng-container *tuiLet="(searchWrapper.stringify$ | async)! as stringify">
-        <button *ngFor="let item of items" tuiElement tuiOption [value]="item">
-          {{ stringify(item) }}
+        <button *ngFor="let item of items" tuiElement tuiOption [value]="item" [title]="stringify(item)">
+          <span class="text-ellipsis">{{ stringify(item) }}</span>
         </button>
       </ng-container>
     </tui-data-list>
