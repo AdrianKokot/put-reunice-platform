@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
+  Page,
   PageService,
   UniversityService,
   UserService,
@@ -8,6 +9,7 @@ import {
 import {
   FormSubmitWrapper,
   PAGE_TREE_HANDLER,
+  parseNullableInt,
 } from '@reunice/modules/shared/util';
 import {
   BaseFormImportsModule,
@@ -34,6 +36,7 @@ import {
 import { TuiCheckedModule, TuiValueChangesModule } from '@taiga-ui/cdk';
 import { TuiLinkModule } from '@taiga-ui/core';
 import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'reunice-page-create-form',
@@ -58,17 +61,22 @@ import { ConfirmDirective } from '@reunice/modules/shared/ui';
 export class PageCreateFormComponent {
   private readonly _service = inject(PageService);
   private readonly _user = inject(AuthService).userSnapshot;
+  private readonly _route = inject(ActivatedRoute).snapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(255)]],
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
-    creatorId: [this._user?.id ?? -1, [Validators.required]],
-    parentId: [-1, [Validators.required]],
-    parentName: ['test'],
+    creatorId: [this._user?.id, [Validators.required]],
+    parentId: [
+      parseNullableInt(this._route.queryParams['parentId']),
+      [Validators.required],
+    ],
     universityId: [
-      this._user?.enrolledUniversities?.at(0)?.id ?? null,
+      parseNullableInt(this._route.queryParams['universityId']) ??
+        this._user?.enrolledUniversities?.at(0)?.id ??
+        null,
       [Validators.required],
     ],
   });
@@ -95,15 +103,29 @@ export class PageCreateFormComponent {
     startWith(this.form.controls.universityId.value),
     distinctUntilChanged(),
     filter((id): id is number => id !== null),
-    tap(() => this.form.controls.parentId.reset()),
     switchMap((id) =>
-      this._service.getUniversityHierarchy(id).pipe(
-        tap((page) => this.form.controls.parentId.setValue(page.id)),
-        startWith(null),
-      ),
+      this._service.getUniversityHierarchy(id).pipe(startWith(null)),
     ),
-    shareReplay(),
+    tap((page) => {
+      if (
+        page !== null &&
+        parseNullableInt(this._route.queryParams['universityId']) !==
+          this.form.controls.universityId.value
+      ) {
+        this.form.patchValue({ parentId: page?.id });
+      }
+    }),
+    shareReplay(1),
   );
 
   readonly pagesTreeHandler = PAGE_TREE_HANDLER;
+
+  selectedPageName = '';
+
+  onParentIdChange(checked: boolean, page: Page) {
+    if (checked) {
+      console.warn({ page });
+      this.selectedPageName = page.title;
+    }
+  }
 }

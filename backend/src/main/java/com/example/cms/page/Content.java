@@ -1,5 +1,6 @@
 package com.example.cms.page;
 
+import com.example.cms.util.HTMLSanitiser;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -36,7 +37,7 @@ public class Content {
 
     public static Content of(String pageContent) {
         Content content = new Content();
-        content.setPageContent(pageContent);
+        content.setPageContent(HTMLSanitiser.encodeInvalidMarkup(pageContent));
         return content;
     }
 }
