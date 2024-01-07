@@ -97,6 +97,7 @@
   "ERRORS.UNIVERSITY.404": "Nie znaleziono uniwersytetu",
   "ERRORS.USER.400.ACCOUNT_TYPE_EMPTY": "Rodzaj konta jest wymagany",
   "ERRORS.USER.400.EMAIL_NOT_VALID": "Adres e-mail jest nieprawidłowy",
+  "ERRORS.USER.400.EMAIL_TAKEN": "Użytkownik o tym adresie e-mail już istnieje",
   "ERRORS.USER.400.NOT_VALID_PASSWORD": "Hasło musi mieć co najmniej 8 znaków i zawierać co najmniej jedną dużą literę, jedną małą literę, jedną cyfrę oraz jeden znak specjalny",
   "ERRORS.USER.400.PAGES_EXISTS": "Nie można usunąć użytkownika z przypisanymi stronami",
   "ERRORS.USER.400.PASSWORD_EMPTY": "Hasło nie może być puste",

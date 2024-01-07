@@ -97,6 +97,7 @@
   "ERRORS.UNIVERSITY.404": "University not found",
   "ERRORS.USER.400.ACCOUNT_TYPE_EMPTY": "Account type is required",
   "ERRORS.USER.400.EMAIL_NOT_VALID": "Email address is not valid",
+  "ERRORS.USER.400.EMAIL_TAKEN": "User with this email already exists",
   "ERRORS.USER.400.NOT_VALID_PASSWORD": "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one special character",
   "ERRORS.USER.400.PAGES_EXISTS": "Cannot delete user with pages",
   "ERRORS.USER.400.PASSWORD_EMPTY": "Password cannot be empty",

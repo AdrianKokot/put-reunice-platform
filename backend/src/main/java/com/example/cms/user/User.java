@@ -57,6 +57,7 @@ public class User {
     private String lastName;
     private Instant lastLoginDate;
 
+    @Column(unique = true)
     @Email(message = "ERRORS.USER.400.EMAIL_NOT_VALID")
     private String email;
 

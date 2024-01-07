@@ -94,6 +94,10 @@ public class UserService {
             throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
         }
 
+        if (userRepository.existsByEmail(form.getEmail())) {
+            throw new UserException(UserExceptionType.EMAIL_TAKEN, "email");
+        }
+
         validatePassword(form.getPassword());
 
         User newUser = new User();
@@ -159,6 +163,14 @@ public class UserService {
                 throw new UserException(UserExceptionType.USERNAME_TAKEN, "username");
             }
         }
+
+        if (userRepository.existsByEmail(form.getEmail())) {
+            User newUser = userRepository.findByEmail(form.getEmail()).orElse(null);
+            if (!newUser.getId().equals(user.getId())) {
+                throw new UserException(UserExceptionType.EMAIL_TAKEN, "email");
+            }
+        }
+
         return user;
     }
 

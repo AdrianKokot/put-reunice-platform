@@ -56,8 +56,8 @@ class UserControllerTest extends BaseAPIControllerTest {
                         null,
                         null,
                         null,
-                        "TEST_UNIVERSITY" + Instant.now().toString(),
-                        "TST_U" + Instant.now().toString(),
+                        "TEST_UNIVERSITY" + Instant.now().toEpochMilli(),
+                        "TST_U" + Instant.now().toEpochMilli(),
                         null,
                         null,
                         "TEST_UNIVERSITY",
@@ -85,7 +85,7 @@ class UserControllerTest extends BaseAPIControllerTest {
         public void setup() {
             dto =
                     new UserDtoFormCreate(
-                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
                             "Password123!",
                             "John",
                             "Doe",
@@ -123,11 +123,11 @@ class UserControllerTest extends BaseAPIControllerTest {
         public void setup() {
             dto =
                     new UserDtoFormCreate(
-                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
                             "Password123!",
                             "John",
                             "Doe",
-                            "test@example.com",
+                            "test" + Instant.now().toEpochMilli() + "@example.com",
                             "123456789",
                             true,
                             Role.MODERATOR,
@@ -168,11 +168,11 @@ class UserControllerTest extends BaseAPIControllerTest {
 
             dto =
                     new UserDtoFormCreate(
-                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
                             "Password123!",
                             "John",
                             "Doe",
-                            "test@example.com",
+                            "test" + Instant.now().toEpochMilli() + "@example.com",
                             "123456789",
                             true,
                             Role.USER,
@@ -202,6 +202,42 @@ class UserControllerTest extends BaseAPIControllerTest {
             performAs(Role.ADMIN, userId);
             performPost(dto).andExpect(status().isCreated());
         }
+
+        @Test
+        void create_DuplicateEmail_BadRequest() throws Exception {
+            performAs(Role.ADMIN, userId);
+            var dto =
+                    new UserDtoFormCreate(
+                            "TEST_USER" + Instant.now().toEpochMilli(),
+                            "Password123!",
+                            "John",
+                            "Doe",
+                            "wojciech.kowalski7342@gmail.com",
+                            "123456789",
+                            true,
+                            Role.USER,
+                            Collections.singleton(universityId));
+
+            performPost(dto).andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void create_DuplicateUsername_BadRequest() throws Exception {
+            performAs(Role.ADMIN, userId);
+            var dto =
+                    new UserDtoFormCreate(
+                            "admin",
+                            "Password123!",
+                            "John",
+                            "Doe",
+                            "test" + Instant.now().toEpochMilli() + "@example.com",
+                            "123456789",
+                            true,
+                            Role.USER,
+                            Collections.singleton(universityId));
+
+            performPost(dto).andExpect(status().isBadRequest());
+        }
     }
 
     @Nested
@@ -219,11 +255,11 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_NAME" + Instant.now().toString(),
-                            "SHORT_NAME" + Instant.now().toString(),
+                            "TEST_NAME" + Instant.now().toEpochMilli(),
+                            "SHORT_NAME" + Instant.now().toEpochMilli(),
                             null,
                             null,
-                            "TEST_DESCRIPTION" + Instant.now().toString(),
+                            "TEST_DESCRIPTION" + Instant.now().toEpochMilli(),
                             false,
                             null);
             newUniversity = universityRepository.save(newUniversity);
@@ -233,8 +269,8 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER" + Instant.now().toString(),
-                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
                             null,
                             null,
                             null,
@@ -249,8 +285,8 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_MODERATOR" + Instant.now().toString(),
-                            "TEST_MODERATOR" + Instant.now().toString(),
+                            "TEST_MODERATOR" + Instant.now().toEpochMilli(),
+                            "TEST_MODERATOR" + Instant.now().toEpochMilli(),
                             null,
                             null,
                             null,
@@ -282,7 +318,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
                             "TEST_USER",
                             null,
                             null,
@@ -305,8 +341,8 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER" + Instant.now().toString(),
-                            "TEST_USER" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
                             null,
                             null,
                             null,
@@ -365,12 +401,12 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER" + Instant.now().toString(),
-                            "TEST_user1!" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
+                            "TEST_user1!" + Instant.now().toEpochMilli(),
                             "TEST_USER",
                             "null",
                             null,
-                            "null@wp.pl",
+                            "null" + Instant.now().toEpochMilli() + "@wp.pl",
                             "000000000",
                             "null",
                             Role.USER,
@@ -389,7 +425,7 @@ class UserControllerTest extends BaseAPIControllerTest {
                     userToUpdate.getEmail(),
                     userToUpdate.getPhoneNumber(),
                     userToUpdate.getDescription(),
-                    Set.of(universityId.longValue()),
+                    Set.of(universityId),
                     userToUpdate.isEnabled(),
                     userToUpdate.getAccountType(),
                     userToUpdate.getUsername(),
@@ -441,12 +477,12 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER" + Instant.now().toString(),
-                            "TEST_user1!" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
+                            "TEST_user1!" + Instant.now().toEpochMilli(),
                             "TEST_USER",
                             "null",
                             null,
-                            "null@wp.pl",
+                            "null" + Instant.now().toEpochMilli() + "@wp.pl",
                             "000000000",
                             "null",
                             Role.USER,
@@ -507,12 +543,12 @@ class UserControllerTest extends BaseAPIControllerTest {
                             null,
                             null,
                             null,
-                            "TEST_USER" + Instant.now().toString(),
-                            "TEST_user1!" + Instant.now().toString(),
+                            "TEST_USER" + Instant.now().toEpochMilli(),
+                            "TEST_user1!" + Instant.now().toEpochMilli(),
                             "TEST_USER",
                             "null",
                             null,
-                            "null@wp.pl",
+                            "null" + Instant.now().toEpochMilli() + "@wp.pl",
                             "000000000",
                             "null",
                             Role.USER,
