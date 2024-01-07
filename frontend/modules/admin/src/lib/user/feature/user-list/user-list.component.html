@@ -12,13 +12,36 @@
     </tui-input>
   </label>
 
+  <label class="w-md" *reuniceUser="'ADMIN'">
+    <tui-combo-box
+      tuiTextfieldSize="m"
+      class="no-shadow"
+      *tuiLet="universitySearch.itemIds$ | async as items"
+      formControlName="enrolledUniversities_eq"
+      [tuiTextfieldLabelOutside]="true"
+      (searchChange)="universitySearch.search($event)"
+      [stringify]="(universitySearch.stringify$ | async)!"
+    >
+      {{ 'UNIVERSITY' | translate }}
+
+      <tui-data-list-wrapper
+        *tuiDataList
+        [items]="items"
+        [itemContent]="(universitySearch.stringify$ | async)!"
+      ></tui-data-list-wrapper>
+    </tui-combo-box>
+  </label>
+
   <button
     tuiIconButton
     [tuiHint]="'CLEAR_FILTERS' | translate"
     [icon]="'tuiIconXCircle'"
     appearance="outline"
     (click)="filtersForm.reset()"
-    *ngIf="((filtersForm | notEmptyValues | async) ?? 0) > 0"
+    *ngIf="
+      ((filtersForm | notEmptyValues | async) ?? 1) >
+      (user?.accountType === accountType.ADMIN ? 0 : 1)
+    "
   ></button>
 
   <a
