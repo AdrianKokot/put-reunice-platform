@@ -1,8 +1,10 @@
 package com.example.cms.email;
 
+import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.user.User;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +21,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class EmailSendingService {
+    @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
     @Autowired private JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
     private final ResourceLoader resourceLoader;
@@ -93,7 +97,7 @@ public class EmailSendingService {
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_USER_ACCOUNT.templateName);
             contentMap.put("[Nazwa Użytkownika]", receiver.getUsername());
             contentMap.put("[Początkowe Hasło]", password);
-            contentMap.put("[link_do_pierwszego_logowania]", "http://localhost/auth/login");
+            contentMap.put("[link_do_pierwszego_logowania]", getUrl("auth", "login"));
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -172,7 +176,7 @@ public class EmailSendingService {
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
             contentMap.put("[Nowy Status]", ticket.getStatus().name());
-            contentMap.put("[ticket_link]", "http://localhost/ticket" + ticket.getRequesterToken());
+            contentMap.put("[ticket_link]", getUrl("ticket", ticket.getRequesterToken().toString()));
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -253,6 +257,24 @@ public class EmailSendingService {
             System.out.println(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String getUrl(String... pathSegments) {
+        try {
+            return UriComponentsBuilder.fromHttpUrl(
+                            this.applicationConfigurationProvider.getApplicationServer())
+                    .pathSegment(pathSegments)
+                    .build()
+                    .normalize()
+                    .toUri()
+                    .toURL()
+                    .toString();
+        } catch (MalformedURLException e) {
+            return (this.applicationConfigurationProvider.getApplicationServer()
+                            + "/"
+                            + String.join("/", pathSegments))
+                    .replaceAll("//", "/");
         }
     }
 }
