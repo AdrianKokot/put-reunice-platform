@@ -46,7 +46,7 @@ export class NotificationsComponent {
     startWith([] as string[]),
   );
 
-  tickets$ = this._service.getAll({ unseen_eq: true, page: 0, size: 5 });
+  tickets$ = this._service.getAll({ unseen: true, page: 0, size: 5 });
   optimisticTickets$ = combineLatest([
     this.tickets$,
     this.recentlyViewedIds$,
