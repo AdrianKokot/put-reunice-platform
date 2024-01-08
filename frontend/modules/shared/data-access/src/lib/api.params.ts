@@ -14,8 +14,7 @@ type OnlyKeysOfType<T, TProp> = {
 
 export type ApiFilter<T> = ApiFilterOperator<T, 'eq'> &
   ApiFilterOperator<OnlyKeysOfType<T, string>, 'ct'> &
-  Partial<{ search: string }> &
-  Partial<{ unseen: boolean }>;
+  Partial<{ search: string }>;
 
 export type ApiSort<T = object> = {
   sort: `${keyof T & string},${'asc' | 'desc'}` & string;
