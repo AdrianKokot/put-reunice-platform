@@ -8,6 +8,7 @@ import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
+import com.example.cms.ticket.projections.TicketDTOCreateResponse;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
@@ -59,7 +60,7 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public Map<String, UUID> createTicket(TicketDtoFormCreate ticketDto) {
+    public TicketDTOCreateResponse createTicket(TicketDtoFormCreate ticketDto) {
         com.example.cms.page.Page page =
                 pageRepository.findById(ticketDto.getPageId()).orElseThrow(PageNotFoundException::new);
 
@@ -83,7 +84,7 @@ public class TicketService {
                                 })
                         .collect(Collectors.toSet()));
 
-        return Map.of("id", ticket.getId(), "token", ticket.getRequesterToken());
+        return new TicketDTOCreateResponse(ticket.getId(), ticket.getRequesterToken());
     }
 
     public Ticket getTicketDetailed(UUID ticketId, Optional<UUID> token) {
@@ -104,7 +105,7 @@ public class TicketService {
         if (optionalLoggedUser.isPresent())
             if (optionalLoggedUser.get().getAccountType().equals(Role.ADMIN)) return ticket;
 
-        throw new TicketAccessForbiddenException();
+        throw new TicketNotFoundException();
     }
 
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {

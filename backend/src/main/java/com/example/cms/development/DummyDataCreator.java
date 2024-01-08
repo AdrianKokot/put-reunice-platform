@@ -1400,7 +1400,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                         "michal.wazowski9020@gmail.com",
                                         "Problem to page 1",
                                         "This is description to my ticket. I have a problem with page 1"))
-                        .get("id");
+                        .getTicketId();
         UUID ticketId2 =
                 ticketService
                         .createTicket(
@@ -1409,7 +1409,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                         "requester2@email.com",
                                         "Problem to page 2",
                                         "This is description to my ticket. I have a problem with page 2"))
-                        .get("id");
+                        .getTicketId();
         UUID ticketId3 =
                 ticketService
                         .createTicket(
@@ -1418,7 +1418,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                         "requester3@email.com",
                                         "Problem to page 3",
                                         "This is description to my ticket. I have a problem with page 3"))
-                        .get("id");
+                        .getTicketId();
         UUID ticketId4 =
                 ticketService
                         .createTicket(
@@ -1427,7 +1427,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                         "requester4@email.com",
                                         "Problem to page 4",
                                         "This is description to my ticket. I have a problem with page 4"))
-                        .get("id");
+                        .getTicketId();
         UUID ticketId5 =
                 ticketService
                         .createTicket(
@@ -1436,7 +1436,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                         "requester5@email.com",
                                         "Second problem to page 4",
                                         "This is description to my ticket. I have a second problem with page 5"))
-                        .get("id");
+                        .getTicketId();
 
         ticketService.addResponse(ticketId1, "message content to ticket 1 from author1");
         ticketService.addResponse(ticketId1, "another message content to ticket 1 from author1");
