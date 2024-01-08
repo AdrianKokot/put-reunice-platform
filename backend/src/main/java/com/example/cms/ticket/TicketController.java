@@ -1,9 +1,6 @@
 package com.example.cms.ticket;
 
-import com.example.cms.ticket.projections.ResponseDtoCreate;
-import com.example.cms.ticket.projections.TicketDto;
-import com.example.cms.ticket.projections.TicketDtoDetailed;
-import com.example.cms.ticket.projections.TicketDtoFormCreate;
+import com.example.cms.ticket.projections.*;
 import com.example.cms.validation.FilterPathVariableValidator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +36,8 @@ public class TicketController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> createTicket(@RequestBody TicketDtoFormCreate ticketDto) {
+    public ResponseEntity<TicketDTOCreateResponse> createTicket(
+            @RequestBody TicketDtoFormCreate ticketDto) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", "1");
 
@@ -47,8 +45,9 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}")
-    public ResponseEntity<TicketDtoDetailed> getTicketDetailed(@PathVariable UUID ticketId) {
-        Ticket ticket = service.getTicketDetailed(ticketId);
+    public ResponseEntity<TicketDtoDetailed> getTicketDetailed(
+            @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+        Ticket ticket = service.getTicketDetailed(ticketId, token);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));

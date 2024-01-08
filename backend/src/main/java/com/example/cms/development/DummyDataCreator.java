@@ -1382,40 +1382,50 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 new UsernamePasswordAuthenticationToken("admin", "51D7k4F8"));
 
         UUID ticketId1 =
-                ticketService.createTicket(
-                        new TicketDtoFormCreate(
-                                1L,
-                                "michal.wazowski9020@gmail.com",
-                                "Problem to page 1",
-                                "This is description to my ticket. I have a problem with page 1"));
+                ticketService
+                        .createTicket(
+                                new TicketDtoFormCreate(
+                                        1L,
+                                        "michal.wazowski9020@gmail.com",
+                                        "Problem to page 1",
+                                        "This is description to my ticket. I have a problem with page 1"))
+                        .getTicketId();
         UUID ticketId2 =
-                ticketService.createTicket(
-                        new TicketDtoFormCreate(
-                                2L,
-                                "requester2@email.com",
-                                "Problem to page 2",
-                                "This is description to my ticket. I have a problem with page 2"));
+                ticketService
+                        .createTicket(
+                                new TicketDtoFormCreate(
+                                        2L,
+                                        "requester2@email.com",
+                                        "Problem to page 2",
+                                        "This is description to my ticket. I have a problem with page 2"))
+                        .getTicketId();
         UUID ticketId3 =
-                ticketService.createTicket(
-                        new TicketDtoFormCreate(
-                                3L,
-                                "requester3@email.com",
-                                "Problem to page 3",
-                                "This is description to my ticket. I have a problem with page 3"));
+                ticketService
+                        .createTicket(
+                                new TicketDtoFormCreate(
+                                        3L,
+                                        "requester3@email.com",
+                                        "Problem to page 3",
+                                        "This is description to my ticket. I have a problem with page 3"))
+                        .getTicketId();
         UUID ticketId4 =
-                ticketService.createTicket(
-                        new TicketDtoFormCreate(
-                                4L,
-                                "requester4@email.com",
-                                "Problem to page 4",
-                                "This is description to my ticket. I have a problem with page 4"));
+                ticketService
+                        .createTicket(
+                                new TicketDtoFormCreate(
+                                        4L,
+                                        "requester4@email.com",
+                                        "Problem to page 4",
+                                        "This is description to my ticket. I have a problem with page 4"))
+                        .getTicketId();
         UUID ticketId5 =
-                ticketService.createTicket(
-                        new TicketDtoFormCreate(
-                                4L,
-                                "requester5@email.com",
-                                "Second problem to page 4",
-                                "This is description to my ticket. I have a second problem with page 5"));
+                ticketService
+                        .createTicket(
+                                new TicketDtoFormCreate(
+                                        4L,
+                                        "requester5@email.com",
+                                        "Second problem to page 4",
+                                        "This is description to my ticket. I have a second problem with page 5"))
+                        .getTicketId();
 
         ticketService.addResponse(ticketId1, "message content to ticket 1 from author1");
         ticketService.addResponse(ticketId1, "another message content to ticket 1 from author1");
