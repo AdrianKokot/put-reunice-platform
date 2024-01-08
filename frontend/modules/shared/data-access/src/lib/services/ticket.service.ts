@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AbstractApiService } from './abstract-api.service';
+import { AbstractApiService, toHttpParams } from './abstract-api.service';
 import { Ticket, TicketResponse } from '../models/ticket';
 import { Observable } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
 
 type TicketCreatePayload = Pick<
   Ticket,
@@ -23,12 +22,8 @@ export class TicketService extends AbstractApiService<
   }
 
   override get(id: Ticket['id'], token?: Token) {
-    const params = token
-      ? new HttpParams({ fromObject: { token } })
-      : new HttpParams();
-
     return this._http.get<Ticket>(`${this._resourceUrl}/${id}`, {
-      params,
+      params: toHttpParams({ token }),
     });
   }
 
@@ -40,13 +35,9 @@ export class TicketService extends AbstractApiService<
   }
 
   getResponses(id: Ticket['id'], token?: string) {
-    const params = token
-      ? new HttpParams({ fromObject: { token } })
-      : new HttpParams();
-
     return this._http.get<TicketResponse[]>(
       `${this._resourceUrl}/${id}/responses`,
-      { params },
+      { params: toHttpParams({ token }) },
     );
   }
 
@@ -55,14 +46,10 @@ export class TicketService extends AbstractApiService<
     content: TicketResponse['content'],
     token?: Token,
   ): Observable<TicketResponse[]> {
-    const params = token
-      ? new HttpParams({ fromObject: { token } })
-      : new HttpParams();
-
     return this._http.post<TicketResponse[]>(
       `${this._resourceUrl}/${id}/responses`,
       { content },
-      { params },
+      { params: toHttpParams({ token }) },
     );
   }
 

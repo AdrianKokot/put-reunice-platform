@@ -6,8 +6,12 @@ import { BaseResource } from '../models/base-resource';
 
 export const TOTAL_ITEMS_HEADER = 'X-Whole-Content-Length';
 
-export const toHttpParams = <T>(params: ApiParams<T> | ApiParams) => {
-  const fromObject = (Object.keys(params) as Array<keyof typeof params>).reduce(
+export const toHttpParams = <
+  T extends string | number | boolean | null | undefined,
+>(
+  params: Record<string, T>,
+) => {
+  const fromObject = Object.keys(params).reduce(
     (acc, key) => {
       const val = params[key];
       if (val !== '' && val !== undefined && val !== null) {
