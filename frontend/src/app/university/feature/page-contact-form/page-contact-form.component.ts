@@ -25,6 +25,8 @@ import {
 } from '@reunice/modules/shared/util';
 import { TicketService } from '@reunice/modules/shared/data-access';
 import { first, switchMap } from 'rxjs';
+import { Router } from '@angular/router';
+import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Component({
   selector: 'reunice-page-contact-form',
@@ -49,6 +51,7 @@ import { first, switchMap } from 'rxjs';
 export class PageContactFormComponent {
   private readonly _service = inject(TicketService);
   private readonly _pageId$ = resourceIdFromRoute('pageId');
+  private readonly _router = inject(Router);
 
   readonly form = inject(FormBuilder).nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(255)]],
@@ -63,12 +66,18 @@ export class PageContactFormComponent {
     submit: (value) =>
       this._pageId$.pipe(
         switchMap((pageId) =>
-          this._service.create({
+          this._service.createTicket({
             ...value,
             pageId: parseInt(pageId),
           }),
         ),
         first(),
+      ),
+    effect: ({ ticketId, ticketToken }) =>
+      fromPromise(
+        this._router.navigate(['tickets', ticketId], {
+          queryParams: { token: ticketToken },
+        }),
       ),
     successAlertMessage: 'SEND_QUESTION_SUCCESS',
   });

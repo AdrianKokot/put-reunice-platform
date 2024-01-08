@@ -57,8 +57,8 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/responses")
     public ResponseEntity<Set<Response>> getTicketResponses(
-            Pageable pageable, @PathVariable UUID ticketId) {
-        Ticket ticket = service.getTicketById(ticketId);
+            Pageable pageable, @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+        Ticket ticket = service.getTicketDetailed(ticketId, token);
         Set<Response> responses = ticket.getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -80,10 +80,13 @@ public class TicketController {
 
     @PostMapping("/{ticketId}/responses")
     public ResponseEntity<Set<Response>> addResponse(
-            @PathVariable UUID ticketId, @RequestBody ResponseDtoCreate responseDtoCreate) {
-        service.addResponse(ticketId, responseDtoCreate.getContent());
+            @PathVariable UUID ticketId,
+            @RequestBody ResponseDtoCreate responseDtoCreate,
+            @RequestParam Optional<UUID> token) {
 
-        Set<Response> responses = service.getTicketById(ticketId).getResponses();
+        Ticket ticket = service.getTicketDetailed(ticketId, token);
+        service.addResponse(ticket.getId(), responseDtoCreate.getContent());
+        Set<Response> responses = ticket.getResponses();
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
