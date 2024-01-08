@@ -13,6 +13,7 @@ import {
 import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
+import { NotificationsComponent } from '../notifications/notifications.component';
 
 @Component({
   selector: 'reunice-ui-top-bar',
@@ -31,6 +32,7 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
     TuiFlagPipeModule,
     TranslateModule,
     LanguageSwitcherComponent,
+    NotificationsComponent,
   ],
   providers: [
     tuiButtonOptionsProvider({
