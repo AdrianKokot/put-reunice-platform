@@ -8,6 +8,7 @@ import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.ticket.exceptions.TicketAccessForbiddenException;
 import com.example.cms.ticket.exceptions.TicketNotFoundException;
+import com.example.cms.ticket.projections.TicketDTOCreateResponse;
 import com.example.cms.ticket.projections.TicketDtoDetailed;
 import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
@@ -59,7 +60,7 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
-    public UUID createTicket(TicketDtoFormCreate ticketDto) {
+    public TicketDTOCreateResponse createTicket(TicketDtoFormCreate ticketDto) {
         com.example.cms.page.Page page =
                 pageRepository.findById(ticketDto.getPageId()).orElseThrow(PageNotFoundException::new);
 
@@ -83,10 +84,10 @@ public class TicketService {
                                 })
                         .collect(Collectors.toSet()));
 
-        return ticket.getId();
+        return new TicketDTOCreateResponse(ticket.getId(), ticket.getRequesterToken());
     }
 
-    public Ticket getTicketDetailed(UUID ticketId) {
+    public Ticket getTicketDetailed(UUID ticketId, Optional<UUID> token) {
         Ticket ticket = this.getTicketById(ticketId);
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
@@ -94,9 +95,17 @@ public class TicketService {
             TicketUserStatus userStatus = userStatusOptional.get();
             userStatus.setLastSeenOn(Instant.now());
             ticketUserStatusRepository.save(userStatus);
+
+            return ticket;
         }
 
-        return ticket;
+        if (token.isPresent()) if (ticket.getRequesterToken().equals(token.get())) return ticket;
+
+        Optional<LoggedUser> optionalLoggedUser = securityService.getPrincipal();
+        if (optionalLoggedUser.isPresent())
+            if (optionalLoggedUser.get().getAccountType().equals(Role.ADMIN)) return ticket;
+
+        throw new TicketNotFoundException();
     }
 
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {

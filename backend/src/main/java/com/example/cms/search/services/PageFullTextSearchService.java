@@ -1,6 +1,7 @@
 package com.example.cms.search.services;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
+import com.example.cms.configuration.DatabaseSchemaHandlingOnStartup;
 import com.example.cms.page.Page;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
@@ -105,9 +106,8 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
     public void createCollection() {
         try {
             if (client.collections(COLLECTION_NAME).retrieve() != null) {
-                if (!this.applicationConfigurationProvider
-                        .getDatabaseSchemaHandlingOnStartup()
-                        .equalsIgnoreCase("create")) return;
+                if (this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()
+                        == DatabaseSchemaHandlingOnStartup.CREATE) return;
 
                 client.collections(COLLECTION_NAME).delete();
             }

@@ -8,6 +8,7 @@
         {{ 'PAGE_CONTENT_TAB' | translate }}
       </button>
       <button
+        data-test="responsibility-tab"
         tuiTab
         *ngIf="item === null || item.contactRequestHandlers.length > 0"
       >
@@ -32,10 +33,10 @@
         </label>
 
         <label
-          [tuiLabel]="'VISIBILITY' | translate"
+          [tuiLabel]="'PAGE_VISIBILITY' | translate"
           class="tui-form__multi-field"
         >
-          {{ (item?.hidden ? 'HIDDEN' : 'VISIBLE') | translate }}
+          {{ (item?.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
         </label>
 
         <label
@@ -157,6 +158,7 @@
       >
         {{ 'VIEW_PAGE' | translate }}
       </a>
+
       <button
         *reuniceUserControlsResource="item"
         tuiButton
@@ -175,9 +177,21 @@
           ) | translate
         "
         (confirm)="deleteHandler.delete(item.id)"
+        data-test="delete-button"
       >
         {{ 'DELETE' | translate }}
       </button>
+
+      <a
+        [routerLink]="['..', 'new']"
+        [queryParams]="{ universityId: item.university.id, parentId: item.id }"
+        tuiButton
+        type="button"
+        appearance="secondary"
+        class="tui-form__button"
+      >
+        {{ 'ADD_SUBPAGE' | translate }}
+      </a>
 
       <a
         [routerLink]="cantEdit ? null : ['edit']"
@@ -192,6 +206,7 @@
         [tuiHint]="
           (cantEdit ? 'CANNOT_EDIT_UNIVERSITY_LANDING_PAGE' : '') | translate
         "
+        data-test="edit-button"
       >
         {{ 'EDIT' | translate }}
       </a>

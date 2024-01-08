@@ -59,7 +59,7 @@ public class UserSpecification extends SearchSpecification implements Specificat
                 }
 
                 return criteriaBuilder.equal(
-                        root.get("enrolledUniversities").get("id"), parseInt(criteria.getValue().toString()));
+                        root.join("enrolledUniversities").get("id"), parseInt(criteria.getValue().toString()));
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
             return this.searchPredicate(root, query, criteriaBuilder);

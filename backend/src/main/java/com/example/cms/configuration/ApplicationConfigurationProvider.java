@@ -1,6 +1,5 @@
 package com.example.cms.configuration;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Service;
 public class ApplicationConfigurationProvider {
 
     private final String applicationServer;
-    private final String databaseSchemaHandlingOnStartup;
-    private final String databaseSchemaCreateType;
+    private final DatabaseSchemaHandlingOnStartup databaseSchemaHandlingOnStartup;
+    private final DatabaseSchemaCreateType databaseSchemaCreateType;
     private final String typesenseApiKey;
     private final String typesenseHost;
     private final Path uploadsDirectory;
@@ -33,23 +32,24 @@ public class ApplicationConfigurationProvider {
      */
     @Autowired
     public ApplicationConfigurationProvider(
-            @Value("${applicationServer}") String applicationServer,
-            @Value("${databaseSchemaHandlingOnStartup}") String databaseSchemaHandlingOnStartup,
-            @Value("${databaseSchemaCreateType}") String databaseSchemaCreateType,
-            @Value("${typesenseApiKey}") String typesenseApiKey,
-            @Value("${typesenseHost}") String typesenseHost,
-            @Value("${uploadsDirectory}") String uploadsDirectory,
-            @Value("${backupsDirectory}") String backupsDirectory,
-            @Value("${typesenseCacheEnabled}") String typesenseCacheEnabled,
-            @Value("${typesenseCacheTtl}") String typesenseCacheTtl)
-            throws IOException {
+            @Value("${app.url}") String applicationServer,
+            @Value("${app.database.schema.handling-on-startup}")
+                    DatabaseSchemaHandlingOnStartup databaseSchemaHandlingOnStartup,
+            @Value("${app.database.schema.create-type}")
+                    DatabaseSchemaCreateType databaseSchemaCreateType,
+            @Value("${app.typesense.key}") String typesenseApiKey,
+            @Value("${app.typesense.host}") String typesenseHost,
+            @Value("${app.path.uploads}") String uploadsDirectory,
+            @Value("${app.path.backups}") String backupsDirectory,
+            @Value("${app.typesense.cache.enabled}") Boolean typesenseCacheEnabled,
+            @Value("${app.typesense.cache.ttl}") Integer typesenseCacheTtl) {
         this.applicationServer = applicationServer;
         this.databaseSchemaHandlingOnStartup = databaseSchemaHandlingOnStartup;
         this.databaseSchemaCreateType = databaseSchemaCreateType;
         this.typesenseApiKey = typesenseApiKey;
         this.typesenseHost = typesenseHost;
-        this.typesenseCacheEnabled = typesenseCacheEnabled.equals("true");
-        this.typesenseCacheTtl = this.typesenseCacheEnabled ? Integer.parseInt(typesenseCacheTtl) : 0;
+        this.typesenseCacheEnabled = typesenseCacheEnabled;
+        this.typesenseCacheTtl = this.typesenseCacheEnabled ? typesenseCacheTtl : 0;
 
         this.uploadsDirectory = Path.of(uploadsDirectory).toAbsolutePath().normalize();
         this.backupsDirectory = Path.of(backupsDirectory).toAbsolutePath().normalize();

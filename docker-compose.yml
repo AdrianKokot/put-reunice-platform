@@ -10,22 +10,15 @@ services:
     volumes:
       - ./db:/var/lib/postgresql/data 777
     ports:
-      - "5432:5432"
+      - 5432:5432
+    profiles:
+      - dev
+      - dev-be
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        APPLICATION_SERVER: ${APPLICATION_SERVER}
-        DATABASE_SCHEMA_HANDLING_ON_STARTUP: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP}
-        DATABASE_SCHEMA_CREATE_TYPE: ${DATABASE_SCHEMA_CREATE_TYPE}
-        SMTP_SERVER: ${SMTP_SERVER}
-        SMTP_PORT: ${SMTP_PORT}
-        SMTP_USERNAME: ${SMTP_USERNAME}
-        SMTP_PASSWORD: ${SMTP_PASSWORD}
-        UPLOADS_DIRECTORY: /uploads/
-        BACKUPS_DIRECTORY: /db-resources/
     container_name: backend
     env_file:
       - ./.env
@@ -33,31 +26,36 @@ services:
       - ./db-resources:/db-resources
       - ./uploads:/uploads
     ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-      - mailpit
-      - typesense
+      - 8080:8080
+    profiles:
+      - dev
+      - dev-be
+      - prod
 
   frontend:
     build: ./frontend
     container_name: frontend
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
+    profiles:
+      - dev
+      - prod
 
   mailpit:
     image: axllent/mailpit
     ports:
-      - "8025:8025"
-      - "1025:1025"
+      - 8025:8025
+      - 1025:1025
     environment:
       MP_SMTP_AUTH_ALLOW_INSECURE: true
       MP_UI_AUTH_FILE: /etc/.mailpitpsswd
       MP_SMTP_AUTH_FILE: /etc/.mailpitpsswd
     volumes:
       - ./.dev/.mailpitpsswd:/etc/.mailpitpsswd
+    profiles:
+      - dev
 
   typesense:
     image: typesense/typesense:0.25.1
@@ -65,7 +63,10 @@ services:
     env_file:
       - ./.env
     ports:
-      - "8108:8108"
+      - 8108:8108
     volumes:
       - ./typesense-data:/data
     command: '--data-dir /data --api-key=${TYPESENSE_API_KEY}'
+    profiles:
+      - dev
+      - prod

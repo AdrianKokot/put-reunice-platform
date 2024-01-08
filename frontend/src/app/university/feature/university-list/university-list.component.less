@@ -1,6 +1,6 @@
 .universities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
   grid-gap: 1.5rem;
 
   .tui-island {
@@ -35,12 +35,4 @@
       margin-bottom: 0.25rem;
     }
   }
-}
-
-.text-center {
-  text-align: center;
-}
-
-.no-universities {
-  grid-column: -1 / 1;
 }

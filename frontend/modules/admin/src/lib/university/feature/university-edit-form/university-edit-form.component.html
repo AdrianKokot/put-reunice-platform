@@ -14,7 +14,7 @@
           tuiTextfieldSize="m"
           [tuiTextfieldLabelOutside]="true"
         >
-          <input tuiTextfield type="text" />
+          <input tuiTextfield type="text" name="name" />
         </tui-input>
 
         <tui-error
@@ -32,7 +32,7 @@
           tuiTextfieldSize="m"
           [tuiTextfieldLabelOutside]="true"
         >
-          <input tuiTextfield type="text" />
+          <input tuiTextfield type="text" name="shortName" />
         </tui-input>
 
         <tui-error
@@ -42,25 +42,28 @@
       </label>
 
       <label
-        [tuiLabel]="'VISIBILITY' | translate"
+        [tuiLabel]="'UNIVERSITY_VISIBILITY' | translate"
         class="tui-form__multi-field"
       >
         <tui-select
           formControlName="hidden"
           tuiTextfieldSize="m"
+          data-test="visibility-select"
           [valueContent]="valueContent"
           [tuiTextfieldLabelOutside]="true"
         >
-          <tui-data-list *tuiDataList>
-            <button tuiOption [value]="false">
-              {{ 'VISIBLE' | translate }}
+          <tui-data-list *tuiDataList data-test="visibility-options">
+            <button tuiOption [value]="false" data-test="visibility-visible">
+              {{ 'UNIVERSITY_VISIBLE' | translate }}
             </button>
-            <button tuiOption [value]="true">{{ 'HIDDEN' | translate }}</button>
+            <button tuiOption [value]="true" data-test="visibility-hidden">
+              {{ 'UNIVERSITY_HIDDEN' | translate }}
+            </button>
           </tui-data-list>
         </tui-select>
 
         <ng-template #valueContent let-item>
-          {{ (item ? 'HIDDEN' : 'VISIBLE') | translate }}
+          {{ (item ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE') | translate }}
         </ng-template>
 
         <tui-error

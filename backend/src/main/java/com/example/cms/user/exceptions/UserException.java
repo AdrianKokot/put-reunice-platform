@@ -26,6 +26,8 @@ public class UserException extends BadRequestException {
                 return "ERRORS.USER.400.NOT_VALID_PASSWORD";
             case USER_IS_ENABLED:
                 return "ERRORS.USER.400.USER_ENABLED";
+            case EMAIL_TAKEN:
+                return "ERRORS.USER.400.EMAIL_TAKEN";
             default:
                 return "ERRORS.400";
         }

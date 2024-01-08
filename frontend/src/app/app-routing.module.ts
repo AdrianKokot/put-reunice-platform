@@ -32,6 +32,11 @@ const routes: Routes = [
     loadChildren: () => UniversityModule,
   },
   {
+    path: 'authors',
+    loadChildren: () =>
+      import('./author/author.module').then((m) => m.AuthorModule),
+  },
+  {
     loadChildren: () => AuthModule,
     path: 'auth',
   },

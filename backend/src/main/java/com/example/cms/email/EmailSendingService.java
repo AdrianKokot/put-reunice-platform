@@ -172,7 +172,7 @@ public class EmailSendingService {
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
             contentMap.put("[Nowy Status]", ticket.getStatus().name());
-            contentMap.put("[ticket_link]", "http://localhost/ticket" + ticket.getRequestedToken());
+            contentMap.put("[ticket_link]", "http://localhost/ticket" + ticket.getRequesterToken());
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);

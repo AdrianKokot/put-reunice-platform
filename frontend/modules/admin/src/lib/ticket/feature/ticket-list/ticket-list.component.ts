@@ -38,7 +38,7 @@ export class TicketListComponent extends ReuniceAbstractTable<Ticket> {
 
   readonly filtersForm = inject(FormBuilder).nonNullable.group({
     search: [''],
-    status_eq: [''],
+    status_eq: [null as Ticket['status'] | null],
     requestedTime_eq: [null as Date | null],
   });
 }

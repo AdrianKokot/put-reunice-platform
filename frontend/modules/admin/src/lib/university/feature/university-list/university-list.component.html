@@ -48,7 +48,7 @@
           [sticky]="true"
           class="column-rest"
         >
-          {{ 'UNIVERSITY_NAME' | translate }}
+          <span>{{ 'UNIVERSITY_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'shortName'"
@@ -57,7 +57,7 @@
           [sticky]="true"
           class="column-sm"
         >
-          {{ 'UNIVERSITY_SHORT_NAME' | translate }}
+          <span>{{ 'UNIVERSITY_SHORT_NAME' | translate }}</span>
         </th>
         <th
           *tuiHead="'hidden'"
@@ -66,15 +66,15 @@
           [sticky]="true"
           class="column-xs"
         >
-          {{ 'HIDDEN' | translate }}
+          <span>{{ 'UNIVERSITY_VISIBILITY' | translate }}</span>
 
           <reunice-table-filter formControlName="hidden_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="false">
-                {{ 'VISIBLE' | translate }}
+                {{ 'UNIVERSITY_VISIBLE' | translate }}
               </button>
               <button tuiOption [value]="true">
-                {{ 'HIDDEN' | translate }}
+                {{ 'UNIVERSITY_HIDDEN' | translate }}
               </button>
             </tui-data-list>
           </reunice-table-filter>
@@ -99,14 +99,17 @@
         "
         tuiTr
       >
-        <td *tuiCell="'name'" tuiTd>
+        <td *tuiCell="'name'" tuiTd class="column-rest">
           {{ item.name }}
         </td>
-        <td *tuiCell="'shortName'" tuiTd>
+        <td *tuiCell="'shortName'" tuiTd class="column-sm">
           {{ item.shortName }}
         </td>
-        <td *tuiCell="'hidden'" tuiTd>
-          {{ item.hidden }}
+        <td *tuiCell="'hidden'" tuiTd class="column-xs">
+          {{
+            (item.hidden ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE')
+              | translate
+          }}
         </td>
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
           <a

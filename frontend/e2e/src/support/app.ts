@@ -1,7 +1,12 @@
+import { LoginPage } from './pages/login.constants';
+
 export const waitForResponse = (alias: string, code: number) => {
   cy.wait(alias)
     .should('have.property', 'response')
     .and('have.property', 'statusCode', code);
+  // Wait for animation to finish
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
 };
 
 export const goToConsole = () => {
@@ -17,9 +22,57 @@ export const goToConsole = () => {
 
 export const TILES = {
   Universities: 'UNIVERSITIES',
+  Users: 'USERS',
+  Pages: 'PAGES',
 } as const;
 
 export const clickOnTile = (tileName: string) => {
   cy.get(`[data-test="dashboard-tile-${tileName.toUpperCase()}"]`).click();
   cy.url().should('contain', `/admin/${tileName.toLowerCase()}`);
+};
+
+export const goToTile = (tileName: string) => {
+  cy.visit(`/admin/${tileName.toLowerCase()}`);
+  cy.url().should('contain', `/admin/${tileName.toLowerCase()}`);
+};
+
+export enum E2EUser {
+  MAIN_ADMIN,
+}
+
+export const loginWith = (username: string, password: string) => {
+  cy.clearAllCookies();
+  LoginPage.visit();
+  const testAlias = `login${Date.now()}`;
+  cy.intercept('POST', '/api/login').as(testAlias);
+  LoginPage.fillForm(username, password);
+  cy.get(LoginPage.loginButton).click();
+  waitForResponse(`@${testAlias}`, 200);
+  cy.url().should('contain', '/universities');
+};
+
+export const login = (user: E2EUser) => {
+  switch (user) {
+    case E2EUser.MAIN_ADMIN:
+      loginWith('E2E_ADMIN', 'e2e_ADMIN1@');
+      break;
+    default:
+      throw new Error(`Unknown user ${user}`);
+  }
+};
+
+export const rememberLogin = (loginFn: () => void) => {
+  let appCookies: Cypress.Cookie[];
+
+  before(() => {
+    loginFn();
+    cy.getAllCookies().then((cookies) => {
+      appCookies = cookies.filter((cookie) => cookie.name !== 'XSRF-TOKEN');
+    });
+  });
+
+  beforeEach(() => {
+    cy.clearAllCookies();
+    appCookies.forEach((cookie) => cy.setCookie(cookie.name, cookie.value));
+  });
 };

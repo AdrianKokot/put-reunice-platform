@@ -1,4 +1,8 @@
-<form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
+<form
+  [formGroup]="handler.form"
+  (ngSubmit)="handler.submit()"
+  *tuiLet="pagesTree$ | async as pageTree"
+>
   <h3 class="tui-form__header">
     {{ 'PAGE_LOCATION' | translate }}
   </h3>
@@ -34,17 +38,13 @@
       {{ 'PARENT_PAGE' | translate }}
     </p>
 
-    <tui-island
-      size="s"
-      data-appearance="textfield"
-      *tuiLet="pagesTree$ | async as items"
-    >
+    <tui-island size="s" data-appearance="textfield">
       <div class="tui-island__content">
         <tui-tree
           class="tui-island__paragraph"
-          *ngIf="items; else loading"
+          *ngIf="pageTree; else loading"
           [tuiTreeController]="true"
-          [value]="items"
+          [value]="pageTree"
           [content]="treeContent"
           [childrenHandler]="pagesTreeHandler"
         ></tui-tree>
@@ -65,10 +65,9 @@
               type="radio"
               formControlName="parentId"
               [value]="page.id"
-              (tuiCheckedChange)="form.controls.parentName.setValue(page.title)"
+              (change)="onParentIdChange(inputElement.checked, page)"
               #inputElement
             />
-
             <span>
               {{ page.title }}
             </span>
@@ -89,7 +88,7 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="text" />
+        <input tuiTextfield type="text" name="title" />
       </tui-input>
 
       <tui-error
@@ -98,23 +97,29 @@
       ></tui-error>
     </label>
 
-    <label [tuiLabel]="'VISIBILITY' | translate" class="tui-form__multi-field">
+    <label
+      [tuiLabel]="'PAGE_VISIBILITY' | translate"
+      class="tui-form__multi-field"
+    >
       <tui-select
         formControlName="hidden"
         tuiTextfieldSize="m"
         [valueContent]="valueContent"
         [tuiTextfieldLabelOutside]="true"
+        data-test="visibility-select"
       >
-        <tui-data-list *tuiDataList>
-          <button tuiOption [value]="false">
-            {{ 'VISIBLE' | translate }}
+        <tui-data-list *tuiDataList data-test="visibility-select-options">
+          <button tuiOption [value]="false" data-test="visibility-visible">
+            {{ 'PAGE_VISIBLE' | translate }}
           </button>
-          <button tuiOption [value]="true">{{ 'HIDDEN' | translate }}</button>
+          <button tuiOption [value]="true" data-test="visibility-hidden">
+            {{ 'PAGE_HIDDEN' | translate }}
+          </button>
         </tui-data-list>
       </tui-select>
 
       <ng-template #valueContent let-item>
-        {{ (item ? 'HIDDEN' : 'VISIBLE') | translate }}
+        {{ (item ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
       </ng-template>
 
       <tui-error
@@ -181,7 +186,7 @@
         'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION'
           | translate
             : {
-                location: form.controls.parentName.value,
+                location: selectedPageName,
                 state:
                   (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE')
                   | translate

@@ -1,0 +1,50 @@
+<ng-container *tuiLet="pages$ | async as pages">
+  <h2
+    class="tui-text_h3 tui-space_top-14"
+    [class.tui-skeleton]="author === null"
+    *tuiLet="author$ | async as author"
+  >
+    <ng-container *ngIf="author !== null; else dash">
+      {{ 'PAGES_CREATED_BY' | translate: { author: author } }}
+    </ng-container>
+    <ng-template #dash>-</ng-template>
+  </h2>
+
+  <div class="pages-grid tui-space_bottom-6">
+    <a
+      *ngFor="let page of pages; else: loading; empty: blank"
+      tuiIsland
+      [routerLink]="['/universities', page.university.id, 'page', page.id]"
+    >
+      <h3 class="tui-island__title tui-space_bottom-1">{{ page.title }}</h3>
+      <p class="tui-island__paragraph">
+        <tui-line-clamp [content]="page.description" [linesLimit]="2" />
+      </p>
+      <p class="tui-island__category">
+        {{ page.university.name }} | {{ page.createdOn | localizedDate }}
+      </p>
+    </a>
+  </div>
+
+  <tui-pagination
+    *tuiLet="totalPages$ | async as totalPages"
+    [class.d-none]="(totalPages ?? 2) < 2"
+    [length]="totalPages ?? 1"
+    [index]="(pageIndex$ | async) ?? 0"
+    (indexChange)="pageIndex$.next($event)"
+  />
+
+  <ng-template #loading>
+    <tui-island *ngFor="let i of placeholderArray">
+      <h3 class="tui-island__title tui-space_bottom-1 tui-skeleton">-</h3>
+      <p class="tui-island__paragraph tui-skeleton">-</p>
+      <p class="tui-island__category tui-skeleton">-</p>
+    </tui-island>
+  </ng-template>
+
+  <ng-template #blank>
+    <p class="text-center no-pages tui-text_body-m">
+      {{ 'NO_PAGES_FOUND' | translate }}
+    </p>
+  </ng-template>
+</ng-container>
