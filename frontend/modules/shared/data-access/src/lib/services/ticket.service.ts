@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AbstractApiService } from './abstract-api.service';
+import {
+  AbstractApiService,
+  TOTAL_ITEMS_HEADER,
+  toHttpParams,
+} from './abstract-api.service';
 import { Ticket, TicketResponse } from '../models/ticket';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ApiParams, ApiPaginatedResponse } from '../api.params';
 
 type TicketCreatePayload = Pick<
   Ticket,
@@ -17,6 +22,24 @@ export class TicketService extends AbstractApiService<
 > {
   constructor() {
     super('/api/tickets');
+  }
+
+  override getAll(
+    params: ApiParams<Ticket> & { unseen?: true } = {},
+  ): Observable<ApiPaginatedResponse<Ticket>> {
+    return this._http
+      .get<Ticket[]>(this._resourceUrl, {
+        params: toHttpParams(params),
+        observe: 'response',
+      })
+      .pipe(
+        map(
+          ({ body, headers }): ApiPaginatedResponse<Ticket> => ({
+            totalItems: Number(headers.get(TOTAL_ITEMS_HEADER)),
+            items: body ?? [],
+          }),
+        ),
+      );
   }
 
   getResponses(id: Ticket['id']) {
