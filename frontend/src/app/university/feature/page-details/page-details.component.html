@@ -23,28 +23,53 @@
 
   <hr />
 
-  <div class="d-block tui-space_vertical-3">
+  <div class="d-block tui-space_vertical-6">
     <tui-editor-socket
       [content]="page?.content ?? '-'"
       [class.tui-skeleton]="page === null"
     ></tui-editor-socket>
   </div>
 
-  <hr />
+  <div class="tui-space_bottom-4">
+    <reunice-page-files-list />
+    <reunice-page-contact-form *ngIf="page && page.hasContactRequestHandler" />
+  </div>
 
-  <p
-    class="text-02"
+  <hr class="tui-space_top-8" />
+  <div
+    class="text-02 tui-space_vertical-4 page-info-grid"
     [class.tui-skeleton]="page === null"
     *ngIf="page === null || page.creator"
   >
-    {{ 'AUTHOR' | translate }}:
-    <a tuiLink [routerLink]="['/authors', page?.creator?.id]">
-      {{ page?.creator?.firstName ?? '-' }} {{ page?.creator?.lastName ?? '-' }}
-    </a>
-  </p>
+    <div>
+      <a tuiLink [routerLink]="['/universities', page?.university?.id]">
+        {{ page?.university?.name }}
+      </a>
+    </div>
+    <div>
+      {{ 'AUTHOR' | translate }}:
+      <a tuiLink [routerLink]="['/authors', page?.creator?.id]">
+        {{ page?.creator?.firstName ?? '-' }}
+        {{ page?.creator?.lastName ?? '-' }}
+      </a>
+    </div>
 
-  <div class="tui-space_top-14 tui-space_bottom-4">
-    <reunice-page-files-list />
-    <reunice-page-contact-form *ngIf="page && page.hasContactRequestHandler" />
+    <ng-container
+      *tuiLet="page?.createdOn | localizedDate: 'short' as createdOn"
+    >
+      <div>
+        {{ 'PAGE_PUBLISHED_ON' | translate }}:
+        {{ createdOn }}
+      </div>
+
+      <ng-container
+        *tuiLet="page?.updatedOn | localizedDate: 'short' as updatedOn"
+      >
+        <div *ngIf="createdOn !== updatedOn">
+          {{ 'PAGE_LAST_MODIFIED_ON' | translate }}:
+          {{ updatedOn }}
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 </ng-container>

@@ -43,7 +43,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        canMatch: [RedirectToUniversityMainPage],
+        canActivate: [RedirectToUniversityMainPage],
         component: PageDetailsComponent,
       },
     ],

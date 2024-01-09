@@ -39,7 +39,7 @@ public class PageService {
 
     public PageDtoDetailed get(Long id) {
         return pageRepository
-                .findById(id)
+                .findDetailedById(id)
                 .map(
                         page -> {
                             if (!isPageVisible(page)) {
@@ -129,9 +129,7 @@ public class PageService {
     }
 
     private List<Page> findVisibleSubpages(Pageable pageable, Page page) {
-        return pageRepository.findAllByParent(pageable, page).stream()
-                .filter(this::isPageVisible)
-                .collect(Collectors.toList());
+        return pageRepository.findAllByParentAndHiddenFalseAndUniversityHiddenFalse(pageable, page);
     }
 
     private boolean isPageVisible(Page page) {
