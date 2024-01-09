@@ -13,6 +13,8 @@ type TicketCreatePayload = Pick<
   'pageId' | 'title' | 'description' | 'requesterEmail'
 >;
 
+type Token = string;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -22,6 +24,19 @@ export class TicketService extends AbstractApiService<
 > {
   constructor() {
     super('/api/tickets');
+  }
+
+  override get(id: Ticket['id'], token?: Token) {
+    return this._http.get<Ticket>(`${this._resourceUrl}/${id}`, {
+      params: toHttpParams({ token }),
+    });
+  }
+
+  createTicket(resource: Partial<TicketCreatePayload>) {
+    return this._http.post<{ ticketId: Ticket['id']; ticketToken: Token }>(
+      this._resourceUrl,
+      resource,
+    );
   }
 
   override getAll(
@@ -42,19 +57,22 @@ export class TicketService extends AbstractApiService<
       );
   }
 
-  getResponses(id: Ticket['id']) {
+  getResponses(id: Ticket['id'], token?: Token) {
     return this._http.get<TicketResponse[]>(
       `${this._resourceUrl}/${id}/responses`,
+      { params: toHttpParams({ token }) },
     );
   }
 
   sendResponse(
     id: Ticket['id'],
     content: TicketResponse['content'],
+    token?: Token,
   ): Observable<TicketResponse[]> {
     return this._http.post<TicketResponse[]>(
       `${this._resourceUrl}/${id}/responses`,
       { content },
+      { params: toHttpParams({ token }) },
     );
   }
 

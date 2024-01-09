@@ -56,6 +56,7 @@ public class Ticket {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
+    @OrderBy("responseTime ASC")
     private Set<Response> responses;
 
     @GeneratedValue(strategy = GenerationType.AUTO)

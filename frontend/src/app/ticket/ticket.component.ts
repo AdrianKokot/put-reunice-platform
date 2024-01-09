@@ -34,6 +34,7 @@ import {
 } from 'rxjs';
 import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'reunice-ticket',
@@ -61,6 +62,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export class TicketComponent {
   private readonly _id$ = resourceIdFromRoute();
   private readonly _service = inject(TicketService);
+  readonly token = inject(ActivatedRoute).snapshot.queryParams['token'];
 
   private readonly _changeStatusRequest$ = new Subject<Ticket['status']>();
   private readonly _sendResponseRequest$ = new Subject<
@@ -82,21 +84,23 @@ export class TicketComponent {
     this._sendResponseRequest$,
   ]).pipe(
     switchMap(([id, content]) =>
-      this._service.sendResponse(id, content).pipe(startWith(null)),
+      this._service.sendResponse(id, content, this.token).pipe(startWith(null)),
     ),
     shareReplay(),
   );
 
   ticket$ = merge(this._id$, this._changeStatus$).pipe(
     switchMap(() => this._id$),
-    switchMap((id) => this._service.get(id).pipe(startWith(null))),
+    switchMap((id) => this._service.get(id, this.token).pipe(startWith(null))),
     shareReplay(),
   );
   ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => Boolean(data)));
 
   responses$ = merge(this._id$, this._sendResponse$).pipe(
     switchMap(() => this._id$),
-    switchMap((id) => this._service.getResponses(id).pipe(startWith(null))),
+    switchMap((id) =>
+      this._service.getResponses(id, this.token).pipe(startWith(null)),
+    ),
     shareReplay(),
   );
   responsesKeepPrevious$ = this.responses$.pipe(
