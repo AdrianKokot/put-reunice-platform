@@ -688,12 +688,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         universityService.update(1L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
         universityService.update(2L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
         universityService.update(3L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
-        universityService.update(4L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
-        universityService.update(5L, new UniversityDtoFormUpdate(null, null, null, null, null, true));
+        universityService.update(5L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
         universityService.update(6L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
-        universityService.update(7L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
         universityService.update(8L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
-        universityService.update(9L, new UniversityDtoFormUpdate(null, null, null, null, null, true));
         universityService.update(10L, new UniversityDtoFormUpdate(null, null, null, null, null, false));
 
         universityService.enrollUsersToUniversity(1L, 4L);
@@ -1142,241 +1139,122 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         pageService.save(
                 new PageDtoFormCreate("History", "The history of our university.", "", 36L, 10L, false));
 
+        var page = pageService.get(1L);
         pageService.update(
                 1L,
                 new PageDtoFormUpdate(
-                        "Education",
-                        "The list of courses we offer.",
-                        "<section>\n"
-                                + "        <h2>Undergraduate Programs</h2>\n"
-                                + "        <p>Discover our range of undergraduate programs in engineering and technology fields.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Computer Science</li>\n"
-                                + "            <li>Electrical Engineering</li>\n"
-                                + "            <li>Civil Engineering</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Graduate Programs</h2>\n"
-                                + "        <p>Explore advanced studies in various engineering disciplines.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Mechanical Engineering</li>\n"
-                                + "            <li>Chemical Engineering</li>\n"
-                                + "            <li>Architecture</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Poznan University of Technology is the best technical university in the Wielkopolskie voivodeship in western Poland. PUT is the third most frequently chosen university in Poland, as up to six candidates competed for a place there.",
+                        "<section><h2>About us</h2><p>PUT is the best technical university in the Wielkopolskie voivodeship in western Poland. PUT is the third most frequently chosen university in Poland, as up to six candidates competed for a place there. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>PUT offers 30 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(5L, 7L),
                         null));
+
+        page = pageService.get(2L);
         pageService.update(
                 2L,
                 new PageDtoFormUpdate(
-                        "Computer Science",
-                        "The Bachelor of Science in Computer Science program at Poznań University of Technology provides a comprehensive foundation in computer science theory and practical programming skills.",
-                        " <section>\n"
-                                + "        <h2>Program Overview</h2>\n"
-                                + "        <p>Students will study a range of subjects including algorithms, data structures, software engineering, and database systems. The program also emphasizes hands-on projects and collaborative learning.</p>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Key Courses</h2>\n"
-                                + "        <ul>\n"
-                                + "            <li>Introduction to Algorithms</li>\n"
-                                + "            <li>Object-Oriented Programming</li>\n"
-                                + "            <li>Database Systems</li>\n"
-                                + "            <li>Software Engineering</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Career Opportunities</h2>\n"
-                                + "        <p>Graduates of this program are well-equipped for roles in software development, web development, database administration, and more.</p>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Adam Mickiewicz University in Poznań (AMU) is one of the major Polish universities, located in the city of Poznań, Greater Poland, in the west of the country.",
+                        "<section><h2>About us</h2><p>Adam Mickiewicz University in Poznań (AMU) is one of the major Polish universities, located in the city of Poznań, Greater Poland, in the west of the country. It traces its origins to 1611 and officially opened on May 7, 1919. Since 1955, it has carried the name of the Polish Romantic poet Adam Mickiewicz. The university has been frequently listed as a top three university in the country.</p></section><section><h2>Our offer</h2><p>AMU offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(5L, 6L, 7L),
                         null));
+
+        page = pageService.get(3L);
         pageService.update(
                 3L,
                 new PageDtoFormUpdate(
-                        "Undergraduate Programs",
-                        "Undergraduate Programs",
-                        "    <section>\n"
-                                + "        <h2>Bachelor of Science in Computer Science</h2>\n"
-                                + "        <p>Explore the foundational principles of computer science and gain practical programming skills.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Introduction to Algorithms</li>\n"
-                                + "            <li>Object-Oriented Programming</li>\n"
-                                + "            <li>Database Systems</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Bachelor of Engineering in Electrical Engineering</h2>\n"
-                                + "        <p>Study the core concepts of electrical engineering and specialize in areas like power systems or electronics.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Electric Circuits</li>\n"
-                                + "            <li>Signals and Systems</li>\n"
-                                + "            <li>Power Electronics</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Poznań University of Medical Sciences (PUMS) is one of the best and largest medical universities in Poland, with over 100 years of sound academic experience and great growth momentum.",
+                        "<section><h2>About us</h2><p>Poznań University of Medical Sciences (PUMS) is one of the best and largest medical universities in Poland, with over 100 years of sound academic experience and great growth momentum. The University is a leading medical school in Poland and is currently recognized as the largest educational, research, and clinical center in Poland. The University is also a vibrant place where students and academics of over 60 nationalities create a thriving and inspiring academic community.</p></section><section><h2>Our offer</h2><p>PUMS offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(5L, 7L, 4L),
                         null));
+
+        page = pageService.get(4L);
         pageService.update(
                 4L,
                 new PageDtoFormUpdate(
-                        "Undergraduate Programs",
-                        "Undergraduate Programs",
-                        "    <section>\n"
-                                + "        <h2>Bachelor of Science in Computer Science</h2>\n"
-                                + "        <p>Explore the foundational principles of computer science and gain practical programming skills.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Introduction to Algorithms</li>\n"
-                                + "            <li>Object-Oriented Programming</li>\n"
-                                + "            <li>Database Systems</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Bachelor of Engineering in Electrical Engineering</h2>\n"
-                                + "        <p>Study the core concepts of electrical engineering and specialize in areas like power systems or electronics.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Electric Circuits</li>\n"
-                                + "            <li>Signals and Systems</li>\n"
-                                + "            <li>Power Electronics</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Poznań University of Economics and Business (PUEB) is one of the oldest, most prestigious schools of economics in Poland. Since 1926, we have been continually developing higher education and ensuring high quality of scientific studies.",
+                        "<section><h2>About us</h2><p>Poznań University of Economics and Business (PUEB) is one of the oldest, most prestigious schools of economics in Poland. Since 1926, we have been continually developing higher education and ensuring high quality of scientific studies. We prepare numerous economic expert reports and implement innovative projects. High-quality education, which we have provided for years, allows our students and graduates to successfully face the challenges of a dynamic labour market.</p></section><section><h2>Our offer</h2><p>PUEB offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(5L, 6L, 4L, 7L),
                         null));
+
+        page = pageService.get(5L);
         pageService.update(
                 5L,
                 new PageDtoFormUpdate(
-                        "Graduate Programs",
-                        "Graduate Programs",
-                        " <section>\n"
-                                + "        <h2>Master of Science in Mechanical Engineering</h2>\n"
-                                + "        <p>Deepen your knowledge in mechanical engineering with advanced coursework and research opportunities.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Finite Element Analysis</li>\n"
-                                + "            <li>Advanced Thermodynamics</li>\n"
-                                + "            <li>Robotics and Automation</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Master of Engineering in Chemical Engineering</h2>\n"
-                                + "        <p>Specialize in chemical process engineering or materials engineering with advanced coursework and projects.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Chemical Reactor Design</li>\n"
-                                + "            <li>Polymer Science</li>\n"
-                                + "            <li>Process Safety</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "University of Fine Arts in Poznań (UAP) is a public university in Poznań, Poland. It was founded in 1919 as the first university in Poland to provide higher education in fine arts.",
+                        "<section><h2>About us</h2><p>University of Fine Arts in Poznań (UAP) is a public university in Poznań, Poland. It was founded in 1919 as the first university in Poland to provide higher education in fine arts. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>UAP offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(5L, 22L),
                         null));
+
+        page = pageService.get(6L);
         pageService.update(
                 6L,
                 new PageDtoFormUpdate(
-                        "Engineering in Electrical Engineering",
-                        "The Bachelor of Engineering in Electrical Engineering program at Poznań University of Technology offers a solid foundation in electrical engineering principles and specialized knowledge in areas like power systems or electronics.",
-                        "<section>\n"
-                                + "        <h2>Program Overview</h2>\n"
-                                + "        <p>Students will study subjects including electric circuits, signals and systems, and power electronics. The program also includes hands-on labs and practical projects.</p>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Specializations</h2>\n"
-                                + "        <ul>\n"
-                                + "            <li>Power Systems</li>\n"
-                                + "            <li>Electronics</li>\n"
-                                + "            <li>Control Systems</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Career Paths</h2>\n"
-                                + "        <p>Graduates are prepared for careers in power generation and distribution, electronics design, control systems engineering, and more.</p>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Wroclaw University of Technology (WUT) is a public research university located in Wrocław, Poland. The Wrocław University of Technology is the largest university in the Lower Silesian Voivodeship with over 35,000 students.",
+                        "<section><h2>About us</h2><p>Wroclaw University of Technology (WUT) is a public research university located in Wrocław, Poland. The Wrocław University of Technology is the largest university in the Lower Silesian Voivodeship with over 35,000 students. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>WUT offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
+
+        page = pageService.get(7L);
         pageService.update(
                 7L,
                 new PageDtoFormUpdate(
-                        "Research",
-                        "At Poznań University of Technology, we're dedicated to cutting-edge research that drives innovation.",
-                        "<section>\n"
-                                + "        <h2>Research Areas</h2>\n"
-                                + "        <ul>\n"
-                                + "            <li>Artificial Intelligence</li>\n"
-                                + "            <li>Green Energy Technologies</li>\n"
-                                + "            <li>Advanced Materials</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Research Facilities</h2>\n"
-                                + "        <p>Explore our state-of-the-art labs and centers for scientific discovery.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Robotics Lab</li>\n"
-                                + "            <li>Nanotechnology Center</li>\n"
-                                + "            <li>Environmental Engineering Lab</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Karol Lipiński Academy of Music in Wrocław (KLAMW) is a public university located in Wrocław, Poland. The Academy of Music in Wrocław is the oldest music school in Poland.",
+                        "<section><h2>About us</h2><p>Karol Lipiński Academy of Music in Wrocław (KLAMW) is a public university located in Wrocław, Poland. The Academy of Music in Wrocław is the oldest music school in Poland. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>KLAMW offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
+
+        page = pageService.get(8L);
         pageService.update(
                 8L,
                 new PageDtoFormUpdate(
-                        "International Programs",
-                        "Explore opportunities for international students to study at Poznań University of Technology.",
-                        "<section>\n"
-                                + "        <h2>Exchange Programs</h2>\n"
-                                + "        <p>Information on exchange partnerships and study abroad opportunities.</p>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>English-Taught Programs</h2>\n"
-                                + "        <p>Discover programs offered in English for international students.</p>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Gdynia Maritime University (GMU) is a public university located in Gdynia, Poland. The Gdynia Maritime University is the largest maritime university in Poland. It is also one of the largest maritime universities in Europe.",
+                        "<section><h2>About us</h2><p>Gdynia Maritime University (GMU) is a public university located in Gdynia, Poland. The Gdynia Maritime University is the largest maritime university in Poland. It is also one of the largest maritime universities in Europe. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>GMU offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
+
+        page = pageService.get(9L);
         pageService.update(
                 9L,
                 new PageDtoFormUpdate(
-                        "Facilities",
-                        "Facilities",
-                        "    <section>\n"
-                                + "        <h2>Libraries</h2>\n"
-                                + "        <p>Explore our well-equipped libraries with extensive collections of engineering and technology resources.</p>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>Laboratories</h2>\n"
-                                + "        <p>Information about specialized labs supporting hands-on learning and research.</p>\n"
-                                + "        <ul>\n"
-                                + "            <li>Advanced Materials Lab</li>\n"
-                                + "            <li>Robotics and Automation Lab</li>\n"
-                                + "            <li>Fluid Dynamics Lab</li>\n"
-                                + "        </ul>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "Chopin University of Music (CUM) is a public university located in Warsaw, Poland. The Chopin University of Music is the oldest music school in Poland. It was founded in 1810 by Frederick Augustus I, King of Saxony and Grand Duke of Warsaw.",
+                        "<section><h2>About us</h2><p>Chopin University of Music (CUM) is a public university located in Warsaw, Poland. The Chopin University of Music is the oldest music school in Poland. It was founded in 1810 by Frederick Augustus I, King of Saxony and Grand Duke of Warsaw. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>CUM offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. CUM has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
+
+        page = pageService.get(10L);
         pageService.update(
                 10L,
                 new PageDtoFormUpdate(
-                        "Contact",
-                        "Get in touch with us for inquiries, admissions, and general information about Poznań University of Technology.",
-                        "<section>\n"
-                                + "        <h2>Admissions Office</h2>\n"
-                                + "        <p>Contact details for the admissions office for prospective students.</p>\n"
-                                + "    </section>\n"
-                                + "    <section>\n"
-                                + "        <h2>General Inquiries</h2>\n"
-                                + "        <p>For any other questions or information, feel free to reach out to our main office.</p>\n"
-                                + "    </section>",
+                        page.getTitle(),
+                        "University of Szczecin (US) is a public university located in Szczecin, Poland. The University of Szczecin is the largest university in the West Pomeranian Voivodeship with over 35,000 students.",
+                        "<section><h2>About us</h2><p>University of Szczecin (US) is a public university located in Szczecin, Poland. The University of Szczecin is the largest university in the West Pomeranian Voivodeship with over 35,000 students. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>US offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. US has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         true,
                         Set.of(),
                         null));
 
         templateService.save(
                 new TemplateDtoFormCreate(
-                        "UniversityTemplate", "Template used for university main page", Set.of(), true));
+                        "UniversityTemplate",
+                        "<section><h2>About us</h2><p>Some information about University</p></section><section><h2>Our offer</h2><p>Some information about University's offer</p></section>",
+                        Set.of(),
+                        true));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken("admin", "51D7k4F8"));

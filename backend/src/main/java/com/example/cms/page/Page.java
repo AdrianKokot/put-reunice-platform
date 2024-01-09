@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter
@@ -35,9 +36,11 @@ public class Page {
     private Long id;
 
     @NotBlank(message = "ERRORS.PAGE.400.TITLE_EMPTY")
+    @Length(max = 255, message = "ERRORS.PAGE.400.TITLE_TOO_LONG")
     private String title;
 
     @NotBlank(message = "ERRORS.PAGE.400.DESCRIPTION_EMPTY")
+    @Length(max = 255, message = "ERRORS.PAGE.400.DESCRIPTION_TOO_LONG")
     private String description;
 
     @NotNull(message = "ERRORS.PAGE.400.CONTENT_EMPTY")
