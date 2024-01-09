@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tickets")
 public class TicketController {
     private final TicketService service;
+    private final ResponseRepository responseRepository;
 
     @GetMapping
     public ResponseEntity<List<TicketDto>> getTickets(
@@ -59,7 +60,7 @@ public class TicketController {
     public ResponseEntity<List<Response>> getTicketResponses(
             Pageable pageable, @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
         Ticket ticket = service.getTicketDetailed(ticketId, token);
-        List<Response> responses = ticket.getResponses(pageable);
+        List<Response> responses = responseRepository.findAllByTicket(pageable, ticket);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
