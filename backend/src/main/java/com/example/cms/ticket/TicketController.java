@@ -56,10 +56,10 @@ public class TicketController {
     }
 
     @GetMapping("/{ticketId}/responses")
-    public ResponseEntity<Set<Response>> getTicketResponses(
-            Pageable pageable, @PathVariable UUID ticketId) {
-        Ticket ticket = service.getTicketById(ticketId);
-        Set<Response> responses = ticket.getResponses();
+    public ResponseEntity<List<Response>> getTicketResponses(
+            Pageable pageable, @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+        Ticket ticket = service.getTicketDetailed(ticketId, token);
+        List<Response> responses = ticket.getResponses(pageable);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
@@ -69,9 +69,9 @@ public class TicketController {
 
     @PutMapping("/{ticketId}")
     public ResponseEntity<?> updateTicketStatus(
-            @PathVariable UUID ticketId, @RequestBody TicketStatus ticketStatusToChangeTo) {
+            @PathVariable UUID ticketId, @RequestBody TicketStatus ticketStatusToChangeTo, @RequestParam Optional<UUID> token) {
         TicketDtoDetailed ticketDtoDetailed =
-                service.updateTicketStatus(ticketStatusToChangeTo, ticketId);
+                service.updateTicketStatus(ticketStatusToChangeTo, ticketId, token);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));
 
@@ -79,15 +79,10 @@ public class TicketController {
     }
 
     @PostMapping("/{ticketId}/responses")
-    public ResponseEntity<Set<Response>> addResponse(
-            @PathVariable UUID ticketId, @RequestBody ResponseDtoCreate responseDtoCreate) {
-        service.addResponse(ticketId, responseDtoCreate.getContent());
+    public ResponseEntity<List<Response>> addResponse(
+            @PathVariable UUID ticketId, @RequestBody ResponseDtoCreate responseDtoCreate, @RequestParam Optional<UUID> token) {
+        service.addResponse(ticketId, responseDtoCreate.getContent(), token);
 
-        Set<Response> responses = service.getTicketById(ticketId).getResponses();
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("X-Whole-Content-Length", String.valueOf(responses.size()));
-
-        return new ResponseEntity<>(responses, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -4,12 +4,15 @@ import com.example.cms.page.Page;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 @Entity
 @Setter
@@ -61,6 +64,27 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     private UUID requesterToken;
+
+    public List<Response> getResponses(Pageable pageable) {
+        List<Response> allResponses = this.responses.stream()
+                .sorted(Comparator.comparing(Response::getResponseTime).reversed())
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allResponses.size());
+
+        try {
+            return allResponses.subList(start, end);
+        } catch (Exception ex) {
+            return List.of();
+        }
+    }
+
+    public List<Response> getResponses() {
+        return this.responses.stream()
+                .sorted(Comparator.comparing(Response::getResponseTime).reversed())
+                .collect(Collectors.toList());
+    }
 
     @Override
     public String toString() {
