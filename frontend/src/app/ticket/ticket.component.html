@@ -66,7 +66,9 @@
 
     <div class="tui-form__buttons tui-form__buttons_align_end gap-4">
       <button
-        *ngIf="ticket?.status === 'NEW' || ticket?.status === 'HANDLED'"
+        *ngIf="
+          !token && (ticket?.status === 'NEW' || ticket?.status === 'HANDLED')
+        "
         tuiButton
         type="button"
         appearance="secondary-destructive"
@@ -76,7 +78,7 @@
         {{ 'TICKET_MARK_IRRELEVANT' | translate }}
       </button>
       <button
-        *ngIf="ticket?.status === 'IRRELEVANT'"
+        *ngIf="!token && ticket?.status === 'IRRELEVANT'"
         tuiButton
         type="button"
         appearance="secondary-destructive"
@@ -94,7 +96,6 @@
           tuiButton
           type="button"
           appearance="secondary"
-          class="tui-group__auto-width-item"
           [disabled]="responseForm.invalid"
           (click)="sendResponse()"
           [showLoader]="!!(loading$ | async)"
@@ -102,6 +103,7 @@
           {{ 'TICKET_REPLY' | translate }}
         </button>
         <button
+          *ngIf="!token"
           tuiButton
           type="submit"
           (click)="changeStatus('RESOLVED')"

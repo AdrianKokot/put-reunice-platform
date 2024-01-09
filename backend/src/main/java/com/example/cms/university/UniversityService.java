@@ -93,6 +93,7 @@ public class UniversityService {
     }
 
     @Secured("ROLE_ADMIN")
+    @Transactional
     public UniversityDtoDetailed addNewUniversity(UniversityDtoFormCreate form) {
         if (universityRepository.existsByNameOrShortName(form.getName(), form.getShortName())) {
             throw new UniversityException(UniversityExceptionType.NAME_TAKEN, "name");
@@ -127,11 +128,15 @@ public class UniversityService {
             throw new UniversityForbiddenException();
         }
 
+        var isVisibilityChanged = university.isHidden() != form.getHidden();
+
         form.updateUniversity(university);
 
         var result = UniversityDtoDetailed.of(universityRepository.save(university));
 
-        searchService.upsert(pageRepository.findAllByUniversity(university));
+        if (isVisibilityChanged) {
+            searchService.upsert(pageRepository.findAllByUniversityAndJoinLazyResources(university));
+        }
 
         return result;
     }

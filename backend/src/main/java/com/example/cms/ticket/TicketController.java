@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +60,7 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/responses")
     public ResponseEntity<List<Response>> getTicketResponses(
-            Pageable pageable, @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+            @PageableDefault(sort = {"responseTime"}, direction = Sort.Direction.DESC) Pageable pageable, @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
         Ticket ticket = service.getTicketDetailed(ticketId, token);
         List<Response> responses = responseRepository.findAllByTicket(pageable, ticket);
 

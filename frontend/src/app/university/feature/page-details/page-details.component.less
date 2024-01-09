@@ -1,3 +1,5 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.less';
+
 .section-border:not(.d-none) {
   display: block;
   border-top: 1px solid var(--tui-base-03);
@@ -11,4 +13,14 @@ reunice-page-contact-form {
 reunice-page-files-list:not(:empty),
 reunice-page-files-list:empty + reunice-page-contact-form {
   border-top: 1px solid var(--tui-base-03);
+}
+
+.page-info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2rem;
+
+  @media @tui-tablet {
+    flex-direction: column;
+  }
 }

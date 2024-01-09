@@ -45,7 +45,9 @@ public class TicketService {
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         String author =
-                loggedUserOptional.isPresent() ? loggedUserOptional.get().getUsername() : "Anonymous";
+                loggedUserOptional.isPresent()
+                        ? loggedUserOptional.get().getUsername()
+                        : ticket.getRequesterEmail();
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
         if (userStatusOptional.isPresent()) {

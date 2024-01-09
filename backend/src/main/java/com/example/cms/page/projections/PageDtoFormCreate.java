@@ -22,8 +22,7 @@ public class PageDtoFormCreate {
         page.setParent(parent);
         page.setUniversity(parent.getUniversity());
         page.setCreator(creator);
-        // If parent page is hidden, create as hidden too
-        page.setHidden(parent.isHidden() || hidden);
+        page.setHidden(hidden);
         return page;
     }
 }

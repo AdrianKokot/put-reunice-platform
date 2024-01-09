@@ -14,6 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PageContactFormComponent } from '../page-contact-form/page-contact-form.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
+import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
   selector: 'reunice-page-details',
@@ -33,6 +34,7 @@ import { fromPromise } from 'rxjs/internal/observable/innerFrom';
     TuiHintModule,
     TranslateModule,
     PageContactFormComponent,
+    LocalizedPipeModule,
   ],
   styleUrls: ['./page-details.component.less'],
   templateUrl: './page-details.component.html',
