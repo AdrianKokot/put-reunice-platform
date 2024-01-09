@@ -69,7 +69,9 @@ public class TicketController {
 
     @PutMapping("/{ticketId}")
     public ResponseEntity<?> updateTicketStatus(
-            @PathVariable UUID ticketId, @RequestBody TicketStatus ticketStatusToChangeTo, @RequestParam Optional<UUID> token) {
+            @PathVariable UUID ticketId,
+            @RequestBody TicketStatus ticketStatusToChangeTo,
+            @RequestParam Optional<UUID> token) {
         TicketDtoDetailed ticketDtoDetailed =
                 service.updateTicketStatus(ticketStatusToChangeTo, ticketId, token);
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -80,7 +82,9 @@ public class TicketController {
 
     @PostMapping("/{ticketId}/responses")
     public ResponseEntity<List<Response>> addResponse(
-            @PathVariable UUID ticketId, @RequestBody ResponseDtoCreate responseDtoCreate, @RequestParam Optional<UUID> token) {
+            @PathVariable UUID ticketId,
+            @RequestBody ResponseDtoCreate responseDtoCreate,
+            @RequestParam Optional<UUID> token) {
         service.addResponse(ticketId, responseDtoCreate.getContent(), token);
 
         return new ResponseEntity<>(HttpStatus.OK);

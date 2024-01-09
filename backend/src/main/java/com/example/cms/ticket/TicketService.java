@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -152,7 +151,8 @@ public class TicketService {
         return ticketRepository.findAll(combinedSpecification, pageable);
     }
 
-    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId, Optional<UUID> token)
+    public TicketDtoDetailed updateTicketStatus(
+            TicketStatus statusToChangeTo, UUID ticketId, Optional<UUID> token)
             throws InvalidStatusChangeException {
         Ticket ticket = getTicketDetailed(ticketId, token);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);

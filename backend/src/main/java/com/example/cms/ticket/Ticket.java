@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @Entity
@@ -66,9 +65,10 @@ public class Ticket {
     private UUID requesterToken;
 
     public List<Response> getResponses(Pageable pageable) {
-        List<Response> allResponses = this.responses.stream()
-                .sorted(Comparator.comparing(Response::getResponseTime).reversed())
-                .collect(Collectors.toList());
+        List<Response> allResponses =
+                this.responses.stream()
+                        .sorted(Comparator.comparing(Response::getResponseTime).reversed())
+                        .collect(Collectors.toList());
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), allResponses.size());
