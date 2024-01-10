@@ -2,6 +2,7 @@ package com.example.cms.email;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.ticket.Ticket;
+import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.user.User;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.io.IOUtils;
@@ -35,10 +37,11 @@ public class EmailSendingService {
         EDIT_USER_ACCOUNT("EditUserAccount"),
         EDIT_USER_ACCOUNT_WITH_PASSWORD("EditUserAccountWithPwd"),
         CHANGE_TICKET_STATUS("ChangeTicketStatus"),
+        CHANGE_TICKET_STATUS_FOR_ADMINS("ChangeTicketStatusIrrelevantOrDeleted"),
         DELETE_USER_ACCOUNT("DeleteUserAccount"),
         DISABLE_USER_ACCOUNT("DisableUserAccount"),
-        ENABLE_USER_ACCOUNT("EnableUserAccount");
-
+        ENABLE_USER_ACCOUNT("EnableUserAccount"),
+        NEW_RESPONSE_TICKET("NewResponseTicket");
         private final String templateName;
 
         EmailTemplate(String templateName) {
@@ -176,7 +179,11 @@ public class EmailSendingService {
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
             contentMap.put("[Nowy Status]", ticket.getStatus().name());
-            contentMap.put("[ticket_link]", getUrl("ticket", ticket.getRequesterToken().toString()));
+            if (ticket.getRequesterToken() != null) {
+                contentMap.put(
+                        "[ticket_link]",
+                        getUrl("tickets", ticket.getId().toString()) + "?token=" + ticket.getRequesterToken());
+            }
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -185,6 +192,34 @@ public class EmailSendingService {
             System.out.println(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Async
+    public void sendChangeTicketStatusForCHREmail(Ticket ticket, String author) {
+        for (TicketUserStatus ticketUser : ticket.getTicketHandlers()) {
+            try {
+                MimeMessage message = javaMailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(sender);
+                helper.setTo(ticketUser.getUser().getEmail());
+                helper.setSubject("Zmiana statusu zapytania w systemie Reunice");
+                String emailTemplateContent =
+                        loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS_FOR_ADMINS.templateName);
+                contentMap.put("[Nowy Status]", ticket.getStatus().name());
+                contentMap.put("[author_changes]", author);
+                if (ticket.getRequesterToken() != null) {
+                    contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
+                }
+                emailTemplateContent = editContent(emailTemplateContent);
+                helper.setText(emailTemplateContent, true);
+                javaMailSender.send(message);
+                contentMap.clear();
+            } catch (MessagingException e) {
+                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -257,6 +292,60 @@ public class EmailSendingService {
             System.out.println(e.getMessage());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Async
+    public void sendNewResponseInTicketEmail(Ticket ticket, String author, String content) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(ticket.getRequesterEmail());
+            helper.setSubject("Nowa odpowiedź do zapytania w systemie Reunice");
+            String emailTemplateContent =
+                    loadHtmlTemplate(EmailTemplate.NEW_RESPONSE_TICKET.templateName);
+            contentMap.put(
+                    "[ticket_link]",
+                    getUrl("tickets", ticket.getId().toString()) + "?token=" + ticket.getRequesterToken());
+            contentMap.put("[content_response]", content);
+            contentMap.put("[author_response]", author);
+            emailTemplateContent = editContent(emailTemplateContent);
+            helper.setText(emailTemplateContent, true);
+            javaMailSender.send(message);
+            contentMap.clear();
+        } catch (MessagingException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Async
+    public void sendNewResponseInTicketEmail(
+            Ticket ticket, String author, String content, Set<TicketUserStatus> ticketUserStatus) {
+        for (TicketUserStatus ticketUser : ticketUserStatus) {
+            String receiverEmail = ticketUser.getUser().getEmail();
+            try {
+                MimeMessage message = javaMailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(sender);
+                helper.setTo(receiverEmail);
+                helper.setSubject("Nowa odpowiedź do zapytania w systemie Reunice");
+                String emailTemplateContent =
+                        loadHtmlTemplate(EmailTemplate.NEW_RESPONSE_TICKET.templateName);
+                contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
+                contentMap.put("[content_response]", content);
+                contentMap.put("[author_response]", author);
+                emailTemplateContent = editContent(emailTemplateContent);
+                helper.setText(emailTemplateContent, true);
+                javaMailSender.send(message);
+                contentMap.clear();
+            } catch (MessagingException e) {
+                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
