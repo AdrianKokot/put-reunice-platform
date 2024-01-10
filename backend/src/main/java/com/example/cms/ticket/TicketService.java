@@ -1,6 +1,7 @@
 package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.email.EmailSendingService;
 import com.example.cms.page.PageRepository;
 import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
@@ -30,6 +31,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final PageRepository pageRepository;
     private final SecurityService securityService;
+    private final EmailSendingService emailSendingService;
     private final TicketUserStatusRepository ticketUserStatusRepository;
 
     private Optional<TicketUserStatus> getIfLoggedUserIsHandler(Ticket ticket) {
@@ -54,11 +56,15 @@ public class TicketService {
         if (userStatusOptional.isPresent()) {
             try {
                 ticket.setStatus(ticket.getStatus().transition(TicketStatus.HANDLED));
+                emailSendingService.sendChangeTicketStatusEmail(ticket);
             } catch (Exception ignored) {
             }
         }
 
         ticket.addResponse(new Response(author, content));
+        emailSendingService.sendNewResponseInTicketEmail(ticket, author, content);
+        emailSendingService.sendNewResponseInTicketEmail(
+                ticket, author, content, ticket.getTicketHandlers());
         ticketRepository.save(ticket);
     }
 
@@ -164,6 +170,13 @@ public class TicketService {
             throw new TicketAccessForbiddenException();
         }
         ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
+        if (ticket.getStatus() != TicketStatus.IRRELEVANT
+                && ticket.getStatus() != TicketStatus.DELETED) {
+            emailSendingService.sendChangeTicketStatusEmail(ticket);
+        } else {
+            emailSendingService.sendChangeTicketStatusForCHREmail(
+                    ticket, userStatusOptional.get().getUser().getEmail());
+        }
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
     }
 
