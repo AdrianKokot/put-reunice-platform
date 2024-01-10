@@ -14,7 +14,7 @@
     >
       <img
         [alt]="flag.key"
-        class="t-flag"
+        class="t-flag flag-border"
         height="20"
         width="27"
         [src]="flag.value | tuiFlag"
@@ -24,7 +24,7 @@
   <ng-template #flagContent let-locale>
     <img
       [alt]="locale"
-      class="t-flag"
+      class="t-flag flag-border"
       height="20"
       width="27"
       [src]="flags.get(locale) ?? '' | tuiFlag"
