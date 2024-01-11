@@ -363,9 +363,13 @@ class PageControllerTest extends BaseAPIControllerTest {
         }
 
         @Test
-        void get_allPages_Guest_Unauthorized() throws Exception {
+        void get_allPages_Guest_Success_OnlyVisible() throws Exception {
             performAsGuest();
-            performGet().andExpect(status().isUnauthorized());
+            var items =
+                    getValue(
+                            performGet().andExpect(status().isOk()),
+                            new TypeReference<List<PageDtoDetailed>>() {});
+            assertThat(items, everyItem(hasProperty("hidden", is(false))));
         }
 
         @Test
