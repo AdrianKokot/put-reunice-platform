@@ -60,7 +60,12 @@ public class TicketController {
 
     @GetMapping("/{ticketId}/responses")
     public ResponseEntity<List<Response>> getTicketResponses(
-            @PageableDefault(sort = {"responseTime"}, direction = Sort.Direction.DESC) Pageable pageable, @PathVariable UUID ticketId, @RequestParam Optional<UUID> token) {
+            @PageableDefault(
+                            sort = {"responseTime"},
+                            direction = Sort.Direction.DESC)
+                    Pageable pageable,
+            @PathVariable UUID ticketId,
+            @RequestParam Optional<UUID> token) {
         Ticket ticket = service.getTicketDetailed(ticketId, token);
         List<Response> responses = responseRepository.findAllByTicket(pageable, ticket);
 
