@@ -1305,15 +1305,25 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                         "This is description to my ticket. I have a second problem with page 5"))
                         .getTicketId();
 
-        ticketService.addResponse(ticketId1, "message content to ticket 1 from author1");
-        ticketService.addResponse(ticketId1, "another message content to ticket 1 from author1");
-        ticketService.addResponse(ticketId1, "message content to ticket 1 from author2");
-        ticketService.addResponse(ticketId2, "message content to ticket 2 from author3");
-        ticketService.addResponse(ticketId2, "message content to ticket 2 from author4");
-        ticketService.addResponse(ticketId3, "message content to ticket 3 from author5");
-        ticketService.addResponse(ticketId3, "message content to ticket 3 from author6");
-        ticketService.addResponse(ticketId3, "another message content to ticket 3 from author5");
-        ticketService.addResponse(ticketId4, "message content to ticket 4 from author1");
-        ticketService.addResponse(ticketId4, "message content to ticket 4 from author7");
+        ticketService.addResponse(
+                ticketId1, "message content to ticket 1 from author1", Optional.empty());
+        ticketService.addResponse(
+                ticketId1, "another message content to ticket 1 from author1", Optional.empty());
+        ticketService.addResponse(
+                ticketId1, "message content to ticket 1 from author2", Optional.empty());
+        ticketService.addResponse(
+                ticketId2, "message content to ticket 2 from author3", Optional.empty());
+        ticketService.addResponse(
+                ticketId2, "message content to ticket 2 from author4", Optional.empty());
+        ticketService.addResponse(
+                ticketId3, "message content to ticket 3 from author5", Optional.empty());
+        ticketService.addResponse(
+                ticketId3, "message content to ticket 3 from author6", Optional.empty());
+        ticketService.addResponse(
+                ticketId3, "another message content to ticket 3 from author5", Optional.empty());
+        ticketService.addResponse(
+                ticketId4, "message content to ticket 4 from author1", Optional.empty());
+        ticketService.addResponse(
+                ticketId4, "message content to ticket 4 from author7", Optional.empty());
     }
 }

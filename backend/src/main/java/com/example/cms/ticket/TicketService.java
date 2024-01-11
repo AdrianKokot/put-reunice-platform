@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,8 +42,8 @@ public class TicketService {
                                 .findFirst());
     }
 
-    public void addResponse(UUID ticketId, String content) {
-        Ticket ticket = getTicketById(ticketId);
+    public void addResponse(UUID ticketId, String content, Optional<UUID> token) {
+        Ticket ticket = getTicketDetailed(ticketId, token);
 
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         String author =
@@ -96,7 +95,7 @@ public class TicketService {
     }
 
     public Ticket getTicketDetailed(UUID ticketId, Optional<UUID> token) {
-        Ticket ticket = this.getTicketById(ticketId);
+        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
         if (userStatusOptional.isPresent()) {
@@ -160,10 +159,10 @@ public class TicketService {
         return ticketRepository.findAll(combinedSpecification, pageable);
     }
 
-    @Secured("ROLE_USER")
-    public TicketDtoDetailed updateTicketStatus(TicketStatus statusToChangeTo, UUID ticketId)
+    public TicketDtoDetailed updateTicketStatus(
+            TicketStatus statusToChangeTo, UUID ticketId, Optional<UUID> token)
             throws InvalidStatusChangeException {
-        Ticket ticket = getTicketById(ticketId);
+        Ticket ticket = getTicketDetailed(ticketId, token);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
 
         if (userStatusOptional.isEmpty()) {
@@ -178,9 +177,5 @@ public class TicketService {
                     ticket, userStatusOptional.get().getUser().getEmail());
         }
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
-    }
-
-    public Ticket getTicketById(UUID id) {
-        return ticketRepository.findById(id).orElseThrow(TicketNotFoundException::new);
     }
 }
