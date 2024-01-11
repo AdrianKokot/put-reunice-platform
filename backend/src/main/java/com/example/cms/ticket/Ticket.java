@@ -4,14 +4,12 @@ import com.example.cms.page.Page;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.domain.Pageable;
 
 @Entity
 @Setter
