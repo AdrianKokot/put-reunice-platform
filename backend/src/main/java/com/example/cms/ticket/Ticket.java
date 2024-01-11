@@ -65,28 +65,6 @@ public class Ticket {
     @Column(columnDefinition = "uuid")
     private UUID requesterToken;
 
-    public List<Response> getResponses(Pageable pageable) {
-        List<Response> allResponses =
-                this.responses.stream()
-                        .sorted(Comparator.comparing(Response::getResponseTime).reversed())
-                        .collect(Collectors.toList());
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), allResponses.size());
-
-        try {
-            return allResponses.subList(start, end);
-        } catch (Exception ex) {
-            return List.of();
-        }
-    }
-
-    public List<Response> getResponses() {
-        return this.responses.stream()
-                .sorted(Comparator.comparing(Response::getResponseTime).reversed())
-                .collect(Collectors.toList());
-    }
-
     @Override
     public String toString() {
         return "Ticket{"
