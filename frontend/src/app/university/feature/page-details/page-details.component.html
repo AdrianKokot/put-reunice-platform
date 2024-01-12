@@ -42,7 +42,7 @@
     *ngIf="page === null || page.creator"
   >
     <div>
-      <a tuiLink [routerLink]="['/universities', page?.university?.id]">
+      <a tuiLink [routerLink]="['/university', page?.university?.id]">
         {{ page?.university?.name }}
       </a>
     </div>

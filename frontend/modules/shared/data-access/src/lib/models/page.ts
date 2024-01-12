@@ -1,21 +1,28 @@
 import { University } from './university';
 import { User } from './user';
 
-export interface Page {
+interface BasePage {
   id: number;
   title: string;
-  creator: User;
-  description: string;
   hidden: boolean;
   content: string;
-  parent: Page | null;
-  university: University;
   children: Page[];
   createdOn: string;
   updatedOn: string;
   contactRequestHandlers: User[];
   hasContactRequestHandler: boolean;
 }
+
+export type Page = BasePage &
+  (
+    | {
+        creator: User;
+        description: string;
+        parent: Page;
+        university: University;
+      }
+    | { creator: null; description: string; parent: null; university: null }
+  );
 
 export interface PageForm {
   title: string;

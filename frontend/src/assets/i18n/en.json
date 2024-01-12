@@ -70,6 +70,8 @@
   "ERRORS.FILE.404": "File not found",
   "ERRORS.LOGIN.401.DISABLED": "Your account has been disabled",
   "ERRORS.LOGIN.401.WRONG_CREDENTIALS": "Wrong username or password",
+  "ERRORS.PAGE.400.CANNOT_DELETE_MAIN_PAGE": "You cannot delete main page",
+  "ERRORS.PAGE.400.CANNOT_HIDE_MAIN_PAGE": "You cannot hide main page",
   "ERRORS.PAGE.400.CONTENT_EMPTY": "Page content cannot be empty",
   "ERRORS.PAGE.400.CREATOR_EMPTY": "Page creator cannot be empty",
   "ERRORS.PAGE.400.CREATOR_NOT_VALID": "Selected author either does not exist or can't be assigned to this page",

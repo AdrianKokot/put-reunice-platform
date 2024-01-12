@@ -132,10 +132,10 @@
           {{ item.createdOn | localizedDate }}
         </td>
         <td *tuiCell="'university'" tuiTd class="column-sm">
-          {{ item.university.name }}
+          {{ item.university?.name ?? '-' }}
         </td>
         <td *tuiCell="'creator'" tuiTd class="column-sm">
-          {{ item.creator.firstName }} {{ item.creator.lastName }}
+          {{ item.creator?.firstName }} {{ item.creator?.lastName ?? '-' }}
         </td>
         <td *tuiCell="'hidden'" tuiTd class="column-xs">
           {{ (item.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}

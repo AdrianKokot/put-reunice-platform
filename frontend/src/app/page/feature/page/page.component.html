@@ -1,0 +1,6 @@
+<div class="d-block tui-space_vertical-6" *tuiLet="page$ | async as page">
+  <tui-editor-socket
+    [content]="page?.content ?? '-'"
+    [class.tui-skeleton]="page === null"
+  ></tui-editor-socket>
+</div>

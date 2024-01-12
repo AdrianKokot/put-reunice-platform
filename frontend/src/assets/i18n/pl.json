@@ -70,6 +70,8 @@
   "ERRORS.FILE.404": "Plik nie znaleziony",
   "ERRORS.LOGIN.401.DISABLED": "Twoje konto zostało wyłączone",
   "ERRORS.LOGIN.401.WRONG_CREDENTIALS": "Nieprawidłowa nazwa użytkownika lub hasło",
+  "ERRORS.PAGE.400.CANNOT_DELETE_MAIN_PAGE": "Nie można usunąć strony głównej",
+  "ERRORS.PAGE.400.CANNOT_HIDE_MAIN_PAGE": "Nie można ukryć strony głównej",
   "ERRORS.PAGE.400.CONTENT_EMPTY": "Treść strony nie może być pusta",
   "ERRORS.PAGE.400.CREATOR_EMPTY": "Twórca strony nie może być pusty",
   "ERRORS.PAGE.400.CREATOR_NOT_VALID": "Twórca strony nie istnieje lub nie może być przypisany do tej strony",

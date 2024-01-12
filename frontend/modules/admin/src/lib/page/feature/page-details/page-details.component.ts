@@ -2,6 +2,7 @@ import {
   FileService,
   Page,
   PageService,
+  University,
   User,
 } from '@reunice/modules/shared/data-access';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
@@ -60,7 +61,10 @@ export class PageDetailsComponent {
     inject(AuthService).userSnapshot ?? throwError('User is null');
 
   readonly pagesTree$ = this.item$.pipe(
-    filter((page): page is Page => page !== null),
+    filter(
+      (page): page is Page & { university: University } =>
+        page !== null && page.university !== null,
+    ),
     switchMap((page) =>
       this._service
         .getUniversityHierarchy(page.university.id)

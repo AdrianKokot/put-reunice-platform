@@ -1,13 +1,13 @@
 {
   "/api/*": {
-    "target": "https://reunice.kokotadrian.pl",
-    "secure": true,
+    "target": "http://localhost:8080",
+    "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/*": {
-    "target": "https://reunice.kokotadrian.pl",
-    "secure": true,
+    "target": "http://localhost:8080",
+    "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   }

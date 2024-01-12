@@ -22,7 +22,7 @@
           *ngFor="let hit of results; trackById"
           tuiOption
           tuiElement
-          [routerLink]="['universities', hit.universityId, 'page', hit.pageId]"
+          [routerLink]="['university', hit.universityId, 'page', hit.pageId]"
           (click)="input.open = false"
         >
           <div>

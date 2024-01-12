@@ -29,7 +29,7 @@ export const ucan3 = (testTimestamp: string) => {
       .first()
       .then((btn) => btn.trigger('click'));
 
-    cy.url().should('match', /\/universities\/\d+\/page\/\d+/);
+    cy.url().should('match', /\/university\/\d+\/page\/\d+/);
     waitForResponse('@getPage', 200);
     cy.get('reunice-page-details').should('contain.text', testTimestamp);
   });
