@@ -453,7 +453,7 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_UniversityAdministrator_Success() throws Exception {
-            performAs(Role.MODERATOR,  Set.of(universityId), userId);
+            performAs(Role.MODERATOR, Set.of(universityId), userId);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
 

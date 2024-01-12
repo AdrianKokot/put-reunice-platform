@@ -4,6 +4,9 @@ import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.user.User;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -14,10 +17,6 @@ import java.util.Objects;
 import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,24 +38,27 @@ public class EmailSendingService {
     private Map<String, String> emailTitles = loadEmailTitles();
     private static ResourceLoader resourceLoader = new DefaultResourceLoader();
 
-
     private Map<String, String> loadEmailTitles() {
-        try (InputStream inputStream = resourceLoader.getResource("classpath:emailTemplates/emailTitles.json").getInputStream()) {
+        try (InputStream inputStream =
+                resourceLoader.getResource("classpath:emailTemplates/emailTitles.json").getInputStream()) {
             ObjectMapper objectMapper = new ObjectMapper();
-            JavaType type = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, String.class);
+            JavaType type =
+                    TypeFactory.defaultInstance().constructMapType(Map.class, String.class, String.class);
             return objectMapper.readValue(inputStream, type);
         } catch (IOException e) {
             throw new RuntimeException("Error loading email titles from JSON file", e);
         }
     }
-    private String getEmailTitle(String templateName){
+
+    private String getEmailTitle(String templateName) {
         String title = emailTitles.get(templateName);
-        if (title == null){
+        if (title == null) {
             return "Information about Eunice Platform";
         } else {
             return title;
         }
     }
+
     public enum EmailTemplate {
         NEW_USER_ACCOUNT("NewUserAccount"),
         EDIT_USER_ACCOUNT("EditUserAccount"),
