@@ -5,6 +5,7 @@ import com.example.cms.ticket.Ticket;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.user.User;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -13,9 +14,14 @@ import java.util.Objects;
 import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
@@ -30,8 +36,27 @@ public class EmailSendingService {
     @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
     @Autowired private JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
-    private final ResourceLoader resourceLoader;
+    private Map<String, String> emailTitles = loadEmailTitles();
+    private static ResourceLoader resourceLoader = new DefaultResourceLoader();
 
+
+    private Map<String, String> loadEmailTitles() {
+        try (InputStream inputStream = resourceLoader.getResource("classpath:emailTemplates/emailTitles.json").getInputStream()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JavaType type = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, String.class);
+            return objectMapper.readValue(inputStream, type);
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading email titles from JSON file", e);
+        }
+    }
+    private String getEmailTitle(String templateName){
+        String title = emailTitles.get(templateName);
+        if (title == null){
+            return "Information about Eunice Platform";
+        } else {
+            return title;
+        }
+    }
     public enum EmailTemplate {
         NEW_USER_ACCOUNT("NewUserAccount"),
         EDIT_USER_ACCOUNT("EditUserAccount"),
@@ -97,7 +122,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Welcome in Eunice Platform! Your account has been created.");
+            helper.setSubject(getEmailTitle("NEW_USER_ACCOUNT"));
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_USER_ACCOUNT.templateName);
             contentMap.put("[user_name]", receiver.getUsername());
             contentMap.put("[user_password]", password);
@@ -121,7 +146,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(oldEmail);
-            helper.setSubject("Changes in your account in the Eunice Platform");
+            helper.setSubject(getEmailTitle("EDIT_USER_ACCOUNT"));
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT.templateName);
             contentMap.put("[new_username]", receiver.getUsername());
             contentMap.put("[new_mail]", receiver.getEmail());
@@ -148,7 +173,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(oldEmail);
-            helper.setSubject("Changes in your account in the Eunice Platform");
+            helper.setSubject(getEmailTitle("EDIT_USER_ACCOUNT_WITH_PASSWORD"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT_WITH_PASSWORD.templateName);
             contentMap.put("[new_username]", receiver.getUsername());
@@ -176,7 +201,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(ticket.getRequesterEmail());
-            helper.setSubject("Request status has been changed in the Eunice Platform");
+            helper.setSubject(getEmailTitle("CHANGE_TICKET_STATUS"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
             contentMap.put("[new_status]", ticket.getStatus().name());
@@ -204,7 +229,7 @@ public class EmailSendingService {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(sender);
                 helper.setTo(ticketUser.getUser().getEmail());
-                helper.setSubject("Information about changing request status in the Eunice Platform");
+                helper.setSubject(getEmailTitle("CHANGE_TICKET_STATUS_CRH"));
                 String emailTemplateContent =
                         loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS_CRH.templateName);
                 contentMap.put("[new_status]", ticket.getStatus().name());
@@ -232,7 +257,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Information about deleting your account in the Eunice Platform");
+            helper.setSubject(getEmailTitle("DELETE_USER_ACCOUNT"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.DELETE_USER_ACCOUNT.templateName);
             contentMap.put("[admin_name]", administratorUsername);
@@ -256,7 +281,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Information about disabling your account in the Eunice Platform");
+            helper.setSubject(getEmailTitle("DISABLE_USER_ACCOUNT"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.DISABLE_USER_ACCOUNT.templateName);
             contentMap.put("[admin_name]", administratorUsername);
@@ -280,7 +305,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Information about enabling your account in the Eunice Platform");
+            helper.setSubject(getEmailTitle("ENABLE_USER_ACCOUNT"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.ENABLE_USER_ACCOUNT.templateName);
             contentMap.put("[admin_name]", administratorUsername);
@@ -303,7 +328,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(ticket.getRequesterEmail());
-            helper.setSubject("New response to the request in the Eunice Platform");
+            helper.setSubject(getEmailTitle("NEW_RESPONSE_TICKET"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.NEW_RESPONSE_TICKET.templateName);
             contentMap.put(
@@ -332,7 +357,7 @@ public class EmailSendingService {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(sender);
                 helper.setTo(receiverEmail);
-                helper.setSubject("New response to the request in the Eunice Platform");
+                helper.setSubject(getEmailTitle("NEW_RESPONSE_TICKET"));
                 String emailTemplateContent =
                         loadHtmlTemplate(EmailTemplate.NEW_RESPONSE_TICKET.templateName);
                 contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
@@ -357,7 +382,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(ticket.getRequesterEmail());
-            helper.setSubject("New request in Eunice platform");
+            helper.setSubject(getEmailTitle("NEW_TICKET"));
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_TICKET.templateName);
             contentMap.put(
                     "[ticket_link]",
@@ -385,7 +410,7 @@ public class EmailSendingService {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(sender);
                 helper.setTo(receiverEmail);
-                helper.setSubject("New request in Eunice platform");
+                helper.setSubject(getEmailTitle("NEW_TICKET"));
                 String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_TICKET.templateName);
                 contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
                 contentMap.put("[request_content]", content);
