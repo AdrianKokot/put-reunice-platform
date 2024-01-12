@@ -453,13 +453,13 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_UniversityAdministrator_Success() throws Exception {
-            performAs(Role.MODERATOR, Set.of(universityId));
+            performAs(Role.MODERATOR, Set.of(universityId), userId);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
 
         @Test
         public void update_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.ADMIN, userId);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
     }
@@ -524,7 +524,7 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.ADMIN, userId);
             userToUpdate.setEnabled(true);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
@@ -590,7 +590,7 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.ADMIN, userId);
             userToUpdate.setEnabled(false);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }

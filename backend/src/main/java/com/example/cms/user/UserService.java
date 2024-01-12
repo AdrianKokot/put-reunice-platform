@@ -193,9 +193,11 @@ public class UserService {
     private void handleUpdateAccountStatus(User user, UserDtoFormUpdate form) {
         if (securityService.hasHigherRoleThan(Role.USER)) {
             if (!form.isEnabled() && user.isEnabled()) {
-                emailService.sendDisableAccountEmail(user, "Administrator", "administrator@reunice.pl");
+                emailService.sendDisableAccountEmail(
+                        user, getLoggedUser().getUsername(), getLoggedUser().getEmail());
             } else if (form.isEnabled() && !user.isEnabled()) {
-                emailService.sendEnableAccountEmail(user, "Administrator", "administrator@reunice.pl");
+                emailService.sendEnableAccountEmail(
+                        user, getLoggedUser().getUsername(), getLoggedUser().getEmail());
             }
 
             user.setEnabled(form.isEnabled());
@@ -225,11 +227,16 @@ public class UserService {
                 validatePassword(form.getPassword());
                 user.setPassword(passwordEncoder.encode(form.getPassword()));
                 emailService.sendEditUserAccountMail(
-                        oldEmail, user, "administrator@reunice.pl", "admin", form.getPassword());
+                        oldEmail,
+                        user,
+                        getLoggedUser().getUsername(),
+                        getLoggedUser().getEmail(),
+                        form.getPassword());
             }
         } else {
             if (!mainDataNotChanged) {
-                emailService.sendEditUserAccountMail(oldEmail, user, "administrator@reunice.pl", "admin");
+                emailService.sendEditUserAccountMail(
+                        oldEmail, user, getLoggedUser().getUsername(), getLoggedUser().getEmail());
             }
         }
         return UserDtoDetailed.of(userRepository.save(user));
@@ -289,7 +296,8 @@ public class UserService {
             throw new UserForbiddenException();
         }
         validateForDelete(user);
-        emailService.sendDeleteAccountEmail(user, "Administrator", "admin@reunice.pl");
+        emailService.sendDeleteAccountEmail(
+                user, getLoggedUser().getUsername(), getLoggedUser().getEmail());
         userRepository.delete(user);
     }
 

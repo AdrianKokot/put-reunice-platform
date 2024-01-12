@@ -91,6 +91,10 @@ public class TicketService {
                                 })
                         .collect(Collectors.toSet()));
 
+        emailSendingService.sendNewRequestEmail(
+                ticket, ticket.getRequesterEmail(), ticket.getDescription());
+        emailSendingService.sendNewRequestEmailCRH(
+                ticket, ticket.getRequesterEmail(), ticket.getDescription(), ticket.getTicketHandlers());
         return new TicketDTOCreateResponse(ticket.getId(), ticket.getRequesterToken());
     }
 
@@ -169,13 +173,9 @@ public class TicketService {
             throw new TicketAccessForbiddenException();
         }
         ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
-        if (ticket.getStatus() != TicketStatus.IRRELEVANT
-                && ticket.getStatus() != TicketStatus.DELETED) {
-            emailSendingService.sendChangeTicketStatusEmail(ticket);
-        } else {
-            emailSendingService.sendChangeTicketStatusForCHREmail(
-                    ticket, userStatusOptional.get().getUser().getEmail());
-        }
+        emailSendingService.sendChangeTicketStatusEmail(ticket);
+        emailSendingService.sendChangeTicketStatusForCHREmail(
+                ticket, userStatusOptional.get().getUser().getEmail());
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
     }
 }

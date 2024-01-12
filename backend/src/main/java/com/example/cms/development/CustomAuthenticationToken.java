@@ -22,6 +22,7 @@ public class CustomAuthenticationToken {
         User user = new User();
         user.setId(id);
         user.setUsername("Admin");
+        user.setEmail("Admin@eunice.pl");
         user.setPassword("");
         user.setAccountType(accountType);
         user.setEnabled(true);

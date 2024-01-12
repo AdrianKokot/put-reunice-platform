@@ -4,7 +4,11 @@ import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.user.User;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -16,6 +20,7 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
@@ -30,18 +35,41 @@ public class EmailSendingService {
     @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
     @Autowired private JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
-    private final ResourceLoader resourceLoader;
+    private Map<String, String> emailTitles = loadEmailTitles();
+    private static ResourceLoader resourceLoader = new DefaultResourceLoader();
+
+    private Map<String, String> loadEmailTitles() {
+        try (InputStream inputStream =
+                resourceLoader.getResource("classpath:emailTemplates/emailTitles.json").getInputStream()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JavaType type =
+                    TypeFactory.defaultInstance().constructMapType(Map.class, String.class, String.class);
+            return objectMapper.readValue(inputStream, type);
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading email titles from JSON file", e);
+        }
+    }
+
+    private String getEmailTitle(String templateName) {
+        String title = emailTitles.get(templateName);
+        if (title == null) {
+            return "Information about Eunice Platform";
+        } else {
+            return title;
+        }
+    }
 
     public enum EmailTemplate {
         NEW_USER_ACCOUNT("NewUserAccount"),
         EDIT_USER_ACCOUNT("EditUserAccount"),
         EDIT_USER_ACCOUNT_WITH_PASSWORD("EditUserAccountWithPwd"),
         CHANGE_TICKET_STATUS("ChangeTicketStatus"),
-        CHANGE_TICKET_STATUS_FOR_ADMINS("ChangeTicketStatusIrrelevantOrDeleted"),
+        CHANGE_TICKET_STATUS_CRH("ChangeTicketStatusCRH"),
         DELETE_USER_ACCOUNT("DeleteUserAccount"),
         DISABLE_USER_ACCOUNT("DisableUserAccount"),
-        ENABLE_USER_ACCOUNT("EnableUserAccount"),
-        NEW_RESPONSE_TICKET("NewResponseTicket");
+        NEW_RESPONSE_TICKET("NewResponseTicket"),
+        NEW_TICKET("NewTicket"),
+        ENABLE_USER_ACCOUNT("EnableUserAccount");
         private final String templateName;
 
         EmailTemplate(String templateName) {
@@ -96,11 +124,11 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Witaj w Reunice! Twoje konto zostało utworzone.");
+            helper.setSubject(getEmailTitle("NEW_USER_ACCOUNT"));
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Użytkownika]", receiver.getUsername());
-            contentMap.put("[Początkowe Hasło]", password);
-            contentMap.put("[link_do_pierwszego_logowania]", getUrl("auth", "login"));
+            contentMap.put("[user_name]", receiver.getUsername());
+            contentMap.put("[user_password]", password);
+            contentMap.put("[login_link]", getUrl("auth", "login"));
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -120,14 +148,14 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(oldEmail);
-            helper.setSubject("Zmiany w Twoim koncie w systemie Reunice");
+            helper.setSubject(getEmailTitle("EDIT_USER_ACCOUNT"));
             String emailTemplateContent = loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT.templateName);
-            contentMap.put("[Nowa Nazwa Użytkownika]", receiver.getUsername());
-            contentMap.put("[Nowy Adres E-mail]", receiver.getEmail());
-            contentMap.put("[Nowe Imie]", receiver.getFirstName());
-            contentMap.put("[Nowe Nazwisko]", receiver.getLastName());
-            contentMap.put("[Nazwa Administratora]", adminUsername);
-            contentMap.put("[E-mail Administratora]", adminEmail);
+            contentMap.put("[new_username]", receiver.getUsername());
+            contentMap.put("[new_mail]", receiver.getEmail());
+            contentMap.put("[new_firstname]", receiver.getFirstName());
+            contentMap.put("[new_lastname]", receiver.getLastName());
+            contentMap.put("[admin_name]", adminUsername);
+            contentMap.put("[admin_mail]", adminEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -147,16 +175,16 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(oldEmail);
-            helper.setSubject("Zmiany w Twoim koncie w systemie Reunice");
+            helper.setSubject(getEmailTitle("EDIT_USER_ACCOUNT_WITH_PASSWORD"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.EDIT_USER_ACCOUNT_WITH_PASSWORD.templateName);
-            contentMap.put("[Nowa Nazwa Użytkownika]", receiver.getUsername());
-            contentMap.put("[Nowy Adres E-mail]", receiver.getEmail());
-            contentMap.put("[Nowe Imie]", receiver.getFirstName());
-            contentMap.put("[Nowe Nazwisko]", receiver.getLastName());
-            contentMap.put("[Nowe Haslo]", password);
-            contentMap.put("[Nazwa Administratora]", adminUsername);
-            contentMap.put("[E-mail Administratora]", adminEmail);
+            contentMap.put("[new_username]", receiver.getUsername());
+            contentMap.put("[new_mail]", receiver.getEmail());
+            contentMap.put("[new_firstname]", receiver.getFirstName());
+            contentMap.put("[new_lastname]", receiver.getLastName());
+            contentMap.put("[new_password]", password);
+            contentMap.put("[admin_name]", adminUsername);
+            contentMap.put("[admin_mail]", adminEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -175,10 +203,10 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(ticket.getRequesterEmail());
-            helper.setSubject("Zmiana statusu zapytania w systemie Reunice");
+            helper.setSubject(getEmailTitle("CHANGE_TICKET_STATUS"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS.templateName);
-            contentMap.put("[Nowy Status]", ticket.getStatus().name());
+            contentMap.put("[new_status]", ticket.getStatus().name());
             if (ticket.getRequesterToken() != null) {
                 contentMap.put(
                         "[ticket_link]",
@@ -203,10 +231,10 @@ public class EmailSendingService {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(sender);
                 helper.setTo(ticketUser.getUser().getEmail());
-                helper.setSubject("Zmiana statusu zapytania w systemie Reunice");
+                helper.setSubject(getEmailTitle("CHANGE_TICKET_STATUS_CRH"));
                 String emailTemplateContent =
-                        loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS_FOR_ADMINS.templateName);
-                contentMap.put("[Nowy Status]", ticket.getStatus().name());
+                        loadHtmlTemplate(EmailTemplate.CHANGE_TICKET_STATUS_CRH.templateName);
+                contentMap.put("[new_status]", ticket.getStatus().name());
                 contentMap.put("[author_changes]", author);
                 if (ticket.getRequesterToken() != null) {
                     contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
@@ -231,11 +259,11 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Informacja o usunięciu konta w systemie Reunice");
+            helper.setSubject(getEmailTitle("DELETE_USER_ACCOUNT"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.DELETE_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Administratora]", administratorUsername);
-            contentMap.put("[E-mail Administratora]", administratorEmail);
+            contentMap.put("[admin_name]", administratorUsername);
+            contentMap.put("[admin_mail]", administratorEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             javaMailSender.send(message);
@@ -255,11 +283,11 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Twoje konto zostało wyłączone w systemie Reunice");
+            helper.setSubject(getEmailTitle("DISABLE_USER_ACCOUNT"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.DISABLE_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Administratora]", administratorUsername);
-            contentMap.put("[E-mail Administratora]", administratorEmail);
+            contentMap.put("[admin_name]", administratorUsername);
+            contentMap.put("[admin_mail]", administratorEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             contentMap.clear();
@@ -279,11 +307,11 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(receiver.getEmail());
-            helper.setSubject("Twoje konto zostało włączone w systemie Reunice");
+            helper.setSubject(getEmailTitle("ENABLE_USER_ACCOUNT"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.ENABLE_USER_ACCOUNT.templateName);
-            contentMap.put("[Nazwa Administratora]", administratorUsername);
-            contentMap.put("[E-mail Administratora]", administratorEmail);
+            contentMap.put("[admin_name]", administratorUsername);
+            contentMap.put("[admin_mail]", administratorEmail);
             emailTemplateContent = editContent(emailTemplateContent);
             helper.setText(emailTemplateContent, true);
             contentMap.clear();
@@ -302,7 +330,7 @@ public class EmailSendingService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(sender);
             helper.setTo(ticket.getRequesterEmail());
-            helper.setSubject("Nowa odpowiedź do zapytania w systemie Reunice");
+            helper.setSubject(getEmailTitle("NEW_RESPONSE_TICKET"));
             String emailTemplateContent =
                     loadHtmlTemplate(EmailTemplate.NEW_RESPONSE_TICKET.templateName);
             contentMap.put(
@@ -331,12 +359,64 @@ public class EmailSendingService {
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(sender);
                 helper.setTo(receiverEmail);
-                helper.setSubject("Nowa odpowiedź do zapytania w systemie Reunice");
+                helper.setSubject(getEmailTitle("NEW_RESPONSE_TICKET"));
                 String emailTemplateContent =
                         loadHtmlTemplate(EmailTemplate.NEW_RESPONSE_TICKET.templateName);
                 contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
                 contentMap.put("[content_response]", content);
                 contentMap.put("[author_response]", author);
+                emailTemplateContent = editContent(emailTemplateContent);
+                helper.setText(emailTemplateContent, true);
+                javaMailSender.send(message);
+                contentMap.clear();
+            } catch (MessagingException e) {
+                System.out.println(e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Async
+    public void sendNewRequestEmail(Ticket ticket, String author, String content) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(sender);
+            helper.setTo(ticket.getRequesterEmail());
+            helper.setSubject(getEmailTitle("NEW_TICKET"));
+            String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_TICKET.templateName);
+            contentMap.put(
+                    "[ticket_link]",
+                    getUrl("tickets", ticket.getId().toString()) + "?token=" + ticket.getRequesterToken());
+            contentMap.put("[request_content]", content);
+            contentMap.put("[request_author]", author);
+            emailTemplateContent = editContent(emailTemplateContent);
+            helper.setText(emailTemplateContent, true);
+            javaMailSender.send(message);
+            contentMap.clear();
+        } catch (MessagingException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Async
+    public void sendNewRequestEmailCRH(
+            Ticket ticket, String author, String content, Set<TicketUserStatus> ticketUserStatus) {
+        for (TicketUserStatus ticketUser : ticketUserStatus) {
+            String receiverEmail = ticketUser.getUser().getEmail();
+            try {
+                MimeMessage message = javaMailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(sender);
+                helper.setTo(receiverEmail);
+                helper.setSubject(getEmailTitle("NEW_TICKET"));
+                String emailTemplateContent = loadHtmlTemplate(EmailTemplate.NEW_TICKET.templateName);
+                contentMap.put("[ticket_link]", getUrl("tickets", ticket.getId().toString()));
+                contentMap.put("[request_content]", content);
+                contentMap.put("[request_author]", author);
                 emailTemplateContent = editContent(emailTemplateContent);
                 helper.setText(emailTemplateContent, true);
                 javaMailSender.send(message);
