@@ -4,12 +4,11 @@ import com.example.cms.university.University;
 import com.example.cms.user.User;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,14 +22,7 @@ import org.hibernate.validator.constraints.Length;
 @Table(name = "pages")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Page {
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "page_handlers",
-            joinColumns = @JoinColumn(name = "page_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> handlers = new HashSet<>();
-
+public class GlobalPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,32 +31,35 @@ public class Page {
     @Length(max = 255, message = "ERRORS.PAGE.400.TITLE_TOO_LONG")
     private String title;
 
-    @NotBlank(message = "ERRORS.PAGE.400.DESCRIPTION_EMPTY")
-    @Length(max = 255, message = "ERRORS.PAGE.400.DESCRIPTION_TOO_LONG")
-    private String description;
+    @Null private String description;
 
     @NotNull(message = "ERRORS.PAGE.400.CONTENT_EMPTY")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Content content;
 
+    @NotNull(message = "ERRORS.PAGE.400.HIDDEN_EMPTY")
     private boolean hidden;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(message = "ERRORS.PAGE.400.CREATOR_EMPTY")
+    @Null
     private User creator;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(message = "ERRORS.PAGE.400.UNIVERSITY_EMPTY")
+    @Null
     private University university;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Null
     private Page parent;
-
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Page> children = new HashSet<>();
 
     private Timestamp createdOn;
     private Timestamp updatedOn;
+
+    public GlobalPage(String title, String content, boolean hidden) {
+        this.title = title;
+        this.content = Content.of(content);
+        this.hidden = hidden;
+    }
 
     @PrePersist
     private void prePersist() {
@@ -82,7 +77,7 @@ public class Page {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Page page = (Page) o;
+        GlobalPage page = (GlobalPage) o;
         return id != null && Objects.equals(id, page.id);
     }
 

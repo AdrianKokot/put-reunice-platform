@@ -27,6 +27,7 @@ class PageControllerTest extends BaseAPIControllerTest {
     @Autowired private UniversityRepository universityRepository;
 
     @Autowired private PageRepository pageRepository;
+    @Autowired private GlobalPageRepository globalPageRepository;
 
     private Long universityId = 99L;
     private Long mainPageId = 99L;
@@ -554,7 +555,7 @@ class PageControllerTest extends BaseAPIControllerTest {
 
         @Test
         void create_WithNoParent_BadRequest() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.MODERATOR, Set.of(universityId));
             var dtoNoParent =
                     new PageDtoFormCreate(
                             dto.getTitle(),
@@ -564,6 +565,19 @@ class PageControllerTest extends BaseAPIControllerTest {
                             null,
                             dto.getHidden());
             performPost(dtoNoParent).andExpect(status().isBadRequest());
+        }
+
+        @Test
+        void create_WithNoParent_AsAdmin_Success() throws Exception {
+            performAs(Role.ADMIN, userId);
+            var dtoNoParent =
+                    new PageDtoFormCreate(
+                            dto.getTitle(), null, dto.getContent(), null, null, dto.getHidden());
+            var item =
+                    getValue(
+                            performPost(dtoNoParent).andExpect(status().is2xxSuccessful()),
+                            PageDtoDetailed.class);
+            globalPageRepository.deleteById(item.getId());
         }
     }
 

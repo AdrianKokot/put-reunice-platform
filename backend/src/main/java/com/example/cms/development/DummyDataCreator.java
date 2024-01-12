@@ -5,6 +5,7 @@ import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.configuration.DatabaseSchemaCreateType;
 import com.example.cms.configuration.DatabaseSchemaHandlingOnStartup;
+import com.example.cms.page.GlobalPageRepository;
 import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
@@ -31,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -47,6 +47,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final TemplateService templateService;
     private final BackupService backupService;
     private final TicketService ticketService;
+    private final GlobalPageRepository globalPageRepository;
 
     @Autowired private AuthenticationManager authenticationManager;
 
@@ -138,6 +139,10 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         true,
                         Role.ADMIN,
                         Set.of()));
+
+        pageService.save(
+                new PageDtoFormCreate(
+                        "Landing Page", null, "<h1>Welcome to Eunice</h1>", null, null, false));
     }
 
     /**
@@ -597,6 +602,10 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Role.ADMIN,
                         Set.of()));
 
+        pageService.save(
+                new PageDtoFormCreate(
+                        "Landing Page", null, "<h1>Welcome to Eunice</h1>", null, null, false));
+
         universityService.addNewUniversity(
                 new UniversityDtoFormCreate(
                         "Poznań University of Technology",
@@ -747,7 +756,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        </ul>\n"
                                 + "    </section>",
                         4L,
-                        1L,
+                        2L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -771,7 +780,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        <p>Graduates of this program are well-equipped for roles in software development, web development, database administration, and more.</p>\n"
                                 + "    </section>",
                         4L,
-                        11L,
+                        12L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -796,7 +805,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        </ul>\n"
                                 + "    </section>",
                         4L,
-                        12L,
+                        13L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -821,7 +830,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        </ul>\n"
                                 + "    </section>",
                         4L,
-                        12L,
+                        13L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -844,7 +853,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        <p>Graduates are prepared for careers in power generation and distribution, electronics design, control systems engineering, and more.</p>\n"
                                 + "    </section>",
                         4L,
-                        11L,
+                        12L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -868,7 +877,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        </ul>\n"
                                 + "    </section>",
                         4L,
-                        1L,
+                        2L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -883,7 +892,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        <p>Discover programs offered in English for international students.</p>\n"
                                 + "    </section>",
                         17L,
-                        1L,
+                        2L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -903,7 +912,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        </ul>\n"
                                 + "    </section>",
                         17L,
-                        1L,
+                        2L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -918,7 +927,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        <p>For any other questions or information, feel free to reach out to our main office.</p>\n"
                                 + "    </section>",
                         18L,
-                        1L,
+                        2L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -943,39 +952,39 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                                 + "        </ul>\n"
                                 + "    </section>",
                         18L,
-                        1L,
+                        2L,
                         false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 5L, 2L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 5L, 3L, false));
         pageService.save(
-                new PageDtoFormCreate("Students", "News, education, work, sport...", "", 5L, 2L, false));
+                new PageDtoFormCreate("Students", "News, education, work, sport...", "", 5L, 3L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         5L,
-                        2L,
+                        3L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 19L, 2L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 19L, 2L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 19L, 3L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 19L, 3L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 20L, 2L, false));
+                        "Contact", "This page contains contact information.", "", 20L, 3L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 20L, 2L, false));
-        pageService.save(new PageDtoFormCreate("News", "News for our students.", "", 5L, 22L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 20L, 3L, false));
+        pageService.save(new PageDtoFormCreate("News", "News for our students.", "", 5L, 23L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Academic Calendar", "Periods of academic education and days off", "", 5L, 22L, false));
+                        "Academic Calendar", "Periods of academic education and days off", "", 5L, 23L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Student Offices",
                         "Student Offices are the first point of contact for you, the students of our university.",
                         "",
                         5L,
-                        22L,
+                        23L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -983,7 +992,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "The Adam Mickiewicz University in Poznań carries out its fundamental and unchanging mission.",
                         "",
                         5L,
-                        23L,
+                        24L,
                         false));
         pageService.save(
                 new PageDtoFormCreate(
@@ -991,157 +1000,158 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "It is a platform that links the institutional repository with the Current Research Information System (CRIS) system. It functions as part of the Omega-Psir software.",
                         "",
                         5L,
-                        23L,
+                        24L,
                         false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 6L, 3L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 6L, 4L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         6L,
-                        3L,
+                        4L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 21L, 3L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 21L, 3L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 21L, 4L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 21L, 4L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 22L, 3L, false));
+                        "Contact", "This page contains contact information.", "", 22L, 4L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 22L, 3L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 22L, 4L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 7L, 4L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 7L, 5L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         7L,
-                        4L,
+                        5L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 23L, 4L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 23L, 4L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 23L, 5L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 23L, 5L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 24L, 4L, false));
+                        "Contact", "This page contains contact information.", "", 24L, 5L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 24L, 4L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 24L, 5L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 8L, 5L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 8L, 6L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         8L,
-                        5L,
+                        6L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 25L, 5L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 25L, 5L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 25L, 6L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 25L, 6L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 26L, 5L, false));
+                        "Contact", "This page contains contact information.", "", 26L, 6L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 26L, 5L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 26L, 6L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 9L, 6L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 9L, 7L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         9L,
-                        6L,
+                        7L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 27L, 6L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 27L, 6L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 27L, 7L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 27L, 7L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 28L, 6L, false));
+                        "Contact", "This page contains contact information.", "", 28L, 7L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 28L, 6L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 28L, 7L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 10L, 7L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 10L, 8L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         10L,
-                        7L,
+                        8L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 29L, 7L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 29L, 7L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 29L, 8L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 29L, 8L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 30L, 7L, false));
+                        "Contact", "This page contains contact information.", "", 30L, 8L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 30L, 7L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 30L, 8L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 11L, 8L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 11L, 9L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         11L,
-                        8L,
+                        9L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 31L, 8L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 31L, 8L, false));
+        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 31L, 9L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 31L, 9L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 32L, 8L, false));
+                        "Contact", "This page contains contact information.", "", 32L, 9L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 32L, 8L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 32L, 9L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 12L, 9L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 12L, 10L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         12L,
-                        9L,
+                        10L,
                         false));
-        pageService.save(new PageDtoFormCreate("Business", "Services and experts", "", 33L, 9L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 33L, 9L, false));
+        pageService.save(
+                new PageDtoFormCreate("Business", "Services and experts", "", 33L, 10L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 33L, 10L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 34L, 9L, false));
+                        "Contact", "This page contains contact information.", "", 34L, 10L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 34L, 9L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 34L, 10L, false));
 
         pageService.save(
-                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 13L, 10L, false));
+                new PageDtoFormCreate("Education", "The list of courses we offer.", "", 13L, 11L, false));
         pageService.save(
                 new PageDtoFormCreate(
                         "Research",
                         "The list of research papers and other academic studies.",
                         "",
                         13L,
-                        10L,
+                        11L,
                         false));
         pageService.save(
-                new PageDtoFormCreate("Business", "Services and experts", "", 35L, 10L, false));
-        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 35L, 10L, false));
+                new PageDtoFormCreate("Business", "Services and experts", "", 35L, 11L, false));
+        pageService.save(new PageDtoFormCreate("Staff", "The list of our staff.", "", 35L, 11L, false));
         pageService.save(
                 new PageDtoFormCreate(
-                        "Contact", "This page contains contact information.", "", 36L, 10L, false));
+                        "Contact", "This page contains contact information.", "", 36L, 11L, false));
         pageService.save(
-                new PageDtoFormCreate("History", "The history of our university.", "", 36L, 10L, false));
+                new PageDtoFormCreate("History", "The history of our university.", "", 36L, 11L, false));
 
-        var page = pageService.get(1L);
+        var page = pageService.get(2L);
         pageService.update(
-                1L,
+                2L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
                         "Poznan University of Technology is the best technical university in the Wielkopolskie voivodeship in western Poland. PUT is the third most frequently chosen university in Poland, as up to six candidates competed for a place there.",
@@ -1150,9 +1160,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Set.of(5L, 7L),
                         null));
 
-        page = pageService.get(2L);
+        page = pageService.get(3L);
         pageService.update(
-                2L,
+                3L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
                         "Adam Mickiewicz University in Poznań (AMU) is one of the major Polish universities, located in the city of Poznań, Greater Poland, in the west of the country.",
@@ -1161,9 +1171,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Set.of(5L, 6L, 7L),
                         null));
 
-        page = pageService.get(3L);
+        page = pageService.get(4L);
         pageService.update(
-                3L,
+                4L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
                         "Poznań University of Medical Sciences (PUMS) is one of the best and largest medical universities in Poland, with over 100 years of sound academic experience and great growth momentum.",
@@ -1172,9 +1182,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Set.of(5L, 7L, 4L),
                         null));
 
-        page = pageService.get(4L);
+        page = pageService.get(5L);
         pageService.update(
-                4L,
+                5L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
                         "Poznań University of Economics and Business (PUEB) is one of the oldest, most prestigious schools of economics in Poland. Since 1926, we have been continually developing higher education and ensuring high quality of scientific studies.",
@@ -1183,9 +1193,9 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Set.of(5L, 6L, 4L, 7L),
                         null));
 
-        page = pageService.get(5L);
+        page = pageService.get(6L);
         pageService.update(
-                5L,
+                6L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
                         "University of Fine Arts in Poznań (UAP) is a public university in Poznań, Poland. It was founded in 1919 as the first university in Poland to provide higher education in fine arts.",
@@ -1194,24 +1204,13 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Set.of(5L, 22L),
                         null));
 
-        page = pageService.get(6L);
-        pageService.update(
-                6L,
-                new PageDtoFormUpdate(
-                        page.getTitle(),
-                        "Wroclaw University of Technology (WUT) is a public research university located in Wrocław, Poland. The Wrocław University of Technology is the largest university in the Lower Silesian Voivodeship with over 35,000 students.",
-                        "<section><h2>About us</h2><p>Wroclaw University of Technology (WUT) is a public research university located in Wrocław, Poland. The Wrocław University of Technology is the largest university in the Lower Silesian Voivodeship with over 35,000 students. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>WUT offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
-                        false,
-                        Set.of(),
-                        null));
-
         page = pageService.get(7L);
         pageService.update(
                 7L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
-                        "Karol Lipiński Academy of Music in Wrocław (KLAMW) is a public university located in Wrocław, Poland. The Academy of Music in Wrocław is the oldest music school in Poland.",
-                        "<section><h2>About us</h2><p>Karol Lipiński Academy of Music in Wrocław (KLAMW) is a public university located in Wrocław, Poland. The Academy of Music in Wrocław is the oldest music school in Poland. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>KLAMW offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
+                        "Wroclaw University of Technology (WUT) is a public research university located in Wrocław, Poland. The Wrocław University of Technology is the largest university in the Lower Silesian Voivodeship with over 35,000 students.",
+                        "<section><h2>About us</h2><p>Wroclaw University of Technology (WUT) is a public research university located in Wrocław, Poland. The Wrocław University of Technology is the largest university in the Lower Silesian Voivodeship with over 35,000 students. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>WUT offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
@@ -1221,8 +1220,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 8L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
-                        "Gdynia Maritime University (GMU) is a public university located in Gdynia, Poland. The Gdynia Maritime University is the largest maritime university in Poland. It is also one of the largest maritime universities in Europe.",
-                        "<section><h2>About us</h2><p>Gdynia Maritime University (GMU) is a public university located in Gdynia, Poland. The Gdynia Maritime University is the largest maritime university in Poland. It is also one of the largest maritime universities in Europe. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>GMU offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
+                        "Karol Lipiński Academy of Music in Wrocław (KLAMW) is a public university located in Wrocław, Poland. The Academy of Music in Wrocław is the oldest music school in Poland.",
+                        "<section><h2>About us</h2><p>Karol Lipiński Academy of Music in Wrocław (KLAMW) is a public university located in Wrocław, Poland. The Academy of Music in Wrocław is the oldest music school in Poland. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>KLAMW offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
@@ -1232,8 +1231,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 9L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
-                        "Chopin University of Music (CUM) is a public university located in Warsaw, Poland. The Chopin University of Music is the oldest music school in Poland. It was founded in 1810 by Frederick Augustus I, King of Saxony and Grand Duke of Warsaw.",
-                        "<section><h2>About us</h2><p>Chopin University of Music (CUM) is a public university located in Warsaw, Poland. The Chopin University of Music is the oldest music school in Poland. It was founded in 1810 by Frederick Augustus I, King of Saxony and Grand Duke of Warsaw. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>CUM offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. CUM has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
+                        "Gdynia Maritime University (GMU) is a public university located in Gdynia, Poland. The Gdynia Maritime University is the largest maritime university in Poland. It is also one of the largest maritime universities in Europe.",
+                        "<section><h2>About us</h2><p>Gdynia Maritime University (GMU) is a public university located in Gdynia, Poland. The Gdynia Maritime University is the largest maritime university in Poland. It is also one of the largest maritime universities in Europe. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>GMU offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
                         Set.of(),
                         null));
@@ -1241,6 +1240,17 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
         page = pageService.get(10L);
         pageService.update(
                 10L,
+                new PageDtoFormUpdate(
+                        page.getTitle(),
+                        "Chopin University of Music (CUM) is a public university located in Warsaw, Poland. The Chopin University of Music is the oldest music school in Poland. It was founded in 1810 by Frederick Augustus I, King of Saxony and Grand Duke of Warsaw.",
+                        "<section><h2>About us</h2><p>Chopin University of Music (CUM) is a public university located in Warsaw, Poland. The Chopin University of Music is the oldest music school in Poland. It was founded in 1810 by Frederick Augustus I, King of Saxony and Grand Duke of Warsaw. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>CUM offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. CUM has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
+                        false,
+                        Set.of(),
+                        null));
+
+        page = pageService.get(11L);
+        pageService.update(
+                11L,
                 new PageDtoFormUpdate(
                         page.getTitle(),
                         "University of Szczecin (US) is a public university located in Szczecin, Poland. The University of Szczecin is the largest university in the West Pomeranian Voivodeship with over 35,000 students.",
@@ -1256,14 +1266,11 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Set.of(),
                         true));
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken("admin", "51D7k4F8"));
-
         UUID ticketId1 =
                 ticketService
                         .createTicket(
                                 new TicketDtoFormCreate(
-                                        1L,
+                                        2L,
                                         "michal.wazowski9020@gmail.com",
                                         "Problem to page 1",
                                         "This is description to my ticket. I have a problem with page 1"))
@@ -1272,7 +1279,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 ticketService
                         .createTicket(
                                 new TicketDtoFormCreate(
-                                        2L,
+                                        3L,
                                         "requester2@email.com",
                                         "Problem to page 2",
                                         "This is description to my ticket. I have a problem with page 2"))
@@ -1281,7 +1288,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 ticketService
                         .createTicket(
                                 new TicketDtoFormCreate(
-                                        3L,
+                                        4L,
                                         "requester3@email.com",
                                         "Problem to page 3",
                                         "This is description to my ticket. I have a problem with page 3"))
@@ -1290,7 +1297,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 ticketService
                         .createTicket(
                                 new TicketDtoFormCreate(
-                                        4L,
+                                        5L,
                                         "requester4@email.com",
                                         "Problem to page 4",
                                         "This is description to my ticket. I have a problem with page 4"))
@@ -1299,7 +1306,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                 ticketService
                         .createTicket(
                                 new TicketDtoFormCreate(
-                                        4L,
+                                        5L,
                                         "requester5@email.com",
                                         "Second problem to page 4",
                                         "This is description to my ticket. I have a second problem with page 5"))

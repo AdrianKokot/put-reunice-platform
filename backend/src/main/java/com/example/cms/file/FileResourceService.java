@@ -90,10 +90,15 @@ public class FileResourceService {
 
     public org.springframework.data.domain.Page<FileResource> getAll(
             Pageable pageable, Long pageId, Map<String, String> filterVars) {
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
-        if ((page.isHidden() || page.getUniversity().isHidden())
-                && securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
+        var optionalPage = pageRepository.findById(pageId);
+
+        if (optionalPage
+                .map(
+                        page ->
+                                (page.isHidden() || page.getUniversity().isHidden())
+                                        && securityService.isForbiddenPage(page))
+                .orElse(true)) {
+            return org.springframework.data.domain.Page.empty();
         }
 
         return this.getAll(
