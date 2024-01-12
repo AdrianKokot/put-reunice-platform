@@ -199,19 +199,15 @@
       tuiButton
       size="m"
       type="submit"
-      *tuiLet="
-        (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE')
-          | translate
-          | lowercase as status
-      "
       [reuniceConfirm]="
-        'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION'
+        'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_' +
+          (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE') +
+          '_STATE_CONFIRMATION'
           | translate
             : {
                 location: form.controls.globalPage.value
                   ? '-'
-                  : selectedPageName,
-                state: status
+                  : selectedPageName
               }
       "
       class="tui-form__button"
