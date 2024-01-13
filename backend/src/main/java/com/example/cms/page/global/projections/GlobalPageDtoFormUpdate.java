@@ -7,5 +7,4 @@ public class GlobalPageDtoFormUpdate {
     String title;
     String content;
     Boolean hidden;
-    Boolean isLanding;
 }

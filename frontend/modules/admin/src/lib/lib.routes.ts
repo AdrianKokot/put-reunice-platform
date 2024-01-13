@@ -30,7 +30,7 @@ export const adminRoutes: Route[] = [
         title: translatedTitle('GLOBAL_PAGES'),
         path: 'global-pages',
         loadChildren: () => import('./global-page/global-page.module'),
-        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+        canActivate: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
       },
       {
         title: translatedTitle('TEMPLATES'),

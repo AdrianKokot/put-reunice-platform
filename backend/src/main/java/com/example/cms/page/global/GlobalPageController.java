@@ -23,6 +23,11 @@ public class GlobalPageController {
 
     private final GlobalPageService service;
 
+    @GetMapping("/main")
+    GlobalPageDtoDetailed getLanding() {
+        return service.getLanding();
+    }
+
     @GetMapping("/{id}")
     GlobalPageDtoDetailed get(@PathVariable long id) {
         return service.get(id);
@@ -42,11 +47,6 @@ public class GlobalPageController {
                 responsePage.stream().map(GlobalPageDtoSimple::of).collect(Collectors.toList()),
                 httpHeaders,
                 HttpStatus.OK);
-    }
-
-    @GetMapping("/main")
-    GlobalPageDtoDetailed getLanding() {
-        return service.getLanding();
     }
 
     @PostMapping

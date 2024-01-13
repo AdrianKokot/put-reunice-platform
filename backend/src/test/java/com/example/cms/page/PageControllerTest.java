@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.cms.BaseAPIControllerTest;
-import com.example.cms.page.global.GlobalPageRepository;
 import com.example.cms.page.projections.PageDtoDetailed;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
@@ -28,7 +27,6 @@ class PageControllerTest extends BaseAPIControllerTest {
     @Autowired private UniversityRepository universityRepository;
 
     @Autowired private PageRepository pageRepository;
-    @Autowired private GlobalPageRepository globalPageRepository;
 
     private Long universityId = 99L;
     private Long mainPageId = 99L;

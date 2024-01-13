@@ -237,12 +237,14 @@ public class SecurityService {
      *     {@code false} otherwise
      */
     public boolean hasHigherRoleThan(Role role) {
-        LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);
-        return hasHigherRoleThan(loggedUser.getAccountType(), role);
+        return getPrincipal()
+                .map(loggedUser -> hasHigherRoleThan(loggedUser.getAccountType(), role))
+                .orElse(false);
     }
 
     public boolean hasHigherOrEqualRoleThan(Role role) {
-        LoggedUser loggedUser = getPrincipal().orElseThrow(UnauthorizedException::new);
-        return hasHigherOrEqualRoleThan(loggedUser.getAccountType(), role);
+        return getPrincipal()
+                .map(loggedUser -> hasHigherOrEqualRoleThan(loggedUser.getAccountType(), role))
+                .orElse(false);
     }
 }
