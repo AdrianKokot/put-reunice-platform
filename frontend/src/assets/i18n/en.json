@@ -29,6 +29,7 @@
   "CANNOT_EDIT_UNIVERSITY_LANDING_PAGE": "You cannot edit university landing page",
   "CHANGES_SAVED_SUCCESS": "Changes saved successfully",
   "CHANGE_PASSWORD": "Change password",
+  "CHECKBOX_GLOBAL_PAGE": "Create as the application page",
   "CHECKBOX_TEMPLATE_AVAILABLE_TO_ALL_UNIVERSITIES": "Mark as available to all universities",
   "CLEAR_FILTERS": "Clear filters",
   "CLOSE": "Close",
