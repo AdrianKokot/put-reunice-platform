@@ -28,12 +28,17 @@ export const RedirectToUniversityMainPage: CanActivateFn = (route) => {
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'universities',
     component: UniversityListComponent,
     title: translatedTitle('UNIVERSITIES'),
   },
   {
-    path: ':id',
+    path: 'university',
+    redirectTo: 'universities',
+    pathMatch: 'full',
+  },
+  {
+    path: 'university/:id',
     component: UniversityShellComponent,
     title: translatedTitle('UNIVERSITY_DETAILS'),
     children: [

@@ -31,10 +31,6 @@ const routes: Routes = [
     canMatch: [AuthGuard],
   },
   {
-    path: 'university',
-    loadChildren: () => UniversityModule,
-  },
-  {
     path: 'authors',
     loadChildren: () =>
       import('./author/author.module').then((m) => m.AuthorModule),
@@ -57,6 +53,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => PageModule,
+  },
+  {
+    path: '',
+    loadChildren: () => UniversityModule,
   },
   {
     path: '**',
