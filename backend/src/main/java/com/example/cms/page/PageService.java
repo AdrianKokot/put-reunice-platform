@@ -33,11 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PageService {
     private final FullTextSearchService<Page, PageSearchHitDto> searchService;
     private final PageRepository pageRepository;
-    private final GlobalPageRepository globalPageRepository;
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
     private final SecurityService securityService;
-    private static final Long MAIN_PAGE_ID = 1L;
 
     public PageDtoDetailed get(Long id) {
         return pageRepository
@@ -140,6 +138,10 @@ public class PageService {
     }
 
     private Page save(Page page) {
+        if (page.getUniversity() == null) throw new PageException(PageExceptionType.UNIVERSITY_EMPTY);
+
+        if (page.getCreator() == null) throw new PageException(PageExceptionType.CREATOR_EMPTY);
+
         Page saved = pageRepository.save(page);
         searchService.upsert(saved);
         return saved;
@@ -167,10 +169,6 @@ public class PageService {
     @Transactional
     public PageDtoDetailed save(PageDtoFormCreate form) {
         if (form.getParentId() == null) {
-            if (securityService.hasHigherOrEqualRoleThan(Role.ADMIN)) {
-                return saveGlobalPage(form);
-            }
-
             throw new PageException(PageExceptionType.PARENT_NOT_FOUND);
         }
 
@@ -199,35 +197,10 @@ public class PageService {
         return PageDtoDetailed.of(save(newPage));
     }
 
-    @Secured("ROLE_ADMIN")
-    private PageDtoDetailed saveGlobalPage(PageDtoFormCreate form) {
-        GlobalPage newPage = new GlobalPage(form.getTitle(), form.getContent(), form.getHidden());
-
-        return PageDtoDetailed.of(globalPageRepository.save(newPage));
-    }
-
-    @Secured("ROLE_ADMIN")
-    private void updateGlobalPage(Long id, PageDtoFormUpdate form) {
-        var page = globalPageRepository.findById(id).orElseThrow(PageNotFoundException::new);
-        page.setTitle(form.getTitle());
-        if (id.equals(MAIN_PAGE_ID) && form.getHidden()) {
-            throw new PageException(PageExceptionType.CANNOT_HIDE_MAIN_PAGE);
-        }
-        page.setHidden(form.getHidden());
-        page.setContent(Content.of(form.getContent()));
-        globalPageRepository.save(page);
-    }
-
     @Secured("ROLE_USER")
     @Transactional
     public void update(Long id, PageDtoFormUpdate form) {
         Page page = pageRepository.findDetailedById(id).orElseThrow(PageNotFoundException::new);
-
-        if (page.getUniversity() == null) {
-            updateGlobalPage(id, form);
-            return;
-        }
-
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
@@ -267,21 +240,9 @@ public class PageService {
         save(page);
     }
 
-    @Secured("ROLE_ADMIN")
-    private void deleteGlobalPage(Long id) {
-        if (id.equals(MAIN_PAGE_ID)) throw new PageException(PageExceptionType.CANNOT_DELETE_MAIN_PAGE);
-
-        globalPageRepository.deleteById(id);
-    }
-
     @Secured("ROLE_USER")
     public void delete(Long id) {
         Page page = pageRepository.findDetailedById(id).orElseThrow(PageNotFoundException::new);
-
-        if (page.getUniversity() == null) {
-            deleteGlobalPage(id);
-            return;
-        }
 
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();

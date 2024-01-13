@@ -1,6 +1,5 @@
 package com.example.cms.page.projections;
 
-import com.example.cms.page.GlobalPage;
 import com.example.cms.page.Page;
 import com.example.cms.university.projections.UniversityDtoSimple;
 import com.example.cms.user.projections.UserDtoSimple;
@@ -33,14 +32,6 @@ public class PageDtoDetailed {
         return of(page, List.of());
     }
 
-    public static PageDtoDetailed of(GlobalPage page) {
-        if (page == null) {
-            return null;
-        }
-
-        return new PageDtoDetailed(page);
-    }
-
     public static PageDtoDetailed of(Page page, List<Page> children) {
         if (page == null) {
             return null;
@@ -65,17 +56,5 @@ public class PageDtoDetailed {
         contactRequestHandlers =
                 page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
         hasContactRequestHandler = !contactRequestHandlers.isEmpty();
-    }
-
-    private PageDtoDetailed(GlobalPage page) {
-        id = page.getId();
-        title = page.getTitle();
-        hidden = page.isHidden();
-        content = page.getContent().getPageContent();
-        createdOn = page.getCreatedOn().toInstant();
-        updatedOn = page.getUpdatedOn().toInstant();
-        children = List.of();
-        contactRequestHandlers = List.of();
-        hasContactRequestHandler = false;
     }
 }

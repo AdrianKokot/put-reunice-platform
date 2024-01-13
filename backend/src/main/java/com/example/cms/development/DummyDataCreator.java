@@ -6,6 +6,7 @@ import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.configuration.DatabaseSchemaCreateType;
 import com.example.cms.configuration.DatabaseSchemaHandlingOnStartup;
 import com.example.cms.page.PageService;
+import com.example.cms.page.global.GlobalPageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
 import com.example.cms.security.Role;
@@ -41,6 +42,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
     private final ApplicationConfigurationProvider applicationConfigurationProvider;
 
     private final PageService pageService;
+    private final GlobalPageService globalPageService;
     private final UserService userService;
     private final UniversityService universityService;
     private final TemplateService templateService;
@@ -137,9 +139,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Role.ADMIN,
                         Set.of()));
 
-        pageService.save(
-                new PageDtoFormCreate(
-                        "Landing Page", null, "<h1>Welcome to Eunice</h1>", null, null, false));
+        globalPageService.initializeMainPage();
     }
 
     /**
@@ -599,9 +599,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         Role.ADMIN,
                         Set.of()));
 
-        pageService.save(
-                new PageDtoFormCreate(
-                        "Landing Page", null, "<h1>Welcome to Eunice</h1>", null, null, false));
+        globalPageService.initializeMainPage();
 
         universityService.addNewUniversity(
                 new UniversityDtoFormCreate(
