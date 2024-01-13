@@ -27,6 +27,12 @@ export const adminRoutes: Route[] = [
         loadChildren: () => import('./page/page.module'),
       },
       {
+        title: translatedTitle('GLOBAL_PAGES'),
+        path: 'global-pages',
+        loadChildren: () => import('./global-page/global-page.module'),
+        canMatch: [AuthorizedOfTypeGuard(ExtendedAccountTypeEnum.ADMIN)],
+      },
+      {
         title: translatedTitle('TEMPLATES'),
         path: 'templates',
         loadChildren: () => import('./template/template.module'),

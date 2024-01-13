@@ -60,32 +60,6 @@
           <span>{{ 'CREATED_ON' | translate }}</span>
         </th>
         <th
-          *tuiHead="'university'"
-          tuiTh
-          tuiSortable
-          [sticky]="true"
-          class="column-sm"
-        >
-          <span>{{ 'UNIVERSITY' | translate }}</span>
-          <reunice-table-filter
-            formControlName="university_eq"
-            [searchWrapper]="universitySearch"
-          ></reunice-table-filter>
-        </th>
-        <th
-          *tuiHead="'creator'"
-          tuiTh
-          tuiSortable
-          [sticky]="true"
-          class="column-sm"
-        >
-          <span>{{ 'AUTHOR' | translate }}</span>
-          <reunice-table-filter
-            formControlName="creator_eq"
-            [searchWrapper]="userSearch"
-          ></reunice-table-filter>
-        </th>
-        <th
           *tuiHead="'hidden'"
           tuiTh
           tuiSortable
@@ -130,12 +104,6 @@
         </td>
         <td *tuiCell="'createdOn'" tuiTd class="column-sm">
           {{ item.createdOn | localizedDate }}
-        </td>
-        <td *tuiCell="'university'" tuiTd class="column-sm">
-          {{ item.university.name }}
-        </td>
-        <td *tuiCell="'creator'" tuiTd class="column-sm">
-          {{ item.creator.firstName }} {{ item.creator.lastName }}
         </td>
         <td *tuiCell="'hidden'" tuiTd class="column-xs">
           {{ (item.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}

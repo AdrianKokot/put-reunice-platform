@@ -15,7 +15,6 @@ import {
   ApiPaginatedResponse,
   Page,
   PageService,
-  User,
 } from '@reunice/modules/shared/data-access';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
@@ -76,7 +75,6 @@ export class AuthorShellComponent {
   readonly author$ = this.result$.pipe(
     filter((result): result is ApiPaginatedResponse<Page> => result !== null),
     map((result) => result.items[0]?.creator),
-    filter((author): author is User => author !== null),
     map((author) => `${author.firstName} ${author.lastName}`),
     take(1),
     shareReplay(1),

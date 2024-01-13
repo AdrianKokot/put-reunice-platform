@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
-  AccountTypeEnum,
   Page,
   PageService,
   UniversityService,
   UserService,
 } from '@reunice/modules/shared/data-access';
 import {
-  CustomValidators,
   FormSubmitWrapper,
   PAGE_TREE_HANDLER,
   parseNullableInt,
@@ -29,11 +27,9 @@ import {
   tap,
 } from 'rxjs';
 import {
-  TuiCheckboxLabeledModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiIslandModule,
-  TuiMultiSelectModule,
   TuiRadioLabeledModule,
   TuiTreeModule,
 } from '@taiga-ui/kit';
@@ -58,8 +54,6 @@ import { ActivatedRoute } from '@angular/router';
     UserDirective,
     ConfirmDirective,
     TuiCheckedModule,
-    TuiCheckboxLabeledModule,
-    TuiMultiSelectModule,
   ],
   templateUrl: './page-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,38 +63,26 @@ export class PageCreateFormComponent {
   private readonly _user = inject(AuthService).userSnapshot;
   private readonly _route = inject(ActivatedRoute).snapshot;
 
-  readonly form = inject(FormBuilder).nonNullable.group(
-    {
-      title: ['', [Validators.required, Validators.maxLength(255)]],
-      description: ['', [Validators.maxLength(255)]],
-      hidden: [true, [Validators.required]],
-      content: [''],
-      creatorId: [this._user?.id],
-      parentId: [parseNullableInt(this._route.queryParams['parentId']), []],
-      universityId: [
-        parseNullableInt(this._route.queryParams['universityId']) ??
-          this._user?.universityId,
-        this._user?.accountType !== AccountTypeEnum.ADMIN ? [] : [],
-      ],
-      globalPage: [false],
-    },
-    {
-      validators: [
-        CustomValidators.crossFieldValidation(
-          'globalPage',
-          false,
-          ['parentId', 'creatorId', 'universityId', 'description'],
-          Validators.required,
-        ),
-      ],
-    },
-  );
+  readonly form = inject(FormBuilder).nonNullable.group({
+    title: ['', [Validators.required, Validators.maxLength(255)]],
+    description: ['', [Validators.required, Validators.maxLength(255)]],
+    hidden: [true, [Validators.required]],
+    content: [''],
+    creatorId: [this._user?.id, [Validators.required]],
+    parentId: [
+      parseNullableInt(this._route.queryParams['parentId']),
+      [Validators.required],
+    ],
+    universityId: [
+      parseNullableInt(this._route.queryParams['universityId']) ??
+        this._user?.enrolledUniversities?.at(0)?.id ??
+        null,
+      [Validators.required],
+    ],
+  });
 
   readonly handler = new FormSubmitWrapper(this.form, {
-    submit: (value) =>
-      this._service.create(
-        value.globalPage ? { ...value, parentId: null } : value,
-      ),
+    submit: (value) => this._service.create(value),
     successAlertMessage: 'PAGE_CREATE_SUCCESS',
     effect: navigateToResourceDetails(['edit']),
   });
@@ -142,6 +124,7 @@ export class PageCreateFormComponent {
 
   onParentIdChange(checked: boolean, page: Page) {
     if (checked) {
+      console.warn({ page });
       this.selectedPageName = page.title;
     }
   }

@@ -1,16 +1,20 @@
-<div class="universities-grid tui-space_vertical-6">
+<h2 class="tui-text_h2 tui-space_top-14 text-center" *ngIf="showHeader">
+  {{ 'UNIVERSITIES_WE_WORK_WITH' | translate }}
+</h2>
+
+<div class="universities-grid tui-space_bottom-6">
   <a
     *ngFor="let page of universities$ | async; else: loading; empty: blank"
     tuiIsland
-    [routerLink]="['/university', page.university?.id, 'page', page.id]"
+    [routerLink]="['/university', page.university.id, 'page', page.id]"
   >
     <figure class="tui-island__figure">
       <img
-        *ngIf="page.university?.image"
+        *ngIf="page.university.image"
         height="180"
         width="350"
-        [ngSrc]="page.university?.image ?? ''"
-        alt="{{ page.university?.name }} image"
+        [ngSrc]="page.university.image"
+        [alt]="page.university.name + ' image'"
       />
     </figure>
 
@@ -18,7 +22,7 @@
     <p class="tui-island__paragraph">
       <tui-line-clamp [content]="page.description" [linesLimit]="2" />
     </p>
-    <p class="tui-island__category">{{ page.university?.address }}</p>
+    <p class="tui-island__category">{{ page.university.address }}</p>
   </a>
 </div>
 

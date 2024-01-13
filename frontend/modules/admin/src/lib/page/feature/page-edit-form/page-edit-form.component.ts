@@ -9,7 +9,6 @@ import {
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
-  CustomValidators,
   FormSubmitWrapper,
   resourceIdFromRoute,
   throwError,
@@ -77,44 +76,29 @@ export class PageEditFormComponent {
   readonly user: User =
     inject(AuthService).userSnapshot ?? throwError('User not found');
 
-  readonly form = inject(FormBuilder).nonNullable.group(
-    {
-      id: [-1, [Validators.required]],
-      universityId: [-1],
-      title: ['', [Validators.required, Validators.maxLength(255)]],
-      author: [''],
-      description: ['', [Validators.maxLength(255)]],
-      hidden: [true, [Validators.required]],
-      content: [''],
-      files: [[] as TuiFileLike[]],
-      filesToRemove: [[] as Array<FileResource['id']>],
-      contactRequestHandlers: [[] as Array<User['id']>],
-      creatorId: [-1],
-      globalPage: [false],
-    },
-    {
-      validators: [
-        CustomValidators.crossFieldValidation(
-          'globalPage',
-          false,
-          ['description', 'creatorId', 'universityId'],
-          Validators.required,
-        ),
-      ],
-    },
-  );
+  readonly form = inject(FormBuilder).nonNullable.group({
+    id: [-1, [Validators.required]],
+    universityId: [-1, [Validators.required]],
+    title: ['', [Validators.required, Validators.maxLength(255)]],
+    author: [''],
+    description: ['', [Validators.required, Validators.maxLength(255)]],
+    hidden: [true, [Validators.required]],
+    content: [''],
+    files: [[] as TuiFileLike[]],
+    filesToRemove: [[] as Array<FileResource['id']>],
+    contactRequestHandlers: [[] as Array<User['id']>],
+    creatorId: [-1, [Validators.required]],
+  });
 
   private readonly _id$ = resourceIdFromRoute();
 
   readonly item$ = this._id$.pipe(
     toResourceFromId(this._service, (item) => {
-      const globalPage = item.university === null;
       this.form.patchValue({
         ...item,
-        globalPage,
-        universityId: item.university?.id,
-        author: `${item.creator?.firstName} ${item.creator?.lastName}`,
-        creatorId: item.creator?.id,
+        universityId: item.university.id,
+        author: `${item.creator.firstName} ${item.creator.lastName}`,
+        creatorId: item.creator.id,
         contactRequestHandlers:
           item.contactRequestHandlers?.map((x) => x.id) ?? [],
       });
@@ -140,7 +124,7 @@ export class PageEditFormComponent {
     distinctUntilChanged(),
   );
 
-  readonly handler = new FormSubmitWrapper(this.form, {
+  handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'PAGE_UPDATE_SUCCESS',
     effect: navigateToResourceDetails(),

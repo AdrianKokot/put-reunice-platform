@@ -34,6 +34,12 @@ export const dashboardTiles: DashboardTile[] = [
     description: 'UNIVERSITY_PAGES_CONTENT',
   },
   {
+    title: 'GLOBAL_PAGES',
+    url: ['global-pages'],
+    icon: 'tuiIconFile',
+    description: 'GLOBAL_PAGES_CONTENT',
+  },
+  {
     title: 'USERS',
     url: ['users'],
     icon: 'tuiIconUsers',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageService } from '@reunice/modules/shared/data-access';
+import { GlobalPageService } from '@reunice/modules/shared/data-access';
 import {
   ActivatedRoute,
   Router,
@@ -40,11 +40,11 @@ import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageComponent {
-  private readonly _pageService = inject(PageService);
+  private readonly _pageService = inject(GlobalPageService);
   private readonly _router = inject(Router);
 
   readonly page$ = inject(ActivatedRoute).paramMap.pipe(
-    map((params) => params.get('id') ?? '1'),
+    map((params) => params.get('id') ?? 'main'),
     switchMap((id) =>
       this._pageService.get(id).pipe(
         startWith(null),

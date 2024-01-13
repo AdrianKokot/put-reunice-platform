@@ -1,0 +1,106 @@
+<ng-container *tuiLet="item$ | async as item">
+  <tui-tabs [(activeItemIndex)]="activeTabIndex" class="tui-space_bottom-4">
+    <button tuiTab>
+      {{ 'PAGE_DETAILS_TAB' | translate }}
+    </button>
+    <button tuiTab>
+      {{ 'PAGE_CONTENT_TAB' | translate }}
+    </button>
+  </tui-tabs>
+
+  <div [hidden]="activeTabIndex !== 0" [class.details-skeleton]="item === null">
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
+        {{ item?.title ?? '—' }}
+      </label>
+
+      <label
+        [tuiLabel]="'PAGE_VISIBILITY' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ (item?.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
+      </label>
+
+      <label
+        [tuiLabel]="'GLOBAL_PAGE_TYPE' | translate"
+        class="tui-form__multi-field"
+      >
+        {{
+          (item?.landing ? 'GLOBAL_PAGE_LANDING' : 'GLOBAL_PAGE_OTHER')
+            | translate
+        }}
+      </label>
+    </div>
+
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label
+        [tuiLabel]="'CREATED_AT' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.createdOn | localizedDate }}
+      </label>
+
+      <label
+        [tuiLabel]="'UPDATED_AT' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.updatedOn | localizedDate }}
+      </label>
+
+      <span class="tui-form__multi-field"></span>
+    </div>
+  </div>
+
+  <div [hidden]="activeTabIndex !== 1" [class.details-skeleton]="item === null">
+    <tui-editor-socket
+      class="tui-island tui-island_size_s"
+      [content]="item?.content ?? ''"
+    ></tui-editor-socket>
+  </div>
+
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
+    <a
+      tuiLink
+      class="tui-form__button d-inline-flex items-center justify-center"
+      [routerLink]="['/pages', item.id]"
+    >
+      {{ 'VIEW_PAGE' | translate }}
+    </a>
+
+    <button
+      tuiButton
+      type="button"
+      appearance="flat-destructive"
+      class="tui-form__button"
+      [reuniceConfirm]="'PAGE_DELETE_DESCRIPTION' | translate"
+      [showLoader]="(deleteHandler.loading$ | async) ?? false"
+      [disabled]="!item.hidden || item.landing"
+      [tuiHint]="
+        (!item.hidden
+          ? 'CANNOT_DELETE_VISIBLE_PAGE'
+          : item.landing
+          ? 'CANNOT_DELETE_MAIN_PAGE'
+          : ''
+        ) | translate
+      "
+      (confirm)="deleteHandler.delete(item.id)"
+      data-test="delete-button"
+    >
+      {{ 'DELETE' | translate }}
+    </button>
+
+    <a
+      [routerLink]="['edit']"
+      tuiButton
+      type="button"
+      appearance="secondary"
+      class="tui-form__button"
+      data-test="edit-button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
+</ng-container>

@@ -6,28 +6,32 @@ interface BasePage {
   title: string;
   hidden: boolean;
   content: string;
-  children: Page[];
   createdOn: string;
   updatedOn: string;
+}
+
+export interface GlobalPage extends BasePage {
+  landing: boolean;
+}
+
+export interface Page extends BasePage {
+  creator: User;
+  description: string;
+  parent: Page | null;
+  university: University;
+  children: Page[];
   contactRequestHandlers: User[];
   hasContactRequestHandler: boolean;
 }
 
-export type Page = BasePage &
-  (
-    | {
-        creator: User;
-        description: string;
-        parent: Page;
-        university: University;
-      }
-    | { creator: null; description: string; parent: null; university: null }
-  );
-
-export interface PageForm {
+export interface GlobalPageForm {
   title: string;
-  description: string;
   content?: string;
+  hidden: boolean;
+}
+
+export interface PageForm extends GlobalPageForm {
+  description: string;
   creatorId: number;
   parentId: number;
   contactRequestHandlers: Array<User['id']>;
