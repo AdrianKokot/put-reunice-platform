@@ -131,6 +131,7 @@ jobs:
             ./setup.sh
             docker pull ${{ steps.meta.outputs.tags }}
             docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -v /uploads:/uploads -v /db-resources:/db-resources -d ${{ steps.meta.outputs.tags }}
+            while [ "$(docker inspect --format='{{.State.Health.Status}}' app)" != "healthy" ]; do sleep 5; done
 
   run-e2e-tests:
     name: 🧪 E2E tests
@@ -141,8 +142,6 @@ jobs:
         working-directory: ./frontend
     steps:
       - uses: actions/checkout@v3
-      - name: Wait for app to start
-        run: sleep 180
       - name: 📦 Install packages
         run: npm ci
       - name: 🧪 E2E tests
