@@ -3,6 +3,7 @@ package com.example.cms.page;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
@@ -59,5 +61,18 @@ public class Page extends AbstractPage {
         this.university = university;
         this.parent = parent;
         this.hidden = hidden;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Page page = (Page) o;
+        return id != null && Objects.equals(id, page.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
