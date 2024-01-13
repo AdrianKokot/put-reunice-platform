@@ -5,7 +5,6 @@ import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import com.example.cms.configuration.DatabaseSchemaCreateType;
 import com.example.cms.configuration.DatabaseSchemaHandlingOnStartup;
-import com.example.cms.page.GlobalPageRepository;
 import com.example.cms.page.PageService;
 import com.example.cms.page.projections.PageDtoFormCreate;
 import com.example.cms.page.projections.PageDtoFormUpdate;
@@ -28,10 +27,8 @@ import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -41,17 +38,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
 
+    private final ApplicationConfigurationProvider applicationConfigurationProvider;
+
     private final PageService pageService;
     private final UserService userService;
     private final UniversityService universityService;
     private final TemplateService templateService;
     private final BackupService backupService;
     private final TicketService ticketService;
-    private final GlobalPageRepository globalPageRepository;
 
-    @Autowired private AuthenticationManager authenticationManager;
-
-    @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
+    private final HealthService healthService;
 
     @Override
     public void onApplicationEvent(@NonNull final ContextRefreshedEvent event) {
@@ -63,7 +59,6 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
             Files.createDirectories(backupService.getRestoreMainPath());
             Files.createDirectories(backupService.getBackupsMainPath());
 
-            // MSz extended
             log.info(
                     String.format(
                             "** databaseSchemaHandlingOnStartup read from properties file: %s",
@@ -74,6 +69,8 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
             } else {
                 log.info("** Using encountered database schema.");
             }
+
+            healthService.setStatus(HealthService.Status.HEALTHY);
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
