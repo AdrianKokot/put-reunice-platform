@@ -9,7 +9,6 @@ import com.example.cms.page.global.projections.GlobalPageDtoFormCreate;
 import com.example.cms.page.global.projections.GlobalPageDtoFormUpdate;
 import com.example.cms.security.Role;
 import com.example.cms.user.User;
-import java.time.Instant;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -187,9 +186,7 @@ public class GlobalPageControllerTest extends BaseAPIControllerTest {
 
         @BeforeEach
         public void setup() {
-            dto =
-                    new GlobalPageDtoFormCreate(
-                            "TEST_PAGE", "TEST_PAGE", false);
+            dto = new GlobalPageDtoFormCreate("TEST_PAGE", "TEST_PAGE", false);
         }
 
         @Test
