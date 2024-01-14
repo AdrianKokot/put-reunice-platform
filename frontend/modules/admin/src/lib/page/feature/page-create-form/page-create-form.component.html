@@ -183,14 +183,12 @@
       size="m"
       type="submit"
       [reuniceConfirm]="
-        'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_Y_STATE_CONFIRMATION'
+        'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_' +
+          (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE') +
+          '_STATE_CONFIRMATION'
           | translate
             : {
-                location: selectedPageName,
-                state:
-                  (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE')
-                  | translate
-                  | lowercase
+                location: selectedPageName
               }
       "
       class="tui-form__button"

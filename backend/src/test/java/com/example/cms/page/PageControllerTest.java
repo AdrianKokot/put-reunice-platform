@@ -40,28 +40,11 @@ class PageControllerTest extends BaseAPIControllerTest {
 
     @Override
     public void setupData() {
-        var user =
-                new User(
-                        null,
-                        null,
-                        null,
-                        null,
-                        "TEST_USER",
-                        "TEST_USER",
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        Role.USER,
-                        true);
+        var user = new User("TEST_USER", Role.USER, true);
         user = userRepository.save(user);
         this.userId = user.getId();
 
-        var university =
-                new University(
-                        null, null, null, "TEST_UNIVERSITY", "TST_U", null, null, "TEST_UNIVERSITY", false, "");
+        var university = new University("TEST_UNIVERSITY", "TST_U", false);
         university = universityRepository.save(university);
         this.universityId = university.getId();
 

@@ -1,6 +1,7 @@
 package com.example.cms.security;
 
 import com.example.cms.page.Page;
+import com.example.cms.template.Template;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import com.example.cms.validation.exceptions.UnauthorizedException;
@@ -156,6 +157,28 @@ public class SecurityService {
                                     return !loggedUser.getId().equals(user.getId());
                             }
                             return true;
+                        })
+                .orElse(true);
+    }
+
+    public boolean isTemplateForbidden(Template template, boolean forModification) {
+        return getPrincipal()
+                .map(
+                        loggedUser -> {
+                            if (loggedUser.getAccountType().equals(Role.ADMIN)) {
+                                return false;
+                            }
+
+                            if (template.isAvailableToAll()) {
+                                return forModification;
+                            }
+
+                            var universitiesSet =
+                                    template.getUniversities().stream()
+                                            .map(University::getId)
+                                            .collect(Collectors.toSet());
+
+                            return loggedUser.getUniversities().stream().noneMatch(universitiesSet::contains);
                         })
                 .orElse(true);
     }

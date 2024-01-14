@@ -109,6 +109,13 @@ export class UserControlsResourceDirective<
       return true;
     }
 
+    if (
+      'availableToAllUniversities' in resource &&
+      resource.availableToAllUniversities
+    ) {
+      return false;
+    }
+
     const universityIds = this.getUniversityIdFromResource(resource);
 
     if (

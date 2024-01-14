@@ -40,7 +40,7 @@ public class TemplateSpecification extends SearchSpecification implements Specif
                                 parseInt(criteria.getValue().toString()));
 
                 Predicate templateAvailableToAllUniversities =
-                        criteriaBuilder.isTrue(root.get("isAvailableToAll"));
+                        criteriaBuilder.isTrue(root.get("availableToAll"));
 
                 return criteriaBuilder.or(predicateUniversity, templateAvailableToAllUniversities);
             }
