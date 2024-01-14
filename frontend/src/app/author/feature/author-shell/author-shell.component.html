@@ -14,7 +14,7 @@
     <a
       *ngFor="let page of pages; else: loading; empty: blank"
       tuiIsland
-      [routerLink]="['/universities', page.university.id, 'page', page.id]"
+      [routerLink]="['/university', page.university.id, 'page', page.id]"
     >
       <h3 class="tui-island__title tui-space_bottom-1">{{ page.title }}</h3>
       <p class="tui-island__paragraph">
