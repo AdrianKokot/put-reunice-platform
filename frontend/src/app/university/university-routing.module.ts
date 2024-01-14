@@ -21,19 +21,24 @@ export const RedirectToUniversityMainPage: CanActivateFn = (route) => {
     .get(id)
     .pipe(
       map((u) =>
-        router.createUrlTree(['universities', u.id, 'page', u.mainPage.id]),
+        router.createUrlTree(['university', u.id, 'page', u.mainPage.id]),
       ),
     );
 };
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'universities',
     component: UniversityListComponent,
     title: translatedTitle('UNIVERSITIES'),
   },
   {
-    path: ':id',
+    path: 'university',
+    redirectTo: 'universities',
+    pathMatch: 'full',
+  },
+  {
+    path: 'university/:id',
     component: UniversityShellComponent,
     title: translatedTitle('UNIVERSITY_DETAILS'),
     children: [

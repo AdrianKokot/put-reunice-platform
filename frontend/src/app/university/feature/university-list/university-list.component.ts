@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { PageService } from '@reunice/modules/shared/data-access';
 import { startWith } from 'rxjs';
@@ -27,6 +32,8 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UniversityListComponent {
+  @Input() showHeader = true;
+
   readonly universities$ = inject(PageService)
     .getMainPages()
     .pipe(startWith(null));

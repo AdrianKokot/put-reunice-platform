@@ -18,6 +18,18 @@ public class PageException extends BadRequestException {
         if (type == PageExceptionType.PARENT_NOT_FOUND) {
             return "ERRORS.PAGE.400.PARENT_NOT_FOUND";
         }
+        if (type == PageExceptionType.CANNOT_HIDE_MAIN_PAGE) {
+            return "ERRORS.PAGE.400.CANNOT_HIDE_MAIN_PAGE";
+        }
+        if (type == PageExceptionType.CANNOT_DELETE_MAIN_PAGE) {
+            return "ERRORS.PAGE.400.CANNOT_DELETE_MAIN_PAGE";
+        }
+        if (type == PageExceptionType.CREATOR_EMPTY) {
+            return "ERRORS.PAGE.400.CREATOR_EMPTY";
+        }
+        if (type == PageExceptionType.UNIVERSITY_EMPTY) {
+            return "ERRORS.PAGE.400.UNIVERSITY_EMPTY";
+        }
         return "ERRORS.400";
     }
 }

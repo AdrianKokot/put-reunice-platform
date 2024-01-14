@@ -48,7 +48,6 @@ export const loginWith = (username: string, password: string) => {
   LoginPage.fillForm(username, password);
   cy.get(LoginPage.loginButton).click();
   waitForResponse(`@${testAlias}`, 200);
-  cy.url().should('contain', '/universities');
 };
 
 export const login = (user: E2EUser) => {

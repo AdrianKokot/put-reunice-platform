@@ -4,6 +4,7 @@ export * from './lib/breadcrumb/page-tree.handler';
 export * from './lib/forms/form-submit-wrapper';
 export * from './lib/forms/delete-resource-wrapper';
 export * from './lib/forms/form-deactivate.guard';
+export * from './lib/forms/custom-validators';
 
 export * from './lib/rxjs/map-to-api-resource';
 
