@@ -33,14 +33,14 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     distinctUntilChanged(),
     switchMap((search) =>
       this._service
-        // @ts-expect-error I don't know how to create types to make typescript recognize that this is a valid call
+          // @ts-expect-error I don't know how to create types to make typescript recognize that this is a valid call
         .getAll({ [this.searchKey]: search, size: 250 })
         .pipe(
           map(({ items }) => items),
           startWith(null),
         ),
     ),
-    shareReplay(),
+    shareReplay(1),
   );
 
   readonly itemIds$: Observable<ReadonlyArray<T['id']> | null> =

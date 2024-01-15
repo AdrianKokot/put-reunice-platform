@@ -21,6 +21,6 @@ export class LoginShellComponent {
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (formValue) => this._auth.login(formValue),
-    effect: () => fromPromise(this._router.navigate(['/'])),
+    effect: () => fromPromise(this._router.navigate(['/admin'])),
   });
 }
