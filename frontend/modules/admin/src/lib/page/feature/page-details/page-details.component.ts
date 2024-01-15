@@ -2,7 +2,6 @@ import {
   FileService,
   Page,
   PageService,
-  User,
 } from '@reunice/modules/shared/data-access';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
@@ -56,7 +55,7 @@ export class PageDetailsComponent {
     shareReplay(),
   );
 
-  readonly user: User =
+  readonly user =
     inject(AuthService).userSnapshot ?? throwError('User is null');
 
   readonly pagesTree$ = this.item$.pipe(

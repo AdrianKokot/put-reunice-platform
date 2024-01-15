@@ -1,13 +1,19 @@
 package com.example.cms.template;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
+import com.example.cms.template.exceptions.TemplateException;
+import com.example.cms.template.exceptions.TemplateExceptionType;
+import com.example.cms.template.exceptions.TemplateForbiddenException;
 import com.example.cms.template.exceptions.TemplateNotFoundException;
 import com.example.cms.template.projections.TemplateDtoDetailed;
 import com.example.cms.template.projections.TemplateDtoFormCreate;
 import com.example.cms.template.projections.TemplateDtoFormUpdate;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
+import com.example.cms.validation.exceptions.UnauthorizedException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TemplateService {
@@ -36,8 +43,17 @@ public class TemplateService {
 
     @Secured("ROLE_USER")
     public TemplateDtoDetailed get(Long id) {
-        return templateRepository
-                .findById(id)
+        var optionalTemplate =
+                securityService.hasHigherOrEqualRoleThan(Role.ADMIN)
+                        ? templateRepository.findById(id)
+                        : templateRepository.findById_available(
+                                id,
+                                securityService
+                                        .getPrincipal()
+                                        .orElseThrow(UnauthorizedException::new)
+                                        .getUniversities());
+
+        return optionalTemplate
                 .map(TemplateDtoDetailed::of)
                 .orElseThrow(TemplateNotFoundException::new);
     }
@@ -75,46 +91,73 @@ public class TemplateService {
         return templateRepository.findAll(combinedSpecification, pageable);
     }
 
-    @Secured("ROLE_MODERATOR")
+    @Secured("ROLE_USER")
     public TemplateDtoDetailed save(TemplateDtoFormCreate form) {
-        Template template = form.toTemplate();
+        if (form.isAvailableToAllUniversities()
+                && !securityService.hasHigherOrEqualRoleThan(Role.ADMIN))
+            throw new TemplateException(TemplateExceptionType.CANNOT_CREATE_TEMPLATE_AVAILABLE_TO_ALL);
+
+        var template =
+                new Template(form.getName(), form.getContent(), form.isAvailableToAllUniversities());
+
         attachUniversities(template, form.getUniversities());
 
         return TemplateDtoDetailed.of(templateRepository.save(template));
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
+    @Transactional
     public void delete(Long id) {
         Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
+
+        if (securityService.isTemplateForbidden(template, true)) throw new TemplateForbiddenException();
+
         templateRepository.delete(template);
     }
 
-    @Secured("ROLE_MODERATOR")
-    public void update(long id, TemplateDtoFormUpdate form) {
+    @Secured("ROLE_USER")
+    public TemplateDtoDetailed update(long id, TemplateDtoFormUpdate form) {
         Template template = templateRepository.findById(id).orElseThrow(TemplateNotFoundException::new);
 
-        form.updateTemplate(template);
+        if (form.isAvailableToAllUniversities()
+                && !securityService.hasHigherOrEqualRoleThan(Role.ADMIN))
+            throw new TemplateException(TemplateExceptionType.CANNOT_MARK_AS_AVAILABLE_TO_ALL);
+
+        if (securityService.isTemplateForbidden(template, true)) throw new TemplateForbiddenException();
+
+        template.setName(form.getName());
+        template.setContent(form.getContent());
+        template.setAvailableToAll(form.isAvailableToAllUniversities());
+
         attachUniversities(template, form.getUniversities());
 
-        templateRepository.save(template);
+        return TemplateDtoDetailed.of(templateRepository.save(template));
     }
 
     private void attachUniversities(Template template, Set<Long> universityIds) {
-        if (template.getIsAvailableToAll()) {
+        if (template.isAvailableToAll()) {
             template.getUniversities().clear();
             return;
+        }
+
+        for (var id : universityIds) {
+            if (!securityService.hasUniversity(id)) {
+                throw new TemplateException(TemplateExceptionType.UNIVERSITY_FORBIDDEN, "universities");
+            }
         }
 
         Set<Long> uniqueUniversityIds =
                 Stream.concat(
                                 universityIds.stream(),
-                                securityService.getPrincipal().get().getUniversities().stream())
+                                securityService
+                                        .getPrincipal()
+                                        .orElseThrow(UnauthorizedException::new)
+                                        .getUniversities()
+                                        .stream())
                         .collect(Collectors.toSet());
 
         Set<University> universities =
-                universityRepository.findAllById(uniqueUniversityIds).stream()
-                        .filter(university -> !securityService.isForbiddenUniversity(university))
-                        .collect(Collectors.toSet());
+                new HashSet<>(universityRepository.findAllById(uniqueUniversityIds));
 
         template.setUniversities(universities);
     }

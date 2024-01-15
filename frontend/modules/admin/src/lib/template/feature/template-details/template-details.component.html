@@ -36,27 +36,54 @@
     class="tui-form__buttons tui-form__buttons_align_end"
     *ngIf="item !== null"
   >
-    <button
-      *reuniceUserControlsResource="item"
-      tuiButton
-      type="button"
-      appearance="flat-destructive"
-      class="tui-form__button"
-      [reuniceConfirm]="'TEMPLATE_DELETE_DESCRIPTION' | translate"
-      [showLoader]="(deleteHandler.loading$ | async) ?? false"
-      (confirm)="deleteHandler.delete(item.id)"
+    <ng-container
+      *reuniceUserControlsResource="item; else allUniversitiesTemplate"
     >
-      {{ 'DELETE' | translate }}
-    </button>
+      <button
+        tuiButton
+        type="button"
+        appearance="flat-destructive"
+        class="tui-form__button"
+        [reuniceConfirm]="'TEMPLATE_DELETE_DESCRIPTION' | translate"
+        [showLoader]="(deleteHandler.loading$ | async) ?? false"
+        (confirm)="deleteHandler.delete(item.id)"
+      >
+        {{ 'DELETE' | translate }}
+      </button>
 
-    <a
-      [routerLink]="['edit']"
-      tuiButton
-      type="button"
-      appearance="secondary"
-      class="tui-form__button"
-    >
-      {{ 'EDIT' | translate }}
-    </a>
+      <a
+        [routerLink]="['edit']"
+        tuiButton
+        type="button"
+        appearance="secondary"
+        class="tui-form__button"
+      >
+        {{ 'EDIT' | translate }}
+      </a>
+    </ng-container>
+
+    <ng-template #allUniversitiesTemplate>
+      <button
+        tuiButton
+        type="button"
+        appearance="flat-destructive"
+        class="tui-form__button"
+        [disabled]="true"
+        [tuiHint]="'CANNOT_DELETE_TEMPLATE_AVAILABLE_TO_ALL' | translate"
+      >
+        {{ 'DELETE' | translate }}
+      </button>
+
+      <a
+        tuiButton
+        type="button"
+        appearance="secondary"
+        class="tui-form__button"
+        [disabled]="true"
+        [tuiHint]="'CANNOT_EDIT_TEMPLATE_AVAILABLE_TO_ALL' | translate"
+      >
+        {{ 'EDIT' | translate }}
+      </a>
+    </ng-template>
   </div>
 </div>

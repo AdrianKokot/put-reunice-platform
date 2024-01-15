@@ -47,6 +47,7 @@ import {
   LocalizedPipeModule,
 } from '@reunice/modules/shared/ui';
 import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-editor/html-editor.component';
+import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -66,6 +67,7 @@ import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-edit
     UserControlsResourceDirective,
     UserDirective,
     HtmlEditorComponent,
+    TuiDropdownModule,
   ],
   templateUrl: './page-edit-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -73,8 +75,8 @@ import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-edit
 export class PageEditFormComponent {
   private readonly _service = inject(PageService);
   private readonly _fileService = inject(FileService);
-  readonly user: User =
-    inject(AuthService).userSnapshot ?? throwError('User not found');
+  readonly user =
+    inject(AuthService).userSnapshot ?? throwError('User is null');
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],
@@ -102,6 +104,8 @@ export class PageEditFormComponent {
         contactRequestHandlers:
           item.contactRequestHandlers?.map((x) => x.id) ?? [],
       });
+      this.userSearch.addItem(item.creator);
+      this.contactRequestHandlerSearch.addItems(item.contactRequestHandlers);
     }),
   );
 
@@ -124,7 +128,7 @@ export class PageEditFormComponent {
     distinctUntilChanged(),
   );
 
-  handler = new FormSubmitWrapper(this.form, {
+  readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
     successAlertMessage: 'PAGE_UPDATE_SUCCESS',
     effect: navigateToResourceDetails(),
@@ -133,6 +137,13 @@ export class PageEditFormComponent {
   rejectedFiles: readonly TuiFileLike[] = [];
 
   readonly userSearch = new ResourceSearchWrapper(
+    inject(UserService),
+    'search',
+    (item) => `${item.firstName} ${item.lastName} (${item.email})`,
+    { enrolledUniversities_eq: this.user.universityId },
+  );
+
+  readonly contactRequestHandlerSearch = new ResourceSearchWrapper(
     inject(UserService),
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,

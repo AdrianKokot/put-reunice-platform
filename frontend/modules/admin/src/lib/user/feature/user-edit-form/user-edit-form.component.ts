@@ -78,6 +78,8 @@ export class UserEditFormComponent {
       ...user,
       enrolledUniversities: user.enrolledUniversities.at(0)?.id,
     });
+
+    this.universitySearch.addItems(user.enrolledUniversities);
   });
 
   readonly handler = new FormSubmitWrapper(this.form, {

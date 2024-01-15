@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageCreateFormComponent } from './page-create-form.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule, provideAuthenticatedUser } from '@reunice/testing';
 
 describe(PageCreateFormComponent.name, () => {
   let component: PageCreateFormComponent;
@@ -8,6 +8,7 @@ describe(PageCreateFormComponent.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideAuthenticatedUser()],
       imports: [TestingModule, PageCreateFormComponent],
     }).compileComponents();
 

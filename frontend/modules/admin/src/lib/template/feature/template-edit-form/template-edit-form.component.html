@@ -34,6 +34,7 @@
         formControlName="universities"
         [tuiTextfieldLabelOutside]="true"
         (searchChange)="universitySearch.search($event)"
+        (tuiDropdownOpenChange)="universitySearch.openChange($event)"
         [stringify]="(universitySearch.stringify$ | async)!"
       >
         <tui-data-list-wrapper

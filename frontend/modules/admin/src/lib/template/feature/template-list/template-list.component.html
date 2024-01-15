@@ -81,13 +81,18 @@
           </a>
 
           <a
-            [routerLink]="[item.id, 'edit']"
+            [routerLink]="canEdit ? [item.id, 'edit'] : null"
             tuiIconButton
             size="s"
+            *tuiLet="!item.availableToAllUniversities || isUserAdmin as canEdit"
             appearance="flat"
             [icon]="'tuiIconEdit'"
             shape="rounded"
-            [tuiHint]="'EDIT' | translate"
+            [tuiHint]="
+              (canEdit ? 'EDIT' : 'CANNOT_EDIT_TEMPLATE_AVAILABLE_TO_ALL')
+                | translate
+            "
+            [disabled]="!canEdit"
           >
           </a>
         </td>

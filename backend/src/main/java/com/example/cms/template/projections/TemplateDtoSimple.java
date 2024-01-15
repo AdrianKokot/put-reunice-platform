@@ -12,6 +12,7 @@ public class TemplateDtoSimple {
     private Long id;
     private String name;
     private String content;
+    private boolean availableToAllUniversities;
 
     public static TemplateDtoSimple of(Template template) {
         if (template == null) {
@@ -24,5 +25,6 @@ public class TemplateDtoSimple {
         id = template.getId();
         name = template.getName();
         content = template.getContent();
+        availableToAllUniversities = template.isAvailableToAll();
     }
 }

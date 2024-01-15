@@ -52,10 +52,9 @@ public class TemplateController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Void> updateTemplate(
+    ResponseEntity<TemplateDtoDetailed> updateTemplate(
             @PathVariable long id, @RequestBody TemplateDtoFormUpdate form) {
-        service.update(id, form);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(service.update(id, form));
     }
 
     @DeleteMapping("/{id}")
