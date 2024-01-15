@@ -24,6 +24,7 @@ import {
   TuiDataListHost,
   TuiDataListModule,
   tuiDropdownOptionsProvider,
+  TuiHintModule,
   TuiHostedDropdownComponent,
   TuiHostedDropdownModule,
   tuiIsEditingKey,
@@ -70,6 +71,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TuiButtonModule,
     TuiHostedDropdownModule,
     TuiLoaderModule,
+    TuiHintModule,
   ],
   providers: [
     tuiAsFocusableItemAccessor(TableFilterComponent),

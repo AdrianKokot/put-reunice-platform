@@ -1,5 +1,6 @@
 import {
   BehaviorSubject,
+  combineLatestWith,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -25,16 +26,21 @@ import { TranslateService } from '@ngx-translate/core';
 import { inject } from '@angular/core';
 
 export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
-  private readonly _search$ = new BehaviorSubject<string>('');
+  private readonly _search$ = new BehaviorSubject<string | null>('');
   private readonly _translate = inject(TranslateService);
+  private readonly _additionalItems$ = new BehaviorSubject<T[]>([]);
 
   readonly items$ = this._search$.pipe(
+    filter((value) => value !== null),
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((search) =>
       this._service
-          // @ts-expect-error I don't know how to create types to make typescript recognize that this is a valid call
-        .getAll({ [this.searchKey]: search, size: 250 })
+        .getAll({
+          ...this._additionalFilters,
+          [this.searchKey]: search,
+          size: 25,
+        })
         .pipe(
           map(({ items }) => items),
           startWith(null),
@@ -53,7 +59,8 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     TuiHandler<TuiContextWithImplicit<T['id']> | T['id'], string>
   > = this.items$.pipe(
     filter((items): items is T[] => items !== null),
-    scan((acc, value) => acc.concat(value), [] as T[]),
+    combineLatestWith(this._additionalItems$),
+    scan((acc, values) => acc.concat(values[0], values[1]), [] as T[]),
     map(
       (items) =>
         new Map(
@@ -81,6 +88,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
       | (OnlyKeysOfType<T, string> & string)
       | Array<OnlyKeysOfType<T, string> & string>
       | ((item: T) => string),
+    private readonly _additionalFilters: ApiFilter<T> = {},
   ) {
     if (typeof stringify === 'function') {
       this.stringify = stringify;
@@ -99,7 +107,21 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
   }
 
   search(text: string | null) {
-    this._search$.next(text?.trim() ?? '');
+    this._search$.next(text?.trim() ?? null);
+  }
+
+  openChange(open: boolean) {
+    if (!open) {
+      this.search('');
+    }
+  }
+
+  addItem(item: T) {
+    this.addItems([item]);
+  }
+
+  addItems(items: T[]) {
+    this._additionalItems$.next(this._additionalItems$.value.concat(items));
   }
 }
 

@@ -43,6 +43,7 @@
 
       .t-sort {
         max-width: calc(100% - var(--tui-height-s) + 1rem);
+
         & > span {
           .text-ellipsis;
         }
@@ -111,10 +112,12 @@
       min-width: 88px;
       max-width: 88px;
 
-      button,
-      a {
-        .transition(opacity);
-        opacity: 0;
+      @media @tui-tablet-min {
+        button,
+        a {
+          .transition(opacity);
+          opacity: 0;
+        }
       }
     }
 

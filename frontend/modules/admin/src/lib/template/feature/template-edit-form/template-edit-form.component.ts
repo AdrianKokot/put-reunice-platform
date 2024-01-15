@@ -21,6 +21,7 @@ import {
   TuiDataListWrapperModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
+import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-template-edit-form',
@@ -33,6 +34,7 @@ import {
     TuiDataListWrapperModule,
     TuiMultiSelectModule,
     UserDirective,
+    TuiDropdownModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,12 +52,14 @@ export class TemplateEditFormComponent {
     ],
   });
 
-  readonly item$ = resourceFromRoute(this._service, (v) =>
+  readonly item$ = resourceFromRoute(this._service, (v) => {
     this.form.patchValue({
       ...v,
       universities: v.universities?.map((u) => u.id) ?? [],
-    }),
-  );
+    });
+
+    this.universitySearch.addItems(v.universities ?? []);
+  });
 
   readonly handler = new FormSubmitWrapper(this.form, {
     submit: (value) => this._service.update(value),
