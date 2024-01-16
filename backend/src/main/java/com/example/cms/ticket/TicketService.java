@@ -164,18 +164,24 @@ public class TicketService {
             throws InvalidStatusChangeException {
         Ticket ticket = getTicketDetailed(ticketId, token);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
+        Boolean isAdmin =
+                securityService
+                        .getPrincipal()
+                        .map(user -> user.getAccountType().equals(Role.ADMIN))
+                        .orElse(false);
 
-        if (userStatusOptional.isEmpty()) {
+        if (userStatusOptional.isEmpty() && !isAdmin) {
             throw new TicketAccessForbiddenException();
         }
         ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
         if (ticket.getStatus() != TicketStatus.IRRELEVANT
                 && ticket.getStatus() != TicketStatus.DELETED) {
             emailSendingService.sendChangeTicketStatusEmail(ticket);
-        } else {
-            emailSendingService.sendChangeTicketStatusForCHREmail(
-                    ticket, userStatusOptional.get().getUser().getEmail());
-        }
+        } else
+            userStatusOptional.ifPresent(
+                    ticketUserStatus ->
+                            emailSendingService.sendChangeTicketStatusForCHREmail(
+                                    ticket, ticketUserStatus.getUser().getEmail()));
         return TicketDtoDetailed.of(ticketRepository.save(ticket));
     }
 }
