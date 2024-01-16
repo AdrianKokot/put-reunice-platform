@@ -24,6 +24,8 @@ public class TicketDtoDetailed {
     private String title;
     private String description;
     private Map<String, Optional<Instant>> lastSeenOn;
+    private String pageTitle;
+    private String universityName;
 
     public static TicketDtoDetailed of(Ticket ticket) {
         if (ticket == null) {
@@ -45,5 +47,7 @@ public class TicketDtoDetailed {
                         .collect(
                                 Collectors.toMap(
                                         item -> item.getUser().getUsername(), TicketUserStatus::getLastSeenOn));
+        pageTitle = ticket.getPage().getTitle();
+        universityName = ticket.getPage().getUniversity().getName();
     }
 }
