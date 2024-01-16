@@ -34,37 +34,15 @@ class UniversityControllerTest extends BaseAPIControllerTest {
 
     @Override
     protected void setupData() {
-        var user =
-                new User(
-                        null,
-                        null,
-                        null,
-                        null,
-                        "TEST_USER",
-                        "TEST_USER",
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        Role.USER,
-                        true);
+        var user = new User("TEST_USER", Role.USER, true);
         user = userRepository.save(user);
         this.userId = user.getId();
 
         var university =
                 new University(
-                        null,
-                        null,
-                        null,
                         "TEST_UNIVERSITY" + Instant.now().toString(),
                         "TST_U" + Instant.now().toString(),
-                        null,
-                        null,
-                        "TEST_UNIVERSITY",
-                        false,
-                        "");
+                        false);
         university = universityRepository.save(university);
         this.universityId = university.getId();
     }

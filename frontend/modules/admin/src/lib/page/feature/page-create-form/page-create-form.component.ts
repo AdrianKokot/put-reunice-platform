@@ -10,6 +10,7 @@ import {
   FormSubmitWrapper,
   PAGE_TREE_HANDLER,
   parseNullableInt,
+  throwError,
 } from '@reunice/modules/shared/util';
 import {
   BaseFormImportsModule,
@@ -34,7 +35,7 @@ import {
   TuiTreeModule,
 } from '@taiga-ui/kit';
 import { TuiCheckedModule, TuiValueChangesModule } from '@taiga-ui/cdk';
-import { TuiLinkModule } from '@taiga-ui/core';
+import { TuiDropdownModule, TuiLinkModule } from '@taiga-ui/core';
 import { ConfirmDirective } from '@reunice/modules/shared/ui';
 import { ActivatedRoute } from '@angular/router';
 
@@ -54,13 +55,15 @@ import { ActivatedRoute } from '@angular/router';
     UserDirective,
     ConfirmDirective,
     TuiCheckedModule,
+    TuiDropdownModule,
   ],
   templateUrl: './page-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageCreateFormComponent {
   private readonly _service = inject(PageService);
-  private readonly _user = inject(AuthService).userSnapshot;
+  private readonly _user =
+    inject(AuthService).userSnapshot ?? throwError('User is null');
   private readonly _route = inject(ActivatedRoute).snapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
@@ -68,15 +71,14 @@ export class PageCreateFormComponent {
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
-    creatorId: [this._user?.id, [Validators.required]],
+    creatorId: [this._user.id, [Validators.required]],
     parentId: [
       parseNullableInt(this._route.queryParams['parentId']),
       [Validators.required],
     ],
     universityId: [
       parseNullableInt(this._route.queryParams['universityId']) ??
-        this._user?.enrolledUniversities?.at(0)?.id ??
-        null,
+        this._user.universityId,
       [Validators.required],
     ],
   });
@@ -91,6 +93,7 @@ export class PageCreateFormComponent {
     inject(UserService),
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
+    { enrolledUniversities_eq: this._user.universityId },
   );
 
   readonly universitySearch = new ResourceSearchWrapper(
@@ -124,7 +127,6 @@ export class PageCreateFormComponent {
 
   onParentIdChange(checked: boolean, page: Page) {
     if (checked) {
-      console.warn({ page });
       this.selectedPageName = page.title;
     }
   }

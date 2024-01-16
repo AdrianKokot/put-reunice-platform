@@ -9,6 +9,7 @@ import {
 import { AuthModule } from '@reunice/modules/auth';
 import { UniversityModule } from './university/university.module';
 import { AuthGuard } from '@reunice/modules/shared/security';
+import { PageModule } from './page/page.module';
 
 @Injectable({ providedIn: 'root' })
 class ReuniceTitleStrategy extends DefaultTitleStrategy {
@@ -16,6 +17,8 @@ class ReuniceTitleStrategy extends DefaultTitleStrategy {
     const title = this.buildTitle(snapshot);
     if (title !== undefined) {
       this.title.setTitle(`Reunice | ${title}`);
+    } else {
+      this.title.setTitle('Reunice');
     }
   }
 }
@@ -26,10 +29,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('@reunice/modules/admin').then((m) => m.AdminModule),
     canMatch: [AuthGuard],
-  },
-  {
-    path: 'universities',
-    loadChildren: () => UniversityModule,
   },
   {
     path: 'authors',
@@ -53,8 +52,11 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'universities',
-    pathMatch: 'full',
+    loadChildren: () => PageModule,
+  },
+  {
+    path: '',
+    loadChildren: () => UniversityModule,
   },
   {
     path: '**',

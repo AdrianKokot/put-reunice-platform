@@ -19,4 +19,8 @@ FROM amazoncorretto:11-alpine-jdk
 WORKDIR /workspace
 COPY --from=build-be /workspace/target/*.jar app.jar
 EXPOSE 8080
+
+HEALTHCHECK --start-period=20s --interval=5s --timeout=10s --retries=5 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/api/health || exit 1
+
 ENTRYPOINT ["java","-jar","app.jar"]

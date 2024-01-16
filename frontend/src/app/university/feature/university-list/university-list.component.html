@@ -1,4 +1,4 @@
-<h2 class="tui-text_h2 tui-space_top-14 text-center">
+<h2 class="tui-text_h2 tui-space_top-14 text-center" *ngIf="showHeader">
   {{ 'UNIVERSITIES_WE_WORK_WITH' | translate }}
 </h2>
 
@@ -6,7 +6,7 @@
   <a
     *ngFor="let page of universities$ | async; else: loading; empty: blank"
     tuiIsland
-    [routerLink]="[page.university.id, 'page', page.id]"
+    [routerLink]="['/university', page.university.id, 'page', page.id]"
   >
     <figure class="tui-island__figure">
       <img

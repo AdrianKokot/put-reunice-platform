@@ -40,28 +40,11 @@ class PageControllerTest extends BaseAPIControllerTest {
 
     @Override
     public void setupData() {
-        var user =
-                new User(
-                        null,
-                        null,
-                        null,
-                        null,
-                        "TEST_USER",
-                        "TEST_USER",
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        Role.USER,
-                        true);
+        var user = new User("TEST_USER", Role.USER, true);
         user = userRepository.save(user);
         this.userId = user.getId();
 
-        var university =
-                new University(
-                        null, null, null, "TEST_UNIVERSITY", "TST_U", null, null, "TEST_UNIVERSITY", false, "");
+        var university = new University("TEST_UNIVERSITY", "TST_U", false);
         university = universityRepository.save(university);
         this.universityId = university.getId();
 
@@ -70,35 +53,25 @@ class PageControllerTest extends BaseAPIControllerTest {
 
         var mainPage =
                 new Page(
-                        null,
-                        null,
                         "TEST_MAIN_PAGE",
                         "TEST_MAIN_PAGE",
                         new Content(null, "TEST_CONTENT"),
                         false,
                         user,
                         university,
-                        null,
-                        null,
-                        null,
                         null);
         mainPage = pageRepository.save(mainPage);
         this.mainPageId = mainPage.getId();
 
         var page =
                 new Page(
-                        null,
-                        null,
                         "TEST_PAGE",
                         "TEST_PAGE",
                         new Content(null, "TEST_CONTENT"),
                         false,
                         user,
                         university,
-                        mainPage,
-                        null,
-                        null,
-                        null);
+                        mainPage);
         page = pageRepository.save(page);
         this.pageId = page.getId();
     }
@@ -310,16 +283,16 @@ class PageControllerTest extends BaseAPIControllerTest {
         }
 
         @Test
-        void get_IdEquals1_Administrator_Success() throws Exception {
+        void get_IdEquals2_Administrator_Success() throws Exception {
             performAs(Role.ADMIN);
 
             var items =
                     getValue(
-                            performGet("?id_eq=1").andExpect(status().isOk()),
+                            performGet("?id_eq=2").andExpect(status().isOk()),
                             new TypeReference<List<PageDtoDetailed>>() {});
 
             assertThat(items.size(), greaterThan(0));
-            assertThat(items, everyItem(hasProperty("id", is(1L))));
+            assertThat(items, everyItem(hasProperty("id", is(2L))));
         }
 
         @Test

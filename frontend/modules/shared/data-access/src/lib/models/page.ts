@@ -1,26 +1,37 @@
 import { University } from './university';
 import { User } from './user';
 
-export interface Page {
+interface BasePage {
   id: number;
   title: string;
-  creator: User;
-  description: string;
   hidden: boolean;
   content: string;
+  createdOn: string;
+  updatedOn: string;
+}
+
+export interface GlobalPage extends BasePage {
+  landing: boolean;
+}
+
+export interface Page extends BasePage {
+  creator: User;
+  description: string;
   parent: Page | null;
   university: University;
   children: Page[];
-  createdOn: string;
-  updatedOn: string;
   contactRequestHandlers: User[];
   hasContactRequestHandler: boolean;
 }
 
-export interface PageForm {
+export interface GlobalPageForm {
   title: string;
-  description: string;
   content?: string;
+  hidden: boolean;
+}
+
+export interface PageForm extends GlobalPageForm {
+  description: string;
   creatorId: number;
   parentId: number;
   contactRequestHandlers: Array<User['id']>;

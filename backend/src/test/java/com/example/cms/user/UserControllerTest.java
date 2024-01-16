@@ -35,34 +35,13 @@ class UserControllerTest extends BaseAPIControllerTest {
     @Override
     protected void setupData() {
 
-        var user =
-                new User(
-                        null,
-                        null,
-                        null,
-                        null,
-                        "TEST_USER",
-                        "TEST_USER",
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        Role.USER,
-                        true);
+        var user = new User("TEST_USER", Role.USER, true);
+
         var university =
                 new University(
-                        null,
-                        null,
-                        null,
                         "TEST_UNIVERSITY" + Instant.now().toEpochMilli(),
                         "TST_U" + Instant.now().toEpochMilli(),
-                        null,
-                        null,
-                        "TEST_UNIVERSITY",
-                        false,
-                        "");
+                        false);
         university = universityRepository.save(university);
         user = userRepository.save(user);
         this.userId = user.getId();
@@ -252,49 +231,13 @@ class UserControllerTest extends BaseAPIControllerTest {
         void delete_UniversityAdministrator_Ok() throws Exception {
             var newUniversity =
                     new University(
-                            null,
-                            null,
-                            null,
                             "TEST_NAME" + Instant.now().toEpochMilli(),
                             "SHORT_NAME" + Instant.now().toEpochMilli(),
-                            null,
-                            null,
-                            "TEST_DESCRIPTION" + Instant.now().toEpochMilli(),
-                            false,
-                            null);
-            newUniversity = universityRepository.save(newUniversity);
-            var newUser =
-                    new User(
-                            null,
-                            null,
-                            null,
-                            null,
-                            "TEST_USER" + Instant.now().toEpochMilli(),
-                            "TEST_USER" + Instant.now().toEpochMilli(),
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            Role.USER,
                             false);
+            newUniversity = universityRepository.save(newUniversity);
+            var newUser = new User("TEST_USER" + Instant.now().toEpochMilli(), Role.USER, false);
             var newModerator =
-                    new User(
-                            null,
-                            null,
-                            null,
-                            null,
-                            "TEST_MODERATOR" + Instant.now().toEpochMilli(),
-                            "TEST_MODERATOR" + Instant.now().toEpochMilli(),
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            Role.MODERATOR,
-                            true);
+                    new User("TEST_MODERATOR" + Instant.now().toEpochMilli(), Role.MODERATOR, true);
             newUser = userRepository.save(newUser);
             newModerator = userRepository.save(newModerator);
             newUniversity.setEnrolledUsers(Set.of(newUser, newModerator));
@@ -359,7 +302,6 @@ class UserControllerTest extends BaseAPIControllerTest {
 
     @Nested
     class ViewUsersListTestClass {
-        // tu coś jest źle, każdy widzi wszystko
         @Test
         void getUserList_User_Approve() throws Exception {
             performAs(Role.USER, userId);
@@ -453,13 +395,13 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_UniversityAdministrator_Success() throws Exception {
-            performAs(Role.MODERATOR, Set.of(universityId));
+            performAs(Role.MODERATOR, Set.of(universityId), userId);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
 
         @Test
         public void update_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.ADMIN, userId);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
     }
@@ -524,7 +466,7 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.ADMIN, userId);
             userToUpdate.setEnabled(true);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }
@@ -590,7 +532,7 @@ class UserControllerTest extends BaseAPIControllerTest {
 
         @Test
         public void update_Administrator_Success() throws Exception {
-            performAs(Role.ADMIN);
+            performAs(Role.ADMIN, userId);
             userToUpdate.setEnabled(false);
             performPut(userToUpdate.getId(), getUpdateForm()).andExpect(status().is2xxSuccessful());
         }

@@ -133,11 +133,15 @@ public class PageService {
 
     private boolean isPageVisible(Page page) {
         return page != null
-                && !((page.isHidden() || page.getUniversity().isHidden())
+                && !((page.isHidden() || (page.getUniversity() != null && page.getUniversity().isHidden()))
                         && securityService.isForbiddenPage(page));
     }
 
     private Page save(Page page) {
+        if (page.getUniversity() == null) throw new PageException(PageExceptionType.UNIVERSITY_EMPTY);
+
+        if (page.getCreator() == null) throw new PageException(PageExceptionType.CREATOR_EMPTY);
+
         Page saved = pageRepository.save(page);
         searchService.upsert(saved);
         return saved;
@@ -181,7 +185,14 @@ public class PageService {
             throw new PageException(PageExceptionType.CREATOR_NOT_VALID);
         }
 
-        Page newPage = form.toPage(parent, creator);
+        Page newPage = new Page();
+        newPage.setTitle(form.getTitle());
+        newPage.setDescription(form.getDescription());
+        newPage.setContent(Content.of(form.getContent()));
+        newPage.setParent(parent);
+        newPage.setUniversity(parent.getUniversity());
+        newPage.setCreator(creator);
+        newPage.setHidden(form.getHidden());
 
         return PageDtoDetailed.of(save(newPage));
     }
@@ -189,7 +200,7 @@ public class PageService {
     @Secured("ROLE_USER")
     @Transactional
     public void update(Long id, PageDtoFormUpdate form) {
-        Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
+        Page page = pageRepository.findDetailedById(id).orElseThrow(PageNotFoundException::new);
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }
@@ -231,7 +242,8 @@ public class PageService {
 
     @Secured("ROLE_USER")
     public void delete(Long id) {
-        Page page = pageRepository.findById(id).orElseThrow(PageNotFoundException::new);
+        Page page = pageRepository.findDetailedById(id).orElseThrow(PageNotFoundException::new);
+
         if (securityService.isForbiddenPage(page)) {
             throw new PageForbiddenException();
         }

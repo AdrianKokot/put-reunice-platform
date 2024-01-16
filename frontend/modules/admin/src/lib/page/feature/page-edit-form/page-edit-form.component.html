@@ -67,6 +67,7 @@
             formControlName="creatorId"
             [tuiTextfieldLabelOutside]="true"
             (searchChange)="userSearch.search($event)"
+            (tuiDropdownOpenChange)="userSearch.openChange($event)"
             [stringify]="(userSearch.stringify$ | async)!"
           >
             <tui-data-list-wrapper
@@ -165,8 +166,7 @@
                   file.uploadedBy === user.username ||
                   user.accountType === 'ADMIN' ||
                   (user.accountType === 'MODERATOR' &&
-                    user.enrolledUniversities[0].id ===
-                      form.controls.universityId.value)
+                    user.universityId === form.controls.universityId.value)
                 "
                 (removed)="removeExistingFile(file)"
               >
@@ -227,16 +227,17 @@
         tuiTextfieldSize="m"
         formControlName="contactRequestHandlers"
         [tuiTextfieldLabelOutside]="true"
-        (searchChange)="userSearch.search($event)"
-        [stringify]="(userSearch.stringify$ | async)!"
+        (searchChange)="contactRequestHandlerSearch.search($event)"
+        [stringify]="(contactRequestHandlerSearch.stringify$ | async)!"
+        (tuiDropdownOpenChange)="contactRequestHandlerSearch.openChange($event)"
         data-test="contact-request-handlers-select"
       >
         <tui-data-list-wrapper
           data-test="contact-request-handlers-select-options"
           *tuiDataList
           tuiMultiSelectGroup
-          [items]="userSearch.itemIds$ | async"
-          [itemContent]="(userSearch.stringify$ | async)!"
+          [items]="contactRequestHandlerSearch.itemIds$ | async"
+          [itemContent]="(contactRequestHandlerSearch.stringify$ | async)!"
         ></tui-data-list-wrapper>
       </tui-multi-select>
 

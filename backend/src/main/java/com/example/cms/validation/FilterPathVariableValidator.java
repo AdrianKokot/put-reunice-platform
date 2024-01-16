@@ -21,7 +21,13 @@ public class FilterPathVariableValidator {
 
     public static Set<String> classPossibleFields(Class klass) {
         Set<String> classFields =
-                Stream.of(klass.getDeclaredFields()).map(Field::getName).collect(Collectors.toSet());
+                Stream.concat(
+                                Stream.of(klass.getDeclaredFields()),
+                                klass.getSuperclass() != null
+                                        ? Stream.of(klass.getSuperclass().getDeclaredFields())
+                                        : Stream.empty())
+                        .map(Field::getName)
+                        .collect(Collectors.toSet());
 
         classFields.removeAll(forbiddenFields.getOrDefault(klass, Set.of()));
 

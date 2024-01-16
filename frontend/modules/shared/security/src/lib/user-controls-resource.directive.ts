@@ -109,6 +109,13 @@ export class UserControlsResourceDirective<
       return true;
     }
 
+    if (
+      'availableToAllUniversities' in resource &&
+      resource.availableToAllUniversities
+    ) {
+      return false;
+    }
+
     const universityIds = this.getUniversityIdFromResource(resource);
 
     if (
@@ -121,7 +128,7 @@ export class UserControlsResourceDirective<
     return (
       user.accountType === ExtendedAccountTypeEnum.USER &&
       'creator' in resource &&
-      user.id === resource.creator.id
+      user.id === resource.creator?.id
     );
   }
 
@@ -129,7 +136,7 @@ export class UserControlsResourceDirective<
     resource: User | Page | University | Template,
   ) {
     if ('university' in resource) {
-      return new Set([resource.university.id]);
+      return new Set([resource.university?.id]);
     }
 
     if ('enrolledUniversities' in resource) {

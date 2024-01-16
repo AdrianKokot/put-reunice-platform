@@ -26,7 +26,7 @@ import {
   ucuu5,
   ucuu7,
 } from './use-cases/university-user';
-import { ucan2, ucan3 } from './use-cases/anonymous-user';
+import { ucan1, ucan2, ucan3 } from './use-cases/anonymous-user';
 
 const testTimestamp = Date.now().toString();
 
@@ -80,6 +80,7 @@ describe('Use Cases', () => {
       cy.visit('/');
     });
 
+    ucan1();
     ucan2();
     ucan3(testTimestamp);
   });
