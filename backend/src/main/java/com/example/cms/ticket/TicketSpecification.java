@@ -8,14 +8,14 @@ import com.example.cms.SearchCriteria;
 import java.util.UUID;
 import javax.persistence.criteria.*;
 
-import com.example.cms.page.Page;
-import lombok.AllArgsConstructor;
+import com.example.cms.SearchSpecification;
 import org.springframework.data.jpa.domain.Specification;
 
-@AllArgsConstructor
-public class TicketSpecification implements Specification<Ticket> {
+public class TicketSpecification extends SearchSpecification implements Specification<Ticket> {
 
-    private SearchCriteria criteria;
+    public TicketSpecification(SearchCriteria criteria) {
+        super(criteria);
+    }
 
     @Override
     public Predicate toPredicate(
@@ -52,6 +52,8 @@ public class TicketSpecification implements Specification<Ticket> {
                     return criteriaBuilder.disjunction();
                 }
             }
+        } else if (criteria.getOperation().equalsIgnoreCase("search")) {
+            return this.searchPredicate(root, query, criteriaBuilder);
         }
         return criteriaBuilder.disjunction();
     }
