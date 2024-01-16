@@ -5,10 +5,9 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.SearchSpecification;
 import java.util.UUID;
 import javax.persistence.criteria.*;
-
-import com.example.cms.SearchSpecification;
 import org.springframework.data.jpa.domain.Specification;
 
 public class TicketSpecification extends SearchSpecification implements Specification<Ticket> {
@@ -30,8 +29,7 @@ public class TicketSpecification extends SearchSpecification implements Specific
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (criteria.getKey().equalsIgnoreCase("pageId")) {
                 return criteriaBuilder.equal(
-                        root.get("page").get("id"),
-                        parseLong(criteria.getValue().toString()));
+                        root.get("page").get("id"), parseLong(criteria.getValue().toString()));
             } else if (criteria.getKey().equalsIgnoreCase("universityId")) {
                 return criteriaBuilder.equal(
                         root.get("page").get("university").get("id"),

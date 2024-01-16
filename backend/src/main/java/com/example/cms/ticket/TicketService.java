@@ -109,8 +109,14 @@ public class TicketService {
         if (token.isPresent()) if (ticket.getRequesterToken().equals(token.get())) return ticket;
 
         Optional<LoggedUser> optionalLoggedUser = securityService.getPrincipal();
-        if (optionalLoggedUser.isPresent())
+        if (optionalLoggedUser.isPresent()) {
             if (optionalLoggedUser.get().getAccountType().equals(Role.ADMIN)) return ticket;
+            if (optionalLoggedUser.get().getAccountType().equals(Role.MODERATOR)
+                    && optionalLoggedUser
+                            .get()
+                            .getUniversities()
+                            .contains(ticket.getPage().getUniversity().getId())) return ticket;
+        }
 
         throw new TicketNotFoundException();
     }
@@ -118,6 +124,7 @@ public class TicketService {
     public Page<Ticket> getTickets(Pageable pageable, Map<String, String> filterVars) {
         Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
         Role role = null;
+        List<Long> universityIds = null;
         Collection<Long> handlesPages = null;
         String email = null;
         Long id = null;
@@ -125,13 +132,14 @@ public class TicketService {
         if (loggedUserOptional.isPresent()) {
             LoggedUser loggedUser = loggedUserOptional.get();
             role = loggedUser.getAccountType();
+            universityIds = loggedUser.getUniversities();
             handlesPages = loggedUser.getHandlesPages();
             email = loggedUser.getEmail();
             id = loggedUser.getId();
         }
 
         Specification<Ticket> combinedSpecification =
-                Specification.where(new TicketRoleSpecification(role, handlesPages, email));
+                Specification.where(new TicketRoleSpecification(role, universityIds, handlesPages, email));
 
         if (filterVars.containsKey("unseen")) {
             filterVars.remove("unseen");
@@ -164,13 +172,18 @@ public class TicketService {
             throws InvalidStatusChangeException {
         Ticket ticket = getTicketDetailed(ticketId, token);
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
-        Boolean isAdmin =
+        Boolean accessByRole =
                 securityService
                         .getPrincipal()
-                        .map(user -> user.getAccountType().equals(Role.ADMIN))
+                        .map(
+                                user ->
+                                        user.getAccountType().equals(Role.ADMIN)
+                                                || (user.getAccountType().equals(Role.MODERATOR)
+                                                        && user.getUniversities()
+                                                                .contains(ticket.getPage().getUniversity().getId())))
                         .orElse(false);
 
-        if (userStatusOptional.isEmpty() && !isAdmin) {
+        if (userStatusOptional.isEmpty() && !accessByRole) {
             throw new TicketAccessForbiddenException();
         }
         ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
