@@ -15,7 +15,7 @@ public class FilterPathVariableValidator {
                     User.class, Set.of("password"),
                     Template.class, Set.of("content"),
                     FileResource.class, Set.of("page"),
-                    Ticket.class, Set.of("page"));
+                    Ticket.class, Set.of("page", "requesterToken"));
 
     private static final Set<String> extraFields = Set.of("search");
 

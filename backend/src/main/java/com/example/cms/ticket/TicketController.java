@@ -27,7 +27,9 @@ public class TicketController {
 
         Page<Ticket> responsePage =
                 service.getTickets(
-                        pageable, FilterPathVariableValidator.validate(vars, Ticket.class, "unseen"));
+                        pageable,
+                        FilterPathVariableValidator.validate(
+                                vars, Ticket.class, "unseen", "pageId", "universityId"));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
@@ -62,7 +64,7 @@ public class TicketController {
     public ResponseEntity<List<Response>> getTicketResponses(
             @PageableDefault(
                             sort = {"responseTime"},
-                            direction = Sort.Direction.DESC)
+                            direction = Sort.Direction.ASC)
                     Pageable pageable,
             @PathVariable UUID ticketId,
             @RequestParam Optional<UUID> token) {
