@@ -32,6 +32,10 @@ public class TicketSpecification extends SearchSpecification implements Specific
                 return criteriaBuilder.equal(
                         root.get("page").get("id"),
                         parseLong(criteria.getValue().toString()));
+            } else if (criteria.getKey().equalsIgnoreCase("universityId")) {
+                return criteriaBuilder.equal(
+                        root.get("page").get("university").get("id"),
+                        parseLong(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
