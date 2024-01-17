@@ -1,6 +1,7 @@
 package com.example.cms.university;
 
 import com.example.cms.page.Page;
+import com.example.cms.template.Template;
 import com.example.cms.user.User;
 import java.util.HashSet;
 import java.util.Objects;
@@ -16,6 +17,7 @@ import org.hibernate.Hibernate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class University {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +30,12 @@ public class University {
             name = "users_enrolled",
             joinColumns = @JoinColumn(name = "university_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ToString.Exclude
     private Set<User> enrolledUsers = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "main_page_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Page mainPage;
 
     @Column(unique = true)
@@ -52,21 +56,9 @@ public class University {
 
     private String image;
 
-    @Override
-    public String toString() {
-        return "University{"
-                + "id="
-                + id
-                + ", name='"
-                + name
-                + '\''
-                + ", shortName='"
-                + shortName
-                + '\''
-                + ", isHidden="
-                + hidden
-                + '}';
-    }
+    @ManyToMany(mappedBy = "universities")
+    @ToString.Exclude
+    private Set<Template> templates = new HashSet<>();
 
     public void enrollUsers(User user) {
         enrolledUsers.add(user);
@@ -83,5 +75,19 @@ public class University {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    @PreRemove
+    protected void removeTemplateAssociations() {
+        for (var template : this.templates) {
+            template.getUniversities().remove(this);
+        }
+    }
+
+    public University(String name, String shortName, boolean hidden) {
+        this.name = name;
+        this.shortName = shortName;
+        this.hidden = hidden;
+        this.description = name;
     }
 }

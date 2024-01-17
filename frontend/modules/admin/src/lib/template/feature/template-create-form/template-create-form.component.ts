@@ -18,6 +18,7 @@ import {
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
 import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-template-create-form',
@@ -29,6 +30,7 @@ import { AuthService, UserDirective } from '@reunice/modules/shared/security';
     TuiCheckboxLabeledModule,
     TuiMultiSelectModule,
     UserDirective,
+    TuiDropdownModule,
   ],
   templateUrl: './template-create-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

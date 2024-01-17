@@ -6,8 +6,10 @@
   left: 0;
   cursor: default;
 
-  opacity: 0;
-  transition: var(--tui-duration) opacity;
+  opacity: 0.25;
+  transition:
+    var(--tui-duration) opacity,
+    var(--tui-duration) color;
 
   .button-container {
     display: flex;
@@ -31,7 +33,7 @@
 
 :host-context(.t-sort:hover) {
   :host {
-    opacity: 0;
+    opacity: 0.25;
   }
 
   :host:hover {

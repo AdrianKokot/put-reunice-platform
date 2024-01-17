@@ -28,6 +28,7 @@
       tuiTextfieldSize="m"
       formControlName="universities"
       [tuiTextfieldLabelOutside]="true"
+      (tuiDropdownOpenChange)="universitySearch.openChange($event)"
       (searchChange)="universitySearch.search($event)"
       [stringify]="(universitySearch.stringify$ | async)!"
     >

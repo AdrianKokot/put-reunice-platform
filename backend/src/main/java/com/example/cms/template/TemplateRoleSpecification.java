@@ -21,7 +21,7 @@ public class TemplateRoleSpecification implements Specification<Template> {
 
         if (!this.role.equals(Role.ADMIN)) {
             return criteriaBuilder.or(
-                    criteriaBuilder.equal(root.get("isAvailableToAll"), true),
+                    criteriaBuilder.equal(root.get("availableToAll"), true),
                     root.join("universities", JoinType.LEFT).get("id").in(universities));
         }
 

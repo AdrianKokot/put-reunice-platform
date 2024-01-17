@@ -19,6 +19,8 @@ public class TicketDto {
     private TicketStatus status;
     private String title;
     private String description;
+    private String pageTitle;
+    private String universityName;
 
     public static TicketDto of(Ticket ticket) {
         if (ticket == null) {
@@ -35,5 +37,7 @@ public class TicketDto {
         status = ticket.getStatus();
         title = ticket.getTitle();
         description = ticket.getDescription();
+        pageTitle = ticket.getPage().getTitle();
+        universityName = ticket.getPage().getUniversity().getName();
     }
 }

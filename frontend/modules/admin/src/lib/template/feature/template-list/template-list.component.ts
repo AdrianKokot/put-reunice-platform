@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Template, TemplateService } from '@reunice/modules/shared/data-access';
+import {
+  AccountTypeEnum,
+  Template,
+  TemplateService,
+} from '@reunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
 import {
   BaseFormImportsModule,
@@ -8,6 +12,7 @@ import {
   ReuniceAbstractTable,
 } from '../../../shared';
 import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import { AuthService } from '@reunice/modules/shared/security';
 
 @Component({
   selector: 'reunice-template-list',
@@ -22,6 +27,8 @@ import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
   providers: [provideReuniceTable(TemplateService)],
 })
 export class TemplateListComponent extends ReuniceAbstractTable<Template> {
+  readonly isUserAdmin =
+    inject(AuthService).userSnapshot?.accountType === AccountTypeEnum.ADMIN;
   readonly columns: Array<keyof Template | string> = ['name', 'actions'];
 
   readonly filtersForm = inject(FormBuilder).nonNullable.group({

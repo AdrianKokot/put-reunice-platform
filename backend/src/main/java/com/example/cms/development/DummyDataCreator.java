@@ -1152,7 +1152,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "Poznan University of Technology is the best technical university in the Wielkopolskie voivodeship in western Poland. PUT is the third most frequently chosen university in Poland, as up to six candidates competed for a place there.",
                         "<section><h2>About us</h2><p>PUT is the best technical university in the Wielkopolskie voivodeship in western Poland. PUT is the third most frequently chosen university in Poland, as up to six candidates competed for a place there. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>PUT offers 30 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
-                        Set.of(5L, 7L),
+                        Set.of(7L),
                         null));
 
         page = pageService.get(3L);
@@ -1163,7 +1163,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "Adam Mickiewicz University in Poznań (AMU) is one of the major Polish universities, located in the city of Poznań, Greater Poland, in the west of the country.",
                         "<section><h2>About us</h2><p>Adam Mickiewicz University in Poznań (AMU) is one of the major Polish universities, located in the city of Poznań, Greater Poland, in the west of the country. It traces its origins to 1611 and officially opened on May 7, 1919. Since 1955, it has carried the name of the Polish Romantic poet Adam Mickiewicz. The university has been frequently listed as a top three university in the country.</p></section><section><h2>Our offer</h2><p>AMU offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
-                        Set.of(5L, 6L, 7L),
+                        Set.of(6L, 7L),
                         null));
 
         page = pageService.get(4L);
@@ -1174,7 +1174,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "Poznań University of Medical Sciences (PUMS) is one of the best and largest medical universities in Poland, with over 100 years of sound academic experience and great growth momentum.",
                         "<section><h2>About us</h2><p>Poznań University of Medical Sciences (PUMS) is one of the best and largest medical universities in Poland, with over 100 years of sound academic experience and great growth momentum. The University is a leading medical school in Poland and is currently recognized as the largest educational, research, and clinical center in Poland. The University is also a vibrant place where students and academics of over 60 nationalities create a thriving and inspiring academic community.</p></section><section><h2>Our offer</h2><p>PUMS offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
-                        Set.of(5L, 7L, 4L),
+                        Set.of(7L, 4L),
                         null));
 
         page = pageService.get(5L);
@@ -1185,7 +1185,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "Poznań University of Economics and Business (PUEB) is one of the oldest, most prestigious schools of economics in Poland. Since 1926, we have been continually developing higher education and ensuring high quality of scientific studies.",
                         "<section><h2>About us</h2><p>Poznań University of Economics and Business (PUEB) is one of the oldest, most prestigious schools of economics in Poland. Since 1926, we have been continually developing higher education and ensuring high quality of scientific studies. We prepare numerous economic expert reports and implement innovative projects. High-quality education, which we have provided for years, allows our students and graduates to successfully face the challenges of a dynamic labour market.</p></section><section><h2>Our offer</h2><p>PUEB offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
-                        Set.of(5L, 6L, 4L, 7L),
+                        Set.of(6L, 4L, 7L),
                         null));
 
         page = pageService.get(6L);
@@ -1196,7 +1196,7 @@ class DummyDataCreator implements ApplicationListener<ContextRefreshedEvent> {
                         "University of Fine Arts in Poznań (UAP) is a public university in Poznań, Poland. It was founded in 1919 as the first university in Poland to provide higher education in fine arts.",
                         "<section><h2>About us</h2><p>University of Fine Arts in Poznań (UAP) is a public university in Poznań, Poland. It was founded in 1919 as the first university in Poland to provide higher education in fine arts. The university has been awarded the prestigious title of \"Research University\" by the Ministry of Science and Higher Education. It is also the only university in Poland to have been awarded the \"HR Excellence in Research\" logo by the European Commission.</p></section><section><h2>Our offer</h2><p>UAP offers 15 fields of study and 90 specializations in Polish and 15 fields of study in English. The university has 10 faculties, 2 colleges and 1 branch in Kutno. PUT has 21,000 students and 1,300 doctoral students. The university employs 2,500 people, including 1,300 academic teachers.</p></section>",
                         false,
-                        Set.of(5L, 22L),
+                        Set.of(22L),
                         null));
 
         page = pageService.get(7L);

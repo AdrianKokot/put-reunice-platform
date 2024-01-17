@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class TicketRoleSpecification implements Specification<Ticket> {
 
     private Role role;
+    private List<Long> universityIds;
     private Collection<Long> handlesPages;
     private String email;
 
@@ -34,6 +35,10 @@ public class TicketRoleSpecification implements Specification<Ticket> {
 
             if (this.email != null) {
                 predicates.add(criteriaBuilder.equal(root.get("requesterEmail"), email));
+            }
+
+            if (this.role.equals(Role.MODERATOR) && this.universityIds != null) {
+                predicates.add(root.get("page").get("university").get("id").in(universityIds));
             }
         }
         return predicates.isEmpty()

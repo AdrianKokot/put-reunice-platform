@@ -2,17 +2,19 @@ package com.example.cms.ticket;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.SearchSpecification;
 import java.util.UUID;
 import javax.persistence.criteria.*;
-import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
-@AllArgsConstructor
-public class TicketSpecification implements Specification<Ticket> {
+public class TicketSpecification extends SearchSpecification implements Specification<Ticket> {
 
-    private SearchCriteria criteria;
+    public TicketSpecification(SearchCriteria criteria) {
+        super(criteria);
+    }
 
     @Override
     public Predicate toPredicate(
@@ -25,8 +27,13 @@ public class TicketSpecification implements Specification<Ticket> {
                         "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
-            if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return criteriaBuilder.equal(root.<String>get(criteria.getKey()), criteria.getValue());
+            if (criteria.getKey().equalsIgnoreCase("pageId")) {
+                return criteriaBuilder.equal(
+                        root.get("page").get("id"), parseLong(criteria.getValue().toString()));
+            } else if (criteria.getKey().equalsIgnoreCase("universityId")) {
+                return criteriaBuilder.equal(
+                        root.get("page").get("university").get("id"),
+                        parseLong(criteria.getValue().toString()));
             } else if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseBoolean(criteria.getValue().toString()));
@@ -36,7 +43,19 @@ public class TicketSpecification implements Specification<Ticket> {
             } else if (root.get(criteria.getKey()).getJavaType() == UUID.class) {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), UUID.fromString(criteria.getValue().toString()));
+            } else if (root.get(criteria.getKey()).getJavaType() == String.class) {
+                return criteriaBuilder.equal(root.<String>get(criteria.getKey()), criteria.getValue());
+            } else if (root.get(criteria.getKey()).getJavaType() == TicketStatus.class) {
+                try {
+                    return criteriaBuilder.equal(
+                            root.<String>get(criteria.getKey()),
+                            TicketStatus.valueOf(criteria.getValue().toString()));
+                } catch (Exception e) {
+                    return criteriaBuilder.disjunction();
+                }
             }
+        } else if (criteria.getOperation().equalsIgnoreCase("search")) {
+            return this.searchPredicate(root, query, criteriaBuilder);
         }
         return criteriaBuilder.disjunction();
     }

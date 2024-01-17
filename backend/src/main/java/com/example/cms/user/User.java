@@ -115,7 +115,11 @@ public class User {
         return getClass().hashCode();
     }
 
-    public boolean handlesPage(Page page) {
-        return this.handlersPages.contains(page);
+    public User(String username, Role role, boolean enabled) {
+        this.username = username;
+        this.accountType = role;
+        this.enabled = enabled;
+        this.password = username;
+        this.email = username + "@example.com";
     }
 }
