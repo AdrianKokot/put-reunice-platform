@@ -3,6 +3,7 @@ package com.example.cms.file;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,25 @@ public class FileService {
         }
 
         return "/static/" + fileDestination.getFileName().toString();
+    }
+
+    public Path store(MultipartFile file, String filename, String directory) throws IOException {
+        if (file.isEmpty()) {
+            throw new IOException("Failed to store empty file.");
+        }
+
+        var fileDestination =
+                FileUtils.getSecureFilePath(this.config.getUploadsDirectory().resolve(directory), filename);
+
+        try (var inputStream = file.getInputStream()) {
+            Files.copy(inputStream, fileDestination, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return fileDestination;
+    }
+
+    public void deleteDirectory(String directory) throws IOException {
+        org.apache.commons.io.FileUtils.deleteDirectory(
+                this.config.getUploadsDirectory().resolve(directory).toFile());
     }
 }

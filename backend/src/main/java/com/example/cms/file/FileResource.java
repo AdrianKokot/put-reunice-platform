@@ -1,70 +1,87 @@
 package com.example.cms.file;
 
 import com.example.cms.page.Page;
+import com.example.cms.user.User;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "files")
 @Getter
 @Setter
+@EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "resources")
 public class FileResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Length(max = 255, message = "ERRORS.FILE.400.FILENAME_TOO_LONG")
     @NotBlank(message = "ERRORS.FILE.400.FILENAME_EMPTY")
-    private String filename;
+    private String name;
 
-    @NotBlank(message = "ERRORS.FILE.400.FILETYPE_EMPTY")
+    @Length(max = 255, message = "ERRORS.FILE.400.DESCRIPTION_TOO_LONG")
+    @NotBlank(message = "ERRORS.FILE.400.DESCRIPTION_EMPTY")
+    private String description;
+
+    private String path;
+
     private String fileType;
 
     @NotNull(message = "ERRORS.FILE.400.FILESIZE_EMPTY")
-    private Long fileSize;
+    private Long size = 0L;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] data;
+    private ResourceType resourceType = ResourceType.FILE;
 
-    private Timestamp uploadDate;
+    private Timestamp createdOn;
+    private Timestamp updatedOn;
 
-    private Long uploadedById;
-    private String uploadedBy;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User author;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull(message = "ERRORS.FILE.400.PAGE_EMPTY")
-    private Page page;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "page_resources",
+            joinColumns = @JoinColumn(name = "resource_id"),
+            inverseJoinColumns = @JoinColumn(name = "page_id"))
+    private Set<Page> pages = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FileResource)) return false;
-        FileResource that = (FileResource) o;
-        return id.equals(that.id)
-                && Objects.equals(filename, that.filename)
-                && Objects.equals(fileType, that.fileType)
-                && Objects.equals(fileSize, that.fileSize)
-                && Arrays.equals(data, that.data)
-                && Objects.equals(uploadDate, that.uploadDate)
-                && Objects.equals(uploadedBy, that.uploadedBy)
-                && page.equals(that.page);
+    @PrePersist
+    protected void prePersist() {
+        var now = Timestamp.valueOf(LocalDateTime.now());
+        createdOn = now;
+        updatedOn = now;
     }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(id, filename, fileType, fileSize, uploadDate, uploadedBy, page);
-        result = 31 * result + Arrays.hashCode(data);
-        return result;
+    @PreUpdate
+    protected void preMerge() {
+        updatedOn = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    public FileResource(String name, String description, User author) {
+        this.name = name;
+        this.description = description;
+        this.author = author;
+    }
+
+    public void setAsFileResource(String path, String fileType, Long size) {
+        this.path = path;
+        this.fileType = fileType;
+        this.size = size;
+        this.resourceType =
+                fileType.split("/")[0].equals("image") ? ResourceType.IMAGE : ResourceType.FILE;
+    }
+
+    public void setAsLinkResource(String url) {
+        this.path = url;
+        this.resourceType = ResourceType.LINK;
     }
 }

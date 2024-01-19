@@ -15,7 +15,6 @@ public class UserDtoSimple {
     private String firstName;
     private String lastName;
     private Role accountType;
-    private boolean enabled;
     private String email;
 
     public static UserDtoSimple of(User user) {
@@ -30,7 +29,6 @@ public class UserDtoSimple {
         username = user.getUsername();
         firstName = user.getFirstName();
         lastName = user.getLastName();
-        enabled = user.isEnabled();
         accountType = user.getAccountType();
         email = user.getEmail();
     }

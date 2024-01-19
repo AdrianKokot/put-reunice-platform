@@ -29,12 +29,12 @@ public class FileRoleSpecification implements Specification<FileResource> {
         if (this.role == null) {
             predicates.add(
                     criteriaBuilder.and(
-                            criteriaBuilder.equal(root.get("page").get("hidden"), false),
-                            criteriaBuilder.equal(root.get("page").get("university").get("hidden"), false)));
-        } else if (this.role.equals(Role.USER)) {
-            predicates.add(criteriaBuilder.equal(root.get("uploadedById"), this.userId));
-        } else if (this.role.equals(Role.MODERATOR)) {
-            predicates.add(root.get("page").get("university").get("id").in(universities));
+                            criteriaBuilder.equal(root.join("pages").get("hidden"), false),
+                            criteriaBuilder.equal(root.join("pages").get("university").get("hidden"), false)));
+        } else if (this.role.equals(Role.USER) || this.role.equals(Role.MODERATOR)) {
+            predicates.add(criteriaBuilder.equal(root.get("author").get("id"), this.userId));
+            //        } else if (this.role.equals(Role.MODERATOR)) {
+            predicates.add(root.get("author").get("enrolledUniversities").get("id").in(universities));
         }
 
         return predicates.isEmpty()

@@ -2,27 +2,29 @@ package com.example.cms.file;
 
 import com.example.cms.SearchCriteria;
 import com.example.cms.file.exceptions.FileNotFoundException;
-import com.example.cms.page.Page;
+import com.example.cms.file.exceptions.ResourceException;
+import com.example.cms.file.exceptions.ResourceExceptionType;
+import com.example.cms.file.exceptions.ResourceNotFoundException;
+import com.example.cms.file.projections.ResourceDtoDetailed;
+import com.example.cms.file.projections.ResourceDtoFormCreate;
 import com.example.cms.page.PageRepository;
-import com.example.cms.page.exceptions.PageForbiddenException;
-import com.example.cms.page.exceptions.PageNotFoundException;
+import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.user.User;
 import com.example.cms.user.UserRepository;
-import com.example.cms.user.exceptions.UserNotFoundException;
+import com.example.cms.validation.exceptions.UnauthorizedException;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -31,38 +33,66 @@ public class FileResourceService {
     private final UserRepository userRepository;
     private final PageRepository pageRepository;
     private final SecurityService securityService;
+    private final FileService fileService;
+    private static final String FILE_DIRECTORY = "files/";
 
-    public FileResource get(Long fileId) {
-        FileResource fileResource =
-                fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
-        Page page = fileResource.getPage();
-        if ((page.isHidden() || page.getUniversity().isHidden())
-                && securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
+    @Secured("ROLE_USER")
+    public ResourceDtoDetailed get(Long id) {
+        var resource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+
+        return ResourceDtoDetailed.of(resource);
+    }
+
+    public UrlResource getFile(Long id) {
+        var resource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+
+        try {
+            return new UrlResource(Paths.get(resource.getPath()).toUri());
+        } catch (IOException e) {
+            throw new ResourceNotFoundException();
         }
-
-        return fileResource;
     }
 
     @Secured("ROLE_USER")
     @Transactional
-    public void uploadFile(Long pageId, Long userId, MultipartFile multipartFile) throws IOException {
+    public ResourceDtoDetailed create(ResourceDtoFormCreate form) {
+        var principal = securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
 
-        Page page = pageRepository.findById(pageId).orElseThrow(PageNotFoundException::new);
-        if (securityService.isForbiddenPage(page)) {
-            throw new PageForbiddenException();
+        if (!principal.getId().equals(form.getAuthorId())
+                && !securityService.hasHigherRoleThan(Role.USER)) {
+            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
         }
 
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User author =
+                userRepository
+                        .findById(form.getAuthorId())
+                        .orElseThrow(() -> new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
 
-        deleteFileIfExists(page, multipartFile);
+        FileResource fileResource = new FileResource(form.getName(), form.getDescription(), author);
 
-        FileResource fileResource = prepareFileResource(page, user, multipartFile);
+        fileResource = fileRepository.save(fileResource);
 
-        fileRepository.save(fileResource);
+        if (form.getFile() == null) {
+            fileResource.setAsLinkResource(form.getUrl());
+        } else {
+            try {
+                var filename =
+                        StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
+                var filePath =
+                        fileService.store(form.getFile(), filename, FILE_DIRECTORY + fileResource.getId());
+                fileResource.setAsFileResource(
+                        filePath.toString(),
+                        Objects.requireNonNull(form.getFile().getContentType()),
+                        form.getFile().getSize());
+            } catch (IOException e) {
+                throw new ResourceException(ResourceExceptionType.FAILED_TO_STORE_FILE);
+            }
+        }
+
+        return ResourceDtoDetailed.of(fileRepository.save(fileResource));
     }
 
-    public org.springframework.data.domain.Page<FileResource> getAll(
+    private org.springframework.data.domain.Page<FileResource> _getAll(
             Pageable pageable, Map<String, String> filterVars) {
         Specification<FileResource> combinedSpecification =
                 Specification.where(FileRoleSpecification.of(securityService.getPrincipal()));
@@ -88,6 +118,12 @@ public class FileResourceService {
         return fileRepository.findAll(combinedSpecification, pageable);
     }
 
+    @Secured("ROLE_USER")
+    public org.springframework.data.domain.Page<FileResource> getAll(
+            Pageable pageable, Map<String, String> filterVars) {
+        return this._getAll(pageable, filterVars);
+    }
+
     public org.springframework.data.domain.Page<FileResource> getAll(
             Pageable pageable, Long pageId, Map<String, String> filterVars) {
         var optionalPage = pageRepository.findById(pageId);
@@ -101,11 +137,11 @@ public class FileResourceService {
             return org.springframework.data.domain.Page.empty();
         }
 
-        return this.getAll(
+        return this._getAll(
                 pageable,
                 new HashMap<>(filterVars) {
                     {
-                        put("page_eq", String.valueOf(pageId));
+                        put("pages_eq", String.valueOf(pageId));
                     }
                 });
     }
@@ -115,33 +151,13 @@ public class FileResourceService {
     public void deleteFile(Long fileId) {
         FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
 
-        if (securityService.isForbiddenPage(file.getPage())) {
-            throw new PageForbiddenException();
+        try {
+
+            fileService.deleteDirectory(FILE_DIRECTORY + file.getId());
+        } catch (IOException e) {
+            throw new ResourceException(ResourceExceptionType.FAILED_TO_DELETE_FILE);
         }
 
         fileRepository.deleteById(fileId);
-    }
-
-    protected void deleteFileIfExists(Page page, MultipartFile multipartFile) {
-        Optional<FileResource> optionalFileResource =
-                fileRepository.findFileResourceByFilenameAndPage(multipartFile.getOriginalFilename(), page);
-
-        optionalFileResource.ifPresent(fileRepository::delete);
-    }
-
-    private static FileResource prepareFileResource(Page page, User user, MultipartFile multipartFile)
-            throws IOException {
-        FileResource fileResource = new FileResource();
-        fileResource.setUploadDate(Timestamp.from(Instant.now()));
-        fileResource.setUploadedBy(user.getUsername());
-        fileResource.setUploadedById(user.getId());
-        fileResource.setPage(page);
-        fileResource.setFilename(
-                StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())));
-        fileResource.setFileSize(multipartFile.getSize());
-        fileResource.setFileType(multipartFile.getContentType());
-        fileResource.setData(multipartFile.getBytes());
-
-        return fileResource;
     }
 }

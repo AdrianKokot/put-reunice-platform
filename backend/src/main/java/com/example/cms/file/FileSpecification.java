@@ -24,9 +24,8 @@ public class FileSpecification implements Specification<FileResource> {
                         "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
-            if (criteria.getKey().equalsIgnoreCase("page")) {
-                return criteriaBuilder.equal(
-                        root.get("page").get("id"), parseInt(criteria.getValue().toString()));
+            if (criteria.getKey().equalsIgnoreCase("pages")) {
+                return criteriaBuilder.equal(root.join("pages").get("id"), criteria.getValue());
             }
 
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
@@ -36,6 +35,7 @@ public class FileSpecification implements Specification<FileResource> {
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }
         }
+
         return criteriaBuilder.disjunction();
     }
 }
