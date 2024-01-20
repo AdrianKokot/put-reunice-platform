@@ -26,6 +26,7 @@ services:
     volumes:
       - ./db-resources:/db-resources
       - ./uploads:/uploads
+      - ./emailTemplates:/emailTemplates
     ports:
       - 8080:8080
     profiles:

@@ -36,6 +36,11 @@
       "description": "Path for backups."
     },
     {
+      "name": "app.path.templates",
+      "type": "java.lang.String",
+      "description": "Path for email templates."
+    },
+    {
       "name": "app.typesense.cache.enabled",
       "type": "java.lang.Boolean",
       "description": "Determine whether to use cache for typesense."
