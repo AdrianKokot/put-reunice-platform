@@ -7,6 +7,7 @@ import com.example.cms.file.exceptions.ResourceExceptionType;
 import com.example.cms.file.exceptions.ResourceNotFoundException;
 import com.example.cms.file.projections.ResourceDtoDetailed;
 import com.example.cms.file.projections.ResourceDtoFormCreate;
+import com.example.cms.file.projections.ResourceDtoFormUpdate;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -80,6 +81,7 @@ public class FileResourceService {
                         StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
                 var filePath =
                         fileService.store(form.getFile(), filename, FILE_DIRECTORY + fileResource.getId());
+
                 fileResource.setAsFileResource(
                         filePath.toString(),
                         Objects.requireNonNull(form.getFile().getContentType()),
@@ -88,6 +90,47 @@ public class FileResourceService {
                 throw new ResourceException(ResourceExceptionType.FAILED_TO_STORE_FILE);
             }
         }
+
+        return ResourceDtoDetailed.of(fileRepository.save(fileResource));
+    }
+
+    @Secured("ROLE_USER")
+    @Transactional
+    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
+        var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+        //        var principal =
+        // securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
+        //
+        //        if (!principal.getId().equals(form.getAuthorId())
+        //            && !securityService.hasHigherRoleThan(Role.USER)) {
+        //            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
+        //        }
+        //
+        //        User author =
+        //                userRepository
+        //                        .findById(form.getAuthorId())
+        //                        .orElseThrow(() -> new
+        // ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
+        //
+        //        if (form.getFile() == null) {
+        //            fileResource.setAsLinkResource(form.getUrl());
+        //        } else {
+        //            try {
+        //                var filename =
+        //
+        // StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
+        //                var filePath =
+        //                        fileService.store(form.getFile(), filename, FILE_DIRECTORY +
+        // fileResource.getId());
+        //
+        //                fileResource.setAsFileResource(
+        //                        filePath.toString(),
+        //                        Objects.requireNonNull(form.getFile().getContentType()),
+        //                        form.getFile().getSize());
+        //            } catch (IOException e) {
+        //                throw new ResourceException(ResourceExceptionType.FAILED_TO_STORE_FILE);
+        //            }
+        //        }
 
         return ResourceDtoDetailed.of(fileRepository.save(fileResource));
     }
@@ -115,7 +158,8 @@ public class FileResourceService {
             }
         }
 
-        return fileRepository.findAll(combinedSpecification, pageable);
+        //        return fileRepository.findAll(combinedSpecification, pageable);
+        return fileRepository.findAll(pageable);
     }
 
     @Secured("ROLE_USER")

@@ -1,0 +1,197 @@
+<form [formGroup]="handler.form" (ngSubmit)="handler.submit()">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label
+      [tuiLabel]="'RESOURCE_NAME' | translate"
+      class="tui-form__multi-field"
+    >
+      <tui-input
+        formControlName="name"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfield type="text" name="name" />
+      </tui-input>
+
+      <tui-error
+        formControlName="name"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
+    <label
+      [tuiLabel]="'RESOURCE_TYPE' | translate"
+      class="tui-form__multi-field"
+    >
+      <tui-select
+        formControlName="resourceType"
+        tuiTextfieldSize="m"
+        data-test="resourceType-select"
+        [valueContent]="valueContent"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <tui-data-list *tuiDataList data-test="resourceType-options">
+          <button
+            tuiOption
+            [value]="ResourceType.FILE"
+            data-test="resourceType-file"
+          >
+            {{ 'RESOURCE_TYPE_FILE' | translate }}
+          </button>
+          <button
+            tuiOption
+            [value]="ResourceType.LINK"
+            data-test="resourceType-link"
+          >
+            {{ 'RESOURCE_TYPE_LINK' | translate }}
+          </button>
+        </tui-data-list>
+      </tui-select>
+
+      <ng-template #valueContent let-item>
+        {{
+          (item === ResourceType.LINK
+            ? 'RESOURCE_TYPE_LINK'
+            : 'RESOURCE_TYPE_FILE'
+          ) | translate
+        }}
+      </ng-template>
+
+      <tui-error
+        formControlName="resourceType"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+
+    <label
+      [tuiLabel]="'RESOURCE_AUTHOR' | translate"
+      class="tui-form__multi-field"
+      *reuniceUser="'ADMINISTRATIVE'"
+    >
+      <tui-combo-box
+        tuiTextfieldSize="m"
+        *tuiLet="userSearch.itemIds$ | async as items"
+        formControlName="authorId"
+        [tuiTextfieldLabelOutside]="true"
+        (searchChange)="userSearch.search($event)"
+        [stringify]="(userSearch.stringify$ | async)!"
+      >
+        <tui-data-list-wrapper
+          *tuiDataList
+          [items]="items"
+          [itemContent]="(userSearch.stringify$ | async)!"
+        ></tui-data-list-wrapper>
+      </tui-combo-box>
+
+      <tui-error
+        formControlName="authorId"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  </div>
+
+  <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+    <tui-text-area
+      formControlName="description"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      [maxLength]="255"
+      [expandable]="true"
+    >
+    </tui-text-area>
+
+    <tui-error
+      formControlName="description"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <label
+    [tuiLabel]="'RESOURCE_LINK' | translate"
+    class="tui-form__row"
+    *ngIf="form.controls.resourceType.value === ResourceType.LINK"
+  >
+    <tui-input
+      formControlName="url"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <input tuiTextfield type="text" name="url" />
+    </tui-input>
+
+    <tui-error
+      formControlName="url"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <ng-container *ngIf="form.controls.resourceType.value !== ResourceType.LINK">
+    <div class="tui-form__row">
+      <div class="tui-space_bottom-1">
+        {{ 'RESOURCE_FILE' | translate }}
+      </div>
+
+      <ng-container *tuiLet="form.controls.file as fileControl">
+        <tui-input-files
+          [maxFileSize]="MAX_FILE_SIZE"
+          *ngIf="!fileControl.value"
+          [formControl]="fileControl"
+          (reject)="onReject($event)"
+        >
+        </tui-input-files>
+
+        <tui-files class="tui-space_top-1">
+          <ng-container *ngIf="fileControl.valueChanges | async as file">
+            <tui-file
+              *tuiItem
+              [file]="file"
+              [showDelete]="fileControl.enabled"
+              (removed)="removeFile()"
+            ></tui-file>
+          </ng-container>
+
+          <ng-container *ngFor="let file of rejectedFiles$ | async">
+            <tui-file
+              *tuiItem
+              state="error"
+              [file]="file"
+              [showDelete]="fileControl.enabled"
+              (removed)="clearRejected(file)"
+            ></tui-file>
+          </ng-container>
+        </tui-files>
+
+        <tui-error
+          [error]="['maxLength'] | tuiFieldError | async"
+          [formControl]="fileControl"
+        ></tui-error>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <div class="tui-form__buttons tui-form__buttons_align_end">
+    <a
+      [routerLink]="['..']"
+      tuiButton
+      type="button"
+      appearance="flat"
+      size="m"
+      class="tui-form__button"
+    >
+      {{ 'CANCEL' | translate }}
+    </a>
+    <button
+      tuiButton
+      size="m"
+      type="submit"
+      class="tui-form__button"
+      [showLoader]="(handler.loading$ | async) ?? false"
+      [reuniceConfirm]="
+        'RESOURCE_CREATE_DESCRIPTION'
+          | translate: { name: handler.form.controls.name.value }
+      "
+      (confirm)="handler.submit()"
+    >
+      {{ 'SAVE' | translate }}
+    </button>
+  </div>
+</form>

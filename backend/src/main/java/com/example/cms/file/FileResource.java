@@ -24,19 +24,19 @@ public class FileResource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Length(max = 255, message = "ERRORS.FILE.400.FILENAME_TOO_LONG")
-    @NotBlank(message = "ERRORS.FILE.400.FILENAME_EMPTY")
+    @Length(max = 255, message = "ERRORS.RESOURCE.400.NAME_TOO_LONG")
+    @NotBlank(message = "ERRORS.RESOURCE.400.NAME_EMPTY")
     private String name;
 
-    @Length(max = 255, message = "ERRORS.FILE.400.DESCRIPTION_TOO_LONG")
-    @NotBlank(message = "ERRORS.FILE.400.DESCRIPTION_EMPTY")
+    @Length(max = 255, message = "ERRORS.RESOURCE.400.DESCRIPTION_TOO_LONG")
+    @NotBlank(message = "ERRORS.RESOURCE.400.DESCRIPTION_EMPTY")
     private String description;
 
     private String path;
 
     private String fileType;
 
-    @NotNull(message = "ERRORS.FILE.400.FILESIZE_EMPTY")
+    @NotNull(message = "ERRORS.RESOURCE.400.SIZE_EMPTY")
     private Long size = 0L;
 
     private ResourceType resourceType = ResourceType.FILE;

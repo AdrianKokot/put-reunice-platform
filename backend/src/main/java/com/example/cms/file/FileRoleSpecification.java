@@ -2,7 +2,6 @@ package com.example.cms.file;
 
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,25 +21,29 @@ public class FileRoleSpecification implements Specification<FileResource> {
     @Override
     public Predicate toPredicate(
             Root<FileResource> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        List<Predicate> predicates = new ArrayList<>();
-
+        //        List<Predicate> predicates = new ArrayList<>();
+        //
         Predicate conjunctionPred = criteriaBuilder.conjunction();
-
-        if (this.role == null) {
-            predicates.add(
-                    criteriaBuilder.and(
-                            criteriaBuilder.equal(root.join("pages").get("hidden"), false),
-                            criteriaBuilder.equal(root.join("pages").get("university").get("hidden"), false)));
-        } else if (this.role.equals(Role.USER) || this.role.equals(Role.MODERATOR)) {
-            predicates.add(criteriaBuilder.equal(root.get("author").get("id"), this.userId));
-            //        } else if (this.role.equals(Role.MODERATOR)) {
-            predicates.add(root.get("author").get("enrolledUniversities").get("id").in(universities));
-        }
-
-        return predicates.isEmpty()
-                ? conjunctionPred
-                : criteriaBuilder.and(
-                        conjunctionPred, criteriaBuilder.or(predicates.toArray(new Predicate[0])));
+        return conjunctionPred;
+        //
+        //        if (this.role == null) {
+        //            predicates.add(
+        //                    criteriaBuilder.and(
+        //                            criteriaBuilder.equal(root.join("pages").get("hidden"), false),
+        //
+        // criteriaBuilder.equal(root.join("pages").get("university").get("hidden"), false)));
+        //        } else if (this.role.equals(Role.USER) || this.role.equals(Role.MODERATOR)) {
+        //            predicates.add(criteriaBuilder.equal(root.get("author").get("id"), this.userId));
+        //            //        } else if (this.role.equals(Role.MODERATOR)) {
+        //
+        // predicates.add(root.get("author").get("enrolledUniversities").get("id").in(universities));
+        //        }
+        //
+        //        return predicates.isEmpty()
+        //                ? conjunctionPred
+        //                : criteriaBuilder.and(
+        //                        conjunctionPred, criteriaBuilder.or(predicates.toArray(new
+        // Predicate[0])));
     }
 
     public static FileRoleSpecification of(Optional<LoggedUser> user) {

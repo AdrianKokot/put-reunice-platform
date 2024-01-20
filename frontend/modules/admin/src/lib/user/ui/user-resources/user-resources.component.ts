@@ -15,30 +15,29 @@ import { FormBuilder } from '@angular/forms';
 import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-user-files',
+  selector: 'reunice-resources-files',
   standalone: true,
   imports: [
     BaseFormImportsModule,
     BaseTableImportsModule,
     FormNotEmptyValuesPipeModule,
   ],
-  templateUrl: './user-files.component.html',
+  templateUrl: './user-resources.component.html',
   providers: [provideReuniceTable(FileService)],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserFilesComponent extends ReuniceAbstractTable<FileResource> {
+export class UserResourcesComponent extends ReuniceAbstractTable<FileResource> {
   @Input() set userId(value: number | null) {
-    this.filtersForm.controls.uploadedById_eq.setValue(value);
+    this.filtersForm.controls.author_eq.setValue(value);
   }
 
   readonly columns: Array<keyof FileResource | string> = [
     'name',
-    'pageTitle',
-    'lastModified',
+    'updatedOn',
     'actions',
   ];
 
   readonly filtersForm = inject(FormBuilder).group({
-    uploadedById_eq: [null as number | null],
+    author_eq: [null as number | null],
   });
 }

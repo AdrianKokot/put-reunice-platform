@@ -13,7 +13,7 @@ import {
 import { TuiTabsModule, TuiTagModule } from '@taiga-ui/kit';
 import { UserBasicInformationComponent } from '../../ui/user-basic-information/user-basic-information.component';
 import { UserPagesComponent } from '../../ui/user-pages/user-pages.component';
-import { UserFilesComponent } from '../../ui/user-files/user-files.component';
+import { UserResourcesComponent } from '../../ui/user-resources/user-resources.component';
 
 @Component({
   selector: 'reunice-user-details',
@@ -24,7 +24,7 @@ import { UserFilesComponent } from '../../ui/user-files/user-files.component';
     TuiTabsModule,
     UserBasicInformationComponent,
     UserPagesComponent,
-    UserFilesComponent,
+    UserResourcesComponent,
   ],
   templateUrl: './user-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

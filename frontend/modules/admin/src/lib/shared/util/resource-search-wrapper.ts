@@ -89,6 +89,7 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
       | Array<OnlyKeysOfType<T, string> & string>
       | ((item: T) => string),
     private readonly _additionalFilters: ApiFilter<T> = {},
+    additionalItems: T[] = [],
   ) {
     if (typeof stringify === 'function') {
       this.stringify = stringify;
@@ -104,6 +105,8 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
       );
       this.stringify = () => '';
     }
+
+    if (additionalItems.length > 0) this.addItems(additionalItems);
   }
 
   search(text: string | null) {

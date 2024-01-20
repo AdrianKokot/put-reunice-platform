@@ -36,6 +36,10 @@ public class FileService {
         var fileDestination =
                 FileUtils.getSecureFilePath(this.config.getUploadsDirectory().resolve(directory), filename);
 
+        if (!Files.exists(fileDestination.getParent())) {
+            Files.createDirectories(fileDestination.getParent());
+        }
+
         try (var inputStream = file.getInputStream()) {
             Files.copy(inputStream, fileDestination, StandardCopyOption.REPLACE_EXISTING);
         }

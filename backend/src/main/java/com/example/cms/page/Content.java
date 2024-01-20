@@ -18,7 +18,7 @@ public class Content {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     @NotNull(message = "Page content must not be null")
     private String pageContent;
 

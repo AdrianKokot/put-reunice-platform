@@ -94,6 +94,7 @@ export class PageCreateFormComponent {
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
     { enrolledUniversities_eq: this._user.universityId },
+    [this._user],
   );
 
   readonly universitySearch = new ResourceSearchWrapper(

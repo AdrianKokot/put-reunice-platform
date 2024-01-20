@@ -1,0 +1,180 @@
+<!--<div *tuiLet="item$ | async as item">-->
+<!--  <form-->
+<!--    [formGroup]="handler.form"-->
+<!--    [class.form-skeleton]="item === null"-->
+<!--    (ngSubmit)="handler.submit()"-->
+<!--  >-->
+<!--    <div class="tui-form__row tui-form__row_multi-fields">-->
+<!--      <label-->
+<!--        [tuiLabel]="'UNIVERSITY_NAME' | translate"-->
+<!--        class="tui-form__multi-field"-->
+<!--      >-->
+<!--        <tui-input-->
+<!--          formControlName="name"-->
+<!--          tuiTextfieldSize="m"-->
+<!--          [tuiTextfieldLabelOutside]="true"-->
+<!--        >-->
+<!--          <input tuiTextfield type="text" name="name" />-->
+<!--        </tui-input>-->
+
+<!--        <tui-error-->
+<!--          formControlName="name"-->
+<!--          [error]="[] | tuiFieldError | async"-->
+<!--        ></tui-error>-->
+<!--      </label>-->
+
+<!--      <label-->
+<!--        [tuiLabel]="'UNIVERSITY_SHORT_NAME' | translate"-->
+<!--        class="tui-form__multi-field"-->
+<!--      >-->
+<!--        <tui-input-->
+<!--          formControlName="shortName"-->
+<!--          tuiTextfieldSize="m"-->
+<!--          [tuiTextfieldLabelOutside]="true"-->
+<!--        >-->
+<!--          <input tuiTextfield type="text" name="shortName" />-->
+<!--        </tui-input>-->
+
+<!--        <tui-error-->
+<!--          formControlName="shortName"-->
+<!--          [error]="[] | tuiFieldError | async"-->
+<!--        ></tui-error>-->
+<!--      </label>-->
+
+<!--      <label-->
+<!--        [tuiLabel]="'UNIVERSITY_VISIBILITY' | translate"-->
+<!--        class="tui-form__multi-field"-->
+<!--      >-->
+<!--        <tui-select-->
+<!--          formControlName="hidden"-->
+<!--          tuiTextfieldSize="m"-->
+<!--          data-test="visibility-select"-->
+<!--          [valueContent]="valueContent"-->
+<!--          [tuiTextfieldLabelOutside]="true"-->
+<!--        >-->
+<!--          <tui-data-list *tuiDataList data-test="visibility-options">-->
+<!--            <button tuiOption [value]="false" data-test="visibility-visible">-->
+<!--              {{ 'UNIVERSITY_VISIBLE' | translate }}-->
+<!--            </button>-->
+<!--            <button tuiOption [value]="true" data-test="visibility-hidden">-->
+<!--              {{ 'UNIVERSITY_HIDDEN' | translate }}-->
+<!--            </button>-->
+<!--          </tui-data-list>-->
+<!--        </tui-select>-->
+
+<!--        <ng-template #valueContent let-item>-->
+<!--          {{ (item ? 'UNIVERSITY_HIDDEN' : 'UNIVERSITY_VISIBLE') | translate }}-->
+<!--        </ng-template>-->
+
+<!--        <tui-error-->
+<!--          formControlName="shortName"-->
+<!--          [error]="[] | tuiFieldError | async"-->
+<!--        ></tui-error>-->
+<!--      </label>-->
+<!--    </div>-->
+
+<!--    <div class="tui-form__row tui-form__row_multi-fields">-->
+<!--      <label-->
+<!--        [tuiLabel]="'ADDRESS' | translate"-->
+<!--        class="tui-form__multi-field _optional"-->
+<!--      >-->
+<!--        <tui-input-->
+<!--          formControlName="address"-->
+<!--          tuiTextfieldSize="m"-->
+<!--          [tuiTextfieldLabelOutside]="true"-->
+<!--        >-->
+<!--          <input tuiTextfield type="text" name="address" />-->
+<!--        </tui-input>-->
+
+<!--        <tui-error-->
+<!--          formControlName="address"-->
+<!--          [error]="[] | tuiFieldError | async"-->
+<!--        ></tui-error>-->
+<!--      </label>-->
+
+<!--      <label-->
+<!--        [tuiLabel]="'WEBSITE' | translate"-->
+<!--        class="tui-form__multi-field _optional"-->
+<!--      >-->
+<!--        <tui-input-->
+<!--          formControlName="website"-->
+<!--          tuiTextfieldSize="m"-->
+<!--          [tuiTextfieldLabelOutside]="true"-->
+<!--        >-->
+<!--          <input tuiTextfield type="text" name="website" />-->
+<!--        </tui-input>-->
+
+<!--        <tui-error-->
+<!--          formControlName="website"-->
+<!--          [error]="[] | tuiFieldError | async"-->
+<!--        ></tui-error>-->
+<!--      </label>-->
+<!--    </div>-->
+
+<!--    <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">-->
+<!--      <tui-text-area-->
+<!--        formControlName="description"-->
+<!--        tuiTextfieldSize="m"-->
+<!--        [tuiTextfieldLabelOutside]="true"-->
+<!--        [maxLength]="255"-->
+<!--        [expandable]="true"-->
+<!--      >-->
+<!--      </tui-text-area>-->
+
+<!--      <tui-error-->
+<!--        formControlName="description"-->
+<!--        [error]="[] | tuiFieldError | async"-->
+<!--      ></tui-error>-->
+<!--    </label>-->
+
+<!--    <label [tuiLabel]="'UNIVERSITY_IMAGE' | translate" class="tui-form__row">-->
+<!--      <tui-input-files-->
+<!--        *ngIf="!form.controls.file.value"-->
+<!--        accept="image/*"-->
+<!--        formControlName="file"-->
+<!--      ></tui-input-files>-->
+
+<!--      <tui-files-->
+<!--        *ngIf="form.controls.file.valueChanges | async as file"-->
+<!--        class="tui-space_top-1"-->
+<!--        style="height: 56px"-->
+<!--      >-->
+<!--        <tui-file-->
+<!--          *tuiItem-->
+<!--          [file]="file"-->
+<!--          [showDelete]="true"-->
+<!--          (removed)="form.controls.file.setValue(null)"-->
+<!--        ></tui-file>-->
+<!--      </tui-files>-->
+<!--    </label>-->
+
+<!--    <div-->
+<!--      class="tui-form__buttons tui-form__buttons_align_end"-->
+<!--      *ngIf="item !== null"-->
+<!--    >-->
+<!--      <a-->
+<!--        [routerLink]="['..']"-->
+<!--        tuiButton-->
+<!--        type="button"-->
+<!--        appearance="flat"-->
+<!--        size="m"-->
+<!--        class="tui-form__button"-->
+<!--      >-->
+<!--        {{ 'CANCEL' | translate }}-->
+<!--      </a>-->
+<!--      <button-->
+<!--        tuiButton-->
+<!--        size="m"-->
+<!--        *tuiLet="confirmText$ | async as confirmText"-->
+<!--        [reuniceConfirm]="-->
+<!--          confirmText !== null ? (confirmText | translate) : null-->
+<!--        "-->
+<!--        type="submit"-->
+<!--        class="tui-form__button"-->
+<!--        [showLoader]="(handler.loading$ | async) ?? false"-->
+<!--      >-->
+<!--        {{ 'SAVE' | translate }}-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--</div>-->

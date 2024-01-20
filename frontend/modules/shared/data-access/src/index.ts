@@ -21,3 +21,5 @@ export * from './lib/services/university.service';
 export * from './lib/services/user.service';
 
 export * from './lib/api.params';
+
+export * from './lib/constants';

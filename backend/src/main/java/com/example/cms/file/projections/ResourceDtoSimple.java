@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResourceDtoSimple {
     private String name;
-    private Instant lastModified;
+    private Instant updatedOn;
     private String type;
     private Long size;
 
@@ -30,7 +30,7 @@ public class ResourceDtoSimple {
     public ResourceDtoSimple(FileResource fileResource) {
         this.name = fileResource.getName();
         this.type = fileResource.getFileType();
-        this.lastModified = fileResource.getUpdatedOn().toInstant();
+        this.updatedOn = fileResource.getUpdatedOn().toInstant();
         this.author = UserDtoJoined.of(fileResource.getAuthor());
         this.size = fileResource.getSize();
         this.id = fileResource.getId();

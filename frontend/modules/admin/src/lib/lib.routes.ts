@@ -53,6 +53,11 @@ export const adminRoutes: Route[] = [
         path: 'tickets',
         loadChildren: () => import('./ticket/ticket.module'),
       },
+      {
+        title: translatedTitle('RESOURCES'),
+        path: 'resources',
+        loadChildren: () => import('./resource/resource.module'),
+      },
     ],
   },
 ];

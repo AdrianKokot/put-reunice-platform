@@ -1,0 +1,76 @@
+<div *tuiLet="item$ | async as item" [class.details-skeleton]="item === null">
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label
+      [tuiLabel]="'RESOURCE_AUTHOR' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ item?.author?.firstName ?? '-' }} {{ item?.author?.lastName }}
+    </label>
+
+    <label
+      [tuiLabel]="'RESOURCE_CREATED_ON' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ item?.createdOn | localizedDate }}
+    </label>
+
+    <label
+      [tuiLabel]="'RESOURCE_UPDATED_ON' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ item?.updatedOn | localizedDate }}
+    </label>
+  </div>
+
+  <div class="tui-form__row tui-form__row_multi-fields">
+    <label
+      [tuiLabel]="'RESOURCE_NAME' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ item?.name ?? '—' }}
+    </label>
+
+    <label
+      [tuiLabel]="'RESOURCE_TYPE' | translate"
+      class="tui-form__multi-field"
+    >
+      {{ 'RESOURCE_TYPE_' + (item?.resourceType ?? '') | translate }}
+    </label>
+
+    <span class="tui-form__multi-field _empty"></span>
+  </div>
+
+  <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+    {{ item?.description ?? '—' }}
+  </label>
+
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
+    <button
+      *reuniceUserControlsResource="item"
+      tuiButton
+      type="button"
+      appearance="flat-destructive"
+      class="tui-form__button"
+      [reuniceConfirm]="'RESOURCE_DELETE_DESCRIPTION' | translate"
+      [showLoader]="(deleteHandler.loading$ | async) ?? false"
+      (confirm)="deleteHandler.delete(item.id)"
+      data-test="delete-button"
+    >
+      {{ 'DELETE' | translate }}
+    </button>
+
+    <a
+      [routerLink]="['edit']"
+      tuiButton
+      type="button"
+      appearance="secondary"
+      class="tui-form__button"
+      data-test="edit-button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
+</div>

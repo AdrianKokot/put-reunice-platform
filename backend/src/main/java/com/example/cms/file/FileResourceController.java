@@ -3,6 +3,7 @@ package com.example.cms.file;
 import com.example.cms.file.exceptions.ResourceNotFoundException;
 import com.example.cms.file.projections.ResourceDtoDetailed;
 import com.example.cms.file.projections.ResourceDtoFormCreate;
+import com.example.cms.file.projections.ResourceDtoFormUpdate;
 import com.example.cms.file.projections.ResourceDtoSimple;
 import com.example.cms.validation.FilterPathVariableValidator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,10 +83,19 @@ public class FileResourceController {
         return ResponseEntity.ok().headers(headers).body(file);
     }
 
-    @PostMapping()
-    public ResponseEntity<ResourceDtoDetailed> create(@RequestBody ResourceDtoFormCreate form) {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ResourceDtoDetailed> create(@ModelAttribute ResourceDtoFormCreate form) {
         var entity = fileService.create(form);
         return ResponseEntity.ok().body(entity);
+    }
+
+    @PutMapping(
+            path = "{id}",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> update(
+            @PathVariable("id") Long id, @ModelAttribute ResourceDtoFormUpdate form) {
+        fileService.update(id, form);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{id}")

@@ -45,3 +45,9 @@ export interface PageSearchHitDto {
   universityName: string;
   highlight: Record<'title' | 'description', string>;
 }
+
+export type PageUpdateForm = (Partial<Omit<Page, 'contactRequestHandlers'>> &
+  Pick<Page, 'id'>) &
+  Partial<{
+    contactRequestHandlers: Array<User['id']>;
+  }>;
