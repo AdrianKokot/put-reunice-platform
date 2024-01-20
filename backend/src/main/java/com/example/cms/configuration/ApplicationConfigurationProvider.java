@@ -20,6 +20,7 @@ public class ApplicationConfigurationProvider {
     private final String typesenseHost;
     private final Path uploadsDirectory;
     private final Path backupsDirectory;
+    private final Path emailTemplatesDirectory;
     private final boolean typesenseCacheEnabled;
     private final int typesenseCacheTtl;
 
@@ -41,6 +42,7 @@ public class ApplicationConfigurationProvider {
             @Value("${app.typesense.host}") String typesenseHost,
             @Value("${app.path.uploads}") String uploadsDirectory,
             @Value("${app.path.backups}") String backupsDirectory,
+            @Value("${EMAIL_TEMPLATE:/emailTemplates/}") String emailTemplatesDirectory,
             @Value("${app.typesense.cache.enabled}") Boolean typesenseCacheEnabled,
             @Value("${app.typesense.cache.ttl}") Integer typesenseCacheTtl) {
         this.applicationServer = applicationServer;
@@ -53,6 +55,7 @@ public class ApplicationConfigurationProvider {
 
         this.uploadsDirectory = Path.of(uploadsDirectory).toAbsolutePath().normalize();
         this.backupsDirectory = Path.of(backupsDirectory).toAbsolutePath().normalize();
+        this.emailTemplatesDirectory = Path.of(emailTemplatesDirectory).toAbsolutePath().normalize();
 
         System.out.println("** Properties read:");
         System.out.println("** --");
@@ -62,6 +65,7 @@ public class ApplicationConfigurationProvider {
         System.out.println("** databaseSchemaCreateType = " + this.databaseSchemaCreateType);
         System.out.println("** uploadsDirectory = " + this.uploadsDirectory);
         System.out.println("** backupsDirectory = " + this.backupsDirectory);
+        System.out.println("** emailTemplateDictionary = " + this.emailTemplatesDirectory);
 
         System.out.println("** -- Typesense");
         System.out.println("** host = " + this.typesenseHost);
