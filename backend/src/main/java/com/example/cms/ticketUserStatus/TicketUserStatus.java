@@ -5,8 +5,6 @@ import com.example.cms.user.User;
 import java.time.Instant;
 import java.util.Optional;
 import javax.persistence.*;
-
-import lombok.Builder;
 import lombok.Data;
 
 @Entity
