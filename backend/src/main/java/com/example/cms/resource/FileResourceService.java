@@ -1,6 +1,7 @@
 package com.example.cms.resource;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.page.PageRepository;
 import com.example.cms.resource.exceptions.FileNotFoundException;
 import com.example.cms.resource.exceptions.ResourceException;
 import com.example.cms.resource.exceptions.ResourceExceptionType;
@@ -8,7 +9,6 @@ import com.example.cms.resource.exceptions.ResourceNotFoundException;
 import com.example.cms.resource.projections.ResourceDtoDetailed;
 import com.example.cms.resource.projections.ResourceDtoFormCreate;
 import com.example.cms.resource.projections.ResourceDtoFormUpdate;
-import com.example.cms.page.PageRepository;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
 import com.example.cms.user.User;
@@ -38,13 +38,14 @@ public class FileResourceService {
     private final PageRepository pageRepository;
     private final SecurityService securityService;
     private final FileService fileService;
-    private static final String FILE_DIRECTORY = "files/";
 
     @Secured("ROLE_USER")
     public ResourceDtoDetailed get(Long id) {
-        var resource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+        return ResourceDtoDetailed.of(getAnonymous(id));
+    }
 
-        return ResourceDtoDetailed.of(resource);
+    public FileResource getAnonymous(Long id) {
+        return fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
     }
 
     public UrlResource getFile(Long id) {
@@ -83,12 +84,14 @@ public class FileResourceService {
                 var filename =
                         StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
                 var filePath =
-                        fileService.store(form.getFile(), filename, FILE_DIRECTORY + fileResource.getId());
+                        fileService.store(
+                                form.getFile(), filename, FileResource.STORE_DIRECTORY + fileResource.getId());
 
                 fileResource.setAsFileResource(
                         filePath.toString(),
                         Objects.requireNonNull(form.getFile().getContentType()),
                         form.getFile().getSize());
+
             } catch (IOException e) {
                 throw new ResourceException(ResourceExceptionType.FAILED_TO_STORE_FILE);
             }
@@ -198,8 +201,7 @@ public class FileResourceService {
         FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
 
         try {
-
-            fileService.deleteDirectory(FILE_DIRECTORY + file.getId());
+            fileService.deleteDirectory(FileResource.STORE_DIRECTORY + file.getId());
         } catch (IOException e) {
             throw new ResourceException(ResourceExceptionType.FAILED_TO_DELETE_FILE);
         }

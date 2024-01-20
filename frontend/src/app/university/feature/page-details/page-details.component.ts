@@ -8,7 +8,7 @@ import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiBreadcrumbsModule, TuiLineClampModule } from '@taiga-ui/kit';
 import { TuiButtonModule, TuiHintModule, TuiLinkModule } from '@taiga-ui/core';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
-import { PageFilesListComponent } from '../page-files-list/page-files-list.component';
+import { PageResourcesListComponent } from '../page-resources-list/page-resources-list.component';
 import { UserControlsResourceDirective } from '@reunice/modules/shared/security';
 import { TranslateModule } from '@ngx-translate/core';
 import { PageContactFormComponent } from '../page-contact-form/page-contact-form.component';
@@ -27,7 +27,7 @@ import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
     TuiBreadcrumbsModule,
     TuiLinkModule,
     TuiLineClampModule,
-    PageFilesListComponent,
+    PageResourcesListComponent,
     TuiButtonModule,
     RouterLink,
     UserControlsResourceDirective,

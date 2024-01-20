@@ -1,12 +1,12 @@
 package com.example.cms.page;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.resource.FileResourceRepository;
 import com.example.cms.page.exceptions.PageException;
 import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbiddenException;
 import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.page.projections.*;
+import com.example.cms.resource.FileResourceRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;

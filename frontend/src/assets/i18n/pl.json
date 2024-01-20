@@ -250,6 +250,7 @@
   "TEMPLATE_DETAILS": "Szczegóły szablonu",
   "TEMPLATE_NAME": "Nazwa",
   "TEMPLATE_UPDATE_SUCCESS": "Szablon został pomyślnie zaktualizowany",
+  "THIS_FILE_STORED_OUTSIDE_APP_WARNING": "Ten plik znajduje się poza aplikacją, bądź ostrożna/y.",
   "TICKETS": "Zgłoszenia",
   "TICKET_ID": "Zgłoszenie #{{id}}",
   "TICKET_LEAVE_REPLY": "Pozostaw wiadomość",

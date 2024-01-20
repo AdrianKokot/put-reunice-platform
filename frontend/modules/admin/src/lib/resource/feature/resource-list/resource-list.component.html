@@ -51,6 +51,15 @@
           <span>{{ 'RESOURCE_NAME' | translate }}</span>
         </th>
         <th
+          *tuiHead="'description'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-md"
+        >
+          <span>{{ 'DESCRIPTION' | translate }}</span>
+        </th>
+        <th
           *tuiHead="'author'"
           tuiTh
           tuiSortable
@@ -94,6 +103,9 @@
       >
         <td *tuiCell="'name'" tuiTd class="column-rest">
           {{ item.name }}
+        </td>
+        <td *tuiCell="'description'" tuiTd class="column-md">
+          {{ item.description }}
         </td>
         <td *tuiCell="'author'" tuiTd class="column-md">
           {{ item.author.firstName }} {{ item.author.lastName }}

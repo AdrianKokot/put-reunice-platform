@@ -203,20 +203,29 @@ label._optional .t-label .t-text {
   }
 }
 
-tui-file.tui-file_with-right-icon {
-  > .t-wrapper {
-    align-items: center;
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 100%;
+tui-file {
+  &.tui-file_with-right-icon:not(._link) {
+    & > .t-wrapper {
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 100%;
 
-    > .t-text {
-      margin-right: auto;
-      max-width: ~'calc(100% - 2.75rem)';
+      & > .t-text {
+        margin-right: auto;
+        max-width: ~'calc(100% - 2.75rem)';
+      }
     }
+    padding-right: 0.5625rem !important;
   }
 
-  padding-right: 0.5625rem !important;
+  &._link > .t-link {
+    max-width: 100%;
+  }
+
+  &.hide_type .t-type {
+    display: none;
+  }
 }
 
 tui-breadcrumbs {

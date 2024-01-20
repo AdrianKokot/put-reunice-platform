@@ -16,7 +16,11 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
-import { Resource, ResourceService } from '@reunice/modules/shared/data-access';
+import {
+  Resource,
+  ResourceService,
+  ResourceType,
+} from '@reunice/modules/shared/data-access';
 import { TuiDestroyService, TuiLetModule } from '@taiga-ui/cdk';
 import {
   TuiPreviewDialogService,
@@ -25,6 +29,7 @@ import {
 import {
   TuiButtonModule,
   TuiDialogContext,
+  TuiHintModule,
   TuiLoaderModule,
   TuiScrollbarModule,
   TuiSvgModule,
@@ -48,7 +53,7 @@ type FilePreviewUIState = {
 );
 
 @Component({
-  selector: 'reunice-page-files-list',
+  selector: 'reunice-page-resources-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -62,13 +67,14 @@ type FilePreviewUIState = {
     TuiSvgModule,
     FileIconPipeModule,
     TuiScrollbarModule,
+    TuiHintModule,
   ],
-  templateUrl: './page-files-list.component.html',
-  styleUrls: ['./page-files-list.component.less'],
+  templateUrl: './page-resources-list.component.html',
+  styleUrls: ['./page-resources-list.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TuiDestroyService],
 })
-export class PageFilesListComponent {
+export class PageResourcesListComponent {
   @ViewChild('preview')
   private readonly _previewTemplate?: TemplateRef<TuiDialogContext>;
 
@@ -102,12 +108,12 @@ export class PageFilesListComponent {
           .pipe(takeUntil(this._destroyed$))
           .subscribe();
 
-      if (data.file.type.startsWith('image'))
+      if (data.file.type?.startsWith('image'))
         return of({
           ...initialState,
           loading: false,
           type: 'url',
-          content: `/api/files/${data.file.id}/download`,
+          content: `/api/resources/${data.file.id}/download`,
         });
 
       return of({ ...initialState, loading: false, type: 'unsupported' });
@@ -124,4 +130,6 @@ export class PageFilesListComponent {
   ): void {
     this._previewState$.next([data, open]);
   }
+
+  protected readonly ResourceType = ResourceType;
 }

@@ -31,6 +31,7 @@ export class ResourceListComponent extends ReuniceAbstractTable<Resource> {
   private readonly _user = inject(AuthService).userSnapshot;
   readonly columns: Array<keyof Resource | string> = [
     'name',
+    'description',
     'author',
     'updatedOn',
     'actions',

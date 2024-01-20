@@ -250,6 +250,7 @@
   "TEMPLATE_DETAILS": "Template details",
   "TEMPLATE_NAME": "Name",
   "TEMPLATE_UPDATE_SUCCESS": "Template updated successfully",
+  "THIS_FILE_STORED_OUTSIDE_APP_WARNING": "Be careful! This file is stored outside the application.",
   "TICKETS": "Tickets",
   "TICKET_ID": "Ticket #{{id}}",
   "TICKET_LEAVE_REPLY": "Leave a reply",

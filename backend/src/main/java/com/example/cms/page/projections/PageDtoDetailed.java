@@ -54,7 +54,8 @@ public class PageDtoDetailed {
 
         createdOn = page.getCreatedOn().toInstant();
         updatedOn = page.getUpdatedOn().toInstant();
-        contactRequestHandlers = page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
+        contactRequestHandlers =
+                page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
         hasContactRequestHandler = !contactRequestHandlers.isEmpty();
         this.hasResources = hasResources;
     }

@@ -67,17 +67,16 @@ public class FileResourceController {
 
     @GetMapping("{id}/download")
     public ResponseEntity<UrlResource> download(@PathVariable("id") Long fileId) {
-        var resource = fileService.get(fileId);
+        var resource = fileService.getAnonymous(fileId);
 
-        if (!resource.getResourceType().equals(ResourceType.FILE))
-            throw new ResourceNotFoundException();
+        if (resource.getResourceType().equals(ResourceType.LINK)) throw new ResourceNotFoundException();
 
         var file = fileService.getFile(fileId);
 
         HttpHeaders headers = new HttpHeaders();
 
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename());
-        headers.add(HttpHeaders.CONTENT_TYPE, resource.getType());
+        headers.add(HttpHeaders.CONTENT_TYPE, resource.getFileType());
         headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(resource.getSize()));
 
         return ResponseEntity.ok().headers(headers).body(file);

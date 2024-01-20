@@ -13,33 +13,49 @@
     class="tui-space_bottom-8"
   >
     <ng-container *ngFor="let file of files; let index = index">
-      <tui-file
-        *tuiItem
-        class="tui-file_with-right-icon"
-        [leftContent]="icon"
-        [file]="file"
-        (click)="showFile({ file, index, length: files?.length ?? 0 }, true)"
-      >
-        <a
-          tuiIconButton
-          [icon]="'tuiIconDownload'"
-          target="_blank"
-          rel="nofollow"
-          (click)="$event.stopPropagation()"
-          [href]="'/api/files/' + file.id + '/download'"
-          appearance="flat"
-          shape="rounded"
-          size="s"
-        ></a>
-      </tui-file>
-      <ng-template #icon>
-        <tui-marker-icon
-          mode="link"
-          new
-          size="xs"
-          [src]="file | fileIcon"
-        ></tui-marker-icon>
-      </ng-template>
+      <ng-container *tuiLet="file.resourceType === ResourceType.LINK as isLink">
+        <tui-file
+          *tuiItem
+          class="tui-file_with-right-icon hide_type"
+          [leftContent]="icon"
+          [showDelete]="false"
+          [showSize]="true"
+          [file]="{
+            name: file.name + '.',
+            src: isLink ? file.path : undefined,
+            size: isLink ? undefined : file.size
+          }"
+          (click)="
+            showFile({ file, index, length: files?.length ?? 0 }, !isLink)
+          "
+          [tuiHint]="
+            isLink ? ('THIS_FILE_STORED_OUTSIDE_APP_WARNING' | translate) : null
+          "
+          tuiHintAppearance="error"
+          [tuiHintShowDelay]="0"
+        >
+          <a
+            *ngIf="!isLink"
+            tuiIconButton
+            [icon]="'tuiIconDownload'"
+            target="_blank"
+            rel="nofollow"
+            (click)="$event.stopPropagation()"
+            [href]="'/api/resources/' + file.id + '/download'"
+            appearance="flat"
+            shape="rounded"
+            size="s"
+          ></a>
+        </tui-file>
+        <ng-template #icon>
+          <tui-marker-icon
+            mode="link"
+            new
+            size="xs"
+            [src]="file | fileIcon"
+          ></tui-marker-icon>
+        </ng-template>
+      </ng-container>
     </ng-container>
   </tui-files>
 
@@ -64,7 +80,7 @@
         [icon]="'tuiIconDownload'"
         target="_blank"
         rel="nofollow"
-        [href]="'/api/files/' + state.fileId + '/download'"
+        [href]="'/api/resources/' + state.fileId + '/download'"
       ></a>
 
       <button

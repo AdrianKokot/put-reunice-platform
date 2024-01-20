@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PageFilesListComponent } from './page-files-list.component';
+import { PageResourcesListComponent } from './page-resources-list.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('PageFilesListComponent', () => {
-  let component: PageFilesListComponent;
-  let fixture: ComponentFixture<PageFilesListComponent>;
+describe('PageResourcesListComponent', () => {
+  let component: PageResourcesListComponent;
+  let fixture: ComponentFixture<PageResourcesListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageFilesListComponent, TestingModule],
+      imports: [PageResourcesListComponent, TestingModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PageFilesListComponent);
+    fixture = TestBed.createComponent(PageResourcesListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

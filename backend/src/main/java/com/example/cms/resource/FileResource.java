@@ -20,6 +20,8 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Table(name = "resources")
 public class FileResource {
+    public static final String STORE_DIRECTORY = "files/";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -83,5 +85,17 @@ public class FileResource {
     public void setAsLinkResource(String url) {
         this.path = url;
         this.resourceType = ResourceType.LINK;
+    }
+
+    public String getBrowserSafeUrl() {
+        if (this.resourceType.equals(ResourceType.FILE)) {
+            return "/api/resources/" + this.id + "/download";
+        }
+
+        if (this.resourceType.equals(ResourceType.LINK)) {
+            return this.getPath();
+        }
+
+        return this.getPath().replaceAll(".*" + STORE_DIRECTORY, "/static/" + STORE_DIRECTORY);
     }
 }

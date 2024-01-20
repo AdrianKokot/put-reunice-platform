@@ -19,6 +19,7 @@ public class ResourceDtoSimple {
     private Long id;
     private ResourceType resourceType;
     private String path;
+    private String description;
 
     public static ResourceDtoSimple of(FileResource fileResource) {
         if (fileResource == null) {
@@ -35,6 +36,7 @@ public class ResourceDtoSimple {
         this.size = fileResource.getSize();
         this.id = fileResource.getId();
         this.resourceType = fileResource.getResourceType();
-        this.path = fileResource.getPath();
+        this.path = fileResource.getBrowserSafeUrl();
+        this.description = fileResource.getDescription();
     }
 }

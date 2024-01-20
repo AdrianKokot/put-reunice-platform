@@ -21,7 +21,6 @@ public class ResourceDtoDetailed {
     private String path;
     private String description;
     private Instant createdOn;
-    private Long universityId;
 
     public static ResourceDtoDetailed of(FileResource fileResource) {
         if (fileResource == null) {
@@ -38,10 +37,8 @@ public class ResourceDtoDetailed {
         this.size = fileResource.getSize();
         this.id = fileResource.getId();
         this.resourceType = fileResource.getResourceType();
-        this.path = fileResource.getPath();
+        this.path = fileResource.getBrowserSafeUrl();
         this.description = fileResource.getDescription();
         this.createdOn = fileResource.getCreatedOn().toInstant();
-        this.universityId =
-                0L; // fileResource.getAuthor().getEnrolledUniversities().stream().findFirst().get().getId();
     }
 }

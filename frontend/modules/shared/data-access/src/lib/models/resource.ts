@@ -9,7 +9,7 @@ export enum ResourceType {
   IMAGE = 'IMAGE',
 }
 
-export interface Resource extends TuiFileLike, BaseResource {
+export interface Resource extends BaseResource {
   author: User;
   createdOn: string;
   description: string;
