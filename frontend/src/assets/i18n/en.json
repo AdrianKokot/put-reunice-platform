@@ -41,6 +41,7 @@
   "CREATED_AT": "Created",
   "CREATED_ON": "Creation date",
   "CREATE_TEMPLATE": "Create template",
+  "RESOURCE_CREATED_ON": "Creation date",
   "CREATE_UNIVERSITY_USER": "Enroll user",
   "DASHBOARD": "Dashboard",
   "DEACTIVATED": "Disabled",
@@ -312,5 +313,6 @@
   "VIEW_PAGE": "View page",
   "WEBSITE": "Website",
   "WORD": "Word",
+  "ERRORS.RESOURCE.403": "You do not have permission to perform this action.",
   "YOUR_QUESTION": "Your question"
 }

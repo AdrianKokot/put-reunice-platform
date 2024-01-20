@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateListComponent } from './template-list.component';
-import { TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
 
 describe(TemplateListComponent.name, () => {
   let component: TemplateListComponent;
@@ -8,6 +8,7 @@ describe(TemplateListComponent.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideAuthenticatedUser()],
       imports: [TestingModule, TemplateListComponent],
     }).compileComponents();
 

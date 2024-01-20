@@ -15,42 +15,30 @@ import org.springframework.data.jpa.domain.Specification;
 public class FileRoleSpecification implements Specification<FileResource> {
 
     private Role role;
-    private Long userId;
     private List<Long> universities;
 
     @Override
     public Predicate toPredicate(
             Root<FileResource> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        //        List<Predicate> predicates = new ArrayList<>();
-        //
-        Predicate conjunctionPred = criteriaBuilder.conjunction();
-        return conjunctionPred;
-        //
-        //        if (this.role == null) {
-        //            predicates.add(
-        //                    criteriaBuilder.and(
-        //                            criteriaBuilder.equal(root.join("pages").get("hidden"), false),
-        //
-        // criteriaBuilder.equal(root.join("pages").get("university").get("hidden"), false)));
-        //        } else if (this.role.equals(Role.USER) || this.role.equals(Role.MODERATOR)) {
-        //            predicates.add(criteriaBuilder.equal(root.get("author").get("id"), this.userId));
-        //            //        } else if (this.role.equals(Role.MODERATOR)) {
-        //
-        // predicates.add(root.get("author").get("enrolledUniversities").get("id").in(universities));
-        //        }
-        //
-        //        return predicates.isEmpty()
-        //                ? conjunctionPred
-        //                : criteriaBuilder.and(
-        //                        conjunctionPred, criteriaBuilder.or(predicates.toArray(new
-        // Predicate[0])));
+
+        if (this.role == null) {
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.join("pages").get("hidden"), false),
+                    criteriaBuilder.equal(root.join("pages").get("university").get("hidden"), false));
+        }
+
+        if (!this.role.equals(Role.ADMIN)) {
+            return root.get("author").get("enrolledUniversities").get("id").in(universities);
+        }
+
+        return criteriaBuilder.conjunction();
     }
 
     public static FileRoleSpecification of(Optional<LoggedUser> user) {
         return user.map(
                         loggedUser ->
                                 new FileRoleSpecification(
-                                        loggedUser.getAccountType(), loggedUser.getId(), loggedUser.getUniversities()))
-                .orElseGet(() -> new FileRoleSpecification(null, null, null));
+                                        loggedUser.getAccountType(), loggedUser.getUniversities()))
+                .orElseGet(() -> new FileRoleSpecification(null, null));
     }
 }

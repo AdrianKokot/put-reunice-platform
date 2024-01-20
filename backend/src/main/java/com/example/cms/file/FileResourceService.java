@@ -16,7 +16,10 @@ import com.example.cms.user.UserRepository;
 import com.example.cms.validation.exceptions.UnauthorizedException;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -158,8 +161,7 @@ public class FileResourceService {
             }
         }
 
-        //        return fileRepository.findAll(combinedSpecification, pageable);
-        return fileRepository.findAll(pageable);
+        return fileRepository.findAll(combinedSpecification, pageable);
     }
 
     @Secured("ROLE_USER")

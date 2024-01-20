@@ -18,6 +18,7 @@
   "BACKUP_SIZE": "Rozmiar kopii zapasowej",
   "BACKUP_SUCCESSFULLY_SCHEDULED": "Utworzenie kopii zapasowej zostało pomyślnie zaplanowane",
   "BASIC_INFORMATION": "Podstawowe informacje",
+  "RESOURCE_CREATED_ON": "Data utworzenia",
   "CANCEL": "Anuluj",
   "CANNOT_DEACTIVATE_OWN_ACCOUNT": "Nie możesz dezaktywować własnego konta",
   "CANNOT_DELETE_ENABLED_ACCOUNT": "Nie możesz usunąć aktywnego konta",
@@ -217,7 +218,7 @@
   "RESOURCE_TYPE_FILE": "Plik",
   "RESOURCE_TYPE_IMAGE": "Zdjęcie",
   "RESOURCE_TYPE_LINK": "Link",
-  "RESOURCE_UPDATED_ON": "Ostatnio edytowano",
+  "RESOURCE_UPDATED_ON": "Ostatnia edycja",
   "RESOURCE_UPDATE_SUCCESS": "Zasób został pomyślnie zaktualizowany",
   "RESTORE_INSTRUCTIONS": "Instrukcje przywracania",
   "RESTORE_INSTRUCTIONS_CONTENT": "<p class=\"tui-text_h6\">Aby przywrócić dane z kopii zapasowej, wykonaj następujące kroki:</p><ol class=\"tui-list tui-list_ordered\"><li class=\"tui-list__item\">Pobierz plik kopii zapasowej</li><li class=\"tui-list__item\">Wyłącz usługę <strong>backend</strong></li><li class=\"tui-list__item\">Prześlij plik kopii zapasowej do mapowanej w kontenerze ścieżki <strong><em>db-resources/restore</em></strong></li><li class=\"tui-list__item\">Uruchom usługę <strong>backend</strong></li></ol>",
@@ -300,6 +301,7 @@
   "USER_NAME": "Imię i nazwisko",
   "USER_PAGES_TAB": "Strony",
   "USER_PASSWORD_CHANGE_SUCCESS": "Hasło zostało pomyślnie zmienione",
+  "USER_RESOURCES_TAB": "Zasoby",
   "USER_RESPONSIBILITY_TAB": "Strony kontaktowe",
   "USER_STATE": "Stan konta",
   "USER_STATE_ACTIVE": "Aktywny",
@@ -311,5 +313,6 @@
   "VIEW_PAGE": "Wyświetl stronę",
   "WEBSITE": "Strona internetowa",
   "WORD": "Słowo",
+  "ERRORS.RESOURCE.403": "Nie masz uprawnień do dostępu do tego zasobu.",
   "YOUR_QUESTION": "Twoje pytanie"
 }
