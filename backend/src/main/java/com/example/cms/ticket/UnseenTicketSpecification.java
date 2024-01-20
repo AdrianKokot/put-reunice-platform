@@ -31,7 +31,6 @@ public class UnseenTicketSpecification implements Specification<Ticket> {
                 criteriaBuilder.equal(subRoot.get("ticket").get("id"), root.get("id")));
 
         return criteriaBuilder.or(
-                criteriaBuilder.isNull(subquery),
                 criteriaBuilder.lessThan(subquery, root.get("lastUpdateTime")));
     }
 }
