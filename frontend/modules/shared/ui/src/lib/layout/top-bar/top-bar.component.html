@@ -1,8 +1,8 @@
-<div class="d-flex items-center gap-1">
+<div class="d-flex items-center gap-4">
   <ng-content select="[menu]"></ng-content>
 
   <header class="tui-text_h6 tui-text_bold">
-    <a tuiLink routerLink="/"> Reunice </a>
+    <a tuiLink routerLink="/"> Eunice </a>
   </header>
 
   <ng-content select="[left]"></ng-content>
@@ -12,7 +12,7 @@
   <ng-content></ng-content>
 </div>
 
-<div class="justify-self-end d-flex items-center gap-1">
+<div class="justify-self-end d-flex items-center gap-4">
   <ng-content select="[right]"></ng-content>
 
   <reunice-notifications *reuniceUser="'AUTHORIZED'"></reunice-notifications>
@@ -42,6 +42,18 @@
       </button>
     </tui-hosted-dropdown>
     <ng-template #profileMenu let-close="close">
+      <div
+        class="d-flex flex-col items-center tui-space_horizontal-4 tui-space_vertical-4 gap-4"
+      >
+        <tui-avatar size="l" text="{{ user.firstName }} {{ user.lastName }}" />
+        <div class="d-flex flex-col items-center">
+          <span class="tui-text_h6">
+            {{ user.firstName }} {{ user.lastName }}
+          </span>
+          <span>{{ 'ACCOUNT_TYPE_' + user.accountType | translate }}</span>
+        </div>
+      </div>
+      <hr />
       <tui-data-list role="menu" size="s">
         <a
           routerLink="/admin"
