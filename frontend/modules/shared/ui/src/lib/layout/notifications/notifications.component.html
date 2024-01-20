@@ -15,7 +15,10 @@
   </tui-hosted-dropdown>
 
   <ng-template #content>
-    <div class="w-300">
+    <div class="w-300 tui-space_top-4">
+      <div class="tui-text_h6 tui-space_horizontal-4">
+        {{ 'NOTIFICATIONS' | translate }}
+      </div>
       <tui-data-list *ngIf="tickets !== null; else loading">
         <a
           *ngFor="let ticket of tickets"
