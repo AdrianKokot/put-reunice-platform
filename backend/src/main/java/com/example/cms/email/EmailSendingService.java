@@ -100,7 +100,6 @@ public class EmailSendingService {
                         .resolve(templateName + ".html");
         byte[] bytes = Files.readAllBytes(templatePath);
         String content = new String(bytes, StandardCharsets.UTF_8);
-        ;
         return content;
     }
 
