@@ -23,13 +23,9 @@ public class FileSpecification implements Specification<FileResource> {
                         criteriaBuilder.lower(root.get(criteria.getKey())),
                         "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
-
-            if (criteria.getKey().equalsIgnoreCase("pages")) {
-                return criteriaBuilder.equal(root.get("pages").get("id"), criteria.getValue());
-            }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
             if (criteria.getKey().equalsIgnoreCase("pages")) {
-                return criteriaBuilder.equal(root.get("pages").get("id"), criteria.getValue());
+                return criteriaBuilder.equal(root.join("pages").get("id"), criteria.getValue());
             }
 
             if (criteria.getKey().equalsIgnoreCase("author")) {

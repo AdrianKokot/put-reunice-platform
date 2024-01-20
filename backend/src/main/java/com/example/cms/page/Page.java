@@ -1,5 +1,6 @@
 package com.example.cms.page;
 
+import com.example.cms.file.FileResource;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import java.util.HashSet;
@@ -42,6 +43,13 @@ public class Page extends AbstractPage {
             joinColumns = @JoinColumn(name = "page_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> handlers = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "page_resources",
+            joinColumns = @JoinColumn(name = "page_id"),
+            inverseJoinColumns = @JoinColumn(name = "resource_id"))
+    private Set<FileResource> resources = new HashSet<>();
 
     public Page(
             String title,

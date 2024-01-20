@@ -11,4 +11,5 @@ public class PageDtoFormUpdate {
     Boolean hidden;
     Set<Long> contactRequestHandlers;
     Long creatorId;
+    Set<Long> resources;
 }

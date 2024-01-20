@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
+  AccountTypeEnum,
   PageService,
   Resource,
   ResourceService,
@@ -24,11 +25,18 @@ import {
   TuiCheckboxLabeledModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
-  TuiFileLike,
   TuiInputFilesModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
-import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   AuthService,
   UserControlsResourceDirective,
@@ -66,7 +74,7 @@ import { TuiDropdownModule } from '@taiga-ui/core';
 })
 export class PageEditFormComponent {
   private readonly _service = inject(PageService);
-  private readonly _fileService = inject(ResourceService);
+  private readonly _resourceService = inject(ResourceService);
   readonly user = inject(AuthService).userSnapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
@@ -77,13 +85,25 @@ export class PageEditFormComponent {
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
-    files: [[] as TuiFileLike[]],
-    filesToRemove: [[] as Array<Resource['id']>],
     contactRequestHandlers: [[] as Array<User['id']>],
     creatorId: [-1, [Validators.required]],
+    resources: [[] as Array<Resource['id']>],
   });
 
   private readonly _id$ = resourceIdFromRoute();
+
+  readonly resources$ = this._id$.pipe(
+    switchMap((pageId) =>
+      this._resourceService.getByPage(pageId).pipe(
+        tap((resources) => {
+          this.form.patchValue({ resources: resources.map((x) => x.id) });
+          this.resourceSearch.addItems(resources);
+        }),
+        startWith(null),
+      ),
+    ),
+    shareReplay(1),
+  );
 
   readonly item$ = this._id$.pipe(
     toResourceFromId(this._service, (item) => {
@@ -125,6 +145,14 @@ export class PageEditFormComponent {
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
     { enrolledUniversities_eq: this.user.universityId },
+    [this.user],
+  );
+
+  readonly resourceSearch = new ResourceSearchWrapper(
+    this._resourceService,
+    'search',
+    (item) => `${item.name} (${item.author.firstName} ${item.author.lastName})`,
+    { universityId_eq: this.user.universityId },
   );
 
   readonly contactRequestHandlerSearch = new ResourceSearchWrapper(
@@ -132,4 +160,6 @@ export class PageEditFormComponent {
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
   );
+
+  protected readonly AccountTypeEnum = AccountTypeEnum;
 }

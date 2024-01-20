@@ -26,20 +26,21 @@ public class PageDtoDetailed {
     private Instant createdOn;
     private Instant updatedOn;
     private List<UserDtoSimple> contactRequestHandlers;
-    private Boolean hasContactRequestHandler;
+    private boolean hasContactRequestHandler;
+    private boolean hasResources;
 
-    public static PageDtoDetailed of(Page page) {
-        return of(page, List.of());
+    public static PageDtoDetailed of(Page page, boolean hasResources) {
+        return of(page, hasResources, List.of());
     }
 
-    public static PageDtoDetailed of(Page page, List<Page> children) {
+    public static PageDtoDetailed of(Page page, boolean hasResources, List<Page> children) {
         if (page == null) {
             return null;
         }
-        return new PageDtoDetailed(page, children);
+        return new PageDtoDetailed(page, hasResources, children);
     }
 
-    private PageDtoDetailed(Page page, List<Page> children) {
+    private PageDtoDetailed(Page page, boolean hasResources, List<Page> children) {
         id = page.getId();
         title = page.getTitle();
         description = page.getDescription();
@@ -56,5 +57,6 @@ public class PageDtoDetailed {
         contactRequestHandlers =
                 page.getHandlers().stream().map(UserDtoSimple::of).collect(Collectors.toList());
         hasContactRequestHandler = !contactRequestHandlers.isEmpty();
+        hasResources = hasResources;
     }
 }

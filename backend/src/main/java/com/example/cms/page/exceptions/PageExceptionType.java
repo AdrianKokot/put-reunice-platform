@@ -8,4 +8,5 @@ public enum PageExceptionType {
     CANNOT_DELETE_MAIN_PAGE,
     CREATOR_EMPTY,
     UNIVERSITY_EMPTY,
+    RESOURCE_NOT_FOUND
 }

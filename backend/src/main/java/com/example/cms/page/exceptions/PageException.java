@@ -24,6 +24,8 @@ public class PageException extends BadRequestException {
                 return "ERRORS.PAGE.400.CREATOR_EMPTY";
             case UNIVERSITY_EMPTY:
                 return "ERRORS.PAGE.400.UNIVERSITY_EMPTY";
+            case RESOURCE_NOT_FOUND:
+                return "ERRORS.PAGE.400.RESOURCE_NOT_FOUND";
             default:
                 return "ERRORS.400";
         }
@@ -38,6 +40,8 @@ public class PageException extends BadRequestException {
                 return "parentId";
             case UNIVERSITY_EMPTY:
                 return "universityId";
+            case RESOURCE_NOT_FOUND:
+                return "resources";
             default:
                 return null;
         }

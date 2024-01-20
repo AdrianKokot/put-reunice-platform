@@ -1,6 +1,7 @@
 package com.example.cms.page;
 
 import com.example.cms.SearchCriteria;
+import com.example.cms.file.FileResourceRepository;
 import com.example.cms.page.exceptions.PageException;
 import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbiddenException;
@@ -36,7 +37,9 @@ public class PageService {
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
     private final SecurityService securityService;
+    private final FileResourceRepository fileResourceRepository;
 
+    @Transactional
     public PageDtoDetailed get(Long id) {
         return pageRepository
                 .findDetailedById(id)
@@ -52,6 +55,7 @@ public class PageService {
                             PageDtoDetailed pageDto =
                                     PageDtoDetailed.of(
                                             page,
+                                            !page.getResources().isEmpty(),
                                             findVisibleSubpages(
                                                     PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
 
@@ -194,7 +198,7 @@ public class PageService {
         newPage.setCreator(creator);
         newPage.setHidden(form.getHidden());
 
-        return PageDtoDetailed.of(save(newPage));
+        return PageDtoDetailed.of(save(newPage), false);
     }
 
     @Secured("ROLE_USER")
@@ -237,6 +241,16 @@ public class PageService {
                         });
 
         page.setHandlers(usersToAssign);
+
+        if (form.getResources() != null) {
+            var resources = fileResourceRepository.findAllById(form.getResources());
+            if (resources.size() != form.getResources().size()) {
+                throw new PageException(PageExceptionType.RESOURCE_NOT_FOUND);
+            }
+
+            page.setResources(new HashSet<>(resources));
+        }
+
         save(page);
     }
 
