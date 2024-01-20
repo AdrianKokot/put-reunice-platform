@@ -22,17 +22,13 @@ import {
 } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import {
-<<<<<<< HEAD
   LocalizedPipeModule,
   TicketToBadgeStatusModule,
 } from '@reunice/modules/shared/ui';
 import {
-=======
-  EMPTY,
-  Subject,
   catchError,
->>>>>>> 4df5d57c0c3bbf72a7b0e0699032e29396db2264
   combineLatest,
+  EMPTY,
   filter,
   map,
   merge,

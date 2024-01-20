@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,7 +47,7 @@ public class BackupController {
 
     @GetMapping(value = "/{backupName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public FileSystemResource downloadBackup(@PathVariable String backupName) {
-        return backupService.getBackupFile(backupName);
+        return backupService.getBackupFile(StringUtils.cleanPath(backupName));
     }
 
     @DeleteMapping(value = "/{backupName}")
