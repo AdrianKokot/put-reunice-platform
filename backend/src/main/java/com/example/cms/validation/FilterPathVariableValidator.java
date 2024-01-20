@@ -1,6 +1,6 @@
 package com.example.cms.validation;
 
-import com.example.cms.file.FileResource;
+import com.example.cms.resource.FileResource;
 import com.example.cms.template.Template;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.user.User;

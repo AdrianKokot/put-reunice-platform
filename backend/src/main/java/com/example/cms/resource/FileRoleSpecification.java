@@ -1,4 +1,4 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;

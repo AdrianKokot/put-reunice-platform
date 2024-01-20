@@ -1,6 +1,6 @@
 package com.example.cms.page;
 
-import com.example.cms.file.FileResource;
+import com.example.cms.resource.FileResource;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import java.util.HashSet;

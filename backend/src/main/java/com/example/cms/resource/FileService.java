@@ -1,4 +1,4 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
 import com.example.cms.configuration.ApplicationConfigurationProvider;
 import java.io.IOException;

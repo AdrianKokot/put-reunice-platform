@@ -1,4 +1,4 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
 import com.example.cms.SearchCriteria;
 import lombok.AllArgsConstructor;
@@ -62,7 +62,7 @@ public class FileSpecification implements Specification<FileResource> {
                     criteriaBuilder.like(
                             criteriaBuilder.lower(root.get("author").get("firstName")),
                             likeValue),
-                    
+
                     criteriaBuilder.like(
                             criteriaBuilder.lower(root.get("author").get("lastName")),
                             likeValue),

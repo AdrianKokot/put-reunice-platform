@@ -1,4 +1,4 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
 public enum ResourceType {
     FILE,

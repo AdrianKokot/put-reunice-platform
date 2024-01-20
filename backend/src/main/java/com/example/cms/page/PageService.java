@@ -1,7 +1,7 @@
 package com.example.cms.page;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.file.FileResourceRepository;
+import com.example.cms.resource.FileResourceRepository;
 import com.example.cms.page.exceptions.PageException;
 import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbiddenException;

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserResourcesComponent } from './user-resources.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('UserFilesComponent', () => {
+describe('UserResourcesComponent', () => {
   let component: UserResourcesComponent;
   let fixture: ComponentFixture<UserResourcesComponent>;
 

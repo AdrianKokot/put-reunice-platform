@@ -1,7 +1,7 @@
-package com.example.cms.file.projections;
+package com.example.cms.resource.projections;
 
-import com.example.cms.file.FileResource;
-import com.example.cms.file.ResourceType;
+import com.example.cms.resource.FileResource;
+import com.example.cms.resource.ResourceType;
 import com.example.cms.user.projections.UserDtoSimple;
 import java.time.Instant;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;

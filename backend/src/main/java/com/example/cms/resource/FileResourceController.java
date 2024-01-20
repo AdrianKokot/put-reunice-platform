@@ -1,10 +1,10 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
-import com.example.cms.file.exceptions.ResourceNotFoundException;
-import com.example.cms.file.projections.ResourceDtoDetailed;
-import com.example.cms.file.projections.ResourceDtoFormCreate;
-import com.example.cms.file.projections.ResourceDtoFormUpdate;
-import com.example.cms.file.projections.ResourceDtoSimple;
+import com.example.cms.resource.exceptions.ResourceNotFoundException;
+import com.example.cms.resource.projections.ResourceDtoDetailed;
+import com.example.cms.resource.projections.ResourceDtoFormCreate;
+import com.example.cms.resource.projections.ResourceDtoFormUpdate;
+import com.example.cms.resource.projections.ResourceDtoSimple;
 import com.example.cms.validation.FilterPathVariableValidator;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/files")
+@RequestMapping("/resources")
 public class FileResourceController {
 
     private final FileResourceService fileService;

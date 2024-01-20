@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageResourcesComponent } from './page-resources.component';
 import { TestingModule } from '@reunice/testing';
 
-describe('UserFilesComponent', () => {
+describe('PageResourcesComponent', () => {
   let component: PageResourcesComponent;
   let fixture: ComponentFixture<PageResourcesComponent>;
 

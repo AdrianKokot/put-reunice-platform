@@ -3,7 +3,7 @@ package com.example.cms.backup;
 import com.example.cms.backup.exceptions.BackupException;
 import com.example.cms.backup.exceptions.BackupNotFoundException;
 import com.example.cms.configuration.ApplicationConfigurationProvider;
-import com.example.cms.file.FileUtils;
+import com.example.cms.resource.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;

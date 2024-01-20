@@ -13,7 +13,7 @@ export class ResourceService extends AbstractApiService<
   ResourceForm
 > {
   constructor() {
-    super('/api/files');
+    super('/api/resources');
   }
 
   override create(resource: ResourceForm): Observable<Resource> {

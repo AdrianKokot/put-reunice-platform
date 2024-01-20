@@ -1,13 +1,13 @@
-package com.example.cms.file;
+package com.example.cms.resource;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.file.exceptions.FileNotFoundException;
-import com.example.cms.file.exceptions.ResourceException;
-import com.example.cms.file.exceptions.ResourceExceptionType;
-import com.example.cms.file.exceptions.ResourceNotFoundException;
-import com.example.cms.file.projections.ResourceDtoDetailed;
-import com.example.cms.file.projections.ResourceDtoFormCreate;
-import com.example.cms.file.projections.ResourceDtoFormUpdate;
+import com.example.cms.resource.exceptions.FileNotFoundException;
+import com.example.cms.resource.exceptions.ResourceException;
+import com.example.cms.resource.exceptions.ResourceExceptionType;
+import com.example.cms.resource.exceptions.ResourceNotFoundException;
+import com.example.cms.resource.projections.ResourceDtoDetailed;
+import com.example.cms.resource.projections.ResourceDtoFormCreate;
+import com.example.cms.resource.projections.ResourceDtoFormUpdate;
 import com.example.cms.page.PageRepository;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;

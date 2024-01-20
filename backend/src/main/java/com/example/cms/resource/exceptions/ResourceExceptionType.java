@@ -1,4 +1,4 @@
-package com.example.cms.file.exceptions;
+package com.example.cms.resource.exceptions;
 
 public enum ResourceExceptionType {
     AUTHOR_NOT_VALID,

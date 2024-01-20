@@ -1,8 +1,8 @@
 package com.example.cms.university;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.file.FileService;
-import com.example.cms.file.FileUtils;
+import com.example.cms.resource.FileService;
+import com.example.cms.resource.FileUtils;
 import com.example.cms.page.PageRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;

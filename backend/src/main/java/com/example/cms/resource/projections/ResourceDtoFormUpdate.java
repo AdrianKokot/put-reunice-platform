@@ -1,4 +1,4 @@
-package com.example.cms.file.projections;
+package com.example.cms.resource.projections;
 
 import lombok.Value;
 import org.springframework.web.multipart.MultipartFile;
