@@ -124,49 +124,50 @@
     ></tui-error>
   </label>
 
-  <ng-container *ngIf="form.controls.resourceType.value !== ResourceType.LINK">
-    <div class="tui-form__row">
-      <div class="tui-space_bottom-1">
-        {{ 'RESOURCE_FILE' | translate }}
-      </div>
-
-      <ng-container *tuiLet="form.controls.file as fileControl">
-        <tui-input-files
-          [maxFileSize]="MAX_FILE_SIZE"
-          *ngIf="!fileControl.value"
-          [formControl]="fileControl"
-          (reject)="onReject($event)"
-        >
-        </tui-input-files>
-
-        <tui-files class="tui-space_top-1">
-          <ng-container *ngIf="fileControl.valueChanges | async as file">
-            <tui-file
-              *tuiItem
-              [file]="file"
-              [showDelete]="fileControl.enabled"
-              (removed)="removeFile()"
-            ></tui-file>
-          </ng-container>
-
-          <ng-container *ngFor="let file of rejectedFiles$ | async">
-            <tui-file
-              *tuiItem
-              state="error"
-              [file]="file"
-              [showDelete]="fileControl.enabled"
-              (removed)="clearRejected(file)"
-            ></tui-file>
-          </ng-container>
-        </tui-files>
-
-        <tui-error
-          [error]="['maxLength'] | tuiFieldError | async"
-          [formControl]="fileControl"
-        ></tui-error>
-      </ng-container>
+  <div
+    class="tui-form__row"
+    *ngIf="form.controls.resourceType.value !== ResourceType.LINK"
+  >
+    <div class="tui-space_bottom-1">
+      {{ 'RESOURCE_FILE' | translate }}
     </div>
-  </ng-container>
+
+    <ng-container *tuiLet="form.controls.file as fileControl">
+      <tui-input-files
+        [maxFileSize]="MAX_FILE_SIZE"
+        *ngIf="!fileControl.value"
+        [formControl]="fileControl"
+        (reject)="onReject($event)"
+      >
+      </tui-input-files>
+
+      <tui-files class="tui-space_top-1">
+        <ng-container *ngIf="fileControl.value as file">
+          <tui-file
+            *tuiItem
+            [file]="file"
+            [showDelete]="fileControl.enabled"
+            (removed)="removeFile()"
+          ></tui-file>
+        </ng-container>
+
+        <ng-container *ngFor="let file of rejectedFiles$ | async">
+          <tui-file
+            *tuiItem
+            state="error"
+            [file]="file"
+            [showDelete]="fileControl.enabled"
+            (removed)="clearRejected(file)"
+          ></tui-file>
+        </ng-container>
+      </tui-files>
+
+      <tui-error
+        [error]="['maxLength'] | tuiFieldError | async"
+        [formControl]="fileControl"
+      ></tui-error>
+    </ng-container>
+  </div>
 
   <div class="tui-form__buttons tui-form__buttons_align_end">
     <a

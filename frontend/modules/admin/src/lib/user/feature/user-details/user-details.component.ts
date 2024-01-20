@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DeleteResourceWrapper,
   resourceFromRoute,
-  throwError,
 } from '@reunice/modules/shared/util';
 import { User, UserService } from '@reunice/modules/shared/data-access';
 import { AuthService } from '@reunice/modules/shared/security';
@@ -31,8 +30,7 @@ import { UserResourcesComponent } from '../../ui/user-resources/user-resources.c
 })
 export class UserDetailsComponent {
   private readonly _service = inject(UserService);
-  readonly user: User =
-    inject(AuthService).userSnapshot ?? throwError('User is null');
+  readonly user: User = inject(AuthService).userSnapshot;
   readonly item$ = resourceFromRoute(this._service);
 
   readonly deleteHandler = new DeleteResourceWrapper(this._service, {

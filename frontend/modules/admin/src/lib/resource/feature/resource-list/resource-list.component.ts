@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  FileResource,
-  FileService,
+  Resource,
+  ResourceService,
   UserService,
 } from '@reunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
@@ -14,7 +14,6 @@ import {
 } from '../../../shared';
 import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
 import { AuthService } from '@reunice/modules/shared/security';
-import { throwError } from '@reunice/modules/shared/util';
 
 @Component({
   selector: 'reunice-resource-list',
@@ -26,12 +25,11 @@ import { throwError } from '@reunice/modules/shared/util';
   ],
   templateUrl: './resource-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(FileService)],
+  providers: [provideReuniceTable(ResourceService)],
 })
-export class ResourceListComponent extends ReuniceAbstractTable<FileResource> {
-  private readonly _user =
-    inject(AuthService).userSnapshot ?? throwError('User is null');
-  readonly columns: Array<keyof FileResource | string> = [
+export class ResourceListComponent extends ReuniceAbstractTable<Resource> {
+  private readonly _user = inject(AuthService).userSnapshot;
+  readonly columns: Array<keyof Resource | string> = [
     'name',
     'author',
     'updatedOn',

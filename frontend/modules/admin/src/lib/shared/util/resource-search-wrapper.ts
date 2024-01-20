@@ -1,10 +1,10 @@
 import {
   BehaviorSubject,
-  combineLatestWith,
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
+  merge,
   Observable,
   scan,
   shareReplay,
@@ -57,10 +57,9 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
 
   readonly stringify$: Observable<
     TuiHandler<TuiContextWithImplicit<T['id']> | T['id'], string>
-  > = this.items$.pipe(
+  > = merge(this.items$, this._additionalItems$).pipe(
     filter((items): items is T[] => items !== null),
-    combineLatestWith(this._additionalItems$),
-    scan((acc, values) => acc.concat(values[0], values[1]), [] as T[]),
+    scan((acc, values) => acc.concat(values), [] as T[]),
     map(
       (items) =>
         new Map(

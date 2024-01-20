@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { FileService, ResourceType } from '@reunice/modules/shared/data-access';
+import {
+  ResourceService,
+  ResourceType,
+} from '@reunice/modules/shared/data-access';
 import {
   formResourceFromRoute,
   FormSubmitWrapper,
@@ -26,7 +29,7 @@ import { TuiInputFilesModule } from '@taiga-ui/kit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceEditFormComponent {
-  private readonly _service = inject(FileService);
+  private readonly _service = inject(ResourceService);
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],

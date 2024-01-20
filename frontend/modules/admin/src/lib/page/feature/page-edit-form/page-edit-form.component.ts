@@ -1,11 +1,25 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {FileResource, FileService, PageService, User, UserService,} from '@reunice/modules/shared/data-access';
-import {TuiLetModule} from '@taiga-ui/cdk';
-import {FormBuilder, Validators} from '@angular/forms';
-import {FormSubmitWrapper, resourceIdFromRoute, throwError, toResourceFromId,} from '@reunice/modules/shared/util';
-import {BaseFormImportsModule, navigateToResourceDetails, ResourceSearchWrapper,} from '../../../shared';
-import {TuiEditorModule} from '@tinkoff/tui-editor';
-import {LoadTemplateComponent} from '../../../shared/editor-extensions/load-template/load-template.component';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  PageService,
+  Resource,
+  ResourceService,
+  User,
+  UserService,
+} from '@reunice/modules/shared/data-access';
+import { TuiLetModule } from '@taiga-ui/cdk';
+import { FormBuilder, Validators } from '@angular/forms';
+import {
+  FormSubmitWrapper,
+  resourceIdFromRoute,
+  toResourceFromId,
+} from '@reunice/modules/shared/util';
+import {
+  BaseFormImportsModule,
+  navigateToResourceDetails,
+  ResourceSearchWrapper,
+} from '../../../shared';
+import { TuiEditorModule } from '@tinkoff/tui-editor';
+import { LoadTemplateComponent } from '../../../shared/editor-extensions/load-template/load-template.component';
 import {
   TuiCheckboxLabeledModule,
   TuiComboBoxModule,
@@ -14,11 +28,18 @@ import {
   TuiInputFilesModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
-import {combineLatest, distinctUntilChanged, map,} from 'rxjs';
-import {AuthService, UserControlsResourceDirective, UserDirective,} from '@reunice/modules/shared/security';
-import {ConfirmDirective, LocalizedPipeModule,} from '@reunice/modules/shared/ui';
-import {HtmlEditorComponent} from '../../../shared/editor-extensions/html-editor/html-editor.component';
-import {TuiDropdownModule} from '@taiga-ui/core';
+import { combineLatest, distinctUntilChanged, map } from 'rxjs';
+import {
+  AuthService,
+  UserControlsResourceDirective,
+  UserDirective,
+} from '@reunice/modules/shared/security';
+import {
+  ConfirmDirective,
+  LocalizedPipeModule,
+} from '@reunice/modules/shared/ui';
+import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-editor/html-editor.component';
+import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
   selector: 'reunice-page-edit-form',
@@ -45,9 +66,8 @@ import {TuiDropdownModule} from '@taiga-ui/core';
 })
 export class PageEditFormComponent {
   private readonly _service = inject(PageService);
-  private readonly _fileService = inject(FileService);
-  readonly user =
-    inject(AuthService).userSnapshot ?? throwError('User is null');
+  private readonly _fileService = inject(ResourceService);
+  readonly user = inject(AuthService).userSnapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],
@@ -58,7 +78,7 @@ export class PageEditFormComponent {
     hidden: [true, [Validators.required]],
     content: [''],
     files: [[] as TuiFileLike[]],
-    filesToRemove: [[] as Array<FileResource['id']>],
+    filesToRemove: [[] as Array<Resource['id']>],
     contactRequestHandlers: [[] as Array<User['id']>],
     creatorId: [-1, [Validators.required]],
   });

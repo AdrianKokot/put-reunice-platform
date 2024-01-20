@@ -16,7 +16,7 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
-import { FileResource, FileService } from '@reunice/modules/shared/data-access';
+import { Resource, ResourceService } from '@reunice/modules/shared/data-access';
 import { TuiDestroyService, TuiLetModule } from '@taiga-ui/cdk';
 import {
   TuiPreviewDialogService,
@@ -40,7 +40,7 @@ type FilePreviewUIState = {
     size: number;
   };
   title: string;
-  fileId: FileResource['id'];
+  fileId: Resource['id'];
 } & (
   | { loading: true }
   | { loading: false; content: PolymorpheusContent; type: 'url' }
@@ -73,7 +73,7 @@ export class PageFilesListComponent {
   private readonly _previewTemplate?: TemplateRef<TuiDialogContext>;
 
   private readonly _destroyed$ = inject(TuiDestroyService);
-  private readonly _fileService = inject(FileService);
+  private readonly _fileService = inject(ResourceService);
   private readonly _previewService = inject(TuiPreviewDialogService);
 
   readonly files$ = resourceIdFromRoute('pageId').pipe(
@@ -116,7 +116,7 @@ export class PageFilesListComponent {
 
   showFile(
     data: {
-      file?: FileResource;
+      file?: Resource;
       index: number;
       length: number;
     },

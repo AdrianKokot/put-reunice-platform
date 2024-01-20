@@ -9,22 +9,20 @@ export enum ResourceType {
   IMAGE = 'IMAGE',
 }
 
-export interface FileResource extends TuiFileLike, BaseResource {
-  name: string;
-  updatedOn: string;
-  type: string;
-  size: number;
-
+export interface Resource extends TuiFileLike, BaseResource {
   author: User;
-  resourceType: ResourceType;
-  path: string;
-  description: string;
   createdOn: string;
-
+  description: string;
+  name: string;
+  path: string;
+  resourceType: ResourceType;
+  size: number;
+  type: string;
   universityId: University['id'];
+  updatedOn: string;
 }
 
-export interface FileResourceForm {
+export interface ResourceForm {
   id?: number;
   name: string;
   description: string;

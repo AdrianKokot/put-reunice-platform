@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  FileService,
+  AccountTypeEnum,
   MAX_FILE_SIZE,
+  ResourceService,
   ResourceType,
   UserService,
 } from '@reunice/modules/shared/data-access';
 import {
   CustomValidators,
   FormSubmitWrapper,
-  throwError,
 } from '@reunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
@@ -42,15 +42,16 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ResourceCreateFormComponent {
   protected readonly MAX_FILE_SIZE = MAX_FILE_SIZE;
-  private readonly _service = inject(FileService);
-  private readonly _user =
-    inject(AuthService).userSnapshot ?? throwError('User is null');
+  private readonly _service = inject(ResourceService);
+  protected readonly user = inject(AuthService).userSnapshot;
+
+  protected readonly AccountType = AccountTypeEnum;
 
   readonly form = inject(FormBuilder).nonNullable.group(
     {
       name: ['', [Validators.required, Validators.maxLength(255)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
-      authorId: [this._user.id, [Validators.required]],
+      authorId: [this.user.id, [Validators.required]],
       resourceType: [ResourceType.FILE as ResourceType, [Validators.required]],
       file: [null as TuiFileLike | null],
       url: [null as string | null, [Validators.maxLength(255)]],
@@ -84,8 +85,8 @@ export class ResourceCreateFormComponent {
     inject(UserService),
     'search',
     ['firstName', 'lastName'],
-    { enrolledUniversities_eq: this._user.universityId },
-    [this._user],
+    { enrolledUniversities_eq: this.user.universityId },
+    [this.user],
   );
 
   readonly rejectedFiles$ = new BehaviorSubject<TuiFileLike[]>([]);

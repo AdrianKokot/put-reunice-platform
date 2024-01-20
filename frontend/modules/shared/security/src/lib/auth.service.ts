@@ -30,8 +30,8 @@ export class AuthService {
     shareReplay(1),
   );
 
-  get userSnapshot() {
-    return this._userSnapshot;
+  get userSnapshot(): LoggedUser {
+    return this._userSnapshot ?? throwError('User not logged in');
   }
 
   private getUser() {

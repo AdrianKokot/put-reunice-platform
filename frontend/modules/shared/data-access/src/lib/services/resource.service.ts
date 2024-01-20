@@ -1,40 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { FileResource, FileResourceForm } from '../models/file';
+import { Resource, ResourceForm } from '../models/resource';
 import { AbstractApiService } from './abstract-api.service';
 import { BaseResource } from '../models/base-resource';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FileService extends AbstractApiService<
-  FileResource,
-  FileResourceForm,
-  FileResourceForm
+export class ResourceService extends AbstractApiService<
+  Resource,
+  ResourceForm,
+  ResourceForm
 > {
   constructor() {
     super('/api/files');
   }
 
-  override create(resource: FileResourceForm): Observable<FileResource> {
-    return this._http.post<FileResource>(
+  override create(resource: ResourceForm): Observable<Resource> {
+    return this._http.post<Resource>(
       this._resourceUrl,
       this._getFormData(resource),
     );
   }
 
   override update(
-    resource: FileResourceForm & Pick<FileResource, 'id'>,
-  ): Observable<FileResource> {
+    resource: ResourceForm & Pick<Resource, 'id'>,
+  ): Observable<Resource> {
     return this._http
-      .put<FileResource>(
+      .put<Resource>(
         `${this._resourceUrl}/${resource.id}`,
         this._getFormData(resource),
       )
       .pipe(switchMap(() => this.get(resource.id)));
   }
 
-  private _getFormData(resource: FileResourceForm): FormData {
+  private _getFormData(resource: ResourceForm): FormData {
     const formData = new FormData();
 
     if (resource.file) {
@@ -50,9 +50,7 @@ export class FileService extends AbstractApiService<
     return formData;
   }
 
-  getByPage(pageID: BaseResource['id']): Observable<FileResource[]> {
-    return this._http.get<FileResource[]>(
-      `${this._resourceUrl}/page/${pageID}`,
-    );
+  getByPage(pageID: BaseResource['id']): Observable<Resource[]> {
+    return this._http.get<Resource[]>(`${this._resourceUrl}/page/${pageID}`);
   }
 }

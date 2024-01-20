@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FileResource } from '@reunice/modules/shared/data-access';
+import { Resource } from '@reunice/modules/shared/data-access';
 
 @Pipe({
   name: 'fileIcon',
   pure: true,
 })
 export class FileIconPipe implements PipeTransform {
-  transform({ type }: FileResource): string {
+  transform({ type }: Resource): string {
     if (type.startsWith('image')) {
       return 'tuiIconImage';
     }

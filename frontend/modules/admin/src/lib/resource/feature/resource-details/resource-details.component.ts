@@ -3,7 +3,7 @@ import {
   DeleteResourceWrapper,
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
-import { FileService } from '@reunice/modules/shared/data-access';
+import { ResourceService } from '@reunice/modules/shared/data-access';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
@@ -17,7 +17,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceDetailsComponent {
-  private readonly _service = inject(FileService);
+  private readonly _service = inject(ResourceService);
 
   readonly item$ = resourceFromRoute(this._service);
 
