@@ -8,21 +8,17 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -35,22 +31,10 @@ public class EmailSendingService {
     @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
     @Autowired private JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
-    private Map<String, String> emailTitles = loadEmailTitles();
-    private static ResourceLoader resourceLoader = new DefaultResourceLoader();
-
-    private Map<String, String> loadEmailTitles() {
-        try (InputStream inputStream =
-                resourceLoader.getResource("classpath:emailTemplates/emailTitles.json").getInputStream()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JavaType type =
-                    TypeFactory.defaultInstance().constructMapType(Map.class, String.class, String.class);
-            return objectMapper.readValue(inputStream, type);
-        } catch (IOException e) {
-            throw new RuntimeException("Error loading email titles from JSON file", e);
-        }
-    }
+    private Map<String, String> emailTitles;
 
     private String getEmailTitle(String templateName) {
+        loadEmailTitles();
         String title = emailTitles.get(templateName);
         if (title == null) {
             return "Information about Eunice Platform";
@@ -77,9 +61,8 @@ public class EmailSendingService {
         }
     }
 
-    public EmailSendingService(JavaMailSender javaMailSender, ResourceLoader resourceLoader) {
+    public EmailSendingService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-        this.resourceLoader = resourceLoader;
     }
 
     @Value("${spring.mail.username}")
@@ -111,10 +94,28 @@ public class EmailSendingService {
 
     private String loadHtmlTemplate(String templateName) throws IOException {
 
-        Resource resource =
-                resourceLoader.getResource("classpath:emailTemplates/" + templateName + ".html");
-        return IOUtils.toString(
-                Objects.requireNonNull(resource.getInputStream()), StandardCharsets.UTF_8);
+        Path templatePath =
+                applicationConfigurationProvider
+                        .getEmailTemplatesDirectory()
+                        .resolve(templateName + ".html");
+        byte[] bytes = Files.readAllBytes(templatePath);
+        String content = new String(bytes, StandardCharsets.UTF_8);
+        return content;
+    }
+
+    private void loadEmailTitles() {
+        try {
+            Path jsonTitlesPath =
+                    applicationConfigurationProvider.getEmailTemplatesDirectory().resolve("emailTitles.json");
+            byte[] bytes = Files.readAllBytes(jsonTitlesPath);
+            String jsonContent = new String(bytes, StandardCharsets.UTF_8);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JavaType type =
+                    TypeFactory.defaultInstance().constructMapType(Map.class, String.class, String.class);
+            emailTitles = objectMapper.readValue(jsonContent, type);
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading email titles from JSON file", e);
+        }
     }
 
     @Async

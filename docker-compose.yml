@@ -14,6 +14,7 @@ services:
     profiles:
       - dev
       - dev-be
+      - ''
 
   backend:
     build:
@@ -25,12 +26,14 @@ services:
     volumes:
       - ./db-resources:/db-resources
       - ./uploads:/uploads
+      - ./emailTemplates:/emailTemplates
     ports:
       - 8080:8080
     profiles:
       - dev
       - dev-be
       - prod
+      - ''
 
   frontend:
     build: ./frontend
@@ -42,9 +45,11 @@ services:
     profiles:
       - dev
       - prod
+      - ''
 
   mailpit:
     image: axllent/mailpit
+    container_name: mailpit
     ports:
       - 8025:8025
       - 1025:1025
@@ -56,9 +61,11 @@ services:
       - ./.dev/.mailpitpsswd:/etc/.mailpitpsswd
     profiles:
       - dev
+      - ''
 
   typesense:
     image: typesense/typesense:0.25.1
+    container_name: typesense
     restart: on-failure
     env_file:
       - ./.env
@@ -70,3 +77,4 @@ services:
     profiles:
       - dev
       - prod
+      - ''
