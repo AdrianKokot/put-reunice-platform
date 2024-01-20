@@ -1,14 +1,15 @@
 package com.example.cms.file;
 
-import static java.lang.Integer.parseInt;
-
 import com.example.cms.SearchCriteria;
+import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
+
+import static java.lang.Integer.parseInt;
 
 @AllArgsConstructor
 public class FileSpecification implements Specification<FileResource> {
@@ -43,6 +44,37 @@ public class FileSpecification implements Specification<FileResource> {
                 return criteriaBuilder.equal(
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }
+        } else if (criteria.getOperation().equalsIgnoreCase("search")) {
+//            return this.searchPredicate(root, query, criteriaBuilder);
+
+            var likeValue = "%" + criteria.getValue().toString().toLowerCase() + "%";
+
+            return criteriaBuilder.or(
+
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("name")),
+                            likeValue),
+
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("description")),
+                            likeValue),
+
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("author").get("firstName")),
+                            likeValue),
+                    
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("author").get("lastName")),
+                            likeValue),
+
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("author").get("email")),
+                            likeValue),
+
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("author").get("username")),
+                            likeValue)
+            );
         }
 
         return criteriaBuilder.disjunction();
