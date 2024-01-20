@@ -31,7 +31,6 @@ import {
   shareReplay,
   startWith,
   switchMap,
-  tap,
 } from 'rxjs';
 import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
@@ -120,7 +119,6 @@ export class TicketComponent {
     this.responses$,
     this._sendResponse$.pipe(startWith('up-to-date')),
   ]).pipe(
-    tap((data) => console.log(data)),
     map((requests) => requests.some((request) => !request)),
     startWith(false),
     shareReplay(),
