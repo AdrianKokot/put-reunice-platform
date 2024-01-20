@@ -33,6 +33,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @Slf4j
@@ -255,7 +256,12 @@ public class BackupService {
     }
 
     private Path getBackupPath(String backupName) throws IOException {
-        backupName = backupName.replaceAll("\\.", "").replaceAll("/", "");
+        backupName = StringUtils.cleanPath(backupName);
+
+        if (backupName.contains(".")) {
+            throw new BackupException();
+        }
+
         return FileUtils.getSecureFilePath(
                 getBackupsMainPath(), backupName + "/" + backupName.concat(".zip"));
     }

@@ -22,11 +22,9 @@ public class ResourceException extends BadRequestException {
     }
 
     private static String getField(ResourceExceptionType type) {
-        switch (type) {
-            case AUTHOR_NOT_VALID:
-                return "authorId";
-            default:
-                return null;
+        if (type.equals(ResourceExceptionType.AUTHOR_NOT_VALID)) {
+            return "authorId";
         }
+        return null;
     }
 }

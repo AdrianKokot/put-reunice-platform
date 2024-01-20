@@ -1,18 +1,18 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormBuilder,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import {
   TuiAvatarModule,
-  TuiIslandModule,
   tuiAvatarOptionsProvider,
-  TuiTextareaModule,
   TuiBadgeModule,
+  TuiIslandModule,
+  TuiTextareaModule,
 } from '@taiga-ui/kit';
-import { TuiGroupModule, TuiButtonModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiGroupModule } from '@taiga-ui/core';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
 import {
@@ -21,18 +21,20 @@ import {
   TicketService,
 } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 import {
-  Subject,
+  LocalizedPipeModule,
+  TicketToBadgeStatusModule,
+} from '@reunice/modules/shared/ui';
+import {
   combineLatest,
   filter,
   map,
   merge,
   shareReplay,
   startWith,
+  Subject,
   switchMap,
 } from 'rxjs';
-import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
 
