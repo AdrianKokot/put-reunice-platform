@@ -83,7 +83,7 @@ public class TicketService {
                         .map(
                                 handler -> {
                                     TicketUserStatus ticketUserStatus = new TicketUserStatus();
-                                    ticketUserStatus.setLastSeenOn(null);
+                                    ticketUserStatus.setLastSeenOn(Instant.EPOCH);
                                     ticketUserStatus.setUser(handler);
                                     ticketUserStatus.setTicket(ticket);
                                     ticketUserStatusRepository.save(ticketUserStatus);

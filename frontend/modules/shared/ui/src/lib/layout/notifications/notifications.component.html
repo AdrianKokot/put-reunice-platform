@@ -5,7 +5,11 @@
     [tuiDropdownMaxHeight]="300"
     [(open)]="open"
   >
-    <tui-badged-content [contentTop]="tickets?.length" [rounded]="true">
+    <tui-badged-content
+      [contentTop]="tickets?.length"
+      [rounded]="true"
+      class="badge"
+    >
       <button icon="tuiIconBell" tuiIconButton type="button"></button>
     </tui-badged-content>
   </tui-hosted-dropdown>
