@@ -17,7 +17,7 @@ public class ResourceException extends BadRequestException {
             case FAILED_TO_DELETE_FILE:
                 return "ERRORS.RESOURCE.400.FAILED_TO_DELETE_FILE";
             default:
-                return "ERRORS.400";
+                return "ERRORS.RESOURCE.400";
         }
     }
 
@@ -25,8 +25,6 @@ public class ResourceException extends BadRequestException {
         switch (type) {
             case AUTHOR_NOT_VALID:
                 return "authorId";
-            case FAILED_TO_STORE_FILE:
-                return "file";
             default:
                 return null;
         }
