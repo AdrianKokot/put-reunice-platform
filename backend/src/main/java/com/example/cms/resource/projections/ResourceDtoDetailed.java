@@ -21,6 +21,7 @@ public class ResourceDtoDetailed {
     private String path;
     private String description;
     private Instant createdOn;
+    private boolean referenced;
 
     public static ResourceDtoDetailed of(FileResource fileResource) {
         if (fileResource == null) {
@@ -40,5 +41,6 @@ public class ResourceDtoDetailed {
         this.path = fileResource.getBrowserSafeUrl();
         this.description = fileResource.getDescription();
         this.createdOn = fileResource.getCreatedOn().toInstant();
+        this.referenced = !fileResource.getPages().isEmpty();
     }
 }

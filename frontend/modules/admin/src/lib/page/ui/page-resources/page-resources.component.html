@@ -12,9 +12,27 @@
           tuiTh
           tuiSortable
           [sticky]="true"
-          class="column-md"
+          class="column-rest"
         >
           <span>{{ 'RESOURCE_NAME' | translate }}</span>
+        </th>
+        <th
+          *tuiHead="'description'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-md"
+        >
+          <span>{{ 'DESCRIPTION' | translate }}</span>
+        </th>
+        <th
+          *tuiHead="'author'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-md"
+        >
+          <span>{{ 'RESOURCE_AUTHOR' | translate }}</span>
         </th>
         <th
           *tuiHead="'updatedOn'"
@@ -28,7 +46,6 @@
         <th
           *tuiHead="'actions'"
           tuiTh
-          tuiSortable
           [sticky]="true"
           class="column-actions"
         ></th>
@@ -45,16 +62,25 @@
         "
         tuiTr
       >
-        <td *tuiCell="'name'" tuiTd class="column-md">
+        <td *tuiCell="'name'" tuiTd class="column-rest">
           {{ item.name }}
         </td>
+
+        <td *tuiCell="'description'" tuiTd class="column-md">
+          {{ item.description }}
+        </td>
+
+        <td *tuiCell="'author'" tuiTd class="column-md">
+          {{ item.author.firstName }} {{ item.author.lastName }}
+        </td>
+
         <td *tuiCell="'updatedOn'" tuiTd class="column-sm">
           {{ item.updatedOn | localizedDate }}
         </td>
 
         <td class="column-actions" *tuiCell="'actions'" tuiTd>
           <a
-            [routerLink]="['/resources', item.id]"
+            [routerLink]="['/admin/resources', item.id]"
             tuiIconButton
             size="s"
             appearance="flat"

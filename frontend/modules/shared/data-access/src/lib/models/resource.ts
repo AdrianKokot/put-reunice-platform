@@ -1,6 +1,5 @@
 import { User } from './user';
 import { TuiFileLike } from '@taiga-ui/kit';
-import { BaseResource } from './base-resource';
 import { University } from './university';
 
 export enum ResourceType {
@@ -9,7 +8,8 @@ export enum ResourceType {
   IMAGE = 'IMAGE',
 }
 
-export interface Resource extends BaseResource {
+export interface Resource {
+  id: number;
   author: User;
   createdOn: string;
   description: string;
@@ -20,6 +20,7 @@ export interface Resource extends BaseResource {
   type: string;
   universityId: University['id'];
   updatedOn: string;
+  referenced: boolean;
 }
 
 export interface ResourceForm {

@@ -15,13 +15,7 @@ import {
   BaseDetailsImportsModule,
   navigateToResourceList,
 } from '../../../shared';
-import {
-  TuiFilesModule,
-  TuiIslandModule,
-  TuiTabsModule,
-  TuiTagModule,
-  TuiTreeModule,
-} from '@taiga-ui/kit';
+import { TuiIslandModule, TuiTabsModule, TuiTreeModule } from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLinkModule } from '@taiga-ui/core';
 import { PageUsersComponent } from '../../ui/page-users/page-users.component';
@@ -32,11 +26,9 @@ import { PageResourcesComponent } from '../../ui/page-resources/page-resources.c
   standalone: true,
   imports: [
     BaseDetailsImportsModule,
-    TuiFilesModule,
     TuiEditorSocketModule,
     TuiIslandModule,
     TuiTreeModule,
-    TuiTagModule,
     TuiLinkModule,
     TuiTabsModule,
     PageUsersComponent,

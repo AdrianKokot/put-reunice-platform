@@ -3,21 +3,33 @@ import {
   DeleteResourceWrapper,
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
-import { ResourceService } from '@reunice/modules/shared/data-access';
+import {
+  ResourceService,
+  ResourceType,
+} from '@reunice/modules/shared/data-access';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
 } from '../../../shared';
+import { TuiTabsModule } from '@taiga-ui/kit';
+import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
+import { ResourcePagesComponent } from '../../ui/resource-pages/resource-pages.component';
 
 @Component({
   selector: 'reunice-resource-details',
   standalone: true,
-  imports: [BaseDetailsImportsModule],
+  imports: [
+    BaseDetailsImportsModule,
+    TuiTabsModule,
+    TuiEditorSocketModule,
+    ResourcePagesComponent,
+  ],
   templateUrl: './resource-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceDetailsComponent {
   private readonly _service = inject(ResourceService);
+  protected readonly ResourceType = ResourceType;
 
   readonly item$ = resourceFromRoute(this._service);
 
@@ -25,4 +37,6 @@ export class ResourceDetailsComponent {
     successAlertMessage: 'RESOURCE_DELETE_SUCCESS',
     effect: navigateToResourceList(),
   });
+
+  activeTabIndex = 0;
 }

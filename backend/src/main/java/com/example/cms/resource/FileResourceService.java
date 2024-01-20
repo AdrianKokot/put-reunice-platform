@@ -200,6 +200,9 @@ public class FileResourceService {
     public void deleteFile(Long fileId) {
         FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
 
+        if (!file.getPages().isEmpty())
+            throw new ResourceException(ResourceExceptionType.FILE_IS_USED_IN_PAGE);
+
         try {
             fileService.deleteDirectory(FileResource.STORE_DIRECTORY + file.getId());
         } catch (IOException e) {

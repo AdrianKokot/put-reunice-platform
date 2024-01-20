@@ -16,6 +16,8 @@ public class ResourceException extends BadRequestException {
                 return "ERRORS.RESOURCE.400.FAILED_TO_STORE_FILE";
             case FAILED_TO_DELETE_FILE:
                 return "ERRORS.RESOURCE.400.FAILED_TO_DELETE_FILE";
+            case FILE_IS_USED_IN_PAGE:
+                return "ERRORS.RESOURCE.400.FILE_IS_USED_IN_PAGE";
             default:
                 return "ERRORS.RESOURCE.400";
         }

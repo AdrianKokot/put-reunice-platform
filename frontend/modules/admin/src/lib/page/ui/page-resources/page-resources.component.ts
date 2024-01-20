@@ -33,6 +33,8 @@ export class PageResourcesComponent extends ReuniceAbstractTable<Resource> {
 
   readonly columns: Array<keyof Resource | string> = [
     'name',
+    'description',
+    'author',
     'updatedOn',
     'actions',
   ];
