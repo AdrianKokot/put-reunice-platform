@@ -42,7 +42,7 @@ public class ApplicationConfigurationProvider {
             @Value("${app.typesense.host}") String typesenseHost,
             @Value("${app.path.uploads}") String uploadsDirectory,
             @Value("${app.path.backups}") String backupsDirectory,
-            @Value("${EMAIL_TEMPLATE:/emailTemplates/}") String emailTemplatesDirectory,
+            @Value("${app.path.templates}") String emailTemplatesDirectory,
             @Value("${app.typesense.cache.enabled}") Boolean typesenseCacheEnabled,
             @Value("${app.typesense.cache.ttl}") Integer typesenseCacheTtl) {
         this.applicationServer = applicationServer;
