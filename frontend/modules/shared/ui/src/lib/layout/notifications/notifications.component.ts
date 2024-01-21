@@ -63,11 +63,13 @@ export class NotificationsComponent {
     map(([tickets, recentlyViewedIds, user]) =>
       tickets.items.map((ticket) => {
         const isOptimisticallySeen = recentlyViewedIds.includes(ticket.id);
+        const lastSeenOnDate =
+          user && new Date(ticket.lastSeenOn[user?.username]);
+        const lastUpdateTimeDate = new Date(ticket.lastUpdateTime);
 
-        const isLastUpdateSeen =
-          !!user &&
-          new Date(ticket.lastSeenOn[user.username]) >
-            new Date(ticket.lastUpdateTime);
+        const isLastUpdateSeen = Boolean(
+          lastSeenOnDate && lastSeenOnDate >= lastUpdateTimeDate,
+        );
 
         const isSeen = isLastUpdateSeen || isOptimisticallySeen;
 
