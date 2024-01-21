@@ -262,6 +262,7 @@
   "UNIVERSITY_VISIBILITY_CHANGE_TO_VISIBLE_CONFIRMATION": "You have changed the visibility of the university to <strong>visible</strong>. The university and its visible pages will be visible to other users. Are you sure you want to do this?",
   "UNIVERSITY_VISIBLE": "Visible",
   "UNSAVED_CHANGES": "Unsaved changes",
+  "UNSEEN": "Unseen",
   "UPDATED_AT": "Last edited",
   "UPLOADED_AT_BY": "Uploaded at {{at}} by {{by}}",
   "USERNAME": "Username",
