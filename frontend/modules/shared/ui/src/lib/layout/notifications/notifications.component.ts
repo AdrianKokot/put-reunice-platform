@@ -13,6 +13,7 @@ import { TuiLetModule } from '@taiga-ui/cdk';
 import { Subject, combineLatest, map, scan, startWith, tap } from 'rxjs';
 import { TicketToBadgeStatusModule } from '../../pipes/ticket-to-badge-status/ticket-to-badge-status.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '@reunice/modules/shared/security';
 
 @Component({
   selector: 'reunice-notifications',
@@ -36,6 +37,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class NotificationsComponent {
   private readonly _service = inject(TicketService);
+  private readonly _user$ = inject(AuthService).user$;
 
   open = false;
 
@@ -46,13 +48,40 @@ export class NotificationsComponent {
     startWith([] as string[]),
   );
 
-  tickets$ = this._service.getAll({ unseen: true, page: 0, size: 5 });
+  tickets$ = this._service.getAll({
+    handler: true,
+    page: 0,
+    size: 5,
+    sort: 'lastUpdateTime,desc',
+  });
+
   optimisticTickets$ = combineLatest([
     this.tickets$,
     this.recentlyViewedIds$,
+    this._user$,
   ]).pipe(
-    map(([tickets, recentlyViewedIds]) =>
-      tickets.items.filter(({ id }) => !recentlyViewedIds.includes(id)),
+    map(([tickets, recentlyViewedIds, user]) =>
+      tickets.items.map((ticket) => {
+        const isOptimisticallySeen = recentlyViewedIds.includes(ticket.id);
+        const lastSeenOnDate =
+          user && new Date(ticket.lastSeenOn[user?.username]);
+        const lastUpdateTimeDate = new Date(ticket.lastUpdateTime);
+
+        const isLastUpdateSeen = Boolean(
+          lastSeenOnDate && lastSeenOnDate >= lastUpdateTimeDate,
+        );
+
+        const isSeen = isLastUpdateSeen || isOptimisticallySeen;
+
+        return {
+          ...ticket,
+          isSeen,
+        };
+      }),
     ),
+  );
+
+  unseenTicketsCount$ = this.optimisticTickets$.pipe(
+    map((tickets) => tickets.filter((ticket) => !ticket.isSeen).length),
   );
 }

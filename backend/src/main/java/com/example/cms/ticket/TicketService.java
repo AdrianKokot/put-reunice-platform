@@ -145,9 +145,9 @@ public class TicketService {
         Specification<Ticket> combinedSpecification =
                 Specification.where(new TicketRoleSpecification(role, universityIds, handlesPages, email));
 
-        if (filterVars.containsKey("unseen")) {
-            filterVars.remove("unseen");
-            combinedSpecification = combinedSpecification.and(new UnseenTicketSpecification(id));
+        if (filterVars.containsKey("handler")) {
+            filterVars.remove("handler");
+            combinedSpecification = combinedSpecification.and(new HandlerTicketSpecification(id));
         }
 
         if (!filterVars.isEmpty()) {
