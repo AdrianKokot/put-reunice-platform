@@ -16,9 +16,9 @@ class ReuniceTitleStrategy extends DefaultTitleStrategy {
   override updateTitle(snapshot: RouterStateSnapshot) {
     const title = this.buildTitle(snapshot);
     if (title !== undefined) {
-      this.title.setTitle(`Reunice | ${title}`);
+      this.title.setTitle(`Eunice | ${title}`);
     } else {
-      this.title.setTitle('Reunice');
+      this.title.setTitle('Eunice');
     }
   }
 }

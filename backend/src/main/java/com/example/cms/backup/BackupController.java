@@ -31,7 +31,7 @@ public class BackupController {
     @GetMapping("/import/{backupName}")
     public void importDatabaseBackup(@PathVariable String backupName)
             throws SQLException, IOException {
-        backupService.importBackup(backupName);
+        backupService.importBackup(StringUtils.cleanPath(backupName));
     }
 
     @GetMapping()
@@ -52,6 +52,6 @@ public class BackupController {
 
     @DeleteMapping(value = "/{backupName}")
     public void deleteBackup(@PathVariable String backupName) {
-        backupService.deleteBackupFile(backupName);
+        backupService.deleteBackupFile(StringUtils.cleanPath(backupName));
     }
 }

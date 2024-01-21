@@ -1,16 +1,20 @@
-<tui-tree
-  [tuiTreeController]="true"
-  [content]="treeContent"
-  [value]="page ?? []"
-  [childrenHandler]="handler"
-  class="tui-space_vertical-4 tui-space_horizontal-2"
-></tui-tree>
-
+<tui-scrollbar *ngIf="page !== null">
+  <tui-tree
+    class="tui-space_vertical-4 tui-space_horizontal-2"
+    [tuiTreeController]="false"
+    [content]="treeContent"
+    [value]="page"
+    [childrenHandler]="handler"
+    [trackBy]="trackById"
+    [map]="map"
+  ></tui-tree>
+</tui-scrollbar>
 <ng-template #treeContent let-value>
   <a
     tuiLink
     [routerLink]="['page', value.id]"
-    routerLinkActive="text-underline"
+    routerLinkActive="text-underline tui-text_bold"
+    class="tree-item"
   >
     {{ value.title }}
   </a>

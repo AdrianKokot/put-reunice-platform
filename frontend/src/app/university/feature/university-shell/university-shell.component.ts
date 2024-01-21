@@ -22,7 +22,9 @@ import {
 import { SideService } from '../../../shared/side.service';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import {
+  PageMapItem,
   UNIVERSITY_PAGE_HIERARCHY,
+  UNIVERSITY_PAGE_HIERARCHY_MAP,
   UniversityPagesTreeComponent,
 } from '../../ui/university-pages-tree/university-pages-tree.component';
 import { TuiBreadcrumbsModule } from '@taiga-ui/kit';
@@ -51,10 +53,7 @@ export class UniversityShellComponent implements OnDestroy {
   private readonly _universityId$ = resourceIdFromRoute();
   private readonly _pageId$ = nestedRouteParamMap('pageId');
 
-  private readonly _pagesMap = new Map<
-    Page['id'],
-    Pick<Page, 'title'> & { parentId: Page['id'] | null }
-  >();
+  private readonly _pagesMap = new Map<Page['id'], PageMapItem>();
 
   public readonly pages$ = this._universityId$.pipe(
     switchMap((id) =>
@@ -63,14 +62,18 @@ export class UniversityShellComponent implements OnDestroy {
         .pipe(startWith(null)),
     ),
     map((pages) => {
+      if (pages === null) return pages;
+
       const addPageToMap = (page: Page, parentId: Page['id'] | null = null) => {
-        this._pagesMap.set(page.id, { title: page.title, parentId });
+        this._pagesMap.set(page.id, {
+          id: page.id,
+          title: page.title,
+          parentId,
+        });
         page.children.forEach((p) => addPageToMap(p, page.id));
       };
 
-      if (pages) {
-        addPageToMap(pages);
-      }
+      addPageToMap(pages);
 
       this._sideService.setLeftSide(
         new PolymorpheusComponent(
@@ -81,6 +84,10 @@ export class UniversityShellComponent implements OnDestroy {
               {
                 provide: UNIVERSITY_PAGE_HIERARCHY,
                 useValue: pages,
+              },
+              {
+                provide: UNIVERSITY_PAGE_HIERARCHY_MAP,
+                useValue: this._pagesMap,
               },
             ],
           }),
@@ -117,5 +124,9 @@ export class UniversityShellComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this._sideService.setLeftSide(null);
+  }
+
+  constructor() {
+    this._sideService.setLeftSide('');
   }
 }

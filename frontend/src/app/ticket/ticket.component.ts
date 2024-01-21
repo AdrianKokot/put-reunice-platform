@@ -26,9 +26,7 @@ import {
   TicketToBadgeStatusModule,
 } from '@reunice/modules/shared/ui';
 import {
-  catchError,
   combineLatest,
-  EMPTY,
   filter,
   map,
   merge,
@@ -38,7 +36,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'reunice-ticket',
@@ -66,7 +64,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TicketComponent {
   private readonly _id$ = resourceIdFromRoute();
   private readonly _service = inject(TicketService);
-  private readonly _router = inject(Router);
   readonly token = inject(ActivatedRoute).snapshot.queryParams['token'];
 
   private readonly _changeStatusRequest$ = new Subject<Ticket['status']>();
@@ -102,15 +99,7 @@ export class TicketComponent {
 
   ticket$ = merge(this._id$, this._changeStatus$, this._sendResponse$).pipe(
     switchMap(() => this._id$),
-    switchMap((id) =>
-      this._service.get(id, this.token).pipe(
-        catchError(() => {
-          this._router.navigate(['not-found']);
-          return EMPTY;
-        }),
-        startWith(null),
-      ),
-    ),
+    switchMap((id) => this._service.get(id, this.token).pipe(startWith(null))),
     shareReplay(),
   );
   ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => Boolean(data)));

@@ -1,6 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UniversityPagesTreeComponent } from './university-pages-tree.component';
+import {
+  PageMapItem,
+  UNIVERSITY_PAGE_HIERARCHY,
+  UNIVERSITY_PAGE_HIERARCHY_MAP,
+  UniversityPagesTreeComponent,
+} from './university-pages-tree.component';
 import { TestingModule } from '@reunice/testing';
+import { Page } from '@reunice/modules/shared/data-access';
 
 describe(UniversityPagesTreeComponent.name, () => {
   let component: UniversityPagesTreeComponent;
@@ -8,6 +14,21 @@ describe(UniversityPagesTreeComponent.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: UNIVERSITY_PAGE_HIERARCHY,
+          useValue: {
+            id: 1,
+            parent: null,
+            title: 'TEST',
+            children: [] as Page[],
+          },
+        },
+        {
+          provide: UNIVERSITY_PAGE_HIERARCHY_MAP,
+          useValue: new Map<Page['id'], PageMapItem>(),
+        },
+      ],
       imports: [TestingModule, UniversityPagesTreeComponent],
     }).compileComponents();
 
