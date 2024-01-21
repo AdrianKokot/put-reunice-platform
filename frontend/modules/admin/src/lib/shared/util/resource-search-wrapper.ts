@@ -49,25 +49,17 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
     shareReplay(1),
   );
 
-  private readonly _mergedSources$ = merge(
-    this.items$,
-    this._additionalItems$,
-  ).pipe(
-    scan((acc, values) => acc.concat(values ?? []), [] as T[]),
-    startWith(null),
-    shareReplay(1),
-  );
-
   readonly itemIds$: Observable<ReadonlyArray<T['id']> | null> =
-    this._mergedSources$.pipe(
+    this.items$.pipe(
       map((items) => (items !== null ? items.map((item) => item.id) : items)),
-      shareReplay(1),
+      shareReplay(),
     );
 
   readonly stringify$: Observable<
     TuiHandler<TuiContextWithImplicit<T['id']> | T['id'], string>
-  > = this._mergedSources$.pipe(
+  > = merge(this.items$, this._additionalItems$).pipe(
     filter((items): items is T[] => items !== null),
+    scan((acc, values) => acc.concat(values), [] as T[]),
     map(
       (items) =>
         new Map(
@@ -84,7 +76,6 @@ export class ResourceSearchWrapper<T extends BaseResource = BaseResource> {
           ? map.get(id)
           : map.get(id.$implicit)) || this._translate.instant('LOADING_DOTS'),
     ),
-    shareReplay(1),
   );
 
   private readonly stringify: (item: T) => string;

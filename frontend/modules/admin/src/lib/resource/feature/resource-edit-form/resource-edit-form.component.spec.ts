@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourceEditFormComponent } from './resource-edit-form.component';
-import {provideAuthenticatedUser, TestingModule} from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
 
 describe(ResourceEditFormComponent.name, () => {
   let component: ResourceEditFormComponent;
