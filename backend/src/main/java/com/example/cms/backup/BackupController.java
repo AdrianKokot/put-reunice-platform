@@ -1,5 +1,6 @@
 package com.example.cms.backup;
 
+import com.example.cms.backup.exceptions.BackupException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -52,6 +53,12 @@ public class BackupController {
 
     @DeleteMapping(value = "/{backupName}")
     public void deleteBackup(@PathVariable String backupName) {
-        backupService.deleteBackupFile(StringUtils.cleanPath(backupName));
+        backupName = StringUtils.cleanPath(backupName);
+
+        if (backupName.contains(".") || backupName.contains("/")) {
+            throw new BackupException();
+        }
+
+        backupService.deleteBackupFile(backupName);
     }
 }

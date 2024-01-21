@@ -6,6 +6,11 @@
     <button tuiTab>
       {{ 'PAGE_CONTENT_TAB' | translate }}
     </button>
+    <button tuiTab>
+      <span [class.tui-skeleton]="item === null">
+        {{ 'PAGE_RESOURCES_TAB' | translate }}
+      </span>
+    </button>
     <button
       data-test="responsibility-tab"
       tuiTab
@@ -13,11 +18,6 @@
     >
       <span [class.tui-skeleton]="item === null">
         {{ 'PAGE_RESPONSIBILITY_TAB' | translate }}
-      </span>
-    </button>
-    <button tuiTab>
-      <span [class.tui-skeleton]="item === null">
-        {{ 'PAGE_RESOURCES_TAB' | translate }}
       </span>
     </button>
   </tui-tabs>
@@ -98,11 +98,11 @@
     </div>
   </div>
 
-  <div [hidden]="activeTabIndex !== 2">
+  <div [hidden]="activeTabIndex !== 3">
     <reunice-page-users *ngIf="item !== null" [handles]="item.id" />
   </div>
 
-  <div [hidden]="activeTabIndex !== 3">
+  <div [hidden]="activeTabIndex !== 2">
     <reunice-page-resources *ngIf="item !== null" [pageId]="item.id" />
   </div>
 
@@ -110,7 +110,7 @@
     <tui-editor-socket
       class="tui-island tui-island_size_s"
       [content]="item?.content ?? ''"
-    ></tui-editor-socket>
+    />
   </div>
 
   <div
@@ -142,7 +142,7 @@
           : ''
         ) | translate
       "
-      (confirm)="deleteHandler.delete(item.id)"
+      (confirm)="delete(item)"
       data-test="delete-button"
     >
       {{ 'DELETE' | translate }}

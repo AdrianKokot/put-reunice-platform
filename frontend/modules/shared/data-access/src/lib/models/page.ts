@@ -22,6 +22,7 @@ export interface Page extends BasePage {
   children: Page[];
   contactRequestHandlers: User[];
   hasContactRequestHandler: boolean;
+  hasResources: boolean;
 }
 
 export interface GlobalPageForm {

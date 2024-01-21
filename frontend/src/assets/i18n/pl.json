@@ -309,6 +309,8 @@
   "USER_DETAILS_TAB": "Szczegóły",
   "USER_NAME": "Imię i nazwisko",
   "USER_PAGES_TAB": "Strony",
+  "DELETE_PAGE_WITH_RESOURCES_PROMPT_LABEL": "Zasoby",
+  "DELETE_PAGE_WITH_RESOURCES_PROMPT_DESCRIPTION": "Ta strona zawiera zasoby, które są połączone tylko z nią. Chcesz usunąć te zasoby?",
   "RESOURCE_UPDATE_DESCRIPTION": "Czy na pewno chcesz zaktualizować zasób <strong>{{name}}</strong>?",
   "USER_PASSWORD_CHANGE_SUCCESS": "Hasło zostało pomyślnie zmienione",
   "FILL_ONLY_IN_ORDER_TO_CHANGE_RESOURCE_FILE": "Wypełnij tylko w celu zmiany pliku zasobu",
@@ -324,5 +326,7 @@
   "VIEW_PAGE": "Wyświetl stronę",
   "WEBSITE": "Strona internetowa",
   "WORD": "Słowo",
+  "YES": "Tak",
+  "NO": "Nie",
   "YOUR_QUESTION": "Twoje pytanie"
 }

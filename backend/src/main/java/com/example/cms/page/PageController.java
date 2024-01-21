@@ -74,8 +74,10 @@ public class PageController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deletePage(@PathVariable long id) {
-        service.delete(id);
+    ResponseEntity<Void> deletePage(
+            @PathVariable long id,
+            @RequestParam(required = false, name = "with_resources") boolean deleteStaleResources) {
+        service.delete(id, deleteStaleResources);
         return ResponseEntity.noContent().build();
     }
 }
