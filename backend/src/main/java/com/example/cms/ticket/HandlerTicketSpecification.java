@@ -4,7 +4,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.springframework.data.jpa.domain.Specification;
 
 public class HandlerTicketSpecification implements Specification<Ticket> {
@@ -24,8 +23,6 @@ public class HandlerTicketSpecification implements Specification<Ticket> {
         query.distinct(true);
         root.join("ticketHandlers");
 
-        return criteriaBuilder.equal(root.join("ticketHandlers")
-                .get("user")
-                .get("id"), userId);
+        return criteriaBuilder.equal(root.join("ticketHandlers").get("user").get("id"), userId);
     }
 }
