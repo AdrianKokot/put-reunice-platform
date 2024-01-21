@@ -130,7 +130,7 @@ jobs:
             cd /reunice
             ./setup.sh
             docker pull ${{ steps.meta.outputs.tags }}
-            docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -v /uploads:/uploads -v /db-resources:/db-resources -d ${{ steps.meta.outputs.tags }}
+            docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -v /uploads:/uploads -v /db-resources:/db-resources -v /emailTemplates:/emailTemplates -d ${{ steps.meta.outputs.tags }}
             while [ "$(docker inspect --format='{{.State.Health.Status}}' app)" != "healthy" ]; do sleep 5; done
 
   run-e2e-tests:
