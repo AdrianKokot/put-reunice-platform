@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  AccountTypeEnum,
   MAX_FILE_SIZE,
   ResourceService,
   ResourceType,
@@ -44,8 +43,6 @@ export class ResourceCreateFormComponent {
   protected readonly MAX_FILE_SIZE = MAX_FILE_SIZE;
   private readonly _service = inject(ResourceService);
   protected readonly user = inject(AuthService).userSnapshot;
-
-  protected readonly AccountType = AccountTypeEnum;
 
   readonly form = inject(FormBuilder).nonNullable.group(
     {

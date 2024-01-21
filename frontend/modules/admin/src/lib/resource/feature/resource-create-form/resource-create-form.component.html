@@ -12,10 +12,7 @@
         <input tuiTextfield type="text" name="name" />
       </tui-input>
 
-      <tui-error
-        formControlName="name"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
     </label>
 
     <label
@@ -59,7 +56,7 @@
       <tui-error
         formControlName="resourceType"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
 
     <label
@@ -85,7 +82,7 @@
       <tui-error
         formControlName="authorId"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -102,7 +99,7 @@
     <tui-error
       formControlName="description"
       [error]="[] | tuiFieldError | async"
-    ></tui-error>
+    />
   </label>
 
   <label
@@ -118,28 +115,21 @@
       <input tuiTextfield type="text" name="url" />
     </tui-input>
 
-    <tui-error
-      formControlName="url"
-      [error]="[] | tuiFieldError | async"
-    ></tui-error>
+    <tui-error formControlName="url" [error]="[] | tuiFieldError | async" />
   </label>
 
-  <div
+  <label
     class="tui-form__row"
     *ngIf="form.controls.resourceType.value !== ResourceType.LINK"
+    [tuiLabel]="'RESOURCE_FILE' | translate"
   >
-    <div class="tui-space_bottom-1">
-      {{ 'RESOURCE_FILE' | translate }}
-    </div>
-
     <ng-container *tuiLet="form.controls.file as fileControl">
       <tui-input-files
         [maxFileSize]="MAX_FILE_SIZE"
         *ngIf="!fileControl.value"
         [formControl]="fileControl"
         (reject)="onReject($event)"
-      >
-      </tui-input-files>
+      />
 
       <tui-files class="tui-space_top-1">
         <ng-container *ngIf="fileControl.value as file">
@@ -148,7 +138,7 @@
             [file]="file"
             [showDelete]="fileControl.enabled"
             (removed)="removeFile()"
-          ></tui-file>
+          />
         </ng-container>
 
         <ng-container *ngFor="let file of rejectedFiles$ | async">
@@ -158,16 +148,16 @@
             [file]="file"
             [showDelete]="fileControl.enabled"
             (removed)="clearRejected(file)"
-          ></tui-file>
+          />
         </ng-container>
       </tui-files>
 
       <tui-error
         [error]="['maxLength'] | tuiFieldError | async"
         [formControl]="fileControl"
-      ></tui-error>
+      />
     </ng-container>
-  </div>
+  </label>
 
   <div class="tui-form__buttons tui-form__buttons_align_end">
     <a

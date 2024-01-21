@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourceEditFormComponent } from './resource-edit-form.component';
-import { TestingModule } from '@reunice/testing';
+import {provideAuthenticatedUser, TestingModule} from '@reunice/testing';
 
 describe(ResourceEditFormComponent.name, () => {
   let component: ResourceEditFormComponent;
@@ -8,6 +8,7 @@ describe(ResourceEditFormComponent.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideAuthenticatedUser()],
       imports: [TestingModule, ResourceEditFormComponent],
     }).compileComponents();
 

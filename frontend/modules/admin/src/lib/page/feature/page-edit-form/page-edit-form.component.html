@@ -22,7 +22,7 @@
           <tui-error
             formControlName="title"
             [error]="[] | tuiFieldError | async"
-          ></tui-error>
+          />
         </label>
 
         <label
@@ -53,7 +53,7 @@
           <tui-error
             formControlName="hidden"
             [error]="[] | tuiFieldError | async"
-          ></tui-error>
+          />
         </label>
 
         <ng-container *reuniceUser="'ADMINISTRATIVE'; else authorNotAdmin">
@@ -81,7 +81,7 @@
             <tui-error
               formControlName="creatorId"
               [error]="[] | tuiFieldError | async"
-            ></tui-error>
+            />
           </label>
         </ng-container>
 
@@ -115,7 +115,7 @@
         <tui-error
           formControlName="description"
           [error]="[] | tuiFieldError | async"
-        ></tui-error>
+        />
       </label>
 
       <h3 class="tui-form__header">
@@ -137,7 +137,7 @@
         <tui-error
           formControlName="content"
           [error]="[] | tuiFieldError | async"
-        ></tui-error>
+        />
       </label>
 
       <h3 class="tui-form__header">{{ 'PAGE_RESOURCES' | translate }}</h3>
@@ -164,7 +164,7 @@
         <tui-error
           formControlName="resources"
           [error]="[] | tuiFieldError | async"
-        ></tui-error>
+        />
       </label>
 
       <h3 class="tui-form__header">
@@ -198,7 +198,7 @@
         <tui-error
           formControlName="contactRequestHandlers"
           [error]="[] | tuiFieldError | async"
-        ></tui-error>
+        />
       </label>
 
       <div

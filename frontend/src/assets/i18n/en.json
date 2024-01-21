@@ -295,6 +295,8 @@
   "UNIVERSITY_VISIBLE": "Visible",
   "UNSAVED_CHANGES": "Unsaved changes",
   "UPDATED_ON": "Last edited",
+  "RESOURCE_UPDATE_DESCRIPTION": "Are you sure you want to update resource <strong>{{name}}</strong>?",
+  "FILL_ONLY_IN_ORDER_TO_CHANGE_RESOURCE_FILE": "Fill only in order to change resource file",
   "USERNAME": "Username",
   "USERNAME_PLACEHOLDER": "user@domain.com",
   "USERS": "Users",
