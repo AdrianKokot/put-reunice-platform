@@ -13,10 +13,7 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +36,9 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @RequiredArgsConstructor
 public class BackupService {
-    private static final String LARGE_OBJECT_TABLE = "pg_largeobject";
     private final ApplicationConfigurationProvider config;
     private final JdbcTemplate jdbcTemplate;
     private final EntityManager entityManager;
-    private final ZipService zipService;
     private final FullTextSearchService<com.example.cms.page.Page, PageSearchHitDto>
             pageSearchService;
     private final PageRepository pageRepository;
@@ -81,24 +76,34 @@ public class BackupService {
         Path backupDirectoryPath = backupPath.getParent();
         Files.createDirectories(backupDirectoryPath);
         Files.createDirectories(getRestoreMainPath());
+        var databaseFilesPath = backupDirectoryPath.resolve("database");
+        Files.createDirectories(databaseFilesPath);
 
         ResultSet tables =
                 connection.getMetaData().getTables(null, "public", "%", new String[] {"TABLE"});
-        List<File> files = new ArrayList<>();
+
         while (tables.next()) {
             String tableName = tables.getString("TABLE_NAME");
             log.info("[BACKUP-EXPORT-JOB][{}] Export table: {}", backupName, tableName);
-            File file = backupDirectoryPath.resolve(tableName.concat(".txt")).toFile();
-            files.add(file);
+            File file = databaseFilesPath.resolve(tableName.concat(".txt")).toFile();
             writeTableToFile(file, tableName, copyManager);
         }
-        File file = backupDirectoryPath.resolve(LARGE_OBJECT_TABLE.concat(".txt")).toFile();
-        files.add(file);
-        writeTableToFile(file, LARGE_OBJECT_TABLE, copyManager);
+
+        var directories = new ArrayList<File>();
+
+        directories.add(databaseFilesPath.toFile());
+
+        var uploadsDirectory = this.config.getUploadsDirectory().toFile();
+        if (uploadsDirectory.isDirectory() && uploadsDirectory.exists())
+            directories.add(uploadsDirectory);
+
+        var emailTemplatesDirectory = this.config.getEmailTemplatesDirectory().toFile();
+        if (emailTemplatesDirectory.isDirectory() && emailTemplatesDirectory.exists())
+            directories.add(emailTemplatesDirectory);
 
         log.info("[BACKUP-EXPORT-JOB][{}] Start creating zip archive", backupName);
-        zipService.zipArchive(files, backupPath);
-        FileUtils.deleteFiles(files);
+        FileUtils.zipArchive(directories, backupPath);
+        org.apache.commons.io.FileUtils.deleteDirectory(databaseFilesPath.toFile());
         log.info("[BACKUP-EXPORT-JOB][{}] Finish job", backupName);
     }
 
@@ -115,8 +120,13 @@ public class BackupService {
         log.info("[BACKUP-IMPORT-JOB][{}] Start importing backup", backupName);
         var zipPath = FileUtils.getSecureFilePath(getRestoreMainPath(), backupName.concat(".zip"));
 
-        zipService.unzipArchive(zipPath);
-        Files.delete(zipPath);
+        FileUtils.unzipArchive(zipPath);
+
+        var databaseFilesPath = getRestoreMainPath().resolve("database");
+        var uploadsDirectory =
+                getRestoreMainPath().resolve(this.config.getUploadsDirectory().toFile().getName());
+        var emailTemplatesDirectory =
+                getRestoreMainPath().resolve(this.config.getEmailTemplatesDirectory().toFile().getName());
 
         log.info("[BACKUP-IMPORT-JOB][{}] Start importing tables", backupName);
 
@@ -124,14 +134,13 @@ public class BackupService {
 
         List<File> files =
                 Arrays.stream(
-                                Optional.ofNullable(getRestoreMainPath().toFile().listFiles())
+                                Optional.ofNullable(databaseFilesPath.toFile().listFiles())
                                         .orElseThrow(BackupNotFoundException::new))
                         .filter(File::isFile)
-                        .filter(file -> !file.getName().equals(LARGE_OBJECT_TABLE.concat(".txt")))
                         .collect(Collectors.toList());
 
         List<String> tableNames =
-                files.stream().map(FileUtils::getFileExtension).collect(Collectors.toList());
+                files.stream().map(f -> f.getName().replace(".txt", "")).collect(Collectors.toList());
 
         executeQueryOnTables(tableNames, "ALTER TABLE %s DISABLE TRIGGER ALL");
         executeQueryOnTables(tableNames, "DELETE FROM %s");
@@ -140,22 +149,56 @@ public class BackupService {
             readTableFromFile(files.get(i).getPath(), tableNames.get(i), copyManager);
         }
 
-        entityManager.createNativeQuery("DELETE FROM pg_largeobject").executeUpdate();
-        readTableFromFile(
-                getRestoreMainPath().resolve(LARGE_OBJECT_TABLE.concat(".txt")).toString(),
-                LARGE_OBJECT_TABLE,
-                copyManager);
-
         executeQueryOnTables(tableNames, "ALTER TABLE %s ENABLE TRIGGER ALL");
 
-        Files.delete(getRestoreMainPath().resolve("pg_largeobject.txt"));
-        FileUtils.deleteFiles(files);
-
         log.info("[BACKUP-IMPORT-JOB][{}] Start reindexing search collections", backupName);
-
         pageSearchService.deleteCollection();
         pageSearchService.createCollection();
         pageRepository.findAll().forEach(pageSearchService::upsert);
+
+        log.info("[BACKUP-IMPORT-JOB][{}] Start moving directories", backupName);
+
+        try {
+            var filesToMove = uploadsDirectory.toFile().listFiles();
+
+            org.apache.commons.io.FileUtils.cleanDirectory(this.config.getUploadsDirectory().toFile());
+
+            for (File file : Objects.requireNonNull(filesToMove)) {
+                Files.move(
+                        file.toPath(),
+                        this.config.getUploadsDirectory().resolve(file.getName()),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            org.apache.commons.io.FileUtils.deleteDirectory(uploadsDirectory.toFile());
+        } catch (Exception e) {
+            log.info("[BACKUP-IMPORT-JOB][{}] Failed to copy uploads directory", backupName);
+            throw new BackupException();
+        }
+
+        try {
+            var filesToMove = emailTemplatesDirectory.toFile().listFiles();
+
+            org.apache.commons.io.FileUtils.cleanDirectory(
+                    this.config.getEmailTemplatesDirectory().toFile());
+
+            for (File file : Objects.requireNonNull(filesToMove)) {
+                Files.move(
+                        file.toPath(),
+                        this.config.getEmailTemplatesDirectory().resolve(file.getName()),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            org.apache.commons.io.FileUtils.deleteDirectory(emailTemplatesDirectory.toFile());
+        } catch (Exception e) {
+            log.info("[BACKUP-IMPORT-JOB][{}] Failed to copy email templates directory", backupName);
+            throw new BackupException();
+        }
+
+        log.info("[BACKUP-IMPORT-JOB][{}] Delete unzipped data", backupName);
+
+        Files.delete(zipPath);
+        org.apache.commons.io.FileUtils.deleteDirectory(databaseFilesPath.toFile());
 
         log.info("[BACKUP-IMPORT-JOB][{}] Finish job", backupName);
     }
