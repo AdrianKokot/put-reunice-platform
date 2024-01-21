@@ -8,6 +8,8 @@ export interface Ticket {
   requesterEmail: string;
   status: 'NEW' | 'HANDLED' | 'IRRELEVANT' | 'RESOLVED' | 'DELETED';
   title: string;
+  lastSeenOn: Record<string, string>;
+  lastUpdateTime: string;
 }
 
 export interface TicketResponse {
