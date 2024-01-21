@@ -1,6 +1,6 @@
 package com.example.cms.validation;
 
-import com.example.cms.file.FileResource;
+import com.example.cms.resource.FileResource;
 import com.example.cms.template.Template;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.user.User;
@@ -14,7 +14,7 @@ public class FilterPathVariableValidator {
             Map.of(
                     User.class, Set.of("password"),
                     Template.class, Set.of("content"),
-                    FileResource.class, Set.of("page"),
+                    FileResource.class, Set.of("size"),
                     Ticket.class, Set.of("page", "requesterToken"));
 
     private static final Set<String> extraFields = Set.of("search");

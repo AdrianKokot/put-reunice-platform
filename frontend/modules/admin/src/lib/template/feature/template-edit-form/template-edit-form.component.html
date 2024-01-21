@@ -17,10 +17,7 @@
         <input tuiTextfield type="text" />
       </tui-input>
 
-      <tui-error
-        formControlName="name"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
     </label>
 
     <label
@@ -48,7 +45,7 @@
       <tui-error
         formControlName="universities"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
 
       <tui-checkbox-labeled
         class="tui-form__field-checkbox"
@@ -73,7 +70,7 @@
       <tui-error
         formControlName="content"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
 
     <div

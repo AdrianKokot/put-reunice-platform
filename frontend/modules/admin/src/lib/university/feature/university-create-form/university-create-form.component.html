@@ -12,10 +12,7 @@
         <input tuiTextfield type="text" name="name" />
       </tui-input>
 
-      <tui-error
-        formControlName="name"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <tui-error formControlName="name" [error]="[] | tuiFieldError | async" />
     </label>
 
     <label
@@ -33,7 +30,7 @@
       <tui-error
         formControlName="shortName"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -53,7 +50,7 @@
       <tui-error
         formControlName="address"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
 
     <label
@@ -71,7 +68,7 @@
       <tui-error
         formControlName="website"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -88,7 +85,7 @@
     <tui-error
       formControlName="description"
       [error]="[] | tuiFieldError | async"
-    ></tui-error>
+    />
   </label>
 
   <div class="tui-form__buttons tui-form__buttons_align_end">

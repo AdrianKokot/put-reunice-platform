@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+:host-context(aside) {
+  tui-scrollbar {
+    max-height: calc(100vh - 76px);
+  }
+}
+
+tui-scrollbar {
+  max-height: calc(100vh - var(--top-bar-height));
+}
+
+tui-tree {
+  width: fit-content;
+  text-overflow: ellipsis;
+  padding-right: 1rem;
+}
+
+.tree-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

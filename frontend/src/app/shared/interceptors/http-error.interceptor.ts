@@ -64,11 +64,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (
-          error.status === 404 ||
-          error.status === 403 ||
-          error.status === 500
-        ) {
+        if (error.status === 403 || error.status === 500) {
           this._errorAlert$.next({
             title: this.translate(`ERROR_${error.status}_TITLE`),
             message: this.translate(`ERROR_${error.status}_MESSAGE`),
@@ -77,6 +73,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
         if (error.status === 401) {
           return from(this._router.navigate(['/auth/login'])).pipe(
+            switchMap(() => NEVER),
+          );
+        }
+
+        if (error.status === 404) {
+          return from(this._router.navigate(['/not-found'])).pipe(
             switchMap(() => NEVER),
           );
         }

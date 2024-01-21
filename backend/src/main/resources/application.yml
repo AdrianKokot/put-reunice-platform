@@ -9,7 +9,7 @@ app:
   path:
     backups: ${BACKUPS_DIRECTORY:/db-resources/}
     uploads: ${UPLOADS_DIRECTORY:/uploads/}
-    templates: ${EMAIL_TEMPLATES:/emailTemplates/}
+    templates: ${EMAIL_TEMPLATES_DIRECTORY:/emailTemplates/}
   database:
     schema:
       create-type: ${DATABASE_SCHEMA_CREATE_TYPE:populate}

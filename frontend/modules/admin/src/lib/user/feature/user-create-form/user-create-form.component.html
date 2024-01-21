@@ -16,7 +16,7 @@
       <tui-error
         formControlName="firstName"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
 
     <label [tuiLabel]="'LAST_NAME' | translate" class="tui-form__multi-field">
@@ -31,7 +31,7 @@
       <tui-error
         formControlName="lastName"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -45,10 +45,7 @@
         <input tuiTextfield type="email" name="email" />
       </tui-input>
 
-      <tui-error
-        formControlName="email"
-        [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
     </label>
 
     <label
@@ -66,7 +63,7 @@
       <tui-error
         formControlName="phoneNumber"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -92,7 +89,7 @@
       <tui-error
         formControlName="username"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
 
     <label
@@ -115,7 +112,7 @@
       <tui-error
         formControlName="password"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -146,7 +143,7 @@
       <tui-error
         formControlName="enabled"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
 
     <label [tuiLabel]="'ROLE' | translate" class="tui-form__multi-field">
@@ -186,7 +183,7 @@
       <tui-error
         formControlName="accountType"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </div>
 
@@ -219,7 +216,7 @@
       <tui-error
         formControlName="enrolledUniversities"
         [error]="[] | tuiFieldError | async"
-      ></tui-error>
+      />
     </label>
   </ng-container>
 

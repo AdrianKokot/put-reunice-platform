@@ -211,20 +211,29 @@ label._optional .t-label .t-text {
   }
 }
 
-tui-file.tui-file_with-right-icon {
-  > .t-wrapper {
-    align-items: center;
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 100%;
+tui-file {
+  &.tui-file_with-right-icon:not(._link) {
+    & > .t-wrapper {
+      align-items: center;
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 100%;
 
-    > .t-text {
-      margin-right: auto;
-      max-width: ~'calc(100% - 2.75rem)';
+      & > .t-text {
+        margin-right: auto;
+        max-width: ~'calc(100% - 2.75rem)';
+      }
     }
+    padding-right: 0.5625rem !important;
   }
 
-  padding-right: 0.5625rem !important;
+  &._link > .t-link {
+    max-width: 100%;
+  }
+
+  &.hide_type .t-type {
+    display: none;
+  }
 }
 
 tui-breadcrumbs {
@@ -247,6 +256,19 @@ tui-breadcrumbs {
   }
 }
 
+@media @tui-mobile {
+  .tui-form__multi-field._empty {
+    display: none;
+  }
+  tui-dropdown-host aside.t-left .t-wrapper {
+    width: 80%;
+  }
+}
+
 reunice-notifications .badge > div {
   pointer-events: none;
+}
+
+.tui-text_bold {
+  font-weight: bold !important;
 }

@@ -39,7 +39,7 @@ public class UniversityDtoDetailed {
         hidden = university.isHidden();
         enrolledUsers =
                 university.getEnrolledUsers().stream().map(UserDtoSimple::of).collect(Collectors.toSet());
-        mainPage = PageDtoDetailed.of(university.getMainPage());
+        mainPage = PageDtoDetailed.of(university.getMainPage(), false);
         address = university.getAddress();
         website = university.getWebsite();
         image = university.getImage();

@@ -1,18 +1,18 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormBuilder,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import {
   TuiAvatarModule,
-  TuiIslandModule,
   tuiAvatarOptionsProvider,
-  TuiTextareaModule,
   TuiBadgeModule,
+  TuiIslandModule,
+  TuiTextareaModule,
 } from '@taiga-ui/kit';
-import { TuiGroupModule, TuiButtonModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiGroupModule } from '@taiga-ui/core';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
 import {
@@ -21,22 +21,22 @@ import {
   TicketService,
 } from '@reunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
 import {
-  EMPTY,
-  Subject,
-  catchError,
+  LocalizedPipeModule,
+  TicketToBadgeStatusModule,
+} from '@reunice/modules/shared/ui';
+import {
   combineLatest,
   filter,
   map,
   merge,
   shareReplay,
   startWith,
+  Subject,
   switchMap,
 } from 'rxjs';
-import { TicketToBadgeStatusModule } from '@reunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'reunice-ticket',
@@ -64,7 +64,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TicketComponent {
   private readonly _id$ = resourceIdFromRoute();
   private readonly _service = inject(TicketService);
-  private readonly _router = inject(Router);
   readonly token = inject(ActivatedRoute).snapshot.queryParams['token'];
 
   private readonly _changeStatusRequest$ = new Subject<Ticket['status']>();
@@ -100,15 +99,7 @@ export class TicketComponent {
 
   ticket$ = merge(this._id$, this._changeStatus$, this._sendResponse$).pipe(
     switchMap(() => this._id$),
-    switchMap((id) =>
-      this._service.get(id, this.token).pipe(
-        catchError(() => {
-          this._router.navigate(['not-found']);
-          return EMPTY;
-        }),
-        startWith(null),
-      ),
-    ),
+    switchMap((id) => this._service.get(id, this.token).pipe(startWith(null))),
     shareReplay(),
   );
   ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => Boolean(data)));

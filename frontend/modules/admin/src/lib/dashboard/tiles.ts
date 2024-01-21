@@ -59,4 +59,10 @@ export const dashboardTiles: DashboardTile[] = [
     icon: 'tuiIconMessageCircle',
     description: 'USERS_QUESTIONS',
   },
+  {
+    title: 'RESOURCES',
+    url: ['resources'],
+    icon: 'tuiIconArchive',
+    description: 'RESOURCES_MANAGEMENT',
+  },
 ];

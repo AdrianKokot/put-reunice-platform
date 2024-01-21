@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@reunice/modules/shared/security';
-import { FormSubmitWrapper, throwError } from '@reunice/modules/shared/util';
+import { FormSubmitWrapper } from '@reunice/modules/shared/util';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -32,8 +32,7 @@ import { TuiFieldErrorPipeModule, TuiInputModule } from '@taiga-ui/kit';
 })
 export class ProfileFormComponent {
   private readonly _service = inject(AuthService);
-  private readonly _user =
-    this._service.userSnapshot ?? throwError('User not logged in');
+  private readonly _user = this._service.userSnapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     firstName: [

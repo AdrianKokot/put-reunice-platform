@@ -10,7 +10,6 @@ import {
   FormSubmitWrapper,
   PAGE_TREE_HANDLER,
   parseNullableInt,
-  throwError,
 } from '@reunice/modules/shared/util';
 import {
   BaseFormImportsModule,
@@ -62,8 +61,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PageCreateFormComponent {
   private readonly _service = inject(PageService);
-  private readonly _user =
-    inject(AuthService).userSnapshot ?? throwError('User is null');
+  private readonly _user = inject(AuthService).userSnapshot;
   private readonly _route = inject(ActivatedRoute).snapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
@@ -94,6 +92,7 @@ export class PageCreateFormComponent {
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
     { enrolledUniversities_eq: this._user.universityId },
+    [this._user],
   );
 
   readonly universitySearch = new ResourceSearchWrapper(

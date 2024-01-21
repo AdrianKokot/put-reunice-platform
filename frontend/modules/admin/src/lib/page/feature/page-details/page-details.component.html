@@ -1,215 +1,178 @@
-<ng-container *tuiLet="files$ | async as files">
-  <ng-container *tuiLet="item$ | async as item">
-    <tui-tabs [(activeItemIndex)]="activeTabIndex" class="tui-space_bottom-4">
-      <button tuiTab>
-        {{ 'PAGE_DETAILS_TAB' | translate }}
-      </button>
-      <button tuiTab>
-        {{ 'PAGE_CONTENT_TAB' | translate }}
-      </button>
-      <button
-        data-test="responsibility-tab"
-        tuiTab
-        *ngIf="item === null || item.contactRequestHandlers.length > 0"
-      >
-        <span [class.tui-skeleton]="item === null">
-          {{ 'PAGE_RESPONSIBILITY_TAB' | translate }}
-        </span>
-      </button>
-      <button tuiTab *ngIf="files === null || files.length > 0">
-        <span [class.tui-skeleton]="item === null">
-          {{ 'PAGE_FILES_TAB' | translate }}
-        </span>
-      </button>
-    </tui-tabs>
-
-    <div
-      [hidden]="activeTabIndex !== 0"
-      [class.details-skeleton]="item === null"
+<ng-container *tuiLet="item$ | async as item">
+  <tui-tabs [(activeItemIndex)]="activeTabIndex" class="tui-space_bottom-4">
+    <button tuiTab>
+      {{ 'PAGE_DETAILS_TAB' | translate }}
+    </button>
+    <button tuiTab>
+      {{ 'PAGE_CONTENT_TAB' | translate }}
+    </button>
+    <button tuiTab>
+      <span [class.tui-skeleton]="item === null">
+        {{ 'PAGE_RESOURCES_TAB' | translate }}
+      </span>
+    </button>
+    <button
+      data-test="responsibility-tab"
+      tuiTab
+      *ngIf="item === null || item.contactRequestHandlers.length > 0"
     >
-      <div class="tui-form__row tui-form__row_multi-fields">
-        <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
-          {{ item?.title ?? '—' }}
-        </label>
+      <span [class.tui-skeleton]="item === null">
+        {{ 'PAGE_RESPONSIBILITY_TAB' | translate }}
+      </span>
+    </button>
+  </tui-tabs>
 
-        <label
-          [tuiLabel]="'PAGE_VISIBILITY' | translate"
-          class="tui-form__multi-field"
-        >
-          {{ (item?.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
-        </label>
-
-        <label
-          [tuiLabel]="'UNIVERSITY' | translate"
-          class="tui-form__multi-field"
-        >
-          {{ item?.university?.name ?? '-' }}
-        </label>
-      </div>
-
-      <div class="tui-form__row tui-form__row_multi-fields">
-        <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
-          {{ item?.creator?.firstName ?? '-' }} {{ item?.creator?.lastName }}
-        </label>
-
-        <label
-          [tuiLabel]="'CREATED_AT' | translate"
-          class="tui-form__multi-field"
-        >
-          {{ item?.createdOn | localizedDate }}
-        </label>
-
-        <label
-          [tuiLabel]="'UPDATED_AT' | translate"
-          class="tui-form__multi-field"
-        >
-          {{ item?.updatedOn | localizedDate }}
-        </label>
-      </div>
-
-      <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
-        {{ item?.description ?? '-' }}
+  <div [hidden]="activeTabIndex !== 0" [class.details-skeleton]="item === null">
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label [tuiLabel]="'TITLE' | translate" class="tui-form__multi-field">
+        {{ item?.title ?? '—' }}
       </label>
 
-      <div class="tui-form__row">
-        <p class="tui-space_top-0 tui-space_bottom-1 text-02">
-          {{ 'PAGE_LOCATION' | translate }}
-        </p>
+      <label
+        [tuiLabel]="'PAGE_VISIBILITY' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ (item?.hidden ? 'PAGE_HIDDEN' : 'PAGE_VISIBLE') | translate }}
+      </label>
 
-        <tui-island size="s" *tuiLet="pagesTree$ | async as items">
-          <div class="tui-island__content">
-            <tui-tree
-              class="tui-island__paragraph"
-              *ngIf="items"
-              [tuiTreeController]="true"
-              [value]="items"
-              [content]="treeContent"
-              [childrenHandler]="pagesTreeHandler"
-            ></tui-tree>
-
-            <ng-template #treeContent let-page>
-              <label
-                [class._selected]="page.id === item?.id"
-                class="reunice-tree-item-option"
-              >
-                <a tuiLink [routerLink]="['../', page.id]">
-                  {{ page.title }}
-                </a>
-              </label>
-            </ng-template>
-          </div>
-        </tui-island>
-      </div>
+      <label
+        [tuiLabel]="'UNIVERSITY' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.university?.name ?? '-' }}
+      </label>
     </div>
 
-    <div [hidden]="activeTabIndex !== 2">
-      <reunice-page-users
-        *ngIf="item !== null"
-        [handles]="item.id"
-      ></reunice-page-users>
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label [tuiLabel]="'AUTHOR' | translate" class="tui-form__multi-field">
+        {{ item?.creator?.firstName ?? '-' }} {{ item?.creator?.lastName }}
+      </label>
+
+      <label
+        [tuiLabel]="'CREATED_AT' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.createdOn | localizedDate }}
+      </label>
+
+      <label
+        [tuiLabel]="'UPDATED_ON' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.updatedOn | localizedDate }}
+      </label>
     </div>
 
-    <div [hidden]="activeTabIndex !== 3">
-      <div class="tui-form__row">
-        <div class="tui-space_bottom-1 text-02">
-          {{ 'FILES' | translate }}
+    <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+      {{ item?.description ?? '-' }}
+    </label>
+
+    <div class="tui-form__row">
+      <p class="tui-space_top-0 tui-space_bottom-1 text-02">
+        {{ 'PAGE_LOCATION' | translate }}
+      </p>
+
+      <tui-island size="s" *tuiLet="pagesTree$ | async as items">
+        <div class="tui-island__content">
+          <tui-tree
+            class="tui-island__paragraph"
+            *ngIf="items"
+            [tuiTreeController]="true"
+            [value]="items"
+            [content]="treeContent"
+            [childrenHandler]="pagesTreeHandler"
+          ></tui-tree>
+
+          <ng-template #treeContent let-page>
+            <label
+              [class._selected]="page.id === item?.id"
+              class="reunice-tree-item-option"
+            >
+              <a tuiLink [routerLink]="['../', page.id]">
+                {{ page.title }}
+              </a>
+            </label>
+          </ng-template>
         </div>
-
-        <tui-files [max]="3">
-          <ng-container *ngFor="let file of files">
-            <tui-file *tuiItem [file]="file" [showDelete]="false">
-              <div class="text-02 tui-text_body-s">
-                {{
-                  'UPLOADED_AT_BY'
-                    | translate
-                      : {
-                          at: file.lastModified | localizedDate,
-                          by: file.uploadedBy
-                        }
-                }}
-              </div>
-            </tui-file>
-          </ng-container>
-          <ng-container *ngIf="files === null">
-            <tui-file class="tui-skeleton"></tui-file>
-          </ng-container>
-        </tui-files>
-      </div>
+      </tui-island>
     </div>
+  </div>
 
-    <div
-      [hidden]="activeTabIndex !== 1"
-      [class.details-skeleton]="item === null"
+  <div [hidden]="activeTabIndex !== 3">
+    <reunice-page-users *ngIf="item !== null" [handles]="item.id" />
+  </div>
+
+  <div [hidden]="activeTabIndex !== 2">
+    <reunice-page-resources *ngIf="item !== null" [pageId]="item.id" />
+  </div>
+
+  <div [hidden]="activeTabIndex !== 1" [class.details-skeleton]="item === null">
+    <tui-editor-socket
+      class="tui-island tui-island_size_s"
+      [content]="item?.content ?? ''"
+    />
+  </div>
+
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
+    <a
+      tuiLink
+      class="tui-form__button d-inline-flex items-center justify-center"
+      [routerLink]="['/university', item.university.id, 'page', item.id]"
     >
-      <tui-editor-socket
-        class="tui-island tui-island_size_s"
-        [content]="item?.content ?? ''"
-      ></tui-editor-socket>
-    </div>
+      {{ 'VIEW_PAGE' | translate }}
+    </a>
 
-    <div
-      class="tui-form__buttons tui-form__buttons_align_end"
-      *ngIf="item !== null"
+    <button
+      *reuniceUserControlsResource="item"
+      tuiButton
+      type="button"
+      appearance="flat-destructive"
+      class="tui-form__button"
+      [reuniceConfirm]="'PAGE_DELETE_DESCRIPTION' | translate"
+      [showLoader]="(deleteHandler.loading$ | async) ?? false"
+      [disabled]="!item.hidden || item.children.length > 0"
+      [tuiHint]="
+        (!item.hidden
+          ? 'CANNOT_DELETE_VISIBLE_PAGE'
+          : item.children.length > 0
+          ? 'CANNOT_DELETE_PAGE_WITH_CHILDREN'
+          : ''
+        ) | translate
+      "
+      (confirm)="delete(item)"
+      data-test="delete-button"
     >
-      <a
-        tuiLink
-        class="tui-form__button d-inline-flex items-center justify-center"
-        [routerLink]="['/university', item.university.id, 'page', item.id]"
-      >
-        {{ 'VIEW_PAGE' | translate }}
-      </a>
+      {{ 'DELETE' | translate }}
+    </button>
 
-      <button
-        *reuniceUserControlsResource="item"
-        tuiButton
-        type="button"
-        appearance="flat-destructive"
-        class="tui-form__button"
-        [reuniceConfirm]="'PAGE_DELETE_DESCRIPTION' | translate"
-        [showLoader]="(deleteHandler.loading$ | async) ?? false"
-        [disabled]="!item.hidden || item.children.length > 0"
-        [tuiHint]="
-          (!item.hidden
-            ? 'CANNOT_DELETE_VISIBLE_PAGE'
-            : item.children.length > 0
-            ? 'CANNOT_DELETE_PAGE_WITH_CHILDREN'
-            : ''
-          ) | translate
-        "
-        (confirm)="deleteHandler.delete(item.id)"
-        data-test="delete-button"
-      >
-        {{ 'DELETE' | translate }}
-      </button>
+    <a
+      [routerLink]="['..', 'new']"
+      [queryParams]="{ universityId: item.university.id, parentId: item.id }"
+      tuiButton
+      type="button"
+      appearance="secondary"
+      class="tui-form__button"
+    >
+      {{ 'ADD_SUBPAGE' | translate }}
+    </a>
 
-      <a
-        [routerLink]="['..', 'new']"
-        [queryParams]="{ universityId: item.university.id, parentId: item.id }"
-        tuiButton
-        type="button"
-        appearance="secondary"
-        class="tui-form__button"
-      >
-        {{ 'ADD_SUBPAGE' | translate }}
-      </a>
-
-      <a
-        [routerLink]="cantEdit ? null : ['edit']"
-        tuiButton
-        type="button"
-        appearance="secondary"
-        class="tui-form__button"
-        *tuiLet="
-          item.parent === null && user.accountType === 'USER' as cantEdit
-        "
-        [disabled]="cantEdit"
-        [tuiHint]="
-          (cantEdit ? 'CANNOT_EDIT_UNIVERSITY_LANDING_PAGE' : '') | translate
-        "
-        data-test="edit-button"
-      >
-        {{ 'EDIT' | translate }}
-      </a>
-    </div>
-  </ng-container>
+    <a
+      [routerLink]="cantEdit ? null : ['edit']"
+      tuiButton
+      type="button"
+      appearance="secondary"
+      class="tui-form__button"
+      *tuiLet="item.parent === null && user?.accountType === 'USER' as cantEdit"
+      [disabled]="cantEdit"
+      [tuiHint]="
+        (cantEdit ? 'CANNOT_EDIT_UNIVERSITY_LANDING_PAGE' : '') | translate
+      "
+      data-test="edit-button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
 </ng-container>

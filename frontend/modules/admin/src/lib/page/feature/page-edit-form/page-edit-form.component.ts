@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  FileResource,
-  FileService,
+  AccountTypeEnum,
   PageService,
+  Resource,
+  ResourceService,
   User,
   UserService,
 } from '@reunice/modules/shared/data-access';
@@ -11,7 +12,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import {
   FormSubmitWrapper,
   resourceIdFromRoute,
-  throwError,
   toResourceFromId,
 } from '@reunice/modules/shared/util';
 import {
@@ -25,7 +25,6 @@ import {
   TuiCheckboxLabeledModule,
   TuiComboBoxModule,
   TuiDataListWrapperModule,
-  TuiFileLike,
   TuiInputFilesModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
@@ -36,6 +35,7 @@ import {
   shareReplay,
   startWith,
   switchMap,
+  tap,
 } from 'rxjs';
 import {
   AuthService,
@@ -74,9 +74,8 @@ import { TuiDropdownModule } from '@taiga-ui/core';
 })
 export class PageEditFormComponent {
   private readonly _service = inject(PageService);
-  private readonly _fileService = inject(FileService);
-  readonly user =
-    inject(AuthService).userSnapshot ?? throwError('User is null');
+  private readonly _resourceService = inject(ResourceService);
+  readonly user = inject(AuthService).userSnapshot;
 
   readonly form = inject(FormBuilder).nonNullable.group({
     id: [-1, [Validators.required]],
@@ -86,13 +85,25 @@ export class PageEditFormComponent {
     description: ['', [Validators.required, Validators.maxLength(255)]],
     hidden: [true, [Validators.required]],
     content: [''],
-    files: [[] as TuiFileLike[]],
-    filesToRemove: [[] as Array<FileResource['id']>],
     contactRequestHandlers: [[] as Array<User['id']>],
     creatorId: [-1, [Validators.required]],
+    resources: [[] as Array<Resource['id']>],
   });
 
   private readonly _id$ = resourceIdFromRoute();
+
+  readonly resources$ = this._id$.pipe(
+    switchMap((pageId) =>
+      this._resourceService.getByPage(pageId).pipe(
+        tap((resources) => {
+          this.form.patchValue({ resources: resources.map((x) => x.id) });
+          this.resourceSearch.addItems(resources);
+        }),
+        startWith(null),
+      ),
+    ),
+    shareReplay(1),
+  );
 
   readonly item$ = this._id$.pipe(
     toResourceFromId(this._service, (item) => {
@@ -107,11 +118,6 @@ export class PageEditFormComponent {
       this.userSearch.addItem(item.creator);
       this.contactRequestHandlerSearch.addItems(item.contactRequestHandlers);
     }),
-  );
-
-  readonly files$ = this._id$.pipe(
-    switchMap((id) => this._fileService.getByPage(id).pipe(startWith(null))),
-    shareReplay(),
   );
 
   readonly confirmText$ = combineLatest([
@@ -134,13 +140,19 @@ export class PageEditFormComponent {
     effect: navigateToResourceDetails(),
   });
 
-  rejectedFiles: readonly TuiFileLike[] = [];
-
   readonly userSearch = new ResourceSearchWrapper(
     inject(UserService),
     'search',
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
     { enrolledUniversities_eq: this.user.universityId },
+    [this.user],
+  );
+
+  readonly resourceSearch = new ResourceSearchWrapper(
+    this._resourceService,
+    'search',
+    (item) => `${item.name} (${item.author.firstName} ${item.author.lastName})`,
+    { universityId_eq: this.user.universityId },
   );
 
   readonly contactRequestHandlerSearch = new ResourceSearchWrapper(
@@ -149,29 +161,5 @@ export class PageEditFormComponent {
     (item) => `${item.firstName} ${item.lastName} (${item.email})`,
   );
 
-  onReject(files: TuiFileLike | readonly TuiFileLike[]): void {
-    this.rejectedFiles = [...this.rejectedFiles, ...(files as TuiFileLike[])];
-  }
-
-  removeFile({ name }: TuiFileLike): void {
-    this.handler.form.controls.files.setValue(
-      this.handler.form.controls.files.value?.filter(
-        (current: TuiFileLike) => current.name !== name,
-      ) ?? [],
-    );
-  }
-
-  removeExistingFile(file: FileResource): void {
-    this.handler.form.controls.filesToRemove.setValue([
-      ...this.handler.form.controls.filesToRemove.value,
-      file.id,
-    ]);
-    file.toRemove = true;
-  }
-
-  clearRejected({ name }: TuiFileLike): void {
-    this.rejectedFiles = this.rejectedFiles.filter(
-      (rejected) => rejected.name !== name,
-    );
-  }
+  protected readonly AccountTypeEnum = AccountTypeEnum;
 }

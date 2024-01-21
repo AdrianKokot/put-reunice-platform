@@ -1,5 +1,6 @@
 package com.example.cms.backup;
 
+import com.example.cms.backup.exceptions.BackupException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,7 +32,7 @@ public class BackupController {
     @GetMapping("/import/{backupName}")
     public void importDatabaseBackup(@PathVariable String backupName)
             throws SQLException, IOException {
-        backupService.importBackup(backupName);
+        backupService.importBackup(StringUtils.cleanPath(backupName));
     }
 
     @GetMapping()
@@ -46,11 +48,17 @@ public class BackupController {
 
     @GetMapping(value = "/{backupName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public FileSystemResource downloadBackup(@PathVariable String backupName) {
-        return backupService.getBackupFile(backupName);
+        return backupService.getBackupFile(StringUtils.cleanPath(backupName));
     }
 
     @DeleteMapping(value = "/{backupName}")
     public void deleteBackup(@PathVariable String backupName) {
+        backupName = StringUtils.cleanPath(backupName);
+
+        if (backupName.contains(".") || backupName.contains("/")) {
+            throw new BackupException();
+        }
+
         backupService.deleteBackupFile(backupName);
     }
 }

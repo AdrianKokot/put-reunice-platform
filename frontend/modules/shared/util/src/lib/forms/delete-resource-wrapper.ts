@@ -34,7 +34,14 @@ export interface DeleteResourceWrapperFunctions {
   successAlertMessage?: string;
 }
 
-export class DeleteResourceWrapper<TResource extends BaseResource> {
+export class DeleteResourceWrapper<
+  TResource extends BaseResource,
+  TService extends AbstractApiService<
+    TResource,
+    unknown,
+    unknown
+  > = AbstractApiService<TResource, unknown, unknown>,
+> {
   private readonly _delete$ = new Subject<TResource['id']>();
   private readonly _translate = inject(TranslateService);
   private readonly _alert = inject(TuiAlertService);
@@ -42,7 +49,7 @@ export class DeleteResourceWrapper<TResource extends BaseResource> {
   public readonly loading$ = this._delete$.pipe(
     takeUntilDestroyed(),
     exhaustMap((id) =>
-      this.service.delete(id).pipe(
+      this.deleteMethod(id).pipe(
         startWith(LOADING_SYMBOL_VALUE),
         catchError((err) => {
           if (err instanceof HttpErrorResponse) {
@@ -97,14 +104,33 @@ export class DeleteResourceWrapper<TResource extends BaseResource> {
     shareReplay(),
   );
 
-  public delete(id: TResource['id']) {
+  private deleteMethod: (id: TResource['id']) => Observable<boolean> = (id) =>
+    this.service.delete(id);
+
+  public delete(
+    id: TResource['id'],
+    // @ts-expect-error Generics sometimes don't work well with this
+    method: ObservableOneArgumentMethods<TResource, TService> = 'delete',
+  ) {
+    this.deleteMethod = (id) => this.service[method](id);
     this._delete$.next(id);
   }
 
   constructor(
-    public readonly service: AbstractApiService<TResource, unknown, unknown>,
+    public readonly service: TService,
     readonly functions: DeleteResourceWrapperFunctions = {},
   ) {
     this.loading$.subscribe();
   }
 }
+
+type ObservableOneArgumentMethods<
+  TResource extends BaseResource,
+  TService extends AbstractApiService<TResource, unknown, unknown>,
+> = {
+  [TKey in keyof TService]: TService[TKey] extends (
+    arg: TResource['id'],
+  ) => Observable<boolean>
+    ? TKey
+    : never;
+}[keyof TService];

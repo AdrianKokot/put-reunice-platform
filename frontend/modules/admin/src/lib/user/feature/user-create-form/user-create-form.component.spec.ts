@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserCreateFormComponent } from './user-create-form.component';
-import { TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
 
 describe(UserCreateFormComponent.name, () => {
   let component: UserCreateFormComponent;
@@ -8,6 +8,7 @@ describe(UserCreateFormComponent.name, () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideAuthenticatedUser()],
       imports: [TestingModule, UserCreateFormComponent],
     }).compileComponents();
 

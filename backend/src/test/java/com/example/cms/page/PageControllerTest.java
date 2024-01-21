@@ -390,7 +390,8 @@ class PageControllerTest extends BaseAPIControllerTest {
                         "TEST_UPDATED_CONTENT",
                         page.isHidden(),
                         page.getHandlers().stream().map(User::getId).collect(Collectors.toSet()),
-                        page.getCreator().getId());
+                        page.getCreator().getId(),
+                        Set.of());
             }
 
             @Test
@@ -423,7 +424,8 @@ class PageControllerTest extends BaseAPIControllerTest {
                         "TEST_UPDATED_CONTENT",
                         page.isHidden(),
                         page.getHandlers().stream().map(User::getId).collect(Collectors.toSet()),
-                        page.getCreator().getId());
+                        page.getCreator().getId(),
+                        Set.of());
             }
 
             @Test
@@ -456,7 +458,8 @@ class PageControllerTest extends BaseAPIControllerTest {
                         "TEST_CONTENT",
                         page.isHidden(),
                         page.getHandlers().stream().map(User::getId).collect(Collectors.toSet()),
-                        creatorId);
+                        creatorId,
+                        Set.of());
             }
 
             @Test

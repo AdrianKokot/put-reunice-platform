@@ -2,7 +2,6 @@ import {
   filter,
   map,
   Observable,
-  share,
   shareReplay,
   startWith,
   switchMap,
@@ -28,7 +27,7 @@ export const nestedRouteParamMap = (paramKey: string) => {
       return route.paramMap.get(paramKey);
     }),
     filter((id): id is string => id !== null),
-    share(),
+    shareReplay(1),
   );
 };
 

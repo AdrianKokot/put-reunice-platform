@@ -1,5 +1,6 @@
 package com.example.cms.page;
 
+import com.example.cms.resource.FileResource;
 import com.example.cms.university.University;
 import com.example.cms.user.User;
 import java.util.HashSet;
@@ -7,10 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
@@ -18,18 +16,11 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Entity
-@Table(name = "pages")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "pages")
 @Where(clause = "university_id IS NOT NULL")
 public class Page extends AbstractPage {
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "page_handlers",
-            joinColumns = @JoinColumn(name = "page_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> handlers = new HashSet<>();
-
     @NotBlank(message = "ERRORS.PAGE.400.DESCRIPTION_EMPTY")
     @Length(max = 255, message = "ERRORS.PAGE.400.DESCRIPTION_TOO_LONG")
     private String description;
@@ -45,6 +36,20 @@ public class Page extends AbstractPage {
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Page> children = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "page_handlers",
+            joinColumns = @JoinColumn(name = "page_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> handlers = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "page_resources",
+            joinColumns = @JoinColumn(name = "page_id"),
+            inverseJoinColumns = @JoinColumn(name = "resource_id"))
+    private Set<FileResource> resources = new HashSet<>();
 
     public Page(
             String title,

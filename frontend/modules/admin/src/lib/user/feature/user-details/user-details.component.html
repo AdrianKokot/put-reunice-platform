@@ -7,7 +7,7 @@
       {{ 'USER_PAGES_TAB' | translate }}
     </button>
     <button tuiTab>
-      {{ 'USER_FILES_TAB' | translate }}
+      {{ 'USER_RESOURCES_TAB' | translate }}
     </button>
     <button tuiTab data-test="responsibility-tab">
       {{ 'USER_RESPONSIBILITY_TAB' | translate }}
@@ -65,7 +65,10 @@
   </div>
 
   <div [hidden]="activeTabIndex !== 2">
-    <reunice-user-files *ngIf="item" [userId]="item.id"></reunice-user-files>
+    <reunice-user-resources
+      *ngIf="item"
+      [userId]="item.id"
+    ></reunice-user-resources>
   </div>
 
   <div [hidden]="activeTabIndex !== 3">

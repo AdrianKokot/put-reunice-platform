@@ -1,0 +1,115 @@
+<ng-container *tuiLet="item$ | async as item">
+  <tui-tabs [(activeItemIndex)]="activeTabIndex" class="tui-space_bottom-4">
+    <button tuiTab>
+      {{ 'RESOURCE_DETAILS_TAB' | translate }}
+    </button>
+    <button tuiTab>
+      {{ 'RESOURCE_PAGES_TAB' | translate }}
+    </button>
+  </tui-tabs>
+
+  <div [hidden]="activeTabIndex !== 0" [class.details-skeleton]="item === null">
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label
+        [tuiLabel]="'RESOURCE_AUTHOR' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.author?.firstName ?? '-' }} {{ item?.author?.lastName }}
+      </label>
+
+      <label
+        [tuiLabel]="'RESOURCE_CREATED_ON' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.createdOn | localizedDate }}
+      </label>
+
+      <label
+        [tuiLabel]="'RESOURCE_UPDATED_ON' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.updatedOn | localizedDate }}
+      </label>
+    </div>
+
+    <div class="tui-form__row tui-form__row_multi-fields">
+      <label
+        [tuiLabel]="'RESOURCE_NAME' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ item?.name ?? '—' }}
+      </label>
+
+      <label
+        [tuiLabel]="'RESOURCE_TYPE' | translate"
+        class="tui-form__multi-field"
+      >
+        {{ 'RESOURCE_TYPE_' + (item?.resourceType ?? '') | translate }}
+      </label>
+
+      <label
+        *ngIf="item?.resourceType === ResourceType.LINK; else empty"
+        [tuiLabel]="'RESOURCE_LINK' | translate"
+        class="tui-form__multi-field"
+      >
+        <a [href]="item?.path" target="_blank">{{ item?.path }}</a>
+      </label>
+
+      <ng-template #empty>
+        <span class="tui-form__multi-field _empty"></span>
+      </ng-template>
+    </div>
+
+    <label [tuiLabel]="'DESCRIPTION' | translate" class="tui-form__row">
+      {{ item?.description ?? '—' }}
+    </label>
+  </div>
+
+  <div [hidden]="activeTabIndex !== 1" [class.details-skeleton]="item === null">
+    <reunice-resource-pages *ngIf="item !== null" [resourceId]="item.id" />
+  </div>
+
+  <div
+    class="tui-form__buttons tui-form__buttons_align_end"
+    *ngIf="item !== null"
+  >
+    <a
+      *ngIf="item.resourceType !== ResourceType.LINK"
+      tuiButton
+      [icon]="'tuiIconDownload'"
+      appearance="secondary"
+      [href]="'/api/resources/' + item.id + '/download'"
+    >
+      {{ 'DOWNLOAD' | translate }}
+    </a>
+
+    <button
+      *reuniceUserControlsResource="item"
+      tuiButton
+      type="button"
+      appearance="flat-destructive"
+      class="tui-form__button"
+      [reuniceConfirm]="'RESOURCE_DELETE_DESCRIPTION' | translate"
+      [showLoader]="(deleteHandler.loading$ | async) ?? false"
+      (confirm)="deleteHandler.delete(item.id)"
+      data-test="delete-button"
+      [disabled]="item.referenced"
+      [tuiHint]="
+        (item.referenced ? 'CANNOT_DELETE_REFERENCED_RESOURCE' : '') | translate
+      "
+    >
+      {{ 'DELETE' | translate }}
+    </button>
+
+    <a
+      [routerLink]="['edit']"
+      tuiButton
+      type="button"
+      appearance="secondary"
+      class="tui-form__button"
+      data-test="edit-button"
+    >
+      {{ 'EDIT' | translate }}
+    </a>
+  </div>
+</ng-container>

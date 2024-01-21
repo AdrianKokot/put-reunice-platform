@@ -28,6 +28,10 @@ public class PageSpecification extends SearchSpecification implements Specificat
                         "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
         } else if (criteria.getOperation().equalsIgnoreCase("eq")) {
+            if (criteria.getKey().equalsIgnoreCase("resources")) {
+                return criteriaBuilder.equal(root.join("resources").get("id"), criteria.getValue());
+            }
+
             if (criteria.getKey().equalsIgnoreCase("handlers")) {
                 return criteriaBuilder.equal(root.join("handlers").get("id"), criteria.getValue());
             }

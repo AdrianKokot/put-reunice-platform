@@ -1,33 +1,40 @@
 <tui-root *tuiLet="side.leftSide$ | async as leftSide">
-  <reunice-ui-top-bar>
-    <reunice-sidebar
-      menu
-      class="sidebar-mobile"
-      #parent="tuiActiveZone"
-      tuiActiveZone
-    >
-      <reunice-search
-        class="search-mobile"
-        [tuiActiveZoneParent]="parent"
-      ></reunice-search>
-      <ng-container *polymorpheusOutlet="leftSide"></ng-container>
-    </reunice-sidebar>
-    <reunice-search left class="search-desktop"></reunice-search>
-  </reunice-ui-top-bar>
+  <ng-container *tuiLet="mobileVisible$ | async as isMobileVisible">
+    <reunice-ui-top-bar>
+      <reunice-sidebar
+        *ngIf="isMobileVisible"
+        menu
+        class="sidebar-mobile"
+        #parent="tuiActiveZone"
+        tuiActiveZone
+      >
+        <reunice-search
+          class="search-mobile"
+          [tuiActiveZoneParent]="parent"
+        ></reunice-search>
+        <ng-container *polymorpheusOutlet="leftSide"></ng-container>
+      </reunice-sidebar>
+      <reunice-search left class="search-desktop"></reunice-search>
+    </reunice-ui-top-bar>
 
-  <div class="d-flex">
-    <div *ngIf="leftSide !== null" class="sidebar-desktop">
-      <ng-container *polymorpheusOutlet="leftSide"></ng-container>
-    </div>
+    <div class="d-flex">
+      <div
+        *ngIf="leftSide !== null && !isMobileVisible"
+        class="sidebar-desktop"
+      >
+        <ng-container *polymorpheusOutlet="leftSide"></ng-container>
+      </div>
 
-    <div class="tui-container tui-container_adaptive tui-space_bottom-8">
-      <router-outlet></router-outlet>
-    </div>
+      <div class="tui-container tui-container_adaptive tui-space_bottom-8">
+        <router-outlet></router-outlet>
+      </div>
 
-    <div>
-      <ng-container *polymorpheusOutlet="side.rightSide$ | async as content">{{
-        content
-      }}</ng-container>
+      <div>
+        <ng-container
+          *polymorpheusOutlet="side.rightSide$ | async as content"
+          >{{ content }}</ng-container
+        >
+      </div>
     </div>
-  </div>
+  </ng-container>
 </tui-root>

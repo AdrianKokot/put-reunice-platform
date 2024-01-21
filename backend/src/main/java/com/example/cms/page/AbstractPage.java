@@ -12,9 +12,9 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
+@MappedSuperclass
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PUBLIC)
-@MappedSuperclass
 public abstract class AbstractPage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public abstract class AbstractPage {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     protected Content content;
 
-    protected boolean hidden;
+    protected boolean hidden = true;
 
     protected Timestamp createdOn;
     protected Timestamp updatedOn;

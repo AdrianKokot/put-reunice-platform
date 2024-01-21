@@ -6,6 +6,7 @@ import com.example.cms.page.exceptions.PageExceptionType;
 import com.example.cms.page.exceptions.PageForbiddenException;
 import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.page.projections.*;
+import com.example.cms.resource.FileResourceRepository;
 import com.example.cms.search.FullTextSearchService;
 import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
@@ -36,7 +37,9 @@ public class PageService {
     private final UniversityRepository universityRepository;
     private final UserRepository userRepository;
     private final SecurityService securityService;
+    private final FileResourceRepository fileResourceRepository;
 
+    @Transactional
     public PageDtoDetailed get(Long id) {
         return pageRepository
                 .findDetailedById(id)
@@ -52,6 +55,7 @@ public class PageService {
                             PageDtoDetailed pageDto =
                                     PageDtoDetailed.of(
                                             page,
+                                            pageRepository.hasPageResourcesReferencedOnlyByItself(page.getId()),
                                             findVisibleSubpages(
                                                     PageRequest.of(0, Integer.MAX_VALUE, Sort.by("title")), page));
 
@@ -194,7 +198,7 @@ public class PageService {
         newPage.setCreator(creator);
         newPage.setHidden(form.getHidden());
 
-        return PageDtoDetailed.of(save(newPage));
+        return PageDtoDetailed.of(save(newPage), false);
     }
 
     @Secured("ROLE_USER")
@@ -237,11 +241,27 @@ public class PageService {
                         });
 
         page.setHandlers(usersToAssign);
+
+        if (form.getResources() != null) {
+            var resources = fileResourceRepository.findAllById(form.getResources());
+            if (resources.size() != form.getResources().size()) {
+                throw new PageException(PageExceptionType.RESOURCE_NOT_FOUND);
+            }
+
+            page.setResources(new HashSet<>(resources));
+        }
+
         save(page);
     }
 
     @Secured("ROLE_USER")
     public void delete(Long id) {
+        delete(id, false);
+    }
+
+    @Secured("ROLE_USER")
+    @Transactional
+    public void delete(Long id, boolean deleteStaleResources) {
         Page page = pageRepository.findDetailedById(id).orElseThrow(PageNotFoundException::new);
 
         if (securityService.isForbiddenPage(page)) {
@@ -250,6 +270,10 @@ public class PageService {
 
         if (pageRepository.existsByParent(page)) {
             throw new PageException(PageExceptionType.DELETING_WITH_CHILD);
+        }
+
+        if (deleteStaleResources) {
+            fileResourceRepository.deleteAll(pageRepository.findResourcesReferencedOnlyByPage(id));
         }
 
         delete(page);

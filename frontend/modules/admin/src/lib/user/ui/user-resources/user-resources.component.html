@@ -1,0 +1,90 @@
+<tui-scrollbar class="reunice-table-wrapper">
+  <table
+    tuiTable
+    tuiSortBy
+    [columns]="columns"
+    *tuiLet="items$ | async as items"
+  >
+    <thead [formGroup]="filtersForm">
+      <tr tuiThGroup>
+        <th
+          *tuiHead="'name'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-md"
+        >
+          <span>{{ 'RESOURCE_NAME' | translate }}</span>
+        </th>
+        <th
+          *tuiHead="'updatedOn'"
+          tuiTh
+          tuiSortable
+          [sticky]="true"
+          class="column-sm"
+        >
+          <span>{{ 'RESOURCE_UPDATED_ON' | translate }}</span>
+        </th>
+        <th
+          *tuiHead="'actions'"
+          tuiTh
+          [sticky]="true"
+          class="column-actions"
+        ></th>
+      </tr>
+    </thead>
+
+    <tbody tuiTbody>
+      <tr
+        *ngFor="
+          let item of items;
+          else: loadingList;
+          empty: emptyList;
+          trackById
+        "
+        tuiTr
+      >
+        <td *tuiCell="'name'" tuiTd class="column-md">
+          {{ item.name }}
+        </td>
+        <td *tuiCell="'updatedOn'" tuiTd class="column-sm">
+          {{ item.updatedOn | localizedDate }}
+        </td>
+
+        <td class="column-actions" *tuiCell="'actions'" tuiTd>
+          <a
+            [routerLink]="['/resources', item.id]"
+            tuiIconButton
+            size="s"
+            appearance="flat"
+            [icon]="'tuiIconInfo'"
+            shape="rounded"
+            [tuiHint]="'SEE_RESOURCE' | translate"
+          >
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</tui-scrollbar>
+
+<tui-table-pagination
+  class="tui-space_top-2"
+  [total]="(total$ | async) ?? 0"
+></tui-table-pagination>
+
+<ng-template #emptyList>
+  <tr>
+    <td tuiTd class="t-empty" [colSpan]="columns.length">
+      {{ emptyMessage$ | async }}
+    </td>
+  </tr>
+</ng-template>
+
+<ng-template #loadingList>
+  <tr>
+    <td [colSpan]="columns.length">
+      <tui-loader></tui-loader>
+    </td>
+  </tr>
+</ng-template>
