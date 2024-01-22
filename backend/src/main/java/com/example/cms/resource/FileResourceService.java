@@ -102,43 +102,36 @@ public class FileResourceService {
 
     @Secured("ROLE_USER")
     @Transactional
-    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
+    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form)  {
         var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
-        //        var principal =
-        // securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
-        //
-        //        if (!principal.getId().equals(form.getAuthorId())
-        //            && !securityService.hasHigherRoleThan(Role.USER)) {
-        //            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
-        //        }
-        //
-        //        User author =
-        //                userRepository
-        //                        .findById(form.getAuthorId())
-        //                        .orElseThrow(() -> new
-        // ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
-        //
-        //        if (form.getFile() == null) {
-        //            fileResource.setAsLinkResource(form.getUrl());
-        //        } else {
-        //            try {
-        //                var filename =
-        //
-        // StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
-        //                var filePath =
-        //                        fileService.store(form.getFile(), filename, FILE_DIRECTORY +
-        // fileResource.getId());
-        //
-        //                fileResource.setAsFileResource(
-        //                        filePath.toString(),
-        //                        Objects.requireNonNull(form.getFile().getContentType()),
-        //                        form.getFile().getSize());
-        //            } catch (IOException e) {
-        //                throw new ResourceException(ResourceExceptionType.FAILED_TO_STORE_FILE);
-        //            }
-        //        }
+        String tempDirectoryName = fileResource.getId().toString()+"_temp";
+        try {
+            fileService.renameDirectory(FileResource.STORE_DIRECTORY + fileResource.getId().toString(), FileResource.STORE_DIRECTORY + tempDirectoryName);
+            if (form.getFile() == null) {
+                fileResource.setAsLinkResource(form.getUrl());
+            } else {
+                var filename =
+                        StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
+                var filePath =
+                        fileService.store(
+                                form.getFile(), filename, FileResource.STORE_DIRECTORY + fileResource.getId());
 
-        return ResourceDtoDetailed.of(fileRepository.save(fileResource));
+                fileResource.setAsFileResource(
+                        filePath.toString(),
+                        Objects.requireNonNull(form.getFile().getContentType()),
+                        form.getFile().getSize());
+            }
+            var resourceDtoDetailed = ResourceDtoDetailed.of(fileRepository.save(fileResource));
+            fileService.deleteDirectory(FileResource.STORE_DIRECTORY+tempDirectoryName);
+            return resourceDtoDetailed;
+        } catch (IOException e){
+            try{
+                fileService.renameDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName, FileResource.STORE_DIRECTORY + fileResource.getId().toString());
+            } catch (IOException ex){
+                throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
+            }
+        }
+            return  ResourceDtoDetailed.of(fileRepository.save(fileResource));
     }
 
     private org.springframework.data.domain.Page<FileResource> _getAll(

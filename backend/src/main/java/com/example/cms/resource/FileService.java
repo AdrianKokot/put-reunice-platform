@@ -51,4 +51,14 @@ public class FileService {
         org.apache.commons.io.FileUtils.deleteDirectory(
                 this.config.getUploadsDirectory().resolve(directory).toFile());
     }
+
+    public void renameDirectory(String sourceDirectory, String targetDirectory) throws IOException {
+        Path sourcePath = this.config.getUploadsDirectory().resolve(sourceDirectory);
+        Path targetPath = this.config.getUploadsDirectory().resolve(targetDirectory);
+
+        if (Files.exists(sourcePath)) {
+            Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
 }
