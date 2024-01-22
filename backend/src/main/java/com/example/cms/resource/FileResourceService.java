@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -103,14 +102,16 @@ public class FileResourceService {
 
     @Secured("ROLE_USER")
     @Transactional
-    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form)  {
+    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
         var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
-        String tempDirectoryName = fileResource.getId().toString()+"_temp";
+        String tempDirectoryName = fileResource.getId().toString() + "_temp";
         try {
-            fileService.renameDirectory(FileResource.STORE_DIRECTORY + fileResource.getId().toString(), FileResource.STORE_DIRECTORY + tempDirectoryName);
+            fileService.renameDirectory(
+                    FileResource.STORE_DIRECTORY + fileResource.getId().toString(),
+                    FileResource.STORE_DIRECTORY + tempDirectoryName);
             if (form.getFile() == null) {
-                if(fileResource.getResourceType() != ResourceType.LINK){
-                    fileService.deleteDirectory(FileResource.STORE_DIRECTORY+ fileResource.getId());
+                if (fileResource.getResourceType() != ResourceType.LINK) {
+                    fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
                 }
                 fileResource.setAsLinkResource(form.getUrl());
             } else {
@@ -126,16 +127,18 @@ public class FileResourceService {
                         form.getFile().getSize());
             }
             var resourceDtoDetailed = ResourceDtoDetailed.of(fileRepository.save(fileResource));
-            fileService.deleteDirectory(FileResource.STORE_DIRECTORY+tempDirectoryName);
+            fileService.deleteDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName);
             return resourceDtoDetailed;
-        } catch (IOException e){
-            try{
-                fileService.renameDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName, FileResource.STORE_DIRECTORY + fileResource.getId().toString());
-            } catch (IOException ex){
+        } catch (IOException e) {
+            try {
+                fileService.renameDirectory(
+                        FileResource.STORE_DIRECTORY + tempDirectoryName,
+                        FileResource.STORE_DIRECTORY + fileResource.getId().toString());
+            } catch (IOException ex) {
                 throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
             }
         }
-            return  ResourceDtoDetailed.of(fileRepository.save(fileResource));
+        return ResourceDtoDetailed.of(fileRepository.save(fileResource));
     }
 
     private org.springframework.data.domain.Page<FileResource> _getAll(
