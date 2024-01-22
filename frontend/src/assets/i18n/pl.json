@@ -94,6 +94,7 @@
   "ERRORS.RESOURCE.400.DESCRIPTION_TOO_LONG": "Opis nie może być dłuższy niż 255 znaków",
   "ERRORS.RESOURCE.400.FAILED_TO_DELETE_FILE": "Nie udało się usunąć pliku",
   "ERRORS.RESOURCE.400.FAILED_TO_STORE_FILE": "Nie udało się zapisać pliku",
+  "ERRORS.RESOURCE.400.FAILED_TO_UPDATE_FILE": "Nie udało się zmodyfikować pliku",
   "ERRORS.RESOURCE.400.FILE_IS_USED_IN_PAGE": "Nie można usunąć zasobu używanego na stronie",
   "ERRORS.RESOURCE.400.NAME_EMPTY": "Nazwa nie może być pusta",
   "ERRORS.RESOURCE.400.NAME_TOO_LONG": "Nazwa nie może być dłuższa niż 255 znaków",
