@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -108,6 +109,9 @@ public class FileResourceService {
         try {
             fileService.renameDirectory(FileResource.STORE_DIRECTORY + fileResource.getId().toString(), FileResource.STORE_DIRECTORY + tempDirectoryName);
             if (form.getFile() == null) {
+                if(fileResource.getResourceType() != ResourceType.LINK){
+                    fileService.deleteDirectory(FileResource.STORE_DIRECTORY+ fileResource.getId());
+                }
                 fileResource.setAsLinkResource(form.getUrl());
             } else {
                 var filename =
