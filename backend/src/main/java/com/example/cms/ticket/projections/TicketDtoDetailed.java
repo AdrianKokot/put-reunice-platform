@@ -71,11 +71,3 @@ public class TicketDtoDetailed {
         lastStatusChangeBy = null;
     }
 }
-
-@AllArgsConstructor
-class LastChangedBy {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-}
