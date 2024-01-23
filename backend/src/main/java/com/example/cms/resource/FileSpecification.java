@@ -3,6 +3,7 @@ package com.example.cms.resource;
 import static java.lang.Integer.parseInt;
 
 import com.example.cms.SearchCriteria;
+import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -33,8 +34,10 @@ public class FileSpecification implements Specification<FileResource> {
             }
 
             if (criteria.getKey().equalsIgnoreCase("university")) {
-                return criteriaBuilder.equal(
-                        root.get("author").get("enrolledUniversities").get("id"), criteria.getValue());
+                return root.join("author")
+                        .join("enrolledUniversities")
+                        .get("id")
+                        .in(Set.of(criteria.getValue()));
             }
 
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
@@ -44,8 +47,6 @@ public class FileSpecification implements Specification<FileResource> {
                         root.<String>get(criteria.getKey()), parseInt(criteria.getValue().toString()));
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
-            //            return this.searchPredicate(root, query, criteriaBuilder);
-
             var likeValue = "%" + criteria.getValue().toString().toLowerCase() + "%";
 
             return criteriaBuilder.or(

@@ -196,6 +196,7 @@
             shape="rounded"
             [tuiHint]="'EDIT' | translate"
             data-test="edit-button"
+            *ngIf="user.accountType !== accountType.USER"
           >
           </a>
         </td>

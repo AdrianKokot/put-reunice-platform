@@ -28,7 +28,7 @@ public class FileRoleSpecification implements Specification<FileResource> {
         }
 
         if (!this.role.equals(Role.ADMIN)) {
-            return root.get("author").get("enrolledUniversities").get("id").in(universities);
+            return root.join("author").join("enrolledUniversities").get("id").in(universities);
         }
 
         return criteriaBuilder.conjunction();

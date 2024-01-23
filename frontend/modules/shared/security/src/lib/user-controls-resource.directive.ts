@@ -11,9 +11,10 @@ import {
 import { AuthService } from './auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AccountTypeEnum,
   ExtendedAccountTypeEnum,
-  Resource,
   Page,
+  Resource,
   Template,
   University,
   User,
@@ -119,12 +120,15 @@ export class UserControlsResourceDirective<
 
     const universityIds = this.getUniversityIdFromResource(resource);
 
-    if (
-      user.accountType === ExtendedAccountTypeEnum.MODERATOR &&
-      user.enrolledUniversities.some((x) => universityIds.has(x.id))
-    ) {
+    if (user.enrolledUniversities.some((x) => universityIds.has(x.id))) {
+      if ('accountType' in resource) {
+        return user.accountType !== AccountTypeEnum.USER;
+      }
+
       return true;
     }
+
+    if ('resourceType' in resource) return true;
 
     return (
       user.accountType === ExtendedAccountTypeEnum.USER &&

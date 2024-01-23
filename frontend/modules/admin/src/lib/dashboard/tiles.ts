@@ -38,13 +38,13 @@ export const dashboardTiles: DashboardTile[] = [
     url: ['global-pages'],
     icon: 'tuiIconFile',
     description: 'GLOBAL_PAGES_CONTENT',
+    role: ExtendedAccountTypeEnum.ADMIN,
   },
   {
     title: 'USERS',
     url: ['users'],
     icon: 'tuiIconUsers',
     description: 'ACCOUNTS_AND_ROLES_MANAGEMENT',
-    role: ExtendedAccountTypeEnum.AUTHORIZED,
   },
   {
     title: 'BACKUPS',

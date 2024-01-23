@@ -54,6 +54,7 @@
         appearance="secondary"
         class="tui-form__button"
         data-test="edit-button"
+        *ngIf="user.accountType !== AccountTypeEnum.USER"
       >
         {{ 'EDIT' | translate }}
       </a>
