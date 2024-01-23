@@ -72,9 +72,7 @@ public class TicketDtoDetailed {
     }
 }
 
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
 class LastChangedBy {
     private Long id;
     private String firstName;
