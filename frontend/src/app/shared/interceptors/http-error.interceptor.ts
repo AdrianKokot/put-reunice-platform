@@ -20,6 +20,7 @@ import { TuiAlertService } from '@taiga-ui/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '@reunice/modules/shared/security';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -34,6 +35,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
     private readonly _router: Router,
     private readonly _injector: Injector,
+    private readonly _auth: AuthService,
     @Inject(TuiAlertService) readonly alert: TuiAlertService,
   ) {
     this._errorAlert$
@@ -72,7 +74,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
 
         if (error.status === 401) {
-          return from(this._router.navigate(['/auth/login'])).pipe(
+          return this._auth.logout().pipe(
+            switchMap(() => from(this._router.navigate(['/auth/login']))),
             switchMap(() => NEVER),
           );
         }
