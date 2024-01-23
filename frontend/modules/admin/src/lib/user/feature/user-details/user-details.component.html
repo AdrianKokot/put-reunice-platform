@@ -35,7 +35,7 @@
         [disabled]="item.id === user.id || item.enabled"
         [tuiHint]="
           (item.id === user.id
-            ? 'CANNOT_DEACTIVATE_OWN_ACCOUNT'
+            ? 'CANNOT_DELETE_OWN_ACCOUNT'
             : item.enabled
             ? 'CANNOT_DELETE_ENABLED_ACCOUNT'
             : ''
@@ -54,7 +54,7 @@
         appearance="secondary"
         class="tui-form__button"
         data-test="edit-button"
-        *ngIf="user.accountType !== AccountTypeEnum.USER"
+        *ngIf="user.accountType !== AccountTypeEnum.USER && user.id !== item.id"
       >
         {{ 'EDIT' | translate }}
       </a>

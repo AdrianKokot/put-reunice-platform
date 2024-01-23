@@ -7,7 +7,10 @@ import com.example.cms.SearchCriteria;
 import com.example.cms.SearchSpecification;
 import com.example.cms.security.Role;
 import java.util.Set;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecification extends SearchSpecification implements Specification<User> {
@@ -62,7 +65,12 @@ public class UserSpecification extends SearchSpecification implements Specificat
                         root.join("enrolledUniversities").get("id"), parseInt(criteria.getValue().toString()));
             }
         } else if (criteria.getOperation().equalsIgnoreCase("search")) {
-            return this.searchPredicate(root, query, criteriaBuilder);
+            return criteriaBuilder.or(
+                    this.searchPredicate(root, query, criteriaBuilder),
+                    criteriaBuilder.like(
+                            criteriaBuilder.lower(
+                                    criteriaBuilder.concat(root.get("firstName"), root.get("lastName"))),
+                            "%" + criteria.getValue().toString().toLowerCase().replace(' ', '%') + "%"));
         }
         return criteriaBuilder.disjunction();
     }
