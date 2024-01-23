@@ -17,6 +17,7 @@ import com.example.cms.user.exceptions.UserNotFoundException;
 import com.example.cms.user.projections.UserDtoDetailed;
 import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
+import com.example.cms.validation.exceptions.UnauthorizedException;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 import java.io.IOException;
 import java.time.Instant;
@@ -216,8 +217,16 @@ public class UserService {
         User user = validateUserAndForm(id, form);
         boolean mainDataNotChanged = mainDataNotChanged(user, form);
         String oldEmail = user.getEmail();
-        updateUserDetails(user, form);
-        handleUpdateAccountStatus(user, form);
+
+        if (securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId() == id) {
+            user.setEmail(form.getEmail());
+            user.setPhoneNumber(form.getPhoneNumber());
+            user.setFirstName(form.getFirstName());
+            user.setLastName(form.getLastName());
+        } else {
+            updateUserDetails(user, form);
+            handleUpdateAccountStatus(user, form);
+        }
 
         if (securityService.hasHigherOrEqualRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
             if (user.getAccountType() == Role.ADMIN
