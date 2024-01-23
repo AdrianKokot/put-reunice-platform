@@ -38,7 +38,7 @@ export const dashboardTiles: DashboardTile[] = [
     url: ['global-pages'],
     icon: 'tuiIconFile',
     description: 'GLOBAL_PAGES_CONTENT',
-    role: ExtendedAccountTypeEnum.ADMIN
+    role: ExtendedAccountTypeEnum.ADMIN,
   },
   {
     title: 'USERS',

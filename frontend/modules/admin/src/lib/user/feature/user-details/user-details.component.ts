@@ -3,7 +3,11 @@ import {
   DeleteResourceWrapper,
   resourceFromRoute,
 } from '@reunice/modules/shared/util';
-import { User, UserService } from '@reunice/modules/shared/data-access';
+import {
+  AccountTypeEnum,
+  User,
+  UserService,
+} from '@reunice/modules/shared/data-access';
 import { AuthService } from '@reunice/modules/shared/security';
 import {
   BaseDetailsImportsModule,
@@ -39,4 +43,5 @@ export class UserDetailsComponent {
   });
 
   activeTabIndex = 0;
+  protected readonly AccountTypeEnum = AccountTypeEnum;
 }
