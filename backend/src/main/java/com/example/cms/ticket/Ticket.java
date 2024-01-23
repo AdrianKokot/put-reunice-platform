@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Setter
@@ -47,6 +48,8 @@ public class Ticket {
 
     @Enumerated(EnumType.STRING)
     private TicketStatus status;
+
+    @Nullable private Long lastStatusChangeByUserId;
 
     private String title;
     private String description;
@@ -94,6 +97,10 @@ public class Ticket {
     public void addResponse(Response response) {
         response.setTicket(this);
         this.responses.add(response);
+    }
+
+    public Optional<Long> getLastStatusChangeByUserId() {
+        return Optional.ofNullable(this.lastStatusChangeByUserId);
     }
 
     @PrePersist

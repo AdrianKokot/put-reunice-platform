@@ -21,10 +21,7 @@ import com.example.cms.validation.exceptions.UnauthorizedException;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -51,6 +48,10 @@ public class UserService {
                 .findById(id)
                 .map(UserDtoDetailed::of)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    public Optional<User> getUserObjectOptional(Long id) {
+        return userRepository.findById(id);
     }
 
     public UserDtoDetailed getLoggedUser() {
