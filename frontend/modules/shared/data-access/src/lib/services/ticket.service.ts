@@ -40,7 +40,7 @@ export class TicketService extends AbstractApiService<
   }
 
   override getAll(
-    params: ApiParams<Ticket> & { unseen?: true } = {},
+    params: ApiParams<Omit<Ticket, 'lastSeenOn'>> & { handler?: true } = {},
   ): Observable<ApiPaginatedResponse<Ticket>> {
     return this._http
       .get<Ticket[]>(this._resourceUrl, {

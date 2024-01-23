@@ -6,7 +6,7 @@
     [(open)]="open"
   >
     <tui-badged-content
-      [contentTop]="tickets?.length"
+      [contentTop]="unseenTicketsCount$ | async"
       [rounded]="true"
       class="badge"
     >
@@ -16,9 +16,10 @@
 
   <ng-template #content>
     <div class="w-300 tui-space_top-4">
-      <div class="tui-text_h6 tui-space_horizontal-4">
+      <div class="tui-text_h6 tui-space_horizontal-4 tui-space_bottom-4">
         {{ 'NOTIFICATIONS' | translate }}
       </div>
+      <hr />
       <tui-data-list *ngIf="tickets !== null; else loading">
         <a
           *ngFor="let ticket of tickets"
@@ -26,14 +27,19 @@
           tuiElement
           [routerLink]="['tickets', ticket.id]"
           (click)="clickedNotifications$.next(ticket.id)"
+          class="break-words"
         >
           <div>
-            <div class="tui-space_bottom-1">
+            <div class="tui-space_bottom-1 d-flex gap-2">
               <tui-badge
-                *ngIf="ticket"
                 [status]="ticket | ticketToBadgeStatus"
                 [value]="'TICKET_STATUS_' + ticket.status | translate"
-              ></tui-badge>
+              />
+              <tui-badge
+                *ngIf="!ticket.isSeen"
+                [value]="'UNSEEN' | translate"
+                status="primary"
+              />
             </div>
             {{ ticket.title }}
           </div>

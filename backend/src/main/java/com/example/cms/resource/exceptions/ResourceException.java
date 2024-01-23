@@ -14,6 +14,8 @@ public class ResourceException extends BadRequestException {
                 return "ERRORS.RESOURCE.400.AUTHOR_NOT_VALID";
             case FAILED_TO_STORE_FILE:
                 return "ERRORS.RESOURCE.400.FAILED_TO_STORE_FILE";
+            case FAILED_TO_UPDATE_FILE:
+                return "ERRORS.RESOURCE.400.FAILED_TO_UPDATE_FILE";
             case FAILED_TO_DELETE_FILE:
                 return "ERRORS.RESOURCE.400.FAILED_TO_DELETE_FILE";
             case FILE_IS_USED_IN_PAGE:

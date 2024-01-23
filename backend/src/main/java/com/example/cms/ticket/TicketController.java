@@ -22,20 +22,20 @@ public class TicketController {
     private final ResponseRepository responseRepository;
 
     @GetMapping
-    public ResponseEntity<List<TicketDto>> getTickets(
+    public ResponseEntity<List<TicketDtoDetailed>> getTickets(
             Pageable pageable, @RequestParam Map<String, String> vars) {
 
         Page<Ticket> responsePage =
                 service.getTickets(
                         pageable,
                         FilterPathVariableValidator.validate(
-                                vars, Ticket.class, "unseen", "pageId", "universityId"));
+                                vars, Ticket.class, "handler", "pageId", "universityId"));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(responsePage.getTotalElements()));
 
         return new ResponseEntity<>(
-                responsePage.stream().map(TicketDto::of).collect(Collectors.toList()),
+                responsePage.stream().map(TicketDtoDetailed::of).collect(Collectors.toList()),
                 httpHeaders,
                 HttpStatus.OK);
     }
