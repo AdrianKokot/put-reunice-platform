@@ -20,7 +20,7 @@
 
     <div
       class="tui-form__buttons tui-form__buttons_align_end"
-      *ngIf="item !== null"
+      *ngIf="item !== null && user.accountType !== AccountTypeEnum.USER"
     >
       <button
         *reuniceUserControlsResource="item"
@@ -47,17 +47,18 @@
         {{ 'DELETE' | translate }}
       </button>
 
-      <a
+      <button
         [routerLink]="['edit']"
+        [disabled]="item.id === user.id"
+        [tuiHint]="(item.id === user.id ? 'CANNOT_EDIT_OWN_ACCOUNT' : '') | translate"
         tuiButton
         type="button"
         appearance="secondary"
         class="tui-form__button"
         data-test="edit-button"
-        *ngIf="user.accountType !== AccountTypeEnum.USER && user.id !== item.id"
       >
         {{ 'EDIT' | translate }}
-      </a>
+      </button>
     </div>
   </div>
 
