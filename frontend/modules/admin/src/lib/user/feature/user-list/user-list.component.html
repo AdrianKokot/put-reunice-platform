@@ -50,6 +50,7 @@
     tuiButton
     type="button"
     data-test="new-button"
+    *ngIf="user.accountType !== accountType.USER"
   >
     {{ 'NEW_USER' | translate }}
   </a>
@@ -196,7 +197,7 @@
             shape="rounded"
             [tuiHint]="'EDIT' | translate"
             data-test="edit-button"
-            *ngIf="user.accountType !== accountType.USER"
+            *ngIf="user.accountType !== accountType.USER && user.id !== item.id"
           >
           </a>
         </td>

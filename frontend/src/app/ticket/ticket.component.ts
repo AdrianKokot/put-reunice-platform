@@ -12,7 +12,11 @@ import {
   TuiIslandModule,
   TuiTextareaModule,
 } from '@taiga-ui/kit';
-import { TuiButtonModule, TuiGroupModule } from '@taiga-ui/core';
+import {
+  TuiAlertService,
+  TuiButtonModule,
+  TuiGroupModule,
+} from '@taiga-ui/core';
 import { resourceIdFromRoute } from '@reunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
 import {
@@ -26,17 +30,21 @@ import {
   TicketToBadgeStatusModule,
 } from '@reunice/modules/shared/ui';
 import {
+  catchError,
   combineLatest,
   filter,
   map,
   merge,
+  of,
   shareReplay,
   startWith,
   Subject,
   switchMap,
+  withLatestFrom,
 } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'reunice-ticket',
@@ -62,6 +70,21 @@ import { ActivatedRoute } from '@angular/router';
   providers: [tuiAvatarOptionsProvider({ autoColor: true })],
 })
 export class TicketComponent {
+  private readonly _alert = inject(TuiAlertService);
+  private readonly _translate = inject(TranslateService);
+
+  private readonly catchError = (err: unknown) => {
+    if (err instanceof HttpErrorResponse && err.status === 400) {
+      this._alert
+        .open(this._translate.instant(err.error.message), {
+          status: 'error',
+        })
+        .subscribe();
+    }
+
+    return of([]);
+  };
+
   private readonly _id$ = resourceIdFromRoute();
   private readonly _service = inject(TicketService);
   readonly token = inject(ActivatedRoute).snapshot.queryParams['token'];
@@ -71,59 +94,64 @@ export class TicketComponent {
     TicketResponse['content']
   >();
 
-  readonly _changeStatus$ = combineLatest([
-    this._id$,
-    this._changeStatusRequest$,
-  ]).pipe(
-    switchMap(([id, status]) =>
+  readonly _changeStatus$ = this._changeStatusRequest$.pipe(
+    withLatestFrom(this._id$),
+    switchMap(([status, id]) =>
       this._service.changeStatus(id, status).pipe(
-        map(() => 'up-to-date'),
+        catchError((e) => this.catchError(e)),
         startWith(null),
       ),
     ),
-    shareReplay(),
+    shareReplay(1),
   );
 
-  readonly _sendResponse$ = combineLatest([
-    this._id$,
-    this._sendResponseRequest$,
-  ]).pipe(
-    switchMap(([id, content]) =>
+  readonly _sendResponse$ = this._sendResponseRequest$.pipe(
+    withLatestFrom(this._id$),
+    switchMap(([content, id]) =>
       this._service.sendResponse(id, content, this.token).pipe(
-        map(() => 'up-to-date'),
+        catchError((e) => this.catchError(e)),
         startWith(null),
       ),
     ),
-    shareReplay(),
+    shareReplay(1),
   );
 
-  ticket$ = merge(this._id$, this._changeStatus$, this._sendResponse$).pipe(
+  readonly ticket$ = merge(
+    this._id$,
+    this._changeStatus$,
+    this._sendResponse$,
+  ).pipe(
     switchMap(() => this._id$),
     switchMap((id) => this._service.get(id, this.token).pipe(startWith(null))),
-    shareReplay(),
+    shareReplay(1),
   );
-  ticketKeepPrevious$ = this.ticket$.pipe(filter((data) => Boolean(data)));
-
-  responses$ = merge(this._id$, this._sendResponse$).pipe(
-    switchMap(() => this._id$),
-    switchMap((id) =>
-      this._service.getResponses(id, this.token).pipe(startWith(null)),
-    ),
-    shareReplay(),
-  );
-  responsesKeepPrevious$ = this.responses$.pipe(
+  readonly ticketKeepPrevious$ = this.ticket$.pipe(
     filter((data) => Boolean(data)),
   );
 
-  loading$ = combineLatest([
+  readonly responses$ = merge(this._id$, this._sendResponse$).pipe(
+    switchMap(() => this._id$),
+    switchMap((id) =>
+      this._service.getResponses(id, this.token).pipe(
+        catchError((e) => this.catchError(e)),
+        startWith(null),
+      ),
+    ),
+    shareReplay(1),
+  );
+  readonly responsesKeepPrevious$ = this.responses$.pipe(
+    filter((data) => Boolean(data)),
+  );
+
+  readonly loading$ = combineLatest([
     this.ticket$,
-    this._changeStatus$.pipe(startWith('up-to-date')),
+    this._changeStatus$.pipe(startWith(false)),
     this.responses$,
-    this._sendResponse$.pipe(startWith('up-to-date')),
+    this._sendResponse$.pipe(startWith(false)),
   ]).pipe(
-    map((requests) => requests.some((request) => !request)),
+    map((requests) => requests.some((r) => r === null)),
     startWith(false),
-    shareReplay(),
+    shareReplay(1),
   );
 
   readonly responseForm = inject(FormBuilder).nonNullable.group({

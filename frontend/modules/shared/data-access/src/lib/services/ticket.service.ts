@@ -68,20 +68,14 @@ export class TicketService extends AbstractApiService<
     id: Ticket['id'],
     content: TicketResponse['content'],
     token?: Token,
-  ): Observable<TicketResponse[]> {
-    return this._http.post<TicketResponse[]>(
-      `${this._resourceUrl}/${id}/responses`,
-      { content },
-      { params: toHttpParams({ token }) },
-    );
-  }
-
-  markAsIrrelevant(id: Ticket['id']) {
-    return this.changeStatus(id, 'IRRELEVANT');
-  }
-
-  markAsDeleted(id: Ticket['id']) {
-    return this.changeStatus(id, 'DELETED');
+  ): Observable<boolean> {
+    return this._http
+      .post(
+        `${this._resourceUrl}/${id}/responses`,
+        { content },
+        { params: toHttpParams({ token }), observe: 'response' },
+      )
+      .pipe(map(({ status }) => status >= 200 && status < 300));
   }
 
   changeStatus(id: string, status: Ticket['status']) {
