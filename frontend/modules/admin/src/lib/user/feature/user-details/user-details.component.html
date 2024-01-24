@@ -50,7 +50,9 @@
       <button
         [routerLink]="['edit']"
         [disabled]="item.id === user.id"
-        [tuiHint]="(item.id === user.id ? 'CANNOT_EDIT_OWN_ACCOUNT' : '') | translate"
+        [tuiHint]="
+          (item.id === user.id ? 'CANNOT_EDIT_OWN_ACCOUNT' : '') | translate
+        "
         tuiButton
         type="button"
         appearance="secondary"
