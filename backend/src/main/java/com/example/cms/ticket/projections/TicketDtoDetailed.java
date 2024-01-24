@@ -3,6 +3,7 @@ package com.example.cms.ticket.projections;
 import com.example.cms.ticket.Ticket;
 import com.example.cms.ticket.TicketStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
+import com.example.cms.user.User;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -27,12 +28,28 @@ public class TicketDtoDetailed {
     private String pageTitle;
     private String universityName;
     private Instant lastUpdateTime;
+    private LastChangedBy lastStatusChangeBy;
 
     public static TicketDtoDetailed of(Ticket ticket) {
         if (ticket == null) {
             return null;
         }
         return new TicketDtoDetailed(ticket);
+    }
+
+    public static TicketDtoDetailed of(Ticket ticket, Optional<User> lastStatusChangedBy) {
+        if (ticket == null) {
+            return null;
+        }
+        TicketDtoDetailed dto = new TicketDtoDetailed(ticket);
+
+        if (lastStatusChangedBy.isPresent()) {
+            User user = lastStatusChangedBy.get();
+            dto.lastStatusChangeBy =
+                    new LastChangedBy(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
+        }
+
+        return dto;
     }
 
     private TicketDtoDetailed(Ticket ticket) {
@@ -51,5 +68,6 @@ public class TicketDtoDetailed {
         pageTitle = ticket.getPage().getTitle();
         universityName = ticket.getPage().getUniversity().getName();
         lastUpdateTime = ticket.getLastUpdateTime();
+        lastStatusChangeBy = null;
     }
 }
