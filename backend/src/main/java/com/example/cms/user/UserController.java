@@ -61,10 +61,14 @@ public class UserController {
         return service.updateUser(id, form);
     }
 
-    @PatchMapping("/{id}")
-    ResponseEntity<Void> modifyUserPasswordField(
-            @PathVariable long id, @RequestBody Map<String, String> passwordMap) {
-        service.modifyPasswordField(id, passwordMap);
+    @PutMapping()
+    UserDtoDetailed updateProfile(@RequestBody UserDtoFormUpdate form) {
+        return service.updateProfile(form);
+    }
+
+    @PatchMapping()
+    ResponseEntity<Void> modifyUserPasswordField(@RequestBody Map<String, String> passwordMap) {
+        service.changeProfilePassword(passwordMap);
         return ResponseEntity.noContent().build();
     }
 

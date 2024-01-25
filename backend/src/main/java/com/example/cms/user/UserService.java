@@ -219,15 +219,8 @@ public class UserService {
         boolean mainDataNotChanged = mainDataNotChanged(user, form);
         String oldEmail = user.getEmail();
 
-        if (securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId() == id) {
-            user.setEmail(form.getEmail());
-            user.setPhoneNumber(form.getPhoneNumber());
-            user.setFirstName(form.getFirstName());
-            user.setLastName(form.getLastName());
-        } else {
-            updateUserDetails(user, form);
-            handleUpdateAccountStatus(user, form);
-        }
+        updateUserDetails(user, form);
+        handleUpdateAccountStatus(user, form);
 
         if (securityService.hasHigherOrEqualRoleThan(Role.MODERATOR) && !form.getPassword().isEmpty()) {
             if (user.getAccountType() == Role.ADMIN
@@ -325,5 +318,26 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         user.setLastLoginDate(Instant.now());
         userRepository.save(user);
+    }
+
+    @Secured("ROLE_USER")
+    public UserDtoDetailed updateProfile(UserDtoFormUpdate form) {
+        User user =
+                validateUserAndForm(
+                        securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId(), form);
+
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setEmail(form.getEmail());
+        user.setPhoneNumber(form.getPhoneNumber());
+
+        return UserDtoDetailed.of(userRepository.save(user));
+    }
+
+    @Secured("ROLE_USER")
+    public void changeProfilePassword(Map<String, String> passwordMap) {
+        this.modifyPasswordField(
+                securityService.getPrincipal().orElseThrow(UnauthorizedException::new).getId(),
+                passwordMap);
     }
 }
