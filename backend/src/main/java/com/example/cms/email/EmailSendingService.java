@@ -19,6 +19,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -27,14 +28,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-public class EmailSendingService {
-    @Autowired private ApplicationConfigurationProvider applicationConfigurationProvider;
-    @Autowired private JavaMailSender javaMailSender;
+@Profile("!test")
+public class EmailSendingService implements EmailSending {
+    private final ApplicationConfigurationProvider applicationConfigurationProvider;
+    private final JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
     private Map<String, String> emailTitles;
 
-    private String getEmailTitle(String templateName) {
+    public EmailSendingService(
+            @Autowired ApplicationConfigurationProvider applicationConfigurationProvider,
+            @Autowired JavaMailSender javaMailSender) {
+        this.applicationConfigurationProvider = applicationConfigurationProvider;
+        this.javaMailSender = javaMailSender;
         loadEmailTitles();
+    }
+
+    private String getEmailTitle(String templateName) {
         String title = emailTitles.get(templateName);
         if (title == null) {
             return "Information about Eunice Platform";
@@ -43,41 +52,21 @@ public class EmailSendingService {
         }
     }
 
-    public enum EmailTemplate {
-        NEW_USER_ACCOUNT("NewUserAccount"),
-        EDIT_USER_ACCOUNT("EditUserAccount"),
-        EDIT_USER_ACCOUNT_WITH_PASSWORD("EditUserAccountWithPwd"),
-        CHANGE_TICKET_STATUS("ChangeTicketStatus"),
-        CHANGE_TICKET_STATUS_CRH("ChangeTicketStatusCRH"),
-        DELETE_USER_ACCOUNT("DeleteUserAccount"),
-        DISABLE_USER_ACCOUNT("DisableUserAccount"),
-        NEW_RESPONSE_TICKET("NewResponseTicket"),
-        NEW_TICKET("NewTicket"),
-        ENABLE_USER_ACCOUNT("EnableUserAccount");
-        private final String templateName;
-
-        EmailTemplate(String templateName) {
-            this.templateName = templateName;
-        }
-    }
-
-    public EmailSendingService(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
-
     @Value("${spring.mail.username}")
     private String sender;
 
     @Async
+    @Override
     public void sendEmail(String receiver, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(sender);
         message.setTo(receiver);
         message.setSubject(subject);
         message.setText(body);
-        javaMailSender.send(message);
+        this.javaMailSender.send(message);
     }
 
+    @Override
     public String editContent(String content) {
         if (content == null || contentMap == null) {
             throw new IllegalArgumentException("Content and editMap cannot be null");
@@ -119,7 +108,8 @@ public class EmailSendingService {
     }
 
     @Async
-    public void sendConfirmNewAccountEmail(User receiver, String password) throws IOException {
+    @Override
+    public void sendConfirmNewAccountEmail(User receiver, String password) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -142,6 +132,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendEditUserAccountMail(
             String oldEmail, User receiver, String adminUsername, String adminEmail) {
         try {
@@ -169,6 +160,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendEditUserAccountMail(
             String oldEmail, User receiver, String adminUsername, String adminEmail, String password) {
         try {
@@ -198,6 +190,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendChangeTicketStatusEmail(Ticket ticket) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -225,6 +218,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendChangeTicketStatusForCHREmail(Ticket ticket, String author) {
         for (TicketUserStatus ticketUser : ticket.getTicketHandlers()) {
             try {
@@ -253,6 +247,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendDeleteAccountEmail(
             User receiver, String administratorUsername, String administratorEmail) {
         try {
@@ -277,6 +272,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendDisableAccountEmail(
             User receiver, String administratorUsername, String administratorEmail) {
         try {
@@ -301,6 +297,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendEnableAccountEmail(
             User receiver, String administratorUsername, String administratorEmail) {
         try {
@@ -325,6 +322,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendNewResponseInTicketEmail(Ticket ticket, String author, String content) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -351,6 +349,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendNewResponseInTicketEmail(
             Ticket ticket, String author, String content, Set<TicketUserStatus> ticketUserStatus) {
         for (TicketUserStatus ticketUser : ticketUserStatus) {
@@ -379,6 +378,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendNewRequestEmail(Ticket ticket, String author, String content) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -404,6 +404,7 @@ public class EmailSendingService {
     }
 
     @Async
+    @Override
     public void sendNewRequestEmailCRH(
             Ticket ticket, String author, String content, Set<TicketUserStatus> ticketUserStatus) {
         for (TicketUserStatus ticketUser : ticketUserStatus) {

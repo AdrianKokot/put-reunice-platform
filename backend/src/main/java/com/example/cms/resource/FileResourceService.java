@@ -103,13 +103,30 @@ public class FileResourceService {
     @Secured("ROLE_USER")
     @Transactional
     public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
+        var principal = securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
+
+        if (!principal.getId().equals(form.getAuthorId())
+                && !securityService.hasHigherRoleThan(Role.USER)) {
+            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
+        }
+
+        User author =
+                userRepository
+                        .findById(form.getAuthorId())
+                        .orElseThrow(() -> new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
+
         var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+
+        fileResource.setName(form.getName());
+        fileResource.setDescription(form.getDescription());
+        fileResource.setAuthor(author);
+
         String tempDirectoryName = fileResource.getId().toString() + "_temp";
         try {
             fileService.renameDirectory(
                     FileResource.STORE_DIRECTORY + fileResource.getId().toString(),
                     FileResource.STORE_DIRECTORY + tempDirectoryName);
-            if (form.getFile() == null) {
+            if (form.getUrl() != null && !form.getUrl().isEmpty()) {
                 if (fileResource.getResourceType() != ResourceType.LINK) {
                     fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
                 }
@@ -126,9 +143,7 @@ public class FileResourceService {
                         Objects.requireNonNull(form.getFile().getContentType()),
                         form.getFile().getSize());
             }
-            var resourceDtoDetailed = ResourceDtoDetailed.of(fileRepository.save(fileResource));
             fileService.deleteDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName);
-            return resourceDtoDetailed;
         } catch (IOException e) {
             try {
                 fileService.renameDirectory(
@@ -138,6 +153,7 @@ public class FileResourceService {
                 throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
             }
         }
+
         return ResourceDtoDetailed.of(fileRepository.save(fileResource));
     }
 

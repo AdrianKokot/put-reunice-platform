@@ -19,14 +19,19 @@ import {
 import { uc1 } from './use-cases/uc-1';
 import {
   ucuu1,
+  ucuu10,
+  ucuu11,
   ucuu12,
   ucuu2,
   ucuu3,
   ucuu4,
   ucuu5,
+  ucuu6,
   ucuu7,
+  ucuu8,
+  ucuu9,
 } from './use-cases/university-user';
-import { ucan1, ucan2, ucan3 } from './use-cases/anonymous-user';
+import { ucan1, ucan2, ucan3, ucan4, ucan5 } from './use-cases/anonymous-user';
 
 const testTimestamp = Date.now().toString();
 
@@ -66,6 +71,10 @@ describe('Use Cases', () => {
       );
     });
 
+    ucuu8();
+    ucuu9(testTimestamp);
+    ucuu10(testTimestamp);
+    ucuu11(testTimestamp);
     ucuu1(testTimestamp);
     ucuu2();
     ucuu3(testTimestamp);
@@ -83,15 +92,20 @@ describe('Use Cases', () => {
     ucan1();
     ucan2();
     ucan3(testTimestamp);
+    ucan4(testTimestamp);
+    ucan5(testTimestamp);
   });
 
-  describe('5. Contact request handler', () => {
+  describe('5. University User', () => {
     rememberLogin(() => {
       loginWith(
         `edited_ua_user${testTimestamp}`,
         UserPage.defaultFormValue.password,
       );
     });
+
+    ucuu4(testTimestamp);
+    ucuu6(testTimestamp);
   });
 
   describe('6. University Administrator', () => {

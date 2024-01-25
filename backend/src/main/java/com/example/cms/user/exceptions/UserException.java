@@ -28,6 +28,8 @@ public class UserException extends BadRequestException {
                 return "ERRORS.USER.400.USER_ENABLED";
             case EMAIL_TAKEN:
                 return "ERRORS.USER.400.EMAIL_TAKEN";
+            case RESOURCES_EXISTS:
+                return "ERRORS.USER.400.RESOURCES_EXISTS";
             default:
                 return "ERRORS.400";
         }

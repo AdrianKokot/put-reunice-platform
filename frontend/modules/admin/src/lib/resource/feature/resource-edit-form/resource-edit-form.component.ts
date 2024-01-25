@@ -94,6 +94,8 @@ export class ResourceEditFormComponent {
         ),
       ]);
     }
+
+    this.userSearch.addItem(item.author);
   });
 
   readonly userSearch = new ResourceSearchWrapper(

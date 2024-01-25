@@ -12,6 +12,7 @@ import com.example.cms.search.projections.PageSearchHitDto;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
+import com.example.cms.ticket.TicketRepository;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
 import com.example.cms.user.User;
@@ -38,6 +39,7 @@ public class PageService {
     private final UserRepository userRepository;
     private final SecurityService securityService;
     private final FileResourceRepository fileResourceRepository;
+    private final TicketRepository ticketRepository;
 
     @Transactional
     public PageDtoDetailed get(Long id) {
@@ -275,6 +277,8 @@ public class PageService {
         if (deleteStaleResources) {
             fileResourceRepository.deleteAll(pageRepository.findResourcesReferencedOnlyByPage(id));
         }
+
+        ticketRepository.deleteAllByPageId(id);
 
         delete(page);
     }

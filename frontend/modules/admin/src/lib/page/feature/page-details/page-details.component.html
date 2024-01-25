@@ -1,24 +1,16 @@
 <ng-container *tuiLet="item$ | async as item">
   <tui-tabs [(activeItemIndex)]="activeTabIndex" class="tui-space_bottom-4">
-    <button tuiTab>
+    <button tuiTab data-test="details-tab">
       {{ 'PAGE_DETAILS_TAB' | translate }}
     </button>
-    <button tuiTab>
+    <button tuiTab data-test="content-tab">
       {{ 'PAGE_CONTENT_TAB' | translate }}
     </button>
-    <button tuiTab>
-      <span [class.tui-skeleton]="item === null">
-        {{ 'PAGE_RESOURCES_TAB' | translate }}
-      </span>
+    <button tuiTab data-test="resources-tab">
+      {{ 'PAGE_RESOURCES_TAB' | translate }}
     </button>
-    <button
-      data-test="responsibility-tab"
-      tuiTab
-      *ngIf="item === null || item.contactRequestHandlers.length > 0"
-    >
-      <span [class.tui-skeleton]="item === null">
-        {{ 'PAGE_RESPONSIBILITY_TAB' | translate }}
-      </span>
+    <button data-test="responsibility-tab" tuiTab>
+      {{ 'PAGE_RESPONSIBILITY_TAB' | translate }}
     </button>
   </tui-tabs>
 
