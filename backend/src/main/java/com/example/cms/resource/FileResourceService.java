@@ -126,7 +126,7 @@ public class FileResourceService {
             fileService.renameDirectory(
                     FileResource.STORE_DIRECTORY + fileResource.getId().toString(),
                     FileResource.STORE_DIRECTORY + tempDirectoryName);
-            if (form.getUrl() != null) {
+            if (form.getUrl() != null && !form.getUrl().isEmpty()) {
                 if (fileResource.getResourceType() != ResourceType.LINK) {
                     fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
                 }
