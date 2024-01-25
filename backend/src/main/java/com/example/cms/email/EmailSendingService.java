@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
@@ -29,13 +30,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 @Profile("!test")
 public class EmailSendingService implements EmailSending {
-    private ApplicationConfigurationProvider applicationConfigurationProvider;
-    private JavaMailSender javaMailSender;
+    private final ApplicationConfigurationProvider applicationConfigurationProvider;
+    private final JavaMailSender javaMailSender;
     private Map<String, String> contentMap = new HashMap<>();
     private Map<String, String> emailTitles;
 
-    private String getEmailTitle(String templateName) {
+    public EmailSendingService(
+            @Autowired ApplicationConfigurationProvider applicationConfigurationProvider,
+            @Autowired JavaMailSender javaMailSender) {
+        this.applicationConfigurationProvider = applicationConfigurationProvider;
+        this.javaMailSender = javaMailSender;
         loadEmailTitles();
+    }
+
+    private String getEmailTitle(String templateName) {
         String title = emailTitles.get(templateName);
         if (title == null) {
             return "Information about Eunice Platform";
