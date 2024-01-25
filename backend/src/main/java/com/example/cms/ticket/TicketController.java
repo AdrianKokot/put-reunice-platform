@@ -1,6 +1,8 @@
 package com.example.cms.ticket;
 
 import com.example.cms.ticket.projections.*;
+import com.example.cms.user.User;
+import com.example.cms.user.UserService;
 import com.example.cms.validation.FilterPathVariableValidator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class TicketController {
     private final TicketService service;
     private final ResponseRepository responseRepository;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<TicketDtoDetailed>> getTickets(
@@ -57,7 +60,12 @@ public class TicketController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("X-Whole-Content-Length", String.valueOf(1));
 
-        return new ResponseEntity<>(TicketDtoDetailed.of(ticket), httpHeaders, HttpStatus.OK);
+        Optional<User> userOptional = Optional.empty();
+        if (ticket.getLastStatusChangeByUserId().isPresent())
+            userOptional = userService.getUserObjectOptional(ticket.getLastStatusChangeByUserId().get());
+
+        return new ResponseEntity<>(
+                TicketDtoDetailed.of(ticket, userOptional), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/{ticketId}/responses")

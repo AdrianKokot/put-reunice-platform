@@ -15,6 +15,8 @@ import com.example.cms.ticket.projections.TicketDtoFormCreate;
 import com.example.cms.ticketUserStatus.TicketUserStatus;
 import com.example.cms.ticketUserStatus.TicketUserStatusRepository;
 import com.example.cms.ticketUserStatus.exceptions.InvalidStatusChangeException;
+import com.example.cms.user.User;
+import com.example.cms.user.UserService;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class TicketService {
     private final PageRepository pageRepository;
     private final SecurityService securityService;
     private final EmailSendingService emailSendingService;
+    private final UserService userService;
     private final TicketUserStatusRepository ticketUserStatusRepository;
 
     private Optional<TicketUserStatus> getIfLoggedUserIsHandler(Ticket ticket) {
@@ -191,6 +194,7 @@ public class TicketService {
             throw new TicketAccessForbiddenException();
         }
         ticket.setStatus(ticket.getStatus().transition(statusToChangeTo));
+        ticket.setLastStatusChangeByUserId(securityService.getPrincipal().get().getId());
 
         if (ticket.getStatus() != TicketStatus.DELETED) {
             emailSendingService.sendChangeTicketStatusEmail(ticket);
@@ -200,6 +204,10 @@ public class TicketService {
                             emailSendingService.sendChangeTicketStatusForCHREmail(
                                     ticket, ticketUserStatus.getUser().getEmail()));
 
-        return TicketDtoDetailed.of(ticketRepository.save(ticket));
+        Optional<User> userOptional = Optional.empty();
+        if (ticket.getLastStatusChangeByUserId().isPresent())
+            userOptional = userService.getUserObjectOptional(ticket.getLastStatusChangeByUserId().get());
+
+        return TicketDtoDetailed.of(ticketRepository.save(ticket), userOptional);
     }
 }

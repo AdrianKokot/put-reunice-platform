@@ -1,4 +1,6 @@
-# REUNICE Platform
+# EUNICE Platform
+
+This project is based on CMS prototype, the difference between the prototype and current state is available as [git diff](https://github.com/AdrianKokot/put-reunice-platform/compare/v1.0.0-cms-prototype...main)
 
 ## Code formatting
 

@@ -1,6 +1,9 @@
 <ng-container *tuiLet="ticketKeepPrevious$ | async as ticket">
-  <h3 class="tui-text_h3 tui-space_top-4 tui-space_bottom-2">
-    {{ ticket?.title }}
+  <h3
+    class="tui-text_h3 tui-space_top-12 tui-space_bottom-2"
+    [class.tui-skeleton]="ticket === null"
+  >
+    {{ ticket?.title ?? '-' }}
     <tui-badge
       *ngIf="ticket"
       [status]="ticket | ticketToBadgeStatus"
@@ -8,7 +11,7 @@
     ></tui-badge>
   </h3>
 
-  <p class="text-02">
+  <p class="text-02" [class.tui-skeleton]="ticket === null">
     {{
       'TICKET_ID'
         | translate
@@ -22,10 +25,11 @@
 
   <div class="d-flex gap-4 tui-space_top-4">
     <tui-avatar
-      [text]="ticket?.requesterEmail || ''"
+      [class.tui-skeleton]="ticket === null"
+      [text]="ticket?.requesterEmail ?? '-'"
       class="tui-space_top-1"
     ></tui-avatar>
-    <tui-island class="w-full">
+    <tui-island class="w-full" [class.tui-skeleton]="ticket === null">
       <div class="tui-text_body-s message-info">
         {{ ticket?.requesterEmail }}
         -
@@ -44,27 +48,41 @@
         ></tui-avatar>
         <tui-island class="w-full">
           <div class="tui-text_body-s message-info">
-            {{ message?.author }}
+            {{ message?.author ?? '-' }}
             -
             {{ message?.responseTime | localizedDate }}
           </div>
-          {{ message?.content }}
+          <div>
+            {{ message?.content ?? '-' }}
+          </div>
         </tui-island>
       </div>
     </ng-container>
   </ng-container>
 
-  <form class="tui-space_top-4 tui-space_bottom-4" [formGroup]="responseForm">
+  <form
+    class="tui-space_top-4 tui-space_bottom-4"
+    [formGroup]="responseForm"
+    *tuiLet="(loading$ | async) ?? false as loading"
+  >
     <tui-textarea
       formControlName="content"
       [expandable]="true"
       [pseudoInvalid]="false"
-      *ngIf="ticket?.status === 'NEW' || ticket?.status === 'HANDLED'"
+      [class.tui-skeleton]="ticket === null"
+      *ngIf="
+        ticket === null ||
+        ticket?.status === 'NEW' ||
+        ticket?.status === 'HANDLED'
+      "
     >
       {{ 'TICKET_LEAVE_REPLY' | translate }}
     </tui-textarea>
 
-    <div class="tui-form__buttons tui-form__buttons_align_end gap-4">
+    <div
+      class="tui-form__buttons tui-form__buttons_align_end gap-4"
+      [class.tui-skeleton]="ticket === null"
+    >
       <button
         *ngIf="
           !token && (ticket?.status === 'NEW' || ticket?.status === 'HANDLED')
@@ -73,7 +91,7 @@
         type="button"
         appearance="secondary-destructive"
         (click)="changeStatus('IRRELEVANT')"
-        [showLoader]="!!(loading$ | async)"
+        [showLoader]="loading"
       >
         {{ 'TICKET_MARK_IRRELEVANT' | translate }}
       </button>
@@ -83,14 +101,18 @@
         type="button"
         appearance="secondary-destructive"
         (click)="changeStatus('DELETED')"
-        [showLoader]="!!(loading$ | async)"
+        [showLoader]="loading"
       >
         {{ 'TICKET_MARK_DELETED' | translate }}
       </button>
       <div
         class="group"
         tuiGroup
-        *ngIf="ticket?.status === 'NEW' || ticket?.status === 'HANDLED'"
+        *ngIf="
+          ticket === null ||
+          ticket?.status === 'NEW' ||
+          ticket?.status === 'HANDLED'
+        "
       >
         <button
           tuiButton
@@ -98,7 +120,7 @@
           appearance="secondary"
           [disabled]="responseForm.invalid"
           (click)="sendResponse()"
-          [showLoader]="!!(loading$ | async)"
+          [showLoader]="loading"
         >
           {{ 'TICKET_REPLY' | translate }}
         </button>
@@ -107,7 +129,7 @@
           tuiButton
           type="submit"
           (click)="changeStatus('RESOLVED')"
-          [showLoader]="!!(loading$ | async)"
+          [showLoader]="loading"
         >
           {{ 'TICKET_RESOLVE' | translate }}
         </button>

@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023 Miłosz Chrzempiec, Bartosz Dolata, Adrian Kokot, Wiktor Szymański
+Copyright (c) 2024 Miłosz Chrzempiec, Bartosz Dolata, Adrian Kokot, Wiktor Szymański
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-This project is based on CMS Prototype, which is licensed under the MIT License.
-The changes between this project and the original CMS Prototype are available as [git diff](https://github.com/AdrianKokot/put-reunice-platform/compare/v1.0.0-cms-prototype...main)
