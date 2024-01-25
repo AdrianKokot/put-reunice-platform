@@ -46,7 +46,11 @@ public class CustomApplicationConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/static/**")
-                .addResourceLocations("file:" + this.config.getUploadsDirectory() + "/");
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+                .addResourceLocations("file:" + this.config.getUploadsDirectory() + "/")
+                .setCachePeriod(86400);
+        registry
+                .addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(86400);
     }
 }
