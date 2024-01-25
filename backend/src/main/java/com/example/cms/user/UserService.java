@@ -1,8 +1,9 @@
 package com.example.cms.user;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.email.EmailSendingService;
+import com.example.cms.email.EmailSending;
 import com.example.cms.page.PageRepository;
+import com.example.cms.resource.FileResourceRepository;
 import com.example.cms.security.LoggedUser;
 import com.example.cms.security.Role;
 import com.example.cms.security.SecurityService;
@@ -19,7 +20,6 @@ import com.example.cms.user.projections.UserDtoFormCreate;
 import com.example.cms.user.projections.UserDtoFormUpdate;
 import com.example.cms.validation.exceptions.UnauthorizedException;
 import com.example.cms.validation.exceptions.WrongDataStructureException;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -41,7 +41,8 @@ public class UserService {
     private final PageRepository pageRepository;
     private final PasswordEncoder passwordEncoder;
     private final SecurityService securityService;
-    private final EmailSendingService emailService;
+    private final EmailSending emailService;
+    private final FileResourceRepository fileResourceRepository;
 
     public UserDtoDetailed getUser(Long id) {
         return userRepository
@@ -133,11 +134,9 @@ public class UserService {
                 throw new UserForbiddenException();
             }
         }
-        try {
-            emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        emailService.sendConfirmNewAccountEmail(newUser, form.getPassword());
+
         return UserDtoDetailed.of(userRepository.save(newUser));
     }
 
@@ -307,6 +306,10 @@ public class UserService {
     private void validateForDelete(User user) {
         if (pageRepository.existsByCreator(user)) {
             throw new UserException(UserExceptionType.PAGES_EXISTS);
+        }
+
+        if (fileResourceRepository.existsByAuthor(user)) {
+            throw new UserException(UserExceptionType.RESOURCES_EXISTS);
         }
 
         if (user.isEnabled()) {

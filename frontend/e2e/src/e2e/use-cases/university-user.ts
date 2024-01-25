@@ -6,6 +6,7 @@ import {
   goToTile,
   PagePage,
   Resource,
+  ResourcePage,
   TILES,
   UserPage,
   waitForResponse,
@@ -59,6 +60,7 @@ export const ucuu3 = (testTimestamp: string) => {
     });
 
     PagePage.setVisibility('visible');
+    PagePage.selectResource(testTimestamp);
 
     Form.submit();
     Dialog.confirm();
@@ -97,6 +99,7 @@ export const ucuu4 = (testTimestamp: string) => {
     cy.get('label .t-content').should('contain.text', 'Hidden');
   });
 };
+
 export const ucuu5 = (testTimestamp: string) => {
   it('UC-UU5. Show page', () => {
     cy.intercept('PUT', '/api/pages/*').as('editPage');
@@ -119,6 +122,28 @@ export const ucuu5 = (testTimestamp: string) => {
     cy.get('label .t-content').should('contain.text', 'Visible');
   });
 };
+
+export const ucuu6 = (testTimestamp: string) => {
+  it('UC-UU6. Delete page', () => {
+    cy.intercept('GET', '/api/pages/*').as('getPage');
+    cy.intercept('DELETE', '/api/pages/*').as('deletePage');
+
+    goToTile(TILES.Pages);
+    Resource.search(`${testTimestamp} University User`);
+    Resource.details();
+    Resource.delete();
+    Dialog.confirm();
+    //
+    // // Second confirm for deleting resources too
+    // // eslint-disable-next-line cypress/no-unnecessary-waiting
+    // cy.wait(300);
+    // Dialog.confirm();
+
+    waitForResponse('@deletePage', 204);
+    cy.url().should('match', /pages/);
+  });
+};
+
 export const ucuu7 = (testTimestamp: string) => {
   it('UC-UU7. Bind contact persons', () => {
     cy.intercept('PUT', '/api/pages/*').as('editPage');
@@ -144,6 +169,120 @@ export const ucuu7 = (testTimestamp: string) => {
       'contain.text',
       `ua_user${testTimestamp}@reunice.com`,
     );
+  });
+};
+
+export const ucuu8 = () => {
+  it('UC-UU8. View resources list', () => {
+    cy.intercept('GET', '/api/resources*').as('getResources');
+
+    goToTile(TILES.Resources);
+
+    waitForResponse('@getResources', 200);
+  });
+};
+
+export const ucuu9 = (testTimestamp: string) => {
+  it('UC-UU9. Upload resource', () => {
+    goToTile(TILES.Resources);
+    cy.intercept('POST', '/api/resources').as('createResource');
+    cy.intercept('GET', '/api/resources/*').as('getResource');
+
+    Resource.new();
+
+    ResourcePage.fillForm({
+      name: `Test ${testTimestamp} Resource`,
+      description: `Test ${testTimestamp} Resource Description`,
+    });
+
+    ResourcePage.setFile();
+
+    Form.submit();
+    Dialog.confirm();
+
+    waitForResponse('@createResource', 200);
+    waitForResponse('@getResource', 200);
+    cy.url().should('match', /resources\/\d+/);
+    cy.get('label .t-content')
+      .should('contain.text', `Test ${testTimestamp} Resource`)
+      .should('contain.text', `Test ${testTimestamp} Resource Description`);
+  });
+
+  it('UC-UU9. Upload resource -- link', () => {
+    goToTile(TILES.Resources);
+    cy.intercept('POST', '/api/resources').as('createResource');
+    cy.intercept('GET', '/api/resources/*').as('getResource');
+
+    Resource.new();
+
+    ResourcePage.setResourceType('link');
+
+    ResourcePage.fillForm({
+      name: `Test ${testTimestamp} Link`,
+      description: `Test ${testTimestamp} Link Description`,
+      url: 'https://google.com',
+    });
+
+    Form.submit();
+    Dialog.confirm();
+
+    waitForResponse('@createResource', 200);
+    waitForResponse('@getResource', 200);
+    cy.url().should('match', /resources\/\d+/);
+    cy.get('label .t-content')
+      .should('contain.text', `Test ${testTimestamp} Link`)
+      .should('contain.text', `Test ${testTimestamp} Link Description`)
+      .should('contain.text', 'https://google.com');
+  });
+};
+
+export const ucuu10 = (testTimestamp: string) => {
+  it('UC-UU10. Delete resource', () => {
+    goToTile(TILES.Resources);
+    cy.intercept('GET', '/api/resources/*').as('getResource');
+    cy.intercept('DELETE', '/api/resources/*').as('deleteResource');
+
+    Resource.search(`Test ${testTimestamp} Link`);
+    Resource.details();
+
+    waitForResponse('@getResource', 200);
+
+    Resource.delete();
+    Dialog.confirm();
+
+    waitForResponse('@deleteResource', 204);
+    cy.url().should('match', /resources/);
+  });
+};
+
+export const ucuu11 = (testTimestamp: string) => {
+  it('UC-UU11. Update resource', () => {
+    goToTile(TILES.Resources);
+    cy.intercept('GET', '/api/resources/*').as('getResource');
+    cy.intercept('PUT', '/api/resources/*').as('updateResource');
+    cy.intercept('DELETE', '/api/resources/*').as('deleteResource');
+
+    Resource.search(`Test ${testTimestamp} Resource`);
+    Resource.edit();
+
+    waitForResponse('@getResource', 200);
+
+    ResourcePage.fillForm({
+      name: `Edited Test ${testTimestamp} Resource`,
+      description: `Edited Test ${testTimestamp} Resource Description`,
+    });
+
+    Form.submit();
+    Dialog.confirm();
+
+    waitForResponse('@updateResource', 204);
+    waitForResponse('@getResource', 200);
+    cy.get('label .t-content')
+      .should('contain.text', `Edited Test ${testTimestamp} Resource`)
+      .should(
+        'contain.text',
+        `Edited Test ${testTimestamp} Resource Description`,
+      );
   });
 };
 

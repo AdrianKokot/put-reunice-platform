@@ -129,6 +129,7 @@
   "ERRORS.USER.400.PAGES_EXISTS": "Cannot delete user with pages",
   "ERRORS.USER.400.PASSWORD_EMPTY": "Password cannot be empty",
   "ERRORS.USER.400.PHONE_NUMBER_NOT_VALID": "Phone number is not valid",
+  "ERRORS.USER.400.RESOURCES_EXISTS": "Cannot delete user with resources. Reassign or delete them first.",
   "ERRORS.USER.400.SAME_PASSWORD": "New password cannot be the same as the old one",
   "ERRORS.USER.400.USERNAME_EMPTY": "Username cannot be empty",
   "ERRORS.USER.400.USERNAME_TAKEN": "User with this username already exists",

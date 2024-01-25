@@ -26,14 +26,16 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles(profiles = {"h2", "secured"})
+@ActiveProfiles(profiles = {"h2", "secured", "test"})
 @ContextConfiguration(classes = {CmsApplication.class})
 public class BaseAPIControllerTest {
     protected String getUrl(Long id) {
         return getUrl() + "/" + id;
     }
 
-    /** @return API base url */
+    /**
+     * @return API base url
+     */
     protected String getUrl() {
         return "";
     }
@@ -84,7 +86,9 @@ public class BaseAPIControllerTest {
                 resultActions.andReturn().getResponse().getContentAsString(), valueTypeRef);
     }
 
-    /** @return Perform APPLICATION_JSON GET request to the API url returned by getUrl() */
+    /**
+     * @return Perform APPLICATION_JSON GET request to the API url returned by getUrl()
+     */
     protected ResultActions performGet() throws Exception {
         return mvc.perform(get(getUrl()).contentType(MediaType.APPLICATION_JSON));
     }

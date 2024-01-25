@@ -1,7 +1,7 @@
 package com.example.cms.ticket;
 
 import com.example.cms.SearchCriteria;
-import com.example.cms.email.EmailSendingService;
+import com.example.cms.email.EmailSending;
 import com.example.cms.page.PageRepository;
 import com.example.cms.page.exceptions.PageNotFoundException;
 import com.example.cms.security.LoggedUser;
@@ -32,7 +32,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final PageRepository pageRepository;
     private final SecurityService securityService;
-    private final EmailSendingService emailSendingService;
+    private final EmailSending emailSendingService;
     private final UserService userService;
     private final TicketUserStatusRepository ticketUserStatusRepository;
 

@@ -10,7 +10,7 @@
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
-        <input tuiTextfield type="email" />
+        <input tuiTextfield type="email" name="email" />
       </tui-input>
 
       <tui-error
@@ -26,7 +26,7 @@
       tuiTextfieldSize="m"
       [tuiTextfieldLabelOutside]="true"
     >
-      <input tuiTextfield type="text" />
+      <input tuiTextfield type="text" name="title" />
     </tui-input>
 
     <tui-error formControlName="title" [error]="[] | tuiFieldError | async" />

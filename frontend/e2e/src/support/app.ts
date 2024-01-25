@@ -24,6 +24,7 @@ export const TILES = {
   Universities: 'UNIVERSITIES',
   Users: 'USERS',
   Pages: 'PAGES',
+  Resources: 'RESOURCES',
 } as const;
 
 export const clickOnTile = (tileName: string) => {
