@@ -4,6 +4,8 @@ import com.example.cms.BaseAPIControllerTest;
 import com.example.cms.page.Content;
 import com.example.cms.page.Page;
 import com.example.cms.page.PageRepository;
+import com.example.cms.resource.projections.ResourceDtoFormCreate;
+import com.example.cms.resource.projections.ResourceDtoFormUpdate;
 import com.example.cms.security.Role;
 import com.example.cms.university.University;
 import com.example.cms.university.UniversityRepository;
@@ -12,7 +14,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
@@ -35,6 +47,11 @@ class ResourceControllerTest extends BaseAPIControllerTest {
         return "/api/resources";
     }
 
+    private MockMultipartFile createMockMultipartFile() throws IOException {
+        String fileName = "file.txt";
+        String content = "This is a test file content";
+        return new MockMultipartFile("file", fileName, "application/octet-stream", content.getBytes(StandardCharsets.UTF_8));
+    }
     @Override
     public void setupData() {
         var user = new User("TEST_USER", Role.USER, true);
@@ -62,45 +79,45 @@ class ResourceControllerTest extends BaseAPIControllerTest {
         page = pageRepository.save(page);
         this.pageId = page.getId();
 
-        FileResource fileResource = new FileResource();
-        fileResource.setId(1L);
-        fileResource.setName("Test File");
-        fileResource.setDescription("This is a test file");
-        fileResource.setPath("/path/to/test/file.txt");
-        fileResource.setFileType("text/plain");
-        fileResource.setSize(1024L);
-        fileResource.setResourceType(ResourceType.FILE);
-        fileResource.setCreatedOn(Timestamp.from(Instant.now()));
-        fileResource.setUpdatedOn(Timestamp.from(Instant.now()));
-        fileResource.setAuthor(user);
-        fileResource.setPages(Set.of(page));
+        var fileResource =
+                new FileResource(
+                        1L,
+                        "Test File",
+                        "Test decription",
+                        "test path",
+                        "test filetype",
+                        1L,
+                        ResourceType.FILE,
+                        Timestamp.from(Instant.now()),
+                        Timestamp.from(Instant.now()),
+                        user,
+                        Set.of(page)
+                );
         fileResource = fileResourceRepository.save(fileResource);
         this.resourceId = fileResource.getId();
     }
-
     @AfterEach
     public void cleanup() {
-        if (fileResourceRepository.existsById(this.resourceId))
-            fileResourceRepository.deleteById(this.resourceId);
+        fileResourceRepository.deleteAll();
 
         if (pageRepository.existsById(this.pageId))
             pageRepository.deleteById(this.pageId);
 
-        if (universityRepository.existsById(this.universityId))
-            universityRepository.deleteById(this.universityId);
-
         if (userRepository.existsById(this.userId))
             userRepository.deleteById(this.userId);
+
+        if (universityRepository.existsById(this.universityId))
+            universityRepository.deleteById(this.universityId);
     }
 
     @Nested
-    class GetResourceTestClass {
+    class ResourceTestClass {
         @Nested
-        class ResourceTestClass {
+        class GetResourceTestClass {
             @Test
             void get_Resource_GuestUser_unauthorized() throws Exception {
                 performAsGuest();
-                performGet(resourceId).andExpect(status().is4xxClientError());
+                performGet(resourceId).andExpect(status().isUnauthorized());
             }
 
             @Test
@@ -120,6 +137,168 @@ class ResourceControllerTest extends BaseAPIControllerTest {
                 performAs(Role.ADMIN, userId);
                 performGet(resourceId).andExpect(status().isOk());
             }
+        }
+
+
+    }
+    @Nested
+    class CreateResourceTestClass {
+
+        @Test
+        void create_Resource_GuestUser_unauthorized() throws Exception {
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performAsGuest();
+            performPostFile(dto).andExpect(status().isUnauthorized());
+        }
+        @Test
+        void create_Resource_User_Success() throws Exception {
+            performAs(Role.USER, userId);
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performPostFile(dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void create_Resource_Moderator_Success() throws Exception {
+            performAs(Role.MODERATOR, userId);
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performPostFile(dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void create_Resource_Admin_Success() throws Exception {
+            performAs(Role.ADMIN, userId);
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performPostFile(dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void create_Link_GuestUser_unauthorized() throws Exception {
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    null,
+                    "URL"
+            );
+            performAsGuest();
+            performPostFile(dto).andExpect(status().isUnauthorized());
+        }
+        @Test
+        void create_Link_User_Success() throws Exception {
+            performAs(Role.USER, userId);
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    null,
+                    "URL"
+            );
+            performPostFile(dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void create_Link_Moderator_Success() throws Exception {
+            performAs(Role.MODERATOR, userId);
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    null,
+                    "URL"
+            );
+            performPostFile(dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void create_Link_Admin_Success() throws Exception {
+            performAs(Role.ADMIN, userId);
+            ResourceDtoFormCreate dto = new ResourceDtoFormCreate(
+                    "name",
+                    "desc",
+                    userId,
+                    null,
+                    "URL"
+            );
+            performPostFile(dto).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class UpdateResourceTestClass {
+        @Test
+        void update_Resource_GuestUser_unauthorized() throws Exception {
+            ResourceDtoFormUpdate dto = new ResourceDtoFormUpdate(
+                    "name",
+                    "desc",
+                    userId,
+                    null,
+                    "URL"
+            );
+            performAsGuest();
+            performPutFile(resourceId, dto).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void update_Resource_User_resource() throws Exception {
+            ResourceDtoFormUpdate dto = new ResourceDtoFormUpdate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performAs(Role.USER, userId);
+            performPutFile(resourceId, dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void update_Resource_Moderator_resource() throws Exception {
+            ResourceDtoFormUpdate dto = new ResourceDtoFormUpdate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performAs(Role.MODERATOR, userId);
+            performPutFile(resourceId, dto).andExpect(status().isOk());
+        }
+
+        @Test
+        void update_Resource_Admin_resource() throws Exception {
+            ResourceDtoFormUpdate dto = new ResourceDtoFormUpdate(
+                    "name",
+                    "desc",
+                    userId,
+                    createMockMultipartFile(),
+                    null
+            );
+            performAs(Role.ADMIN, userId);
+            performPutFile(resourceId, dto).andExpect(status().isOk());
         }
     }
 }
