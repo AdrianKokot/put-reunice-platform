@@ -5,5 +5,6 @@ public enum ResourceExceptionType {
     FAILED_TO_STORE_FILE,
     FAILED_TO_DELETE_FILE,
     FAILED_TO_UPDATE_FILE,
-    FILE_IS_USED_IN_PAGE
+    FILE_IS_USED_IN_PAGE,
+    FILE_EMPTY
 }

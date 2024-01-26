@@ -10,9 +10,9 @@ import {
   TuiTableModule,
   TuiTablePaginationModule,
 } from '@taiga-ui/addon-table';
-import { NgForTrackByIdDirective } from '@reunice/modules/shared/util';
+import { NgForTrackByIdDirective } from '@eunice/modules/shared/util';
 import { TableFilterComponent } from './table/table-filter/table-filter.component';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import { LocalizedPipeModule } from '@eunice/modules/shared/ui';
 
 const modules = [
   CommonModule,

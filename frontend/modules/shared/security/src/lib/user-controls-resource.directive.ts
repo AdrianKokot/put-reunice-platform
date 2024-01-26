@@ -18,17 +18,17 @@ import {
   Template,
   University,
   User,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { combineLatest, Subject } from 'rxjs';
 
 class UserControlsResourceContext<T = unknown> {
   public $implicit: T;
-  public reuniceUserControlsResource: T;
+  public euniceUserControlsResource: T;
   public controlledResource: T;
 
   constructor(value: T) {
     this.$implicit = value;
-    this.reuniceUserControlsResource = value;
+    this.euniceUserControlsResource = value;
     this.controlledResource = value;
   }
 }
@@ -37,7 +37,7 @@ class UserControlsResourceContext<T = unknown> {
  * @description This directive is used to show or hide content based on the user's
  *              permission to control the given resource.
  * @example
- * <div *reuniceUserControlsResource="page">
+ * <div *euniceUserControlsResource="page">
  *   <p>
  *     Content available only for user that is either creator of the page,
  *     administrator of the university that is parent of the page
@@ -46,7 +46,7 @@ class UserControlsResourceContext<T = unknown> {
  *  </div>
  */
 @Directive({
-  selector: '[reuniceUserControlsResource]',
+  selector: '[euniceUserControlsResource]',
   standalone: true,
 })
 export class UserControlsResourceDirective<
@@ -56,12 +56,12 @@ export class UserControlsResourceDirective<
   private readonly _trigger$ = new Subject<void>();
 
   @Input({
-    alias: 'reuniceUserControlsResource',
+    alias: 'euniceUserControlsResource',
   })
   controlledResource: T | null = null;
 
   @Input({
-    alias: 'reuniceUserControlsResourceElse',
+    alias: 'euniceUserControlsResourceElse',
   })
   fallbackTemplate: TemplateRef<unknown> | null = null;
 

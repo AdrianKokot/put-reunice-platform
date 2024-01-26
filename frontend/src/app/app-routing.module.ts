@@ -6,13 +6,13 @@ import {
   Routes,
   TitleStrategy,
 } from '@angular/router';
-import { AuthModule } from '@reunice/modules/auth';
+import { AuthModule } from '@eunice/modules/auth';
 import { UniversityModule } from './university/university.module';
-import { AuthGuard } from '@reunice/modules/shared/security';
+import { AuthGuard } from '@eunice/modules/shared/security';
 import { PageModule } from './page/page.module';
 
 @Injectable({ providedIn: 'root' })
-class ReuniceTitleStrategy extends DefaultTitleStrategy {
+class euniceTitleStrategy extends DefaultTitleStrategy {
   override updateTitle(snapshot: RouterStateSnapshot) {
     const title = this.buildTitle(snapshot);
     if (title !== undefined) {
@@ -27,7 +27,7 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () =>
-      import('@reunice/modules/admin').then((m) => m.AdminModule),
+      import('@eunice/modules/admin').then((m) => m.AdminModule),
     canMatch: [AuthGuard],
   },
   {
@@ -76,7 +76,7 @@ const routes: Routes = [
   providers: [
     {
       provide: TitleStrategy,
-      useClass: ReuniceTitleStrategy,
+      useClass: euniceTitleStrategy,
     },
   ],
   exports: [RouterModule],

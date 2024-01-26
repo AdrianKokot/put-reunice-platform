@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UniversityService } from '@reunice/modules/shared/data-access';
-import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { UniversityService } from '@eunice/modules/shared/data-access';
+import { FormSubmitWrapper } from '@eunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
 } from '../../../shared';
-import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { ConfirmDirective } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-university-create-form',
+  selector: 'eunice-university-create-form',
   standalone: true,
   imports: [BaseFormImportsModule, ConfirmDirective],
   templateUrl: './university-create-form.component.html',

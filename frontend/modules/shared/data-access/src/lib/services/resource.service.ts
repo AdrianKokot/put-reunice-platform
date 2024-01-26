@@ -39,8 +39,8 @@ export class ResourceService extends AbstractApiService<
 
     if (resource.file) {
       formData.append('file', resource.file as File, resource.file.name);
-    } else {
-      formData.append('url', resource.url as string);
+    } else if (resource.url && resource.url.trim().length > 0) {
+      formData.append('url', resource.url);
     }
 
     formData.append('authorId', resource.authorId.toString());

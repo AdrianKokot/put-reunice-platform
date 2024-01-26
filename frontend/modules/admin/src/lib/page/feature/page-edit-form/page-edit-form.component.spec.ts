@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageEditFormComponent } from './page-edit-form.component';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 
 describe(PageEditFormComponent.name, () => {
   let component: PageEditFormComponent;

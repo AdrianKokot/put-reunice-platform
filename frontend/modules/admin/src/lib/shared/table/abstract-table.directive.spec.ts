@@ -1,11 +1,11 @@
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
-import { provideReuniceTable } from './table.provider';
+import { provideeuniceTable } from './table.provider';
 import { Component } from '@angular/core';
-import { BaseResource, PageService } from '@reunice/modules/shared/data-access';
-import { ReuniceAbstractTable } from './reunice-abstract-table.directive';
+import { BaseResource, PageService } from '@eunice/modules/shared/data-access';
+import { AbstractTable } from './abstract-table.directive';
 import { FormGroup } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 import { BaseTableImportsModule } from '../base-table-imports.module';
 import { TableStorageKeys } from '../storage';
 
@@ -38,14 +38,14 @@ import { TableStorageKeys } from '../storage';
       [total]="(total$ | async) ?? 0"
     ></tui-table-pagination>
   `,
-  providers: [provideReuniceTable(PageService)],
+  providers: [provideeuniceTable(PageService)],
 })
-class TestComponent extends ReuniceAbstractTable<BaseResource> {
+class TestComponent extends AbstractTable<BaseResource> {
   readonly columns: Array<keyof BaseResource | string> = [];
   readonly filtersForm = new FormGroup({});
 }
 
-describe(ReuniceAbstractTable.name, () => {
+describe(AbstractTable.name, () => {
   let fixture: ComponentFixture<TestComponent>;
   let component: TestComponent;
 

@@ -8,7 +8,7 @@ import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { distinctUntilChanged, filter, map, merge, Subject } from 'rxjs';
 
 @Component({
-  selector: 'reunice-sidebar',
+  selector: 'eunice-sidebar',
   standalone: true,
   imports: [
     CommonModule,

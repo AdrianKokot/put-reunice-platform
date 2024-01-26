@@ -5,8 +5,8 @@ import {
   UNIVERSITY_PAGE_HIERARCHY_MAP,
   UniversityPagesTreeComponent,
 } from './university-pages-tree.component';
-import { TestingModule } from '@reunice/testing';
-import { Page } from '@reunice/modules/shared/data-access';
+import { TestingModule } from '@eunice/testing';
+import { Page } from '@eunice/modules/shared/data-access';
 
 describe(UniversityPagesTreeComponent.name, () => {
   let component: UniversityPagesTreeComponent;

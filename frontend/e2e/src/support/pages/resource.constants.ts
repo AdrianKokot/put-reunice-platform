@@ -1,4 +1,4 @@
-import { Resource } from '@reunice/modules/shared/data-access';
+import { Resource } from '@eunice/modules/shared/data-access';
 
 type ResourceForm = Pick<Resource, 'name' | 'description'> & { url: string };
 

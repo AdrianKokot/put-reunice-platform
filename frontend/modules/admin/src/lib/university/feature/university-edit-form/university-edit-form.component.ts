@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UniversityService } from '@reunice/modules/shared/data-access';
+import { UniversityService } from '@eunice/modules/shared/data-access';
 import {
   formResourceFromRoute,
   FormSubmitWrapper,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
 } from '../../../shared';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { combineLatest, distinctUntilChanged, map, of, switchMap } from 'rxjs';
-import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { ConfirmDirective } from '@eunice/modules/shared/ui';
 import { TuiInputFilesModule } from '@taiga-ui/kit';
 
 @Component({
-  selector: 'reunice-university-edit-form',
+  selector: 'eunice-university-edit-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,

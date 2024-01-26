@@ -158,7 +158,7 @@
           <button
             tuiOption
             [value]="accountType.ADMIN"
-            *reuniceUser="accountType.ADMIN"
+            *euniceUser="accountType.ADMIN"
             data-test="role-admin"
           >
             {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
@@ -187,7 +187,7 @@
     </label>
   </div>
 
-  <ng-container *reuniceUser="accountType.ADMIN">
+  <ng-container *euniceUser="accountType.ADMIN">
     <label
       [tuiLabel]="'ENROLLED_UNIVERSITIES' | translate"
       class="tui-form__row"

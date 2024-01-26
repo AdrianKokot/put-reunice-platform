@@ -32,7 +32,7 @@
   </a>
 </div>
 
-<tui-scrollbar class="reunice-table-wrapper">
+<tui-scrollbar class="eunice-table-wrapper">
   <table
     tuiTable
     tuiSortBy
@@ -68,7 +68,7 @@
         >
           <span>{{ 'PAGE_VISIBILITY' | translate }}</span>
 
-          <reunice-table-filter formControlName="hidden_eq">
+          <eunice-table-filter formControlName="hidden_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="false">
                 {{ 'PAGE_VISIBLE' | translate }}
@@ -77,7 +77,7 @@
                 {{ 'PAGE_HIDDEN' | translate }}
               </button>
             </tui-data-list>
-          </reunice-table-filter>
+          </eunice-table-filter>
         </th>
         <th
           *tuiHead="'actions'"

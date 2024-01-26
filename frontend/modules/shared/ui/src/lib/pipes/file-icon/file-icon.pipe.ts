@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Resource, ResourceType } from '@reunice/modules/shared/data-access';
+import { Resource, ResourceType } from '@eunice/modules/shared/data-access';
 
 @Pipe({
   name: 'fileIcon',

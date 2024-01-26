@@ -6,7 +6,7 @@
   <label
     [tuiLabel]="'TEMPLATE_AVAILABLE_TO_UNIVERSITIES' | translate"
     class="tui-form__row"
-    *reuniceUser="'ADMIN'"
+    *euniceUser="'ADMIN'"
   >
     <ng-container *ngIf="item?.availableToAllUniversities; else universityTags">
       {{ 'ALL_UNIVERSITIES' | translate }}
@@ -37,14 +37,14 @@
     *ngIf="item !== null"
   >
     <ng-container
-      *reuniceUserControlsResource="item; else allUniversitiesTemplate"
+      *euniceUserControlsResource="item; else allUniversitiesTemplate"
     >
       <button
         tuiButton
         type="button"
         appearance="flat-destructive"
         class="tui-form__button"
-        [reuniceConfirm]="'TEMPLATE_DELETE_DESCRIPTION' | translate"
+        [euniceConfirm]="'TEMPLATE_DELETE_DESCRIPTION' | translate"
         [showLoader]="(deleteHandler.loading$ | async) ?? false"
         (confirm)="deleteHandler.delete(item.id)"
       >

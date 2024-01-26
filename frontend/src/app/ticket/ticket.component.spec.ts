@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TicketComponent } from './ticket.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe('TicketComponent', () => {
   let component: TicketComponent;

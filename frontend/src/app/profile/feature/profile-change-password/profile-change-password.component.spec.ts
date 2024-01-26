@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProfileChangePasswordComponent } from './profile-change-password.component';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 
 describe(ProfileChangePasswordComponent.name, () => {
   let component: ProfileChangePasswordComponent;

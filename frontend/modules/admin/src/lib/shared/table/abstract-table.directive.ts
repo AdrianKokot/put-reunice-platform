@@ -24,7 +24,7 @@ import {
   tap,
 } from 'rxjs';
 import { FormGroup } from '@angular/forms';
-import { REUNICE_TABLE_SERVICE } from './table.provider';
+import { eunice_TABLE_SERVICE } from './table.provider';
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import {
   AbstractApiService,
@@ -32,15 +32,13 @@ import {
   ApiParams,
   ApiSort,
   BaseResource,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { TUI_NOTHING_FOUND_MESSAGE } from '@taiga-ui/core';
 import { TableStorageKeys } from '../storage';
 import { tuiIsNumber } from '@taiga-ui/cdk';
 
 @Directive()
-export abstract class ReuniceAbstractTable<T extends BaseResource>
-  implements OnInit
-{
+export abstract class AbstractTable<T extends BaseResource> implements OnInit {
   @ViewChild(TuiTablePaginationComponent, { static: true })
   private readonly _pagination: TuiTablePaginationComponent | null = null;
 
@@ -59,9 +57,8 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
   abstract readonly columns: Array<keyof T | string>;
   abstract readonly filtersForm: FormGroup;
 
-  protected readonly service = inject<AbstractApiService<T, unknown, unknown>>(
-    REUNICE_TABLE_SERVICE,
-  );
+  protected readonly service =
+    inject<AbstractApiService<T, unknown, unknown>>(eunice_TABLE_SERVICE);
 
   private readonly _refresh$ = new BehaviorSubject<void>(undefined);
 
@@ -76,9 +73,7 @@ export abstract class ReuniceAbstractTable<T extends BaseResource>
 
   ngOnInit(): void {
     if (!this._sortBy || !this._table || !this._pagination) {
-      throw new Error(
-        `${ReuniceAbstractTable.name}: missing required content child.`,
-      );
+      throw new Error(`${AbstractTable.name}: missing required content child.`);
     }
 
     const pageSize = parseInt(

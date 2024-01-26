@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 import { GlobalPageDetailsComponent } from './global-page-details.component';
 
 describe(GlobalPageDetailsComponent.name, () => {

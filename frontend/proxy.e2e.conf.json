@@ -1,12 +1,12 @@
 {
   "/api/*": {
-    "target": "https://reunice.kokotadrian.pl",
+    "target": "https://eunice.kokotadrian.pl",
     "secure": true,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/static/*": {
-    "target": "https://reunice.kokotadrian.pl",
+    "target": "https://eunice.kokotadrian.pl",
     "secure": true,
     "logLevel": "debug",
     "changeOrigin": true

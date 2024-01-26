@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserBasicInformationComponent } from './user-basic-information.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe('UserBasicInformationComponent', () => {
   let component: UserBasicInformationComponent;

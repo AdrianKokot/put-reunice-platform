@@ -10,8 +10,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { LoggedUser, User } from '@reunice/modules/shared/data-access';
-import { throwError } from '@reunice/modules/shared/util';
+import { LoggedUser, User } from '@eunice/modules/shared/data-access';
+import { throwError } from '@eunice/modules/shared/util';
 
 @Injectable({
   providedIn: 'root',

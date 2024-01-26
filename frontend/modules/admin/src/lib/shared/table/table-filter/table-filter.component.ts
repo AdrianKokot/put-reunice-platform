@@ -47,14 +47,14 @@ import {
 } from '@taiga-ui/cdk';
 import { ResourceSearchWrapper } from '../../util/resource-search-wrapper';
 import { TUI_SELECT_OPTION } from '@taiga-ui/kit';
-import { BaseResource } from '@reunice/modules/shared/data-access';
+import { BaseResource } from '@eunice/modules/shared/data-access';
 import { NgControl } from '@angular/forms';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'reunice-table-filter',
+  selector: 'eunice-table-filter',
   templateUrl: './table-filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,

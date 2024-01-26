@@ -2,7 +2,7 @@ import {
   ExtendedAccountType,
   ExtendedAccountTypeEnum,
   User,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 
 export const isUserOfType = (
   user: User | null,

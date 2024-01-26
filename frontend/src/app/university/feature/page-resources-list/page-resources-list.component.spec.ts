@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageResourcesListComponent } from './page-resources-list.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe('PageResourcesListComponent', () => {
   let component: PageResourcesListComponent;

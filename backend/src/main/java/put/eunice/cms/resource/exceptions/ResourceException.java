@@ -20,6 +20,8 @@ public class ResourceException extends BadRequestException {
                 return "ERRORS.RESOURCE.400.FAILED_TO_DELETE_FILE";
             case FILE_IS_USED_IN_PAGE:
                 return "ERRORS.RESOURCE.400.FILE_IS_USED_IN_PAGE";
+            case FILE_EMPTY:
+                return "ERRORS.RESOURCE.400.FILE_EMPTY";
             default:
                 return "ERRORS.RESOURCE.400";
         }
@@ -28,6 +30,9 @@ public class ResourceException extends BadRequestException {
     private static String getField(ResourceExceptionType type) {
         if (type.equals(ResourceExceptionType.AUTHOR_NOT_VALID)) {
             return "authorId";
+        }
+        if (type.equals(ResourceExceptionType.FILE_EMPTY)) {
+            return "file";
         }
         return null;
     }

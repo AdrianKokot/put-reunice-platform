@@ -63,7 +63,7 @@
     <label class="tui-form__row" [tuiLabel]="'CONTENT' | translate">
       <tui-editor formControlName="content">
         <ng-container ngProjectAs="tools">
-          <reunice-html-editor-tool tuiItem></reunice-html-editor-tool>
+          <eunice-html-editor-tool tuiItem></eunice-html-editor-tool>
         </ng-container>
       </tui-editor>
 
@@ -92,7 +92,7 @@
         size="m"
         type="submit"
         *tuiLet="confirmText$ | async as confirmText"
-        [reuniceConfirm]="
+        [euniceConfirm]="
           confirmText !== null ? (confirmText | translate) : null
         "
         class="tui-form__button"

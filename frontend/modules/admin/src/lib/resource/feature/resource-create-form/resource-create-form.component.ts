@@ -4,19 +4,19 @@ import {
   ResourceService,
   ResourceType,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   CustomValidators,
   FormSubmitWrapper,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
   ResourceSearchWrapper,
 } from '../../../shared';
-import { ConfirmDirective } from '@reunice/modules/shared/ui';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { ConfirmDirective } from '@eunice/modules/shared/ui';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
@@ -26,7 +26,7 @@ import {
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'reunice-resource-create-form',
+  selector: 'eunice-resource-create-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,

@@ -5,19 +5,19 @@ import {
   PageService,
   UniversityService,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   FormSubmitWrapper,
   PAGE_TREE_HANDLER,
   parseNullableInt,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
   ResourceSearchWrapper,
 } from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import {
   distinctUntilChanged,
   filter,
@@ -35,11 +35,11 @@ import {
 } from '@taiga-ui/kit';
 import { TuiCheckedModule, TuiValueChangesModule } from '@taiga-ui/cdk';
 import { TuiDropdownModule, TuiLinkModule } from '@taiga-ui/core';
-import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { ConfirmDirective } from '@eunice/modules/shared/ui';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'reunice-page-create-form',
+  selector: 'eunice-page-create-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,

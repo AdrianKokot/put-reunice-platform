@@ -71,7 +71,7 @@ export const ucua3 = (testTimestamp: string) => {
     UserPage.fillForm({
       firstName: `UA_Test_${testTimestamp}`,
       lastName: 'UA_User',
-      email: `ua_user${testTimestamp}@reunice.com`,
+      email: `ua_user${testTimestamp}@eunice.com`,
       username: `ua_user${testTimestamp}`,
     });
 
@@ -103,7 +103,7 @@ export const ucua5 = (testTimestamp: string) => {
     UserPage.fillForm({
       firstName: `Edited_UA_Test_${testTimestamp}`,
       lastName: 'Edited_UA_User',
-      email: `edited_ua_user${testTimestamp}@reunice.com`,
+      email: `edited_ua_user${testTimestamp}@eunice.com`,
       username: `edited_ua_user${testTimestamp}`,
     });
 
@@ -114,7 +114,7 @@ export const ucua5 = (testTimestamp: string) => {
     cy.get('label .t-content')
       .should('contain.text', `Edited_UA_Test_${testTimestamp}`)
       .should('contain.text', 'Edited_UA_User')
-      .should('contain.text', `edited_ua_user${testTimestamp}@reunice.com`)
+      .should('contain.text', `edited_ua_user${testTimestamp}@eunice.com`)
       .should('contain.text', `edited_ua_user${testTimestamp}`);
   });
 };

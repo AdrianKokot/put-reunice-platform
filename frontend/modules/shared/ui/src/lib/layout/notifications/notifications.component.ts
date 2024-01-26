@@ -7,16 +7,16 @@ import {
   TuiLoaderModule,
   TuiDataListModule,
 } from '@taiga-ui/core';
-import { TicketService } from '@reunice/modules/shared/data-access';
+import { TicketService } from '@eunice/modules/shared/data-access';
 import { RouterLink } from '@angular/router';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { Subject, combineLatest, map, scan, startWith, tap } from 'rxjs';
 import { TicketToBadgeStatusModule } from '../../pipes/ticket-to-badge-status/ticket-to-badge-status.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService } from '@reunice/modules/shared/security';
+import { AuthService } from '@eunice/modules/shared/security';
 
 @Component({
-  selector: 'reunice-notifications',
+  selector: 'eunice-notifications',
   standalone: true,
   imports: [
     CommonModule,

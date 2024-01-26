@@ -2,7 +2,7 @@
   "name": "modules-shared-util",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "modules/shared/util/src",
-  "prefix": "reunice",
+  "prefix": "eunice",
   "tags": [],
   "projectType": "library",
   "targets": {

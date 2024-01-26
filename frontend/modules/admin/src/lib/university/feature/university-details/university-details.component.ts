@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DeleteResourceWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
-import { UniversityService } from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/util';
+import { UniversityService } from '@eunice/modules/shared/data-access';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import {
   BaseDetailsImportsModule,
@@ -11,7 +11,7 @@ import {
 } from '../../../shared';
 
 @Component({
-  selector: 'reunice-university-details',
+  selector: 'eunice-university-details',
   standalone: true,
   imports: [BaseDetailsImportsModule, TuiEditorSocketModule],
   templateUrl: './university-details.component.html',

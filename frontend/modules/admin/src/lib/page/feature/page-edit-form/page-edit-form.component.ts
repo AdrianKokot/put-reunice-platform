@@ -6,14 +6,14 @@ import {
   ResourceService,
   User,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   FormSubmitWrapper,
   resourceIdFromRoute,
   toResourceFromId,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
@@ -41,16 +41,16 @@ import {
   AuthService,
   UserControlsResourceDirective,
   UserDirective,
-} from '@reunice/modules/shared/security';
+} from '@eunice/modules/shared/security';
 import {
   ConfirmDirective,
   LocalizedPipeModule,
-} from '@reunice/modules/shared/ui';
+} from '@eunice/modules/shared/ui';
 import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-editor/html-editor.component';
 import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
-  selector: 'reunice-page-edit-form',
+  selector: 'eunice-page-edit-form',
   standalone: true,
   imports: [
     TuiLetModule,

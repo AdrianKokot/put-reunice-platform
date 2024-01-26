@@ -14,7 +14,7 @@ import { TuiTiptapEditorService } from '@tinkoff/tui-editor';
 import { TuiFieldErrorPipeModule, TuiTextAreaModule } from '@taiga-ui/kit';
 
 @Component({
-  selector: 'reunice-html-editor-tool',
+  selector: 'eunice-html-editor-tool',
   standalone: true,
   imports: [
     CommonModule,

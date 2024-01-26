@@ -67,7 +67,7 @@
     <label
       [tuiLabel]="'RESOURCE_AUTHOR' | translate"
       class="tui-form__multi-field"
-      *reuniceUser="'ADMINISTRATIVE'"
+      *euniceUser="'ADMINISTRATIVE'"
     >
       <tui-combo-box
         tuiTextfieldSize="m"
@@ -189,7 +189,7 @@
       type="submit"
       class="tui-form__button"
       [showLoader]="(handler.loading$ | async) ?? false"
-      [reuniceConfirm]="
+      [euniceConfirm]="
         'RESOURCE_UPDATE_DESCRIPTION'
           | translate: { name: handler.form.controls.name.value }
       "

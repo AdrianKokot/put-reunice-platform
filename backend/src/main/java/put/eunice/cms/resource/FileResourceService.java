@@ -121,17 +121,44 @@ public class FileResourceService {
         fileResource.setDescription(form.getDescription());
         fileResource.setAuthor(author);
 
-        String tempDirectoryName = fileResource.getId().toString() + "_temp";
-        try {
-            fileService.renameDirectory(
-                    FileResource.STORE_DIRECTORY + fileResource.getId().toString(),
-                    FileResource.STORE_DIRECTORY + tempDirectoryName);
-            if (form.getUrl() != null && !form.getUrl().isEmpty()) {
-                if (fileResource.getResourceType() != ResourceType.LINK) {
-                    fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
-                }
+        boolean shouldStoreFile = false;
+        boolean shouldDeleteFile = false;
+
+        if (fileResource.getResourceType() == ResourceType.LINK && form.getUrl() != null) {
+            fileResource.setPath(form.getUrl());
+            shouldStoreFile = true;
+        } else if (fileResource.getResourceType() == ResourceType.LINK && form.getUrl() == null) {
+            shouldStoreFile = true;
+        } else if (fileResource.getResourceType() != ResourceType.LINK && form.getFile() == null) {
+            shouldStoreFile = false;
+            if (form.getUrl() != null) {
+                shouldDeleteFile = true;
                 fileResource.setAsLinkResource(form.getUrl());
-            } else {
+            }
+        } else if (fileResource.getResourceType() != ResourceType.LINK && form.getFile() != null) {
+            shouldStoreFile = true;
+        }
+
+        if (shouldDeleteFile) {
+            try {
+                fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
+            } catch (IOException e) {
+                throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
+            }
+        }
+
+        if (shouldStoreFile) {
+
+            if (form.getFile() == null) {
+                throw new ResourceException(ResourceExceptionType.FILE_EMPTY);
+            }
+
+            String tempDirectoryName = fileResource.getId().toString() + "_temp";
+            try {
+                fileService.renameDirectory(
+                        FileResource.STORE_DIRECTORY + fileResource.getId().toString(),
+                        FileResource.STORE_DIRECTORY + tempDirectoryName);
+
                 var filename =
                         StringUtils.cleanPath(Objects.requireNonNull(form.getFile().getOriginalFilename()));
                 var filePath =
@@ -142,15 +169,16 @@ public class FileResourceService {
                         filePath.toString(),
                         Objects.requireNonNull(form.getFile().getContentType()),
                         form.getFile().getSize());
-            }
-            fileService.deleteDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName);
-        } catch (IOException e) {
-            try {
-                fileService.renameDirectory(
-                        FileResource.STORE_DIRECTORY + tempDirectoryName,
-                        FileResource.STORE_DIRECTORY + fileResource.getId().toString());
-            } catch (IOException ex) {
-                throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
+
+                fileService.deleteDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName);
+            } catch (IOException e) {
+                try {
+                    fileService.renameDirectory(
+                            FileResource.STORE_DIRECTORY + tempDirectoryName,
+                            FileResource.STORE_DIRECTORY + fileResource.getId().toString());
+                } catch (IOException ex) {
+                    throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
+                }
             }
         }
 

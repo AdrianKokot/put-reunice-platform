@@ -167,7 +167,7 @@ export const ucuu7 = (testTimestamp: string) => {
 
     cy.get('table tr td:nth-child(3)').should(
       'contain.text',
-      `ua_user${testTimestamp}@reunice.com`,
+      `ua_user${testTimestamp}@eunice.com`,
     );
   });
 };
@@ -300,14 +300,14 @@ export const ucuu12 = (testTimestamp: string) => {
 
       cy.get('table tr td:nth-child(3)').should(
         'contain.text',
-        `ua_user${testTimestamp}@reunice.com`,
+        `ua_user${testTimestamp}@eunice.com`,
       );
     });
 
     it('User vs Pages mode', () => {
       cy.intercept('GET', '/api/users/*').as('getUser');
       goToTile(TILES.Users);
-      Resource.search(`ua_user${testTimestamp}@reunice.com`);
+      Resource.search(`ua_user${testTimestamp}@eunice.com`);
       Resource.details();
 
       waitForResponse('@getUser', 200);

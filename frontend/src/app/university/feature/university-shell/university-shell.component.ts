@@ -6,7 +6,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Page, PageService } from '@reunice/modules/shared/data-access';
+import { Page, PageService } from '@eunice/modules/shared/data-access';
 import {
   combineLatest,
   distinctUntilKeyChanged,
@@ -18,7 +18,7 @@ import {
 import {
   nestedRouteParamMap,
   resourceIdFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { SideService } from '../../../shared/side.service';
 import { PolymorpheusComponent } from '@tinkoff/ng-polymorpheus';
 import {
@@ -33,7 +33,7 @@ import { RouterModule } from '@angular/router';
 import { TuiLetModule } from '@taiga-ui/cdk';
 
 @Component({
-  selector: 'reunice-university-shell',
+  selector: 'eunice-university-shell',
   standalone: true,
   imports: [
     CommonModule,

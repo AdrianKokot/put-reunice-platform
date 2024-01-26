@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 import { DashboardShellComponent } from './dashboard/feature/dashboard-shell/dashboard-shell.component';
 import { DashboardTilesComponent } from './dashboard/ui/dashboard-tiles/dashboard-tiles.component';
-import { translatedTitle } from '@reunice/modules/shared/util';
-import { ExtendedAccountTypeEnum } from '@reunice/modules/shared/data-access';
-import { AuthorizedOfTypeGuard } from '@reunice/modules/shared/security';
+import { translatedTitle } from '@eunice/modules/shared/util';
+import { ExtendedAccountTypeEnum } from '@eunice/modules/shared/data-access';
+import { AuthorizedOfTypeGuard } from '@eunice/modules/shared/security';
 
 export const adminRoutes: Route[] = [
   {

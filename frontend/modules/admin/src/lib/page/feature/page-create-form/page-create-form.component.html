@@ -10,7 +10,7 @@
   <label
     [tuiLabel]="'UNIVERSITY' | translate"
     class="tui-form__row"
-    *reuniceUser="'ADMIN'"
+    *euniceUser="'ADMIN'"
   >
     <tui-combo-box
       tuiTextfieldSize="m"
@@ -59,7 +59,7 @@
         <ng-template #treeContent let-page>
           <label
             [class._selected]="inputElement.checked"
-            class="cursor-pointer reunice-tree-item-option"
+            class="cursor-pointer eunice-tree-item-option"
           >
             <input
               type="radio"
@@ -128,7 +128,7 @@
     <label
       [tuiLabel]="'AUTHOR' | translate"
       class="tui-form__multi-field"
-      *reuniceUser="'ADMINISTRATIVE'"
+      *euniceUser="'ADMINISTRATIVE'"
     >
       <tui-combo-box
         tuiTextfieldSize="m"
@@ -183,7 +183,7 @@
       tuiButton
       size="m"
       type="submit"
-      [reuniceConfirm]="
+      [euniceConfirm]="
         'PAGE_WILL_BE_CREATED_UNDER_X_LOCATION_WITH_' +
           (form.controls.hidden.value ? 'HIDDEN' : 'VISIBLE') +
           '_STATE_CONFIRMATION'
