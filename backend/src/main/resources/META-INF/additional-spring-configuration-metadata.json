@@ -7,12 +7,12 @@
     },
     {
       "name": "app.database.schema.handling-on-startup",
-      "type": "com.example.cms.configuration.DatabaseSchemaHandlingOnStartup",
+      "type": "put.eunice.cms.configuration.DatabaseSchemaHandlingOnStartup",
       "description": "How to handle database schema on application startup."
     },
     {
       "name": "app.database.schema.create-type",
-      "type": "com.example.cms.configuration.DatabaseSchemaCreateType",
+      "type": "put.eunice.cms.configuration.DatabaseSchemaCreateType",
       "description": "How to handle database schema creation when app.database.schema.handling-on-startup=create."
     },
     {
