@@ -100,59 +100,37 @@ public class FileResourceService {
         return ResourceDtoDetailed.of(fileRepository.save(fileResource));
     }
 
-    @Secured("ROLE_USER")
-    @Transactional
-    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
-        var principal = securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
-
-        if (!principal.getId().equals(form.getAuthorId())
-                && !securityService.hasHigherRoleThan(Role.USER)) {
-            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
+    private void updateFileResourceToLinkResource(FileResource fileResource, String url) {
+        try {
+            fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
+        } catch (IOException e) {
+            throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
         }
 
-        User author =
-                userRepository
-                        .findById(form.getAuthorId())
-                        .orElseThrow(() -> new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
+        fileResource.setAsLinkResource(url);
+    }
 
-        var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+    private void updateLinkResourceToFileResource(
+            FileResource fileResource, ResourceDtoFormUpdate form) {
+        if (form.getFile() == null) {
+            throw new ResourceException(ResourceExceptionType.FILE_EMPTY);
+        }
 
-        fileResource.setName(form.getName());
-        fileResource.setDescription(form.getDescription());
-        fileResource.setAuthor(author);
+        updateFileResource(fileResource, form);
+    }
 
-        boolean shouldStoreFile = false;
-        boolean shouldDeleteFile = false;
-
-        if (fileResource.getResourceType() == ResourceType.LINK && form.getUrl() != null) {
+    private void updateLinkResource(FileResource fileResource, ResourceDtoFormUpdate form) {
+        if (form.getUrl() != null) {
             fileResource.setPath(form.getUrl());
-            shouldStoreFile = true;
-        } else if (fileResource.getResourceType() == ResourceType.LINK && form.getUrl() == null) {
-            shouldStoreFile = true;
-        } else if (fileResource.getResourceType() != ResourceType.LINK && form.getFile() == null) {
-            shouldStoreFile = false;
-            if (form.getUrl() != null) {
-                shouldDeleteFile = true;
-                fileResource.setAsLinkResource(form.getUrl());
-            }
-        } else if (fileResource.getResourceType() != ResourceType.LINK && form.getFile() != null) {
-            shouldStoreFile = true;
+        } else {
+            updateLinkResourceToFileResource(fileResource, form);
         }
+    }
 
-        if (shouldDeleteFile) {
-            try {
-                fileService.deleteDirectory(FileResource.STORE_DIRECTORY + fileResource.getId());
-            } catch (IOException e) {
-                throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
-            }
-        }
-
-        if (shouldStoreFile) {
-
-            if (form.getFile() == null) {
-                throw new ResourceException(ResourceExceptionType.FILE_EMPTY);
-            }
-
+    private void updateFileResource(FileResource fileResource, ResourceDtoFormUpdate form) {
+        if (form.getUrl() != null) {
+            updateFileResourceToLinkResource(fileResource, form.getUrl());
+        } else if (form.getFile() != null) {
             String tempDirectoryName = fileResource.getId().toString() + "_temp";
             try {
                 fileService.renameDirectory(
@@ -180,6 +158,34 @@ public class FileResourceService {
                     throw new ResourceException(ResourceExceptionType.FAILED_TO_UPDATE_FILE);
                 }
             }
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @Transactional
+    public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
+        var principal = securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
+
+        if (!principal.getId().equals(form.getAuthorId())
+                && !securityService.hasHigherRoleThan(Role.USER)) {
+            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
+        }
+
+        User author =
+                userRepository
+                        .findById(form.getAuthorId())
+                        .orElseThrow(() -> new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
+
+        var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+
+        fileResource.setName(form.getName());
+        fileResource.setDescription(form.getDescription());
+        fileResource.setAuthor(author);
+
+        if (fileResource.getResourceType() == ResourceType.LINK) {
+            updateLinkResource(fileResource, form);
+        } else {
+            updateFileResource(fileResource, form);
         }
 
         return ResourceDtoDetailed.of(fileRepository.save(fileResource));
