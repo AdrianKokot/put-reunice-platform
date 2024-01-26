@@ -154,15 +154,16 @@ public class BaseAPIControllerTest {
 
     protected ResultActions performPutFile(Long id, ResourceDtoFormUpdate dto) throws Exception {
         if(dto.getFile() == null){
-            return mvc.perform(put("/{id}", id)
+            return mvc.perform(put(getUrl(id))
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                     .param("name", dto.getName())
                     .param("authorId", String.valueOf(dto.getAuthorId()))
                     .param("description", dto.getDescription())
                     .param("url", dto.getUrl()));
         } else {
-            return mvc.perform(MockMvcRequestBuilders.put(getUrl(id))
-                    //.file(new MockMultipartFile(dto.getFile().getName(), dto.getFile().getOriginalFilename(), dto.getFile().getContentType(), dto.getFile().getInputStream()))
+            return mvc.perform(put(getUrl(id))
+                    .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                    .content(dto.getFile().getBytes())
                     .param("name", dto.getName())
                     .param("authorId", String.valueOf(dto.getAuthorId()))
                     .param("description", dto.getDescription())
