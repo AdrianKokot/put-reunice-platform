@@ -12,7 +12,7 @@ export const waitForResponse = (alias: string, code: number) => {
 export const goToConsole = () => {
   cy.visit('/');
   cy.scrollTo('top');
-  cy.get('reunice-ui-top-bar [data-test="user-menu-button"]').click();
+  cy.get('eunice-ui-top-bar [data-test="user-menu-button"]').click();
   cy.get(
     'tui-root tui-dropdown-host tui-data-list a[data-test="user-menu-console-button"]',
   ).click({ force: true });

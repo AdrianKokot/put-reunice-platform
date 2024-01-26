@@ -11,7 +11,7 @@ RUN mkdir -p /workspace
 WORKDIR /workspace
 COPY backend/pom.xml /workspace
 COPY backend/src /workspace/src
-COPY --from=build-fe /usr/src/app/dist/reunice /workspace/src/main/resources/static
+COPY --from=build-fe /usr/src/app/dist/eunice /workspace/src/main/resources/static
 RUN mvn -f pom.xml clean package -DskipTests
 
 ### Run ###

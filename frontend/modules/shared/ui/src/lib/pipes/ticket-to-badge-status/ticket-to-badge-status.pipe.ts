@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Ticket } from '@reunice/modules/shared/data-access';
+import { Ticket } from '@eunice/modules/shared/data-access';
 import { TuiStatus } from '@taiga-ui/kit';
 
 @Pipe({

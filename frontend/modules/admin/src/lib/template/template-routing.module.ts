@@ -7,7 +7,7 @@ import { TemplateDetailsComponent } from './feature/template-details/template-de
 import {
   DeactivateFormGuard,
   translatedTitle,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 
 const routes: Routes = [
   {

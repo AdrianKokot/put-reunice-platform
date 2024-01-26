@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DeleteResourceWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   ResourceService,
   ResourceType,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
@@ -16,7 +16,7 @@ import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { ResourcePagesComponent } from '../../ui/resource-pages/resource-pages.component';
 
 @Component({
-  selector: 'reunice-resource-details',
+  selector: 'eunice-resource-details',
   standalone: true,
   imports: [
     BaseDetailsImportsModule,

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UniversityListComponent } from './university-list.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe(UniversityListComponent.name, () => {
   let component: UniversityListComponent;

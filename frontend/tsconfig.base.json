@@ -15,17 +15,17 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@reunice/modules/admin": ["modules/admin/src/index.ts"],
-      "@reunice/modules/auth": ["modules/auth/src/index.ts"],
-      "@reunice/modules/shared/data-access": [
+      "@eunice/modules/admin": ["modules/admin/src/index.ts"],
+      "@eunice/modules/auth": ["modules/auth/src/index.ts"],
+      "@eunice/modules/shared/data-access": [
         "modules/shared/data-access/src/index.ts"
       ],
-      "@reunice/modules/shared/security": [
+      "@eunice/modules/shared/security": [
         "modules/shared/security/src/index.ts"
       ],
-      "@reunice/modules/shared/ui": ["modules/shared/ui/src/index.ts"],
-      "@reunice/modules/shared/util": ["modules/shared/util/src/index.ts"],
-      "@reunice/testing": ["testing/src/index.ts"]
+      "@eunice/modules/shared/ui": ["modules/shared/ui/src/index.ts"],
+      "@eunice/modules/shared/util": ["modules/shared/util/src/index.ts"],
+      "@eunice/testing": ["testing/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

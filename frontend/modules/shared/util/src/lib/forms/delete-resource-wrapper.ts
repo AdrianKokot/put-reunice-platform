@@ -19,7 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   AbstractApiService,
   BaseResource,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isValidationApiError } from './form-submit-wrapper';
 

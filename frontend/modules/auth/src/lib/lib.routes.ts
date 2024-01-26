@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { LoginShellComponent } from './features/login-shell/login-shell.component';
-import { GuestGuard, logoutFn } from '@reunice/modules/shared/security';
+import { GuestGuard, logoutFn } from '@eunice/modules/shared/security';
 import { Type } from '@angular/core';
 
 export const authRoutes: Route[] = [

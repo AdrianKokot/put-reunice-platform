@@ -2,18 +2,18 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   University,
   UniversityService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
-  ReuniceAbstractTable,
+  provideeuniceTable,
+  AbstractTable,
 } from '../../../shared';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-university-list',
+  selector: 'eunice-university-list',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -22,9 +22,9 @@ import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
   ],
   templateUrl: './university-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(UniversityService)],
+  providers: [provideeuniceTable(UniversityService)],
 })
-export class UniversityListComponent extends ReuniceAbstractTable<University> {
+export class UniversityListComponent extends AbstractTable<University> {
   readonly columns: Array<keyof University | string> = [
     'name',
     'shortName',

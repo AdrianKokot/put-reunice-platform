@@ -4,19 +4,19 @@ import {
   inject,
   Input,
 } from '@angular/core';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
 import { FormBuilder } from '@angular/forms';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
-  ReuniceAbstractTable,
+  provideeuniceTable,
+  AbstractTable,
 } from '../../../shared';
-import { UserDirective } from '@reunice/modules/shared/security';
-import { User, UserService } from '@reunice/modules/shared/data-access';
+import { UserDirective } from '@eunice/modules/shared/security';
+import { User, UserService } from '@eunice/modules/shared/data-access';
 
 @Component({
-  selector: 'reunice-page-users',
+  selector: 'eunice-page-users',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -26,9 +26,9 @@ import { User, UserService } from '@reunice/modules/shared/data-access';
   ],
   templateUrl: './page-users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(UserService)],
+  providers: [provideeuniceTable(UserService)],
 })
-export class PageUsersComponent extends ReuniceAbstractTable<User> {
+export class PageUsersComponent extends AbstractTable<User> {
   @Input()
   set handles(value: number | null) {
     this.filtersForm.controls.handlersPages_eq.setValue(value);

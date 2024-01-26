@@ -11,7 +11,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
   AbstractApiService,
   BaseResource,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 

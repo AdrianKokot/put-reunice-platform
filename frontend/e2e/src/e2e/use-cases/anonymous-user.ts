@@ -43,19 +43,19 @@ const goToPageBySearch = (search: string) => {
 export const ucan3 = (testTimestamp: string) => {
   it('UC-AN3. Search for keywords', () => {
     goToPageBySearch(testTimestamp);
-    cy.get('reunice-page-details').should('contain.text', testTimestamp);
+    cy.get('eunice-page-details').should('contain.text', testTimestamp);
   });
 };
 
 export const ucan4 = (testTimestamp: string) => {
   it('UC-AN4. Downloading files', () => {
     goToPageBySearch(`${testTimestamp} University User Page`);
-    cy.get('reunice-page-details').should('contain.text', testTimestamp);
-    cy.get('reunice-page-resources-list tui-file').should(
+    cy.get('eunice-page-details').should('contain.text', testTimestamp);
+    cy.get('eunice-page-resources-list tui-file').should(
       'contain.text',
       testTimestamp,
     );
-    cy.get('reunice-page-resources-list tui-file a').click();
+    cy.get('eunice-page-resources-list tui-file a').click();
   });
 };
 

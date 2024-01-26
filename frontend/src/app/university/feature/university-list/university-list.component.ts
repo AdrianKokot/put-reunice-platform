@@ -5,7 +5,7 @@ import {
   Input,
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { PageService } from '@reunice/modules/shared/data-access';
+import { PageService } from '@eunice/modules/shared/data-access';
 import { startWith } from 'rxjs';
 import { TuiIslandModule, TuiLineClampModule } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
@@ -14,7 +14,7 @@ import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'reunice-university-list',
+  selector: 'eunice-university-list',
   standalone: true,
   imports: [
     CommonModule,

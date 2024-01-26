@@ -2,19 +2,19 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
-  ReuniceAbstractTable,
+  provideeuniceTable,
+  AbstractTable,
 } from '../../../shared';
 import {
   FormNotEmptyValuesPipeModule,
   TicketToBadgeStatusModule,
-} from '@reunice/modules/shared/ui';
+} from '@eunice/modules/shared/ui';
 import { FormBuilder } from '@angular/forms';
-import { Ticket, TicketService } from '@reunice/modules/shared/data-access';
+import { Ticket, TicketService } from '@eunice/modules/shared/data-access';
 import { TuiBadgeModule } from '@taiga-ui/kit';
 
 @Component({
-  selector: 'reunice-ticket-list',
+  selector: 'eunice-ticket-list',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -24,10 +24,10 @@ import { TuiBadgeModule } from '@taiga-ui/kit';
     TicketToBadgeStatusModule,
   ],
   templateUrl: './ticket-list.component.html',
-  providers: [provideReuniceTable(TicketService)],
+  providers: [provideeuniceTable(TicketService)],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TicketListComponent extends ReuniceAbstractTable<Ticket> {
+export class TicketListComponent extends AbstractTable<Ticket> {
   readonly columns: Array<keyof Ticket | string> = [
     'title',
     'requestedTime',

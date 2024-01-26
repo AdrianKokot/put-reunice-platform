@@ -3,17 +3,17 @@ import { TuiButtonModule, TuiHintModule, TuiLabelModule } from '@taiga-ui/core';
 import { CommonModule } from '@angular/common';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiTableModule } from '@taiga-ui/addon-table';
-import { NgForTrackByIdDirective } from '@reunice/modules/shared/util';
+import { NgForTrackByIdDirective } from '@eunice/modules/shared/util';
 import {
   ConfirmDirective,
   LocalizedPipeModule,
-} from '@reunice/modules/shared/ui';
+} from '@eunice/modules/shared/ui';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 import {
   UserControlsResourceDirective,
   UserDirective,
-} from '@reunice/modules/shared/security';
+} from '@eunice/modules/shared/security';
 
 const modules = [
   CommonModule,

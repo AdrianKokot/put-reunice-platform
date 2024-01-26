@@ -5,21 +5,21 @@ import {
   UniversityService,
   User,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
+  provideeuniceTable,
   ResourceSearchWrapper,
-  ReuniceAbstractTable,
+  AbstractTable,
 } from '../../../shared';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
 import { TuiComboBoxModule, TuiDataListWrapperModule } from '@taiga-ui/kit';
 
 @Component({
-  selector: 'reunice-user-list',
+  selector: 'eunice-user-list',
   templateUrl: './user-list.component.html',
   standalone: true,
   imports: [
@@ -31,9 +31,9 @@ import { TuiComboBoxModule, TuiDataListWrapperModule } from '@taiga-ui/kit';
     TuiDataListWrapperModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(UserService)],
+  providers: [provideeuniceTable(UserService)],
 })
-export class UserListComponent extends ReuniceAbstractTable<User> {
+export class UserListComponent extends AbstractTable<User> {
   readonly user = inject(AuthService).userSnapshot;
   readonly columns: Array<keyof User | string> = [
     'username',

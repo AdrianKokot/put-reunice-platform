@@ -3,19 +3,19 @@ import {
   AccountTypeEnum,
   Template,
   TemplateService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
-  ReuniceAbstractTable,
+  provideeuniceTable,
+  AbstractTable,
 } from '../../../shared';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
-import { AuthService } from '@reunice/modules/shared/security';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
+import { AuthService } from '@eunice/modules/shared/security';
 
 @Component({
-  selector: 'reunice-template-list',
+  selector: 'eunice-template-list',
   templateUrl: './template-list.component.html',
   imports: [
     BaseFormImportsModule,
@@ -24,9 +24,9 @@ import { AuthService } from '@reunice/modules/shared/security';
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(TemplateService)],
+  providers: [provideeuniceTable(TemplateService)],
 })
-export class TemplateListComponent extends ReuniceAbstractTable<Template> {
+export class TemplateListComponent extends AbstractTable<Template> {
   readonly isUserAdmin =
     inject(AuthService).userSnapshot?.accountType === AccountTypeEnum.ADMIN;
   readonly columns: Array<keyof Template | string> = ['name', 'actions'];

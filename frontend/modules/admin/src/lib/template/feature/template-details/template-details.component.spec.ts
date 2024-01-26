@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateDetailsComponent } from './template-details.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe(TemplateDetailsComponent.name, () => {
   let component: TemplateDetailsComponent;

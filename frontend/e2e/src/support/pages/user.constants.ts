@@ -1,4 +1,4 @@
-import { User } from '@reunice/modules/shared/data-access';
+import { User } from '@eunice/modules/shared/data-access';
 import { waitForResponse } from '../app';
 
 type UserForm = Pick<

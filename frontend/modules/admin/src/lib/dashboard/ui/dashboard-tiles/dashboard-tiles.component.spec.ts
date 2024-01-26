@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardTilesComponent } from './dashboard-tiles.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe(DashboardTilesComponent.name, () => {
   let component: DashboardTilesComponent;

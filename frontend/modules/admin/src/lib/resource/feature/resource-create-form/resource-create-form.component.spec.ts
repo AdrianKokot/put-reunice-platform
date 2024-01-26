@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourceCreateFormComponent } from './resource-create-form.component';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 
 describe(ResourceCreateFormComponent.name, () => {
   let component: ResourceCreateFormComponent;

@@ -1,4 +1,4 @@
-import { University } from '@reunice/modules/shared/data-access';
+import { University } from '@eunice/modules/shared/data-access';
 
 type UniversityForm = Pick<
   University,

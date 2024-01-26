@@ -4,24 +4,24 @@ import {
   inject,
   Input,
 } from '@angular/core';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
 import { FormBuilder } from '@angular/forms';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
+  provideeuniceTable,
   ResourceSearchWrapper,
-  ReuniceAbstractTable,
+  AbstractTable,
 } from '../../../shared';
 import {
   Page,
   PageService,
   Resource,
   UniversityService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 
 @Component({
-  selector: 'reunice-resource-pages',
+  selector: 'eunice-resource-pages',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -30,9 +30,9 @@ import {
   ],
   templateUrl: './resource-pages.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(PageService)],
+  providers: [provideeuniceTable(PageService)],
 })
-export class ResourcePagesComponent extends ReuniceAbstractTable<Page> {
+export class ResourcePagesComponent extends AbstractTable<Page> {
   @Input() set resourceId(value: Resource['id'] | null) {
     this.filtersForm.controls.resources_eq.setValue(value);
   }

@@ -6,7 +6,7 @@ import {
   defaultEditorExtensions,
   TUI_EDITOR_EXTENSIONS,
 } from '@tinkoff/tui-editor';
-import { provideDeactivateForm } from '@reunice/modules/shared/util';
+import { provideDeactivateForm } from '@eunice/modules/shared/util';
 
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(adminRoutes)],

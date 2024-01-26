@@ -3,9 +3,9 @@ import {
   AccountTypeEnum,
   TemplateService,
   UniversityService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { FormBuilder, Validators } from '@angular/forms';
-import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { FormSubmitWrapper } from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
@@ -17,11 +17,11 @@ import {
   TuiDataListWrapperModule,
   TuiMultiSelectModule,
 } from '@taiga-ui/kit';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
-  selector: 'reunice-template-create-form',
+  selector: 'eunice-template-create-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,

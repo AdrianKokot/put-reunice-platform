@@ -78,7 +78,7 @@
           <ng-template #treeContent let-page>
             <label
               [class._selected]="page.id === item?.id"
-              class="reunice-tree-item-option"
+              class="eunice-tree-item-option"
             >
               <a tuiLink [routerLink]="['../', page.id]">
                 {{ page.title }}
@@ -91,11 +91,11 @@
   </div>
 
   <div [hidden]="activeTabIndex !== 3">
-    <reunice-page-users *ngIf="item !== null" [handles]="item.id" />
+    <eunice-page-users *ngIf="item !== null" [handles]="item.id" />
   </div>
 
   <div [hidden]="activeTabIndex !== 2">
-    <reunice-page-resources *ngIf="item !== null" [pageId]="item.id" />
+    <eunice-page-resources *ngIf="item !== null" [pageId]="item.id" />
   </div>
 
   <div [hidden]="activeTabIndex !== 1" [class.details-skeleton]="item === null">
@@ -118,12 +118,12 @@
     </a>
 
     <button
-      *reuniceUserControlsResource="item"
+      *euniceUserControlsResource="item"
       tuiButton
       type="button"
       appearance="flat-destructive"
       class="tui-form__button"
-      [reuniceConfirm]="'PAGE_DELETE_DESCRIPTION' | translate"
+      [euniceConfirm]="'PAGE_DELETE_DESCRIPTION' | translate"
       [showLoader]="(deleteHandler.loading$ | async) ?? false"
       [disabled]="!item.hidden || item.children.length > 0"
       [tuiHint]="

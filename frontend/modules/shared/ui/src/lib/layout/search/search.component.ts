@@ -8,7 +8,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { SearchService } from '@reunice/modules/shared/data-access';
+import { SearchService } from '@eunice/modules/shared/data-access';
 import {
   TuiDataListModule,
   TuiHintModule,
@@ -21,7 +21,7 @@ import { TuiElementModule } from '@taiga-ui/cdk';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'reunice-search',
+  selector: 'eunice-search',
   standalone: true,
   imports: [
     CommonModule,

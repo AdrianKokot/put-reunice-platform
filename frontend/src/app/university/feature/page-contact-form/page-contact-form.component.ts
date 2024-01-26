@@ -22,14 +22,14 @@ import {
 import {
   FormSubmitWrapper,
   resourceIdFromRoute,
-} from '@reunice/modules/shared/util';
-import { TicketService } from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/util';
+import { TicketService } from '@eunice/modules/shared/data-access';
 import { first, switchMap } from 'rxjs';
 import { Router } from '@angular/router';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Component({
-  selector: 'reunice-page-contact-form',
+  selector: 'eunice-page-contact-form',
   standalone: true,
   imports: [
     CommonModule,

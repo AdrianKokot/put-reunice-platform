@@ -9,11 +9,11 @@ import { CommonModule } from '@angular/common';
 import {
   nestedRouteParamMap,
   PAGE_TREE_HANDLER,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TuiLinkModule, TuiScrollbarModule } from '@taiga-ui/core';
 import { TuiTreeModule } from '@taiga-ui/kit';
-import { Page } from '@reunice/modules/shared/data-access';
+import { Page } from '@eunice/modules/shared/data-access';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, first, map } from 'rxjs';
 
@@ -29,7 +29,7 @@ export const UNIVERSITY_PAGE_HIERARCHY_MAP = new InjectionToken<
 >('UNIVERSITY_PAGE_HIERARCHY_MAP');
 
 @Component({
-  selector: 'reunice-university-pages-tree',
+  selector: 'eunice-university-pages-tree',
   standalone: true,
   imports: [
     CommonModule,

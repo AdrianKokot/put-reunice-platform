@@ -8,15 +8,15 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "e2e/cypress.config.ts",
-        "devServerTarget": "reunice:serve:e2e-development",
+        "devServerTarget": "eunice:serve:e2e-development",
         "testingType": "e2e"
       },
       "configurations": {
         "production": {
-          "devServerTarget": "reunice:serve:e2e-development"
+          "devServerTarget": "eunice:serve:e2e-development"
         },
         "ci": {
-          "devServerTarget": "reunice:e2e-serve-static"
+          "devServerTarget": "eunice:e2e-serve-static"
         }
       }
     },
@@ -29,5 +29,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": ["reunice"]
+  "implicitDependencies": ["eunice"]
 }

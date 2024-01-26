@@ -73,7 +73,7 @@ form.form-skeleton [tuiWrapper],
   }
 }
 
-.reunice-tree-item-option {
+.eunice-tree-item-option {
   color: var(--tui-primary);
   transition-property: color;
   transition-duration: var(--tui-duration, 0.3s);
@@ -197,16 +197,16 @@ form.form-skeleton [tuiWrapper],
 // Language
 
 html {
-  --reunice-optional-text: 'Optional';
+  --eunice-optional-text: 'Optional';
 
   &[lang='pl'] {
-    --reunice-optional-text: 'Opcjonalne';
+    --eunice-optional-text: 'Opcjonalne';
   }
 }
 
 label._optional .t-label .t-text {
   &::after {
-    content: ' (' var(--reunice-optional-text) ')';
+    content: ' (' var(--eunice-optional-text) ')';
     color: var(--tui-text-02);
   }
 }
@@ -249,7 +249,7 @@ tui-breadcrumbs {
 }
 
 @media @tui-mobile-min {
-  reunice-university-shell {
+  eunice-university-shell {
     display: block;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -265,7 +265,7 @@ tui-breadcrumbs {
   }
 }
 
-reunice-notifications .badge > div {
+eunice-notifications .badge > div {
   pointer-events: none;
 }
 

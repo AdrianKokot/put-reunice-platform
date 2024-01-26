@@ -1,16 +1,16 @@
-import { Page } from '@reunice/modules/shared/data-access';
+import { Page } from '@eunice/modules/shared/data-access';
 import { waitForResponse } from '../app';
 
 type PageForm = Pick<Page, 'title' | 'description' | 'content'>;
 
 export const PublicPage = {
   fillContactForm: (subject: string, email: string, message: string) => {
-    cy.get('reunice-page-contact-form input[name="title"]').type(subject);
-    cy.get('reunice-page-contact-form input[name="email"]').type(email);
-    cy.get('reunice-page-contact-form textarea').type(message);
+    cy.get('eunice-page-contact-form input[name="title"]').type(subject);
+    cy.get('eunice-page-contact-form input[name="email"]').type(email);
+    cy.get('eunice-page-contact-form textarea').type(message);
 
     cy.intercept('POST', '/api/tickets').as('createContactRequest');
-    cy.get('reunice-page-contact-form form').submit();
+    cy.get('eunice-page-contact-form form').submit();
     waitForResponse('@createContactRequest', 200);
   },
 };

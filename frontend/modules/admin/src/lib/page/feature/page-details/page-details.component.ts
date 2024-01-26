@@ -1,12 +1,12 @@
-import { Page, PageService } from '@reunice/modules/shared/data-access';
+import { Page, PageService } from '@eunice/modules/shared/data-access';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DeleteResourceWrapper,
   PAGE_TREE_HANDLER,
   resourceIdFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { filter, shareReplay, startWith, switchMap, takeUntil } from 'rxjs';
-import { AuthService } from '@reunice/modules/shared/security';
+import { AuthService } from '@eunice/modules/shared/security';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
@@ -25,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TuiDestroyService } from '@taiga-ui/cdk';
 
 @Component({
-  selector: 'reunice-page-details',
+  selector: 'eunice-page-details',
   standalone: true,
   imports: [
     BaseDetailsImportsModule,

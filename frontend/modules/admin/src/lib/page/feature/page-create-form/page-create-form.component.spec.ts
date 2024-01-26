@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageCreateFormComponent } from './page-create-form.component';
-import { TestingModule, provideAuthenticatedUser } from '@reunice/testing';
+import { TestingModule, provideAuthenticatedUser } from '@eunice/testing';
 
 describe(PageCreateFormComponent.name, () => {
   let component: PageCreateFormComponent;

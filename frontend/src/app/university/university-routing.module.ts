@@ -1,7 +1,7 @@
 import { inject, NgModule } from '@angular/core';
 import { CanActivateFn, Router, RouterModule, Routes } from '@angular/router';
-import { UniversityService } from '@reunice/modules/shared/data-access';
-import { translatedTitle } from '@reunice/modules/shared/util';
+import { UniversityService } from '@eunice/modules/shared/data-access';
+import { translatedTitle } from '@eunice/modules/shared/util';
 import { map } from 'rxjs';
 import { PageDetailsComponent } from './feature/page-details/page-details.component';
 import { UniversityListComponent } from './feature/university-list/university-list.component';

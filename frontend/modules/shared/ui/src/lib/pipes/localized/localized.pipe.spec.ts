@@ -3,7 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
-import { LangService } from '@reunice/modules/shared/util';
+import { LangService } from '@eunice/modules/shared/util';
 
 describe(LocalizedDatePipe.name, () => {
   beforeEach(async () => {

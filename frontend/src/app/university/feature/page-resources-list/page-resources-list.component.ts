@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { resourceIdFromRoute } from '@reunice/modules/shared/util';
+import { resourceIdFromRoute } from '@eunice/modules/shared/util';
 import {
   filter,
   Observable,
@@ -20,7 +20,7 @@ import {
   Resource,
   ResourceService,
   ResourceType,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { TuiDestroyService, TuiLetModule } from '@taiga-ui/cdk';
 import {
   TuiPreviewDialogService,
@@ -37,7 +37,7 @@ import {
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiFilesModule, TuiMarkerIconModule } from '@taiga-ui/kit';
-import { FileIconPipeModule } from '@reunice/modules/shared/ui';
+import { FileIconPipeModule } from '@eunice/modules/shared/ui';
 
 type FilePreviewUIState = {
   pagination: {
@@ -53,7 +53,7 @@ type FilePreviewUIState = {
 );
 
 @Component({
-  selector: 'reunice-page-resources-list',
+  selector: 'eunice-page-resources-list',
   standalone: true,
   imports: [
     CommonModule,

@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageService } from '@reunice/modules/shared/data-access';
+import { PageService } from '@eunice/modules/shared/data-access';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { catchError, EMPTY, startWith, switchMap, throwError } from 'rxjs';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiBreadcrumbsModule, TuiLineClampModule } from '@taiga-ui/kit';
 import { TuiButtonModule, TuiHintModule, TuiLinkModule } from '@taiga-ui/core';
-import { resourceIdFromRoute } from '@reunice/modules/shared/util';
+import { resourceIdFromRoute } from '@eunice/modules/shared/util';
 import { PageResourcesListComponent } from '../page-resources-list/page-resources-list.component';
-import { UserControlsResourceDirective } from '@reunice/modules/shared/security';
+import { UserControlsResourceDirective } from '@eunice/modules/shared/security';
 import { TranslateModule } from '@ngx-translate/core';
 import { PageContactFormComponent } from '../page-contact-form/page-contact-form.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import { LocalizedPipeModule } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-page-details',
+  selector: 'eunice-page-details',
   standalone: true,
   imports: [
     CommonModule,
