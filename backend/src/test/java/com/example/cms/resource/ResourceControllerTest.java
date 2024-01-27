@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -352,6 +353,71 @@ class ResourceControllerTest extends BaseAPIControllerTest {
                 );
                 performAs(Role.ADMIN, userId);
                 performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
+            }
+        }
+        @Nested
+        class DeleteResourceTestClass {
+
+            private void clearFileResourcePages(){
+                FileResource file = fileResourceRepository.findById(resourceId).get();
+                file.setPages(new HashSet<Page>());
+                fileResourceRepository.save(file);
+            }
+
+            @Test
+            void delete_Resource_GuestUser_unauthorized() throws Exception {
+                performAsGuest();
+                performDelete(resourceId).andExpect(status().isUnauthorized());
+            }
+
+            @Test
+            void delete_Resource_User_Success() throws Exception {
+                clearFileResourcePages();
+                performAs(Role.USER, userId);
+                performDelete(resourceId).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            void delete_Resource_Moderator_Success() throws Exception {
+                clearFileResourcePages();
+                performAs(Role.MODERATOR, userId);
+                performDelete(resourceId).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            void delete_Resource_Admin_Success() throws Exception {
+                clearFileResourcePages();
+                performAs(Role.ADMIN, userId);
+                performDelete(resourceId).andExpect(status().is2xxSuccessful());
+            }
+
+
+            @Test
+            void delete_Link_GuestUser_unauthorized() throws Exception {
+                clearFileResourcePages();
+                performAsGuest();
+                performDelete(resourceId).andExpect(status().isUnauthorized());
+            }
+
+            @Test
+            void delete_Link_User_Success() throws Exception {
+                clearFileResourcePages();
+                performAs(Role.USER, userId);
+                performDelete(resourceId).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            void delete_Link_Moderator_Success() throws Exception {
+                clearFileResourcePages();
+                performAs(Role.MODERATOR, userId);
+                performDelete(resourceId).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            void delete_Link_Admin_Success() throws Exception {
+                clearFileResourcePages();
+                performAs(Role.ADMIN, userId);
+                performDelete(resourceId).andExpect(status().is2xxSuccessful());
             }
         }
     }
