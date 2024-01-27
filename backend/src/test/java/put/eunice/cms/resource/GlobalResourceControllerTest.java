@@ -1,8 +1,14 @@
 package put.eunice.cms.resource;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import put.eunice.cms.BaseAPIControllerTest;
 import put.eunice.cms.page.Content;
 import put.eunice.cms.page.Page;
@@ -11,15 +17,6 @@ import put.eunice.cms.security.Role;
 import put.eunice.cms.university.University;
 import put.eunice.cms.university.UniversityRepository;
 import put.eunice.cms.user.User;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.Set;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class GlobalResourceControllerTest extends BaseAPIControllerTest {
     @Autowired private UniversityRepository universityRepository;
@@ -49,8 +46,6 @@ class GlobalResourceControllerTest extends BaseAPIControllerTest {
 
         university.setEnrolledUsers(Set.of(user));
         university = universityRepository.save(university);
-
-
 
         var page =
                 new Page(
@@ -85,14 +80,12 @@ class GlobalResourceControllerTest extends BaseAPIControllerTest {
         if (fileResourceRepository.existsById(this.resourceId))
             fileResourceRepository.deleteById(this.resourceId);
 
-        if (pageRepository.existsById(this.pageId))
-            pageRepository.deleteById(this.pageId);
+        if (pageRepository.existsById(this.pageId)) pageRepository.deleteById(this.pageId);
 
         if (universityRepository.existsById(this.universityId))
             universityRepository.deleteById(this.universityId);
 
-        if (userRepository.existsById(this.userId))
-            userRepository.deleteById(this.userId);
+        if (userRepository.existsById(this.userId)) userRepository.deleteById(this.userId);
     }
 
     @Nested

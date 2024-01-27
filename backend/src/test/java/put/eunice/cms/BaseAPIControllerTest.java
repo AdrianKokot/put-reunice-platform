@@ -1,5 +1,7 @@
 package put.eunice.cms;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;
@@ -25,7 +27,6 @@ import put.eunice.cms.resource.projections.ResourceDtoFormCreate;
 import put.eunice.cms.resource.projections.ResourceDtoFormUpdate;
 import put.eunice.cms.security.Role;
 import put.eunice.cms.user.UserRepository;
-
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -124,19 +125,26 @@ public class BaseAPIControllerTest {
     }
 
     protected ResultActions performPostFile(ResourceDtoFormCreate dto) throws Exception {
-        if(dto.getFile() == null){
-            return mvc.perform(MockMvcRequestBuilders.multipart(getUrl() )
-                    .param("name", dto.getName())
-                    .param("authorId", String.valueOf(dto.getAuthorId()))
-                    .param("description", dto.getDescription())
-                    .param("url", dto.getUrl()));
+        if (dto.getFile() == null) {
+            return mvc.perform(
+                    MockMvcRequestBuilders.multipart(getUrl())
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
         } else {
-            return mvc.perform(MockMvcRequestBuilders.multipart(getUrl())
-                    .file(new MockMultipartFile(dto.getFile().getName(),dto.getFile().getOriginalFilename(), dto.getFile().getContentType(), dto.getFile().getInputStream()))
-                    .param("name", dto.getName())
-                    .param("authorId", String.valueOf(dto.getAuthorId()))
-                    .param("description", dto.getDescription())
-                    .param("url", dto.getUrl()));
+            return mvc.perform(
+                    MockMvcRequestBuilders.multipart(getUrl())
+                            .file(
+                                    new MockMultipartFile(
+                                            dto.getFile().getName(),
+                                            dto.getFile().getOriginalFilename(),
+                                            dto.getFile().getContentType(),
+                                            dto.getFile().getInputStream()))
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
         }
     }
 
@@ -153,21 +161,23 @@ public class BaseAPIControllerTest {
     }
 
     protected ResultActions performPutFile(Long id, ResourceDtoFormUpdate dto) throws Exception {
-        if(dto.getFile() == null){
-            return mvc.perform(put(getUrl(id))
-                    .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                    .param("name", dto.getName())
-                    .param("authorId", String.valueOf(dto.getAuthorId()))
-                    .param("description", dto.getDescription())
-                    .param("url", dto.getUrl()));
+        if (dto.getFile() == null) {
+            return mvc.perform(
+                    put(getUrl(id))
+                            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
         } else {
-            return mvc.perform(put(getUrl(id))
-                    .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                    .content(dto.getFile().getBytes())
-                    .param("name", dto.getName())
-                    .param("authorId", String.valueOf(dto.getAuthorId()))
-                    .param("description", dto.getDescription())
-                    .param("url", dto.getUrl()));
+            return mvc.perform(
+                    put(getUrl(id))
+                            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                            .content(dto.getFile().getBytes())
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
         }
     }
 
