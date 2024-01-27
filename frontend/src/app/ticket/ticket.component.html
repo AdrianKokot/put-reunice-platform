@@ -8,8 +8,20 @@
       *ngIf="ticket"
       [status]="ticket | ticketToBadgeStatus"
       [value]="'TICKET_STATUS_' + ticket.status | translate"
+      [tuiHint]="ticket?.lastStatusChangeBy ? lastStatusChange : null"
     ></tui-badge>
   </h3>
+
+  <ng-template #lastStatusChange>
+    {{
+      'TICKET_LAST_STATUS_CHANGE'
+        | translate
+          : {
+              firstName: ticket?.lastStatusChangeBy?.firstName,
+              lastName: ticket?.lastStatusChangeBy?.lastName
+            }
+    }}
+  </ng-template>
 
   <p class="text-02" [class.tui-skeleton]="ticket === null">
     {{
