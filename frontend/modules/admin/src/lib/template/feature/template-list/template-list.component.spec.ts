@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateListComponent } from './template-list.component';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 
 describe(TemplateListComponent.name, () => {
   let component: TemplateListComponent;

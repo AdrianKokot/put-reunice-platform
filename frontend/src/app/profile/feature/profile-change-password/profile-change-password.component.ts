@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '@reunice/modules/shared/security';
-import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { AuthService } from '@eunice/modules/shared/security';
+import { FormSubmitWrapper } from '@eunice/modules/shared/util';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -13,7 +13,7 @@ import {
 import { TuiFieldErrorPipeModule, TuiInputPasswordModule } from '@taiga-ui/kit';
 
 @Component({
-  selector: 'reunice-profile-change-password',
+  selector: 'eunice-profile-change-password',
   standalone: true,
   imports: [
     CommonModule,

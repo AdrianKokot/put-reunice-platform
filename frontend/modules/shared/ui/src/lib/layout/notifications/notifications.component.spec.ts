@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationsComponent } from './notifications.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe(NotificationsComponent.name, () => {
   let component: NotificationsComponent;

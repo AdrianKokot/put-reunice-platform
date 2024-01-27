@@ -15,7 +15,7 @@ import {
   AbstractApiService,
   ApiFilter,
   BaseResource,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   TuiContextWithImplicit,
   TuiHandler,

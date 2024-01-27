@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserEditFormComponent } from './user-edit-form.component';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 
 describe(UserEditFormComponent.name, () => {
   let component: UserEditFormComponent;

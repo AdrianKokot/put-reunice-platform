@@ -12,7 +12,7 @@
     </tui-input>
   </label>
 
-  <label class="w-md" *reuniceUser="'ADMIN'">
+  <label class="w-md" *euniceUser="'ADMIN'">
     <tui-combo-box
       tuiTextfieldSize="m"
       class="no-shadow"
@@ -50,12 +50,13 @@
     tuiButton
     type="button"
     data-test="new-button"
+    *ngIf="user.accountType !== accountType.USER"
   >
     {{ 'NEW_USER' | translate }}
   </a>
 </div>
 
-<tui-scrollbar class="reunice-table-wrapper">
+<tui-scrollbar class="eunice-table-wrapper">
   <table
     tuiTable
     tuiSortBy
@@ -99,12 +100,12 @@
           class="column-sm"
         >
           <span>{{ 'ROLE' | translate }}</span>
-          <reunice-table-filter formControlName="accountType_eq">
+          <eunice-table-filter formControlName="accountType_eq">
             <tui-data-list *tuiDataList size="s">
               <button
                 tuiOption
                 [value]="accountType.ADMIN"
-                *reuniceUser="accountType.ADMIN"
+                *euniceUser="accountType.ADMIN"
               >
                 {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
               </button>
@@ -115,7 +116,7 @@
                 {{ 'ACCOUNT_TYPE_' + accountType.USER | translate }}
               </button>
             </tui-data-list>
-          </reunice-table-filter>
+          </eunice-table-filter>
         </th>
         <th
           *tuiHead="'enabled'"
@@ -125,7 +126,7 @@
           class="column-xs"
         >
           <span>{{ 'USER_STATE' | translate }}</span>
-          <reunice-table-filter formControlName="enabled_eq">
+          <eunice-table-filter formControlName="enabled_eq">
             <tui-data-list *tuiDataList size="s">
               <button tuiOption [value]="true">
                 {{ 'USER_STATE_ACTIVE' | translate }}
@@ -134,7 +135,7 @@
                 {{ 'USER_STATE_DEACTIVATED' | translate }}
               </button>
             </tui-data-list>
-          </reunice-table-filter>
+          </eunice-table-filter>
         </th>
         <th
           *tuiHead="'actions'"
@@ -196,7 +197,7 @@
             shape="rounded"
             [tuiHint]="'EDIT' | translate"
             data-test="edit-button"
-            *ngIf="user.accountType !== accountType.USER"
+            *ngIf="user.accountType !== accountType.USER && user.id !== item.id"
           >
           </a>
         </td>

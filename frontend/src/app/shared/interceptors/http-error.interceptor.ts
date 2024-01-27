@@ -20,7 +20,7 @@ import { TuiAlertService } from '@taiga-ui/core';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from '@reunice/modules/shared/security';
+import { AuthService } from '@eunice/modules/shared/security';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {

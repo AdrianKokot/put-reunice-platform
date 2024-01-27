@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '@reunice/modules/shared/security';
+import { AuthService } from '@eunice/modules/shared/security';
 import { Router } from '@angular/router';
-import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { FormSubmitWrapper } from '@eunice/modules/shared/util';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Component({
-  selector: 'reunice-login-shell',
+  selector: 'eunice-login-shell',
   templateUrl: './login-shell.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

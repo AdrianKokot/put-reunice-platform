@@ -20,7 +20,7 @@ import { inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TuiAlertService } from '@taiga-ui/core';
 import { ERROR_SYMBOL_VALUE, LOADING_SYMBOL_VALUE } from './wrapper.symbols';
-import { FieldViolationApiError } from '@reunice/modules/shared/data-access';
+import { FieldViolationApiError } from '@eunice/modules/shared/data-access';
 
 export interface FormSubmitWrapperFunctions<
   TControl extends {

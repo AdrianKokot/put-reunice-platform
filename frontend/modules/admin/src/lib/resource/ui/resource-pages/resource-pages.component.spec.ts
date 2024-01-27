@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResourcePagesComponent } from './resource-pages.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe('ResourcePagesComponent', () => {
   let component: ResourcePagesComponent;

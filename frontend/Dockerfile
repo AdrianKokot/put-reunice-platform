@@ -7,5 +7,5 @@ RUN npm ci && \
 
 ### Run ###
 FROM nginx:1.17.1-alpine
-COPY --from=build /usr/src/app/dist/reunice /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/eunice /usr/share/nginx/html
 EXPOSE 80

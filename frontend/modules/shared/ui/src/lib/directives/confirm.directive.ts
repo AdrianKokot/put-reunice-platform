@@ -15,7 +15,7 @@ import { TUI_PROMPT } from '@taiga-ui/kit';
 import { FormGroupDirective } from '@angular/forms';
 
 @Directive({
-  selector: '[reuniceConfirm]',
+  selector: '[euniceConfirm]',
   standalone: true,
   providers: [TuiDestroyService],
 })
@@ -25,7 +25,7 @@ export class ConfirmDirective {
   private readonly _translate = inject(TranslateService);
   private readonly _form = inject(FormGroupDirective, { optional: true });
 
-  @Input('reuniceConfirm')
+  @Input('euniceConfirm')
   promptContent: PolymorpheusContent | null = '';
 
   @Input()

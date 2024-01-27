@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { GlobalPageService } from '@reunice/modules/shared/data-access';
+import { GlobalPageService } from '@eunice/modules/shared/data-access';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   FormSubmitWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
@@ -15,12 +15,12 @@ import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 import {
   ConfirmDirective,
   LocalizedPipeModule,
-} from '@reunice/modules/shared/ui';
+} from '@eunice/modules/shared/ui';
 import { HtmlEditorComponent } from '../../../shared/editor-extensions/html-editor/html-editor.component';
 import { TuiItemModule } from '@taiga-ui/cdk';
 
 @Component({
-  selector: 'reunice-global-page-edit-form',
+  selector: 'eunice-global-page-edit-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,

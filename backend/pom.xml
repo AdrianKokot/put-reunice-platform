@@ -8,11 +8,11 @@
         <version>2.7.14</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
+    <groupId>put.eunice</groupId>
     <artifactId>cms</artifactId>
-    <version>0.3</version>
-    <name>cms</name>
-    <description>Demo project for Spring Boot</description>
+    <version>1.0</version>
+    <name>EUNICE CMS</name>
+    <description>Science focused CMS prototype</description>
     <properties>
         <java.version>11</java.version>
     </properties>

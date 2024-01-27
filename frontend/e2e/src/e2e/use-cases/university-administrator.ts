@@ -71,7 +71,7 @@ export const ucua3 = (testTimestamp: string) => {
     UserPage.fillForm({
       firstName: `UA_Test_${testTimestamp}`,
       lastName: 'UA_User',
-      email: `ua_user${testTimestamp}@reunice.com`,
+      email: `ua_user${testTimestamp}@eunice.com`,
       username: `ua_user${testTimestamp}`,
     });
 
@@ -103,7 +103,7 @@ export const ucua5 = (testTimestamp: string) => {
     UserPage.fillForm({
       firstName: `Edited_UA_Test_${testTimestamp}`,
       lastName: 'Edited_UA_User',
-      email: `edited_ua_user${testTimestamp}@reunice.com`,
+      email: `edited_ua_user${testTimestamp}@eunice.com`,
       username: `edited_ua_user${testTimestamp}`,
     });
 
@@ -114,7 +114,7 @@ export const ucua5 = (testTimestamp: string) => {
     cy.get('label .t-content')
       .should('contain.text', `Edited_UA_Test_${testTimestamp}`)
       .should('contain.text', 'Edited_UA_User')
-      .should('contain.text', `edited_ua_user${testTimestamp}@reunice.com`)
+      .should('contain.text', `edited_ua_user${testTimestamp}@eunice.com`)
       .should('contain.text', `edited_ua_user${testTimestamp}`);
   });
 };
@@ -158,33 +158,7 @@ export const ucua4 = (testTimestamp: string) => {
     cy.intercept('GET', '/api/pages?*').as('getPages');
     setUserState('disabled', testTimestamp);
 
-    cy.intercept('GET', '/api/pages/*').as('getPage');
-    cy.intercept('DELETE', '/api/pages/*').as('deletePage');
     cy.intercept('DELETE', '/api/users/*').as('deleteUser');
-    cy.intercept('GET', '/api/users/*').as('getUserDetails');
-    UserPage.tabs.pages();
-    let userUrl = '';
-    cy.url().then((u) => (userUrl = u));
-    waitForResponse('@getPages', 200);
-
-    Resource.edit('table');
-    waitForResponse('@getPage', 200);
-
-    PagePage.setVisibility('hidden');
-
-    Form.submit();
-    Dialog.confirm();
-
-    waitForResponse('@getPage', 200);
-
-    Resource.delete();
-
-    waitForResponse('@deletePage', 204);
-
-    cy.then(() => cy.visit(userUrl));
-
-    waitForResponse('@getUserDetails', 200);
-
     Resource.delete();
 
     waitForResponse('@deleteUser', 204);

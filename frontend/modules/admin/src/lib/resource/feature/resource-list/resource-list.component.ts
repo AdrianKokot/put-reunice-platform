@@ -3,20 +3,20 @@ import {
   Resource,
   ResourceService,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { FormBuilder } from '@angular/forms';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
+  provideeuniceTable,
   ResourceSearchWrapper,
-  ReuniceAbstractTable,
+  AbstractTable,
 } from '../../../shared';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
-import { AuthService } from '@reunice/modules/shared/security';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
+import { AuthService } from '@eunice/modules/shared/security';
 
 @Component({
-  selector: 'reunice-resource-list',
+  selector: 'eunice-resource-list',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -25,9 +25,9 @@ import { AuthService } from '@reunice/modules/shared/security';
   ],
   templateUrl: './resource-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(ResourceService)],
+  providers: [provideeuniceTable(ResourceService)],
 })
-export class ResourceListComponent extends ReuniceAbstractTable<Resource> {
+export class ResourceListComponent extends AbstractTable<Resource> {
   private readonly _user = inject(AuthService).userSnapshot;
   readonly columns: Array<keyof Resource | string> = [
     'name',

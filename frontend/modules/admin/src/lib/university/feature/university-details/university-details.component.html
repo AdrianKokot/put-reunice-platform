@@ -57,7 +57,7 @@
     class="tui-form__buttons tui-form__buttons_align_end"
     *ngIf="item !== null"
   >
-    <ng-container *reuniceUserControlsResource="item">
+    <ng-container *euniceUserControlsResource="item">
       <a
         tuiButton
         [routerLink]="['../../pages', item.mainPage.id, 'edit']"
@@ -86,7 +86,7 @@
         type="button"
         appearance="flat-destructive"
         class="tui-form__button"
-        [reuniceConfirm]="'UNIVERSITY_DELETE_DESCRIPTION' | translate"
+        [euniceConfirm]="'UNIVERSITY_DELETE_DESCRIPTION' | translate"
         [showLoader]="(deleteHandler.loading$ | async) ?? false"
         [disabled]="
           !item.hidden ||

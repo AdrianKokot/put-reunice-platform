@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GlobalPageService } from '@reunice/modules/shared/data-access';
+import { GlobalPageService } from '@eunice/modules/shared/data-access';
 import {
   ActivatedRoute,
   Router,
@@ -12,14 +12,14 @@ import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import { TuiBreadcrumbsModule, TuiLineClampModule } from '@taiga-ui/kit';
 import { TuiButtonModule, TuiHintModule, TuiLinkModule } from '@taiga-ui/core';
-import { UserControlsResourceDirective } from '@reunice/modules/shared/security';
+import { UserControlsResourceDirective } from '@eunice/modules/shared/security';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import { LocalizedPipeModule } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-page',
+  selector: 'eunice-page',
   standalone: true,
   imports: [
     CommonModule,

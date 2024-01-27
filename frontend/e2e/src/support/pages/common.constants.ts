@@ -9,7 +9,7 @@ export const Dialog = {
     confirm: 'tui-dialog-host .t-buttons button:last-of-type',
   },
   confirm() {
-    cy.get(Dialog.buttons.confirm).click();
+    cy.get(Dialog.buttons.confirm).last().click();
   },
 };
 export const Resource = {

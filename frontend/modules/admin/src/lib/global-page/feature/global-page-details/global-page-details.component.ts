@@ -1,9 +1,9 @@
-import { GlobalPageService } from '@reunice/modules/shared/data-access';
+import { GlobalPageService } from '@eunice/modules/shared/data-access';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DeleteResourceWrapper,
   resourceIdFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { shareReplay, startWith, switchMap } from 'rxjs';
 import {
   BaseDetailsImportsModule,
@@ -14,7 +14,7 @@ import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import { TuiLinkModule } from '@taiga-ui/core';
 
 @Component({
-  selector: 'reunice-global-page-details',
+  selector: 'eunice-global-page-details',
   standalone: true,
   imports: [
     BaseDetailsImportsModule,

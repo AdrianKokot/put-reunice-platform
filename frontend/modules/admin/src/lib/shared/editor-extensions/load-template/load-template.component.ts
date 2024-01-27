@@ -10,7 +10,7 @@ import {
   Template,
   TemplateService,
   University,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { map, startWith, Subject, switchMap } from 'rxjs';
 import {
   TuiButtonModule,
@@ -22,7 +22,7 @@ import { TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'reunice-load-template-tool',
+  selector: 'eunice-load-template-tool',
   standalone: true,
   imports: [
     CommonModule,

@@ -2,7 +2,7 @@ import { RouterLink } from '@angular/router';
 import {
   ExtendedAccountType,
   ExtendedAccountTypeEnum,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 
 export interface DashboardTile {
   title: string;

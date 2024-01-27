@@ -5,11 +5,11 @@ import {
   UniversityService,
   User,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   FormSubmitWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   BaseFormImportsModule,
@@ -21,7 +21,7 @@ import {
   TuiDataListWrapperModule,
   TuiInputPasswordModule,
 } from '@taiga-ui/kit';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import {
   combineLatest,
   distinctUntilChanged,
@@ -30,10 +30,10 @@ import {
   startWith,
 } from 'rxjs';
 import { TuiHintModule } from '@taiga-ui/core';
-import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { ConfirmDirective } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-user-edit-form',
+  selector: 'eunice-user-edit-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,

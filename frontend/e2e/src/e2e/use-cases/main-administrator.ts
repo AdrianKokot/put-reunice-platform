@@ -32,10 +32,7 @@ export const uca12 = (testTimestamp: string) => {
     Form.submit();
     Dialog.confirm();
 
-    cy.intercept('GET', '/api/universities/*').as('getUniversity2');
     waitForResponse('@editUniversity', 200);
-
-    waitForResponse('@getUniversity2', 200);
 
     Resource.delete();
 
@@ -124,7 +121,7 @@ export const uca5 = (testTimestamp: string) => {
       UserPage.fillForm({
         firstName: `Test_${testTimestamp}`,
         lastName: 'User',
-        email: `user${testTimestamp}@reunice.com`,
+        email: `user${testTimestamp}@eunice.com`,
         username: `user${testTimestamp}`,
       });
 
@@ -145,7 +142,7 @@ export const uca5 = (testTimestamp: string) => {
       UserPage.fillForm({
         firstName: `Test_${testTimestamp}`,
         lastName: 'Moderator',
-        email: `moderator${testTimestamp}@reunice.com`,
+        email: `moderator${testTimestamp}@eunice.com`,
         username: `moderator${testTimestamp}`,
       });
 
@@ -221,7 +218,7 @@ export const uca_7_8_9 = (testTimestamp: string) => {
       UserPage.fillForm({
         firstName: `Edited_Test_${testTimestamp}`,
         lastName: 'Edited_User',
-        email: `edited_user${testTimestamp}@reunice.com`,
+        email: `edited_user${testTimestamp}@eunice.com`,
         username: `edited_user${testTimestamp}`,
       });
 
@@ -230,7 +227,7 @@ export const uca_7_8_9 = (testTimestamp: string) => {
       cy.url().should('match', /users\/\d+/);
 
       cy.get('label .t-content')
-        .should('contain.text', `edited_user${testTimestamp}@reunice.com`)
+        .should('contain.text', `edited_user${testTimestamp}@eunice.com`)
         .should('contain.text', `Edited_Test_${testTimestamp}`)
         .should('contain.text', 'Edited_User')
         .should('contain.text', `edited_user${testTimestamp}`);

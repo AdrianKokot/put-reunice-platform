@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateCreateFormComponent } from './template-create-form.component';
-import { provideAuthenticatedUser, TestingModule } from '@reunice/testing';
+import { provideAuthenticatedUser, TestingModule } from '@eunice/testing';
 
 describe(TemplateCreateFormComponent.name, () => {
   let component: TemplateCreateFormComponent;

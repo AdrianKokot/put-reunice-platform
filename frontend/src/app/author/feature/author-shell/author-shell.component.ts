@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { resourceIdFromRoute } from '@reunice/modules/shared/util';
+import { resourceIdFromRoute } from '@eunice/modules/shared/util';
 import {
   BehaviorSubject,
   combineLatest,
@@ -15,7 +15,7 @@ import {
   ApiPaginatedResponse,
   Page,
   PageService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { TranslateModule } from '@ngx-translate/core';
 import { TuiForModule, TuiLetModule } from '@taiga-ui/cdk';
 import {
@@ -24,10 +24,10 @@ import {
   TuiPaginationModule,
 } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
-import { LocalizedPipeModule } from '@reunice/modules/shared/ui';
+import { LocalizedPipeModule } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-author-shell',
+  selector: 'eunice-author-shell',
   standalone: true,
   imports: [
     CommonModule,

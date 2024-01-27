@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { TuiButtonModule } from '@taiga-ui/core';
 
 @Component({
-  selector: 'reunice-not-found',
+  selector: 'eunice-not-found',
   standalone: true,
   imports: [
     CommonModule,

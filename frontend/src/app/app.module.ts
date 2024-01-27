@@ -28,7 +28,7 @@ import {
 } from '@angular/common/http';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { HttpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
-import { UiModule } from '@reunice/modules/shared/ui';
+import { UiModule } from '@eunice/modules/shared/ui';
 import { TuiLanguageName, tuiLanguageSwitcher } from '@taiga-ui/i18n';
 import { PolymorpheusModule } from '@tinkoff/ng-polymorpheus';
 import { TuiActiveZoneModule, TuiLetModule } from '@taiga-ui/cdk';

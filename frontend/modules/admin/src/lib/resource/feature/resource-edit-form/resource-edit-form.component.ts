@@ -5,30 +5,30 @@ import {
   ResourceService,
   ResourceType,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   CustomValidators,
   FormSubmitWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
   ResourceSearchWrapper,
 } from '../../../shared';
 import { TuiLetModule } from '@taiga-ui/cdk';
-import { ConfirmDirective } from '@reunice/modules/shared/ui';
+import { ConfirmDirective } from '@eunice/modules/shared/ui';
 import {
   TuiComboBoxModule,
   TuiDataListWrapperModule,
   TuiFileLike,
   TuiInputFilesModule,
 } from '@taiga-ui/kit';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'reunice-resource-edit-form',
+  selector: 'eunice-resource-edit-form',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -94,6 +94,8 @@ export class ResourceEditFormComponent {
         ),
       ]);
     }
+
+    this.userSearch.addItem(item.author);
   });
 
   readonly userSearch = new ResourceSearchWrapper(

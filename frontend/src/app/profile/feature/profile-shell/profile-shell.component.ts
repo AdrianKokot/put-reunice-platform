@@ -4,7 +4,7 @@ import { TuiTabsModule } from '@taiga-ui/kit';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'reunice-profile-shell',
+  selector: 'eunice-profile-shell',
   standalone: true,
   templateUrl: './profile-shell.component.html',
   styles: [],

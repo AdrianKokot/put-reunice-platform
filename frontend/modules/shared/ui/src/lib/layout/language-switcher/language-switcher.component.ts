@@ -10,14 +10,11 @@ import {
 import { TuiSelectModule } from '@taiga-ui/kit';
 import { LOCAL_STORAGE } from '@ng-web-apis/common';
 import { TuiLanguageSwitcher } from '@taiga-ui/i18n';
-import {
-  LOCALE_FLAGS,
-  localeToTuiLanguage,
-} from '@reunice/modules/shared/util';
+import { LOCALE_FLAGS, localeToTuiLanguage } from '@eunice/modules/shared/util';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'reunice-language-switcher',
+  selector: 'eunice-language-switcher',
   standalone: true,
   imports: [
     CommonModule,

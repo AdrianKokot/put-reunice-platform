@@ -10,8 +10,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { LoggedUser, User } from '@reunice/modules/shared/data-access';
-import { throwError } from '@reunice/modules/shared/util';
+import { LoggedUser, User } from '@eunice/modules/shared/data-access';
+import { throwError } from '@eunice/modules/shared/util';
 
 @Injectable({
   providedIn: 'root',
@@ -54,14 +54,10 @@ export class AuthService {
   }
 
   changePassword(data: { newPassword: string; oldPassword: string }) {
-    const { id } = this._userSnapshot ?? throwError('User not logged in');
-
-    return this._http.patch(`${this._resourceUrl}/${id}`, data);
+    return this._http.patch(`${this._resourceUrl}`, data);
   }
 
   update(data: Pick<User, 'firstName' | 'lastName' | 'email' | 'phoneNumber'>) {
-    const { id } = this._userSnapshot ?? throwError('User not logged in');
-
-    return this._http.put<User>(`${this._resourceUrl}/${id}`, data);
+    return this._http.put<User>(`${this._resourceUrl}`, data);
   }
 }

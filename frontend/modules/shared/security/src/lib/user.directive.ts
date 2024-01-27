@@ -13,7 +13,7 @@ import {
   ExtendedAccountType,
   ExtendedAccountTypeEnum,
   User,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { shareReplay, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isUserOfType } from './is-user-of-type';
@@ -34,7 +34,7 @@ class UserContext {
  * @description This directive is used to show or hide content based on the user's account type.
  *              Directive also exposes context with user data.
  * @example
- * <div *reuniceUser="AccountTypeEnum.AUTHORIZED; else unauthorized; let user = user">
+ * <div *euniceUser="AccountTypeEnum.AUTHORIZED; else unauthorized; let user = user">
  *   <p>Hello {{ user.firstName }} {{ user.lastName }}</p>
  *  </div>
  *  <ng-template #unauthorized>
@@ -42,7 +42,7 @@ class UserContext {
  *  </ng-template>
  *
  *  @example
- *  <div *reuniceUser="AccountTypeEnum.GUEST; else authorized">
+ *  <div *euniceUser="AccountTypeEnum.GUEST; else authorized">
  *    <p>Guest content</p>
  *  </div>
  *  <ng-template #authorized let-user>
@@ -50,7 +50,7 @@ class UserContext {
  *  </ng-template>
  */
 @Directive({
-  selector: '[reuniceUser]',
+  selector: '[euniceUser]',
   standalone: true,
 })
 export class UserDirective implements OnInit {
@@ -63,7 +63,7 @@ export class UserDirective implements OnInit {
   private readonly _context = new UserContext();
 
   @Input({
-    alias: 'reuniceUser',
+    alias: 'euniceUser',
     transform: (value: string) => {
       console.assert(
         value in ExtendedAccountTypeEnum,
@@ -75,7 +75,7 @@ export class UserDirective implements OnInit {
   requiredAccountType: ExtendedAccountType | null =
     ExtendedAccountTypeEnum.AUTHORIZED;
 
-  @Input('reuniceUserElse')
+  @Input('euniceUserElse')
   fallbackTemplate: TemplateRef<UserContext> | null = null;
 
   constructor(
