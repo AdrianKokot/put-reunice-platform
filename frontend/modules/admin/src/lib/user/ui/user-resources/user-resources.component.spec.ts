@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserResourcesComponent } from './user-resources.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe('UserResourcesComponent', () => {
   let component: UserResourcesComponent;

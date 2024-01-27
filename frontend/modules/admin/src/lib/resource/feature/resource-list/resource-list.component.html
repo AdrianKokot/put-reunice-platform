@@ -32,7 +32,7 @@
   </a>
 </div>
 
-<tui-scrollbar class="reunice-table-wrapper">
+<tui-scrollbar class="eunice-table-wrapper">
   <table
     tuiTable
     tuiSortBy
@@ -67,10 +67,10 @@
           class="column-md"
         >
           <span>{{ 'RESOURCE_AUTHOR' | translate }}</span>
-          <reunice-table-filter
+          <eunice-table-filter
             formControlName="author_eq"
             [searchWrapper]="userSearch"
-          ></reunice-table-filter>
+          ></eunice-table-filter>
         </th>
         <th
           *tuiHead="'updatedOn'"

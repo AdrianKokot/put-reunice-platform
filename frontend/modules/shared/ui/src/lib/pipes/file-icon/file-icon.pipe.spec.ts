@@ -1,5 +1,5 @@
 import { FileIconPipe } from './file-icon.pipe';
-import { Resource } from '@reunice/modules/shared/data-access';
+import { Resource } from '@eunice/modules/shared/data-access';
 
 describe('FileIconPipe', () => {
   let pipe: FileIconPipe;

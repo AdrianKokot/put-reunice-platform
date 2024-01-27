@@ -7,7 +7,7 @@ import { PageDetailsComponent } from './feature/page-details/page-details.compon
 import {
   DeactivateFormGuard,
   translatedTitle,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 
 const routes: Routes = [
   {

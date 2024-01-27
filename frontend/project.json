@@ -1,8 +1,8 @@
 {
-  "name": "reunice",
+  "name": "eunice",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "reunice",
+  "prefix": "eunice",
   "sourceRoot": "./src",
   "tags": [],
   "targets": {
@@ -10,7 +10,7 @@
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/reunice",
+        "outputPath": "dist/eunice",
         "index": "./src/index.html",
         "main": "./src/main.ts",
         "polyfills": ["zone.js"],
@@ -57,18 +57,18 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "reunice:build:production"
+          "browserTarget": "eunice:build:production"
         },
         "e2e-production": {
-          "browserTarget": "reunice:build:production",
+          "browserTarget": "eunice:build:production",
           "proxyConfig": "./proxy.e2e.conf.json"
         },
         "development": {
-          "browserTarget": "reunice:build:development",
+          "browserTarget": "eunice:build:development",
           "proxyConfig": "./proxy.conf.json"
         },
         "e2e-development": {
-          "browserTarget": "reunice:build:development",
+          "browserTarget": "eunice:build:development",
           "proxyConfig": "./proxy.e2e.conf.json"
         }
       },
@@ -77,7 +77,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "reunice:build"
+        "browserTarget": "eunice:build"
       }
     },
     "lint": {
@@ -104,7 +104,7 @@
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "reunice:build",
+        "buildTarget": "eunice:build",
         "proxyConfig": "./proxy.e2e.conf.json"
       }
     }

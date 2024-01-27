@@ -13,7 +13,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { LangService, langToLocale } from '@reunice/modules/shared/util';
+import { LangService, langToLocale } from '@eunice/modules/shared/util';
 
 @Pipe({
   name: 'localizedDate',

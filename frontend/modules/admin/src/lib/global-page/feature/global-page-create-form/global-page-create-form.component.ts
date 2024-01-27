@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { FormSubmitWrapper } from '@reunice/modules/shared/util';
+import { FormSubmitWrapper } from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
 } from '../../../shared';
-import { GlobalPageService } from '@reunice/modules/shared/data-access';
+import { GlobalPageService } from '@eunice/modules/shared/data-access';
 
 @Component({
-  selector: 'reunice-global-page-create-form',
+  selector: 'eunice-global-page-create-form',
   standalone: true,
   imports: [BaseFormImportsModule],
   templateUrl: './global-page-create-form.component.html',

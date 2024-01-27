@@ -4,7 +4,7 @@ import { GlobalPageListComponent } from './feature/global-page-list/global-page-
 import {
   DeactivateFormGuard,
   translatedTitle,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import { GlobalPageCreateFormComponent } from './feature/global-page-create-form/global-page-create-form.component';
 import { GlobalPageDetailsComponent } from './feature/global-page-details/global-page-details.component';
 import { GlobalPageEditFormComponent } from './feature/global-page-edit-form/global-page-edit-form.component';

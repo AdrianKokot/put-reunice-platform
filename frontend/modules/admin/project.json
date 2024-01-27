@@ -2,7 +2,7 @@
   "name": "modules-admin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "modules/admin/src",
-  "prefix": "reunice",
+  "prefix": "eunice",
   "tags": [],
   "projectType": "library",
   "targets": {

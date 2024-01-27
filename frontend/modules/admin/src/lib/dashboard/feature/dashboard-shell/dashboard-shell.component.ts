@@ -6,13 +6,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { BreadcrumbService } from '@reunice/modules/shared/util';
+import { BreadcrumbService } from '@eunice/modules/shared/util';
 import { TuiBreadcrumbsModule } from '@taiga-ui/kit';
 import { TuiLinkModule } from '@taiga-ui/core';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'reunice-dashboard-shell',
+  selector: 'eunice-dashboard-shell',
   standalone: true,
   imports: [
     CommonModule,

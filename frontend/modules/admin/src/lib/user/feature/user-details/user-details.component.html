@@ -15,20 +15,20 @@
   </tui-tabs>
 
   <div [hidden]="activeTabIndex !== 0" [class.details-skeleton]="item === null">
-    <reunice-user-basic-information [user]="item">
-    </reunice-user-basic-information>
+    <eunice-user-basic-information [user]="item">
+    </eunice-user-basic-information>
 
     <div
       class="tui-form__buttons tui-form__buttons_align_end"
       *ngIf="item !== null && user.accountType !== AccountTypeEnum.USER"
     >
       <button
-        *reuniceUserControlsResource="item"
+        *euniceUserControlsResource="item"
         tuiButton
         type="button"
         appearance="flat-destructive"
         class="tui-form__button"
-        [reuniceConfirm]="
+        [euniceConfirm]="
           'USER_DELETE_DESCRIPTION' | translate: { username: item.username }
         "
         [showLoader]="(deleteHandler.loading$ | async) ?? false"
@@ -65,17 +65,17 @@
   </div>
 
   <div [hidden]="activeTabIndex !== 1">
-    <reunice-user-pages *ngIf="item" [userId]="item.id"></reunice-user-pages>
+    <eunice-user-pages *ngIf="item" [userId]="item.id"></eunice-user-pages>
   </div>
 
   <div [hidden]="activeTabIndex !== 2">
-    <reunice-user-resources
+    <eunice-user-resources
       *ngIf="item"
       [userId]="item.id"
-    ></reunice-user-resources>
+    ></eunice-user-resources>
   </div>
 
   <div [hidden]="activeTabIndex !== 3">
-    <reunice-user-pages *ngIf="item" [handlerId]="item.id"></reunice-user-pages>
+    <eunice-user-pages *ngIf="item" [handlerId]="item.id"></eunice-user-pages>
   </div>
 </ng-container>

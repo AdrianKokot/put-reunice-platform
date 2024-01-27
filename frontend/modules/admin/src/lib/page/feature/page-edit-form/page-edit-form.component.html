@@ -56,11 +56,11 @@
           />
         </label>
 
-        <ng-container *reuniceUser="'ADMINISTRATIVE'; else authorNotAdmin">
+        <ng-container *euniceUser="'ADMINISTRATIVE'; else authorNotAdmin">
           <label
             [tuiLabel]="'AUTHOR' | translate"
             class="tui-form__multi-field"
-            *reuniceUserControlsResource="item; else authorNotAdmin"
+            *euniceUserControlsResource="item; else authorNotAdmin"
           >
             <tui-combo-box
               tuiTextfieldSize="m"
@@ -125,12 +125,12 @@
       <label class="tui-form__row" [tuiLabel]="'CONTENT' | translate">
         <tui-editor formControlName="content">
           <ng-container ngProjectAs="tools">
-            <reunice-load-template-tool
+            <eunice-load-template-tool
               tuiItem
               [universityId]="item?.university?.id ?? null"
             >
-            </reunice-load-template-tool>
-            <reunice-html-editor-tool tuiItem></reunice-html-editor-tool>
+            </eunice-load-template-tool>
+            <eunice-html-editor-tool tuiItem></eunice-html-editor-tool>
           </ng-container>
         </tui-editor>
 
@@ -220,7 +220,7 @@
           size="m"
           type="submit"
           *tuiLet="confirmText$ | async as confirmText"
-          [reuniceConfirm]="
+          [euniceConfirm]="
             confirmText !== null ? (confirmText | translate) : null
           "
           class="tui-form__button"

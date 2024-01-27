@@ -7,7 +7,7 @@ import { ResourceDetailsComponent } from './feature/resource-details/resource-de
 import {
   DeactivateFormGuard,
   translatedTitle,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 
 const routes: Routes = [
   {

@@ -4,7 +4,7 @@ import { UserListComponent } from './feature/user-list/user-list.component';
 import { UserEditFormComponent } from './feature/user-edit-form/user-edit-form.component';
 import { UserCreateFormComponent } from './feature/user-create-form/user-create-form.component';
 import { UserDetailsComponent } from './feature/user-details/user-details.component';
-import { translatedTitle } from '@reunice/modules/shared/util';
+import { translatedTitle } from '@eunice/modules/shared/util';
 
 const routes: Routes = [
   {

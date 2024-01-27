@@ -3,19 +3,19 @@ import {
   AccountTypeEnum,
   TemplateService,
   UniversityService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   FormSubmitWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   BaseFormImportsModule,
   navigateToResourceDetails,
   ResourceSearchWrapper,
 } from '../../../shared';
 import { TuiEditorModule } from '@tinkoff/tui-editor';
-import { AuthService, UserDirective } from '@reunice/modules/shared/security';
+import { AuthService, UserDirective } from '@eunice/modules/shared/security';
 import {
   TuiCheckboxLabeledModule,
   TuiDataListWrapperModule,
@@ -24,7 +24,7 @@ import {
 import { TuiDropdownModule } from '@taiga-ui/core';
 
 @Component({
-  selector: 'reunice-template-edit-form',
+  selector: 'eunice-template-edit-form',
   templateUrl: './template-edit-form.component.html',
   standalone: true,
   imports: [

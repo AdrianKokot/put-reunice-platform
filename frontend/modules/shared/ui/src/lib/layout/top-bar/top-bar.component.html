@@ -15,12 +15,12 @@
 <div class="justify-self-end d-flex items-center gap-4">
   <ng-content select="[right]"></ng-content>
 
-  <reunice-notifications *reuniceUser="'AUTHORIZED'"></reunice-notifications>
+  <eunice-notifications *euniceUser="'AUTHORIZED'"></eunice-notifications>
 
-  <reunice-language-switcher></reunice-language-switcher>
+  <eunice-language-switcher></eunice-language-switcher>
 
   <a
-    *reuniceUser="'GUEST'; else loggedMenu"
+    *euniceUser="'GUEST'; else loggedMenu"
     tuiIconButton
     data-test="login-button"
     routerLink="/auth/login"

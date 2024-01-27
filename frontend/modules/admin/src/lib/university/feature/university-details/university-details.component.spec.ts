@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UniversityDetailsComponent } from './university-details.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe(UniversityDetailsComponent.name, () => {

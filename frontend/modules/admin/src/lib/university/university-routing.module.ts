@@ -7,7 +7,7 @@ import { UniversityDetailsComponent } from './feature/university-details/univers
 import {
   DeactivateFormGuard,
   translatedTitle,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 
 const routes: Routes = [
   {

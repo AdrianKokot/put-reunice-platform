@@ -6,7 +6,7 @@
     <span>
       {{ page?.title ?? '-' }}
     </span>
-    <span *reuniceUserControlsResource="page" class="tui-space_left-auto">
+    <span *euniceUserControlsResource="page" class="tui-space_left-auto">
       <a
         tuiIconButton
         [icon]="'tuiIconEdit'"
@@ -31,8 +31,8 @@
   </div>
 
   <div class="tui-space_bottom-4">
-    <reunice-page-resources-list />
-    <reunice-page-contact-form *ngIf="page && page.hasContactRequestHandler" />
+    <eunice-page-resources-list />
+    <eunice-page-contact-form *ngIf="page && page.hasContactRequestHandler" />
   </div>
 
   <hr class="tui-space_top-8" />

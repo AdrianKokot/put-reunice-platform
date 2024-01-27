@@ -17,18 +17,18 @@ import {
   TuiButtonModule,
   TuiGroupModule,
 } from '@taiga-ui/core';
-import { resourceIdFromRoute } from '@reunice/modules/shared/util';
+import { resourceIdFromRoute } from '@eunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
 import {
   Ticket,
   TicketResponse,
   TicketService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { TuiLetModule } from '@taiga-ui/cdk';
 import {
   LocalizedPipeModule,
   TicketToBadgeStatusModule,
-} from '@reunice/modules/shared/ui';
+} from '@eunice/modules/shared/ui';
 import {
   catchError,
   combineLatest,
@@ -47,7 +47,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'reunice-ticket',
+  selector: 'eunice-ticket',
   templateUrl: './ticket.component.html',
   styleUrls: ['./ticket.component.css'],
   standalone: true,

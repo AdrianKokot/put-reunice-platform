@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GlobalPageListComponent } from './global-page-list.component';
-import { TestingModule } from '@reunice/testing';
+import { TestingModule } from '@eunice/testing';
 
 describe(GlobalPageListComponent.name, () => {
   let component: GlobalPageListComponent;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserDirective } from '@reunice/modules/shared/security';
+import { UserDirective } from '@eunice/modules/shared/security';
 import {
   TuiAppearance,
   TuiButtonModule,
@@ -16,7 +16,7 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
 import { NotificationsComponent } from '../notifications/notifications.component';
 
 @Component({
-  selector: 'reunice-ui-top-bar',
+  selector: 'eunice-ui-top-bar',
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

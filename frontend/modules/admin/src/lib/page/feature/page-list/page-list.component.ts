@@ -4,19 +4,19 @@ import {
   PageService,
   UniversityService,
   UserService,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
+  provideeuniceTable,
   ResourceSearchWrapper,
-  ReuniceAbstractTable,
+  AbstractTable,
 } from '../../../shared';
 import { FormBuilder } from '@angular/forms';
-import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
+import { FormNotEmptyValuesPipeModule } from '@eunice/modules/shared/ui';
 
 @Component({
-  selector: 'reunice-page-list',
+  selector: 'eunice-page-list',
   standalone: true,
   imports: [
     BaseFormImportsModule,
@@ -25,9 +25,9 @@ import { FormNotEmptyValuesPipeModule } from '@reunice/modules/shared/ui';
   ],
   templateUrl: './page-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(PageService)],
+  providers: [provideeuniceTable(PageService)],
 })
-export class PageListComponent extends ReuniceAbstractTable<Page> {
+export class PageListComponent extends AbstractTable<Page> {
   readonly columns: Array<keyof Page | string> = [
     'title',
     'createdOn',

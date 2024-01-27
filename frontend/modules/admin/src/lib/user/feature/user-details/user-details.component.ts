@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   DeleteResourceWrapper,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
+} from '@eunice/modules/shared/util';
 import {
   AccountTypeEnum,
   User,
   UserService,
-} from '@reunice/modules/shared/data-access';
-import { AuthService } from '@reunice/modules/shared/security';
+} from '@eunice/modules/shared/data-access';
+import { AuthService } from '@eunice/modules/shared/security';
 import {
   BaseDetailsImportsModule,
   navigateToResourceList,
@@ -19,7 +19,7 @@ import { UserPagesComponent } from '../../ui/user-pages/user-pages.component';
 import { UserResourcesComponent } from '../../ui/user-resources/user-resources.component';
 
 @Component({
-  selector: 'reunice-user-details',
+  selector: 'eunice-user-details',
   standalone: true,
   imports: [
     BaseDetailsImportsModule,

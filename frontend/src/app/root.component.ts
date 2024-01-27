@@ -5,7 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map } from 'rxjs';
 
 @Component({
-  selector: 'reunice-root',
+  selector: 'eunice-root',
   templateUrl: './root.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./root.component.less'],

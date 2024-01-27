@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import {
   ExtendedAccountType,
   ExtendedAccountTypeEnum,
-} from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/data-access';
 import { PermissionService } from './permission.service';
 import { map } from 'rxjs';
 

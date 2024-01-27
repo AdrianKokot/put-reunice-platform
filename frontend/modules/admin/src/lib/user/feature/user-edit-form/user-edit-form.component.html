@@ -163,7 +163,7 @@
               <button
                 tuiOption
                 [value]="accountType.ADMIN"
-                *reuniceUser="accountType.ADMIN"
+                *euniceUser="accountType.ADMIN"
                 data-test="role-admin"
               >
                 {{ 'ACCOUNT_TYPE_' + accountType.ADMIN | translate }}
@@ -278,7 +278,7 @@
           type="submit"
           class="tui-form__button"
           *tuiLet="confirmText$ | async as confirmText"
-          [reuniceConfirm]="
+          [euniceConfirm]="
             confirmText !== null ? (confirmText | translate) : null
           "
           [disabled]="readOnly"

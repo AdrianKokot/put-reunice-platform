@@ -4,7 +4,7 @@ import { PageComponent } from '../page/page.component';
 import { UniversityListComponent } from '../../../university/feature/university-list/university-list.component';
 
 @Component({
-  selector: 'reunice-main-page',
+  selector: 'eunice-main-page',
   standalone: true,
   imports: [CommonModule, PageComponent, UniversityListComponent],
   templateUrl: './main-page.component.html',

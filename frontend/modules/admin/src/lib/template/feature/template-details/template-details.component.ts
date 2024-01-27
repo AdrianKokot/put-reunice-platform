@@ -3,8 +3,8 @@ import {
   DeleteResourceWrapper,
   NgForTrackByIdDirective,
   resourceFromRoute,
-} from '@reunice/modules/shared/util';
-import { TemplateService } from '@reunice/modules/shared/data-access';
+} from '@eunice/modules/shared/util';
+import { TemplateService } from '@eunice/modules/shared/data-access';
 import { TuiTagModule } from '@taiga-ui/kit';
 import { TuiEditorSocketModule } from '@tinkoff/tui-editor';
 import {
@@ -13,7 +13,7 @@ import {
 } from '../../../shared';
 
 @Component({
-  selector: 'reunice-template-details',
+  selector: 'eunice-template-details',
   standalone: true,
   imports: [
     BaseDetailsImportsModule,

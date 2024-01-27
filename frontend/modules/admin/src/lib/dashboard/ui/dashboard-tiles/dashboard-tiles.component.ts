@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { TuiActionModule, TuiMarkerIconModule } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 import { dashboardTiles } from '../../tiles';
-import { AuthService, isUserOfType } from '@reunice/modules/shared/security';
+import { AuthService, isUserOfType } from '@eunice/modules/shared/security';
 import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'reunice-dashboard-tiles',
+  selector: 'eunice-dashboard-tiles',
   standalone: true,
   imports: [
     CommonModule,

@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Backup, BackupService } from '@reunice/modules/shared/data-access';
+import { Backup, BackupService } from '@eunice/modules/shared/data-access';
 import {
   BaseFormImportsModule,
   BaseTableImportsModule,
-  provideReuniceTable,
-  ReuniceAbstractTable,
+  provideeuniceTable,
+  AbstractTable,
 } from '../../../shared';
 import {
   ConfirmDirective,
   FormNotEmptyValuesPipeModule,
-} from '@reunice/modules/shared/ui';
+} from '@eunice/modules/shared/ui';
 import { FormGroup } from '@angular/forms';
 import {
   exhaustMap,
@@ -35,7 +35,7 @@ interface NewAction {
 type UiAction = DeleteAction | NewAction;
 
 @Component({
-  selector: 'reunice-backup-list',
+  selector: 'eunice-backup-list',
   templateUrl: './backup-list.component.html',
   standalone: true,
   imports: [
@@ -45,9 +45,9 @@ type UiAction = DeleteAction | NewAction;
     ConfirmDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [provideReuniceTable(BackupService)],
+  providers: [provideeuniceTable(BackupService)],
 })
-export class BackupListComponent extends ReuniceAbstractTable<Backup> {
+export class BackupListComponent extends AbstractTable<Backup> {
   private readonly _alert = inject(TuiAlertService);
   private readonly _dialog = inject(TuiDialogService);
   private readonly _translate = inject(TranslateService);
