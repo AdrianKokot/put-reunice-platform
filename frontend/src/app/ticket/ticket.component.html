@@ -106,8 +106,8 @@
         {{ 'TICKET_MARK_DELETED' | translate }}
       </button>
       <div
-        class="group"
         tuiGroup
+        class="group"
         *ngIf="
           ticket === null ||
           ticket?.status === 'NEW' ||
@@ -127,11 +127,17 @@
         <button
           *ngIf="!token"
           tuiButton
+          class="tui-group__auto-width-item"
           type="submit"
           (click)="changeStatus('RESOLVED')"
           [showLoader]="loading"
         >
-          {{ 'TICKET_RESOLVE' | translate }}
+          {{
+            (responseForm.value.content
+              ? 'TICKET_REPLY_AND_RESOLVE'
+              : 'TICKET_RESOLVE'
+            ) | translate
+          }}
         </button>
       </div>
     </div>

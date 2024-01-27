@@ -273,6 +273,7 @@
   "TICKET_MARK_IRRELEVANT": "Oznacz jako nieistotne",
   "TICKET_REPLY_SUCCESS": "Odpowiedź została wysłana",
   "TICKET_REPLY": "Wyślij",
+  "TICKET_REPLY_AND_RESOLVE": "Wyślij i rozwiąż",
   "TICKET_RESOLVE_SUCCESS": "Zgłoszenie zostało oznaczone jako rozwiązane",
   "TICKET_RESOLVE": "Rozwiąż",
   "TICKET_STATUS_DELETED": "Usunięte",
