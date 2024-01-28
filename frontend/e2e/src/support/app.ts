@@ -36,6 +36,9 @@ export const clickOnTile = (tileName: string) => {
 export const goToTile = (tileName: string) => {
   cy.visit(`/admin/${tileName.toLowerCase()}`);
   cy.url().should('contain', `/admin/${tileName.toLowerCase()}`);
+  cy.get('input[name="search"]').should('exist', {
+    timeout: 10000,
+  });
 };
 
 export enum E2EUser {
