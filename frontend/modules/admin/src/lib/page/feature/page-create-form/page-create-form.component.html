@@ -24,7 +24,7 @@
         *tuiDataList
         [items]="items"
         [itemContent]="(universitySearch.stringify$ | async)!"
-      ></tui-data-list-wrapper>
+      />
     </tui-combo-box>
 
     <tui-error
@@ -47,7 +47,7 @@
           [value]="pageTree"
           [content]="treeContent"
           [childrenHandler]="pagesTreeHandler"
-        ></tui-tree>
+        />
         <ng-template #loading>
           <span
             [class.tui-skeleton]="form.controls.universityId.value !== null"
@@ -142,7 +142,7 @@
           *tuiDataList
           [items]="items"
           [itemContent]="(userSearch.stringify$ | async)!"
-        ></tui-data-list-wrapper>
+        />
       </tui-combo-box>
 
       <tui-error

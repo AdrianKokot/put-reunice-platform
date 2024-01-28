@@ -10,6 +10,10 @@ export interface Ticket {
   title: string;
   lastSeenOn: Record<string, string>;
   lastUpdateTime: string;
+  lastStatusChangeBy?: {
+    firstName: string;
+    lastName: string;
+  };
 }
 
 export interface TicketResponse {

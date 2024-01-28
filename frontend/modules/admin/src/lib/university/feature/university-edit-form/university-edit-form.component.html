@@ -118,8 +118,7 @@
         [tuiTextfieldLabelOutside]="true"
         [maxLength]="255"
         [expandable]="true"
-      >
-      </tui-text-area>
+      />
 
       <tui-error
         formControlName="description"
@@ -135,7 +134,8 @@
         *ngIf="!form.controls.file.value"
         accept="image/*"
         formControlName="file"
-      ></tui-input-files>
+        [maxFileSize]="MAX_FILE_SIZE"
+      />
 
       <tui-files
         *ngIf="form.controls.file.valueChanges | async as file"
@@ -147,7 +147,7 @@
           [file]="file"
           [showDelete]="true"
           (removed)="form.controls.file.setValue(null)"
-        ></tui-file>
+        />
       </tui-files>
 
       <div class="tui-form__field-note">

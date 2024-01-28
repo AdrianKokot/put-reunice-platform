@@ -36,9 +36,7 @@
         data-test="user-menu-button"
         [pseudoHover]="profileMenuDropdown.open || null"
       >
-        <tui-avatar
-          text="{{ user.firstName }} {{ user.lastName }}"
-        ></tui-avatar>
+        <tui-avatar text="{{ user.firstName }} {{ user.lastName }}" />
       </button>
     </tui-hosted-dropdown>
     <ng-template #profileMenu let-close="close">

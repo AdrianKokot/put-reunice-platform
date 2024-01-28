@@ -266,6 +266,7 @@
   "TEMPLATES": "Szablony",
   "THIS_FILE_STORED_OUTSIDE_APP_WARNING": "Ten plik znajduje się poza aplikacją, bądź ostrożna/y.",
   "TICKET_ID": "Zgłoszenie #{{id}}",
+  "TICKET_LAST_STATUS_CHANGE": "Autorem ostatniej zmiany statusu jest {{firstName}} {{lastName}}",
   "TICKET_LEAVE_REPLY": "Pozostaw wiadomość",
   "TICKET_MARK_DELETED_SUCCESS": "Zgłoszenie zostało oznaczone jako usunięte",
   "TICKET_MARK_DELETED": "Oznacz jako usunięte",
