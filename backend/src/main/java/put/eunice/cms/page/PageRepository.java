@@ -2,7 +2,6 @@ package put.eunice.cms.page;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -32,7 +31,7 @@ public interface PageRepository extends JpaRepository<Page, Long>, JpaSpecificat
     @Query(
             value =
                     "SELECT r FROM FileResource r JOIN r.pages p WHERE p.id = :pageId AND SIZE(r.pages) = 1")
-    Set<FileResource> findResourcesReferencedOnlyByPage(@Param("pageId") Long pageId);
+    List<FileResource> findResourcesReferencedOnlyByPage(@Param("pageId") Long pageId);
 
     @Query(
             value =

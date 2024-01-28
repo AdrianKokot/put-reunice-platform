@@ -4,7 +4,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +33,13 @@ import put.eunice.cms.security.Role;
 import put.eunice.cms.user.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+            "app.path.uploads=./test-directories/uploads/",
+            "app.path.templates=./test-directories/templates/",
+            "app.path.backups=./test-directories/backups/",
+        })
 @ActiveProfiles(profiles = {"h2", "secured", "test"})
 @ContextConfiguration(classes = {CmsApplication.class})
 public class BaseAPIControllerTest {
@@ -189,6 +199,15 @@ public class BaseAPIControllerTest {
         return mvc.perform(delete(getUrl(id)).contentType(MediaType.APPLICATION_JSON));
     }
 
+    /**
+     * @param id ID of the object to be deleted
+     * @param queryParams Query parameters to be appended to the API url returned by getUrl(id)
+     * @return Perform APPLICATION_JSON DELETE request to the API url returned by getUrl(id)
+     */
+    protected ResultActions performDelete(Long id, String queryParams) throws Exception {
+        return mvc.perform(delete(getUrl(id) + queryParams).contentType(MediaType.APPLICATION_JSON));
+    }
+
     /** Set the current user to anonymous (guest) */
     protected void performAsGuest() {
         ctx.setAuthentication(new TestingAuthenticationToken(null, null));
@@ -238,5 +257,10 @@ public class BaseAPIControllerTest {
      */
     protected void performAs(Role role, Set<Long> universities) {
         ctx.setAuthentication(CustomAuthenticationToken.create(role, universities));
+    }
+
+    @AfterAll
+    public static void directoryCleanup() throws IOException {
+        FileUtils.deleteDirectory(Path.of("./test-directories").toFile());
     }
 }
