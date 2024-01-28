@@ -52,6 +52,6 @@ export const Resource = {
       searchAlias,
     );
     cy.get(Resource.input.search).type(value);
-    waitForResponse(`@${searchAlias}`, 500);
+    waitForResponse(`@${searchAlias}`, 200);
   },
 } as const;
