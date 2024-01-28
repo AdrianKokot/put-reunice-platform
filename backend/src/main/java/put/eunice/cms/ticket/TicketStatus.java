@@ -8,7 +8,7 @@ public enum TicketStatus {
     DELETED(),
     IRRELEVANT(DELETED),
     HANDLED(IRRELEVANT, RESOLVED),
-    NEW(IRRELEVANT, HANDLED);
+    NEW(IRRELEVANT, HANDLED, RESOLVED);
 
     private final List<TicketStatus> allowedStatusChanges;
 

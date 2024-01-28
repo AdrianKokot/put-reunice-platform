@@ -1,3 +1,4 @@
+import { TicketPage } from '../../support/pages/ticket.constants';
 import { PublicPage, waitForResponse } from '../../support';
 
 export const ucan1 = () => {
@@ -63,9 +64,33 @@ export const ucan5 = (testTimestamp: string) => {
   it('UC-AN5. Requesting contact', () => {
     goToPageBySearch(`${testTimestamp} University User Page`);
     PublicPage.fillContactForm(
-      testTimestamp,
+      `${testTimestamp} - Resolve`,
       'examplecontactrequest@eunice.com',
-      `Test ${testTimestamp} Contact Request`,
+      `Test Correct ${testTimestamp} Contact Request`,
+    );
+    cy.url().should('match', /tickets\/.*\?token=.*/);
+    cy.get(TicketPage.title).should(
+      'contain.text',
+      `${testTimestamp} - Resolve`,
+    );
+
+    cy.get(TicketPage.inputs.content).clear();
+    cy.get(TicketPage.inputs.content).type(
+      'Additional message from anonymous user.',
+    );
+
+    cy.get(TicketPage.inputs.reply).click();
+
+    goToPageBySearch(`${testTimestamp} University User Page`);
+    PublicPage.fillContactForm(
+      `${testTimestamp} - Irrelevant`,
+      'examplecontactrequest@eunice.com',
+      `Test Incorrect ${testTimestamp} Contact Request`,
+    );
+    cy.url().should('match', /tickets\/.*\?token=.*/);
+    cy.get('.tui-text_h3').should(
+      'contain.text',
+      `${testTimestamp} - Irrelevant`,
     );
   });
 };

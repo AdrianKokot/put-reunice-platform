@@ -274,6 +274,7 @@
   "TICKET_MARK_IRRELEVANT": "Mark as irrelevant",
   "TICKET_REPLY_SUCCESS": "Reply sent successfully",
   "TICKET_REPLY": "Reply",
+  "TICKET_REPLY_AND_RESOLVE": "Reply and resolve",
   "TICKET_RESOLVE_SUCCESS": "Ticket has been resolved successfully",
   "TICKET_RESOLVE": "Resolve",
   "TICKET_STATUS_DELETED": "Deleted",

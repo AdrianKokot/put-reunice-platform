@@ -2,14 +2,16 @@
   <h3
     class="tui-text_h3 tui-space_top-12 tui-space_bottom-2"
     [class.tui-skeleton]="ticket === null"
+    data-test="title"
   >
     {{ ticket?.title ?? '-' }}
     <tui-badge
       *ngIf="ticket"
       [status]="ticket | ticketToBadgeStatus"
       [value]="'TICKET_STATUS_' + ticket.status | translate"
+      data-test="status"
       [tuiHint]="ticket?.lastStatusChangeBy ? lastStatusChange : null"
-    />
+    ></tui-badge>
   </h3>
 
   <ng-template #lastStatusChange>
@@ -101,6 +103,7 @@
         appearance="secondary-destructive"
         (click)="changeStatus('IRRELEVANT')"
         [showLoader]="loading"
+        data-test="irrelevant"
       >
         {{ 'TICKET_MARK_IRRELEVANT' | translate }}
       </button>
@@ -111,12 +114,13 @@
         appearance="secondary-destructive"
         (click)="changeStatus('DELETED')"
         [showLoader]="loading"
+        data-test="delete"
       >
         {{ 'TICKET_MARK_DELETED' | translate }}
       </button>
       <div
-        class="group"
         tuiGroup
+        class="group"
         *ngIf="
           ticket === null ||
           ticket?.status === 'NEW' ||
@@ -124,23 +128,31 @@
         "
       >
         <button
-          tuiButton
-          type="button"
-          appearance="secondary"
-          [disabled]="responseForm.invalid"
-          (click)="sendResponse()"
-          [showLoader]="loading"
-        >
-          {{ 'TICKET_REPLY' | translate }}
-        </button>
-        <button
           *ngIf="!token"
           tuiButton
+          class="tui-group__auto-width-item"
+          appearance="secondary"
           type="submit"
           (click)="changeStatus('RESOLVED')"
           [showLoader]="loading"
+          data-test="resolve"
         >
-          {{ 'TICKET_RESOLVE' | translate }}
+          {{
+            (responseForm.value.content
+              ? 'TICKET_REPLY_AND_RESOLVE'
+              : 'TICKET_RESOLVE'
+            ) | translate
+          }}
+        </button>
+        <button
+          tuiButton
+          type="button"
+          [disabled]="responseForm.invalid"
+          (click)="sendResponse()"
+          [showLoader]="loading"
+          data-test="reply"
+        >
+          {{ 'TICKET_REPLY' | translate }}
         </button>
       </div>
     </div>

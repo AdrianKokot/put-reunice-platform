@@ -33,6 +33,7 @@ import {
 import {
   catchError,
   combineLatest,
+  concat,
   filter,
   map,
   merge,
@@ -91,38 +92,30 @@ export class TicketComponent {
   private readonly _service = inject(TicketService);
   readonly token = inject(ActivatedRoute).snapshot.queryParams['token'];
 
-  private readonly _changeStatusRequest$ = new Subject<Ticket['status']>();
-  private readonly _sendResponseRequest$ = new Subject<
-    TicketResponse['content']
-  >();
+  private readonly _changeRequest$ = new Subject<{
+    status?: Ticket['status'];
+    content?: TicketResponse['content'];
+  }>();
 
-  readonly _changeStatus$ = this._changeStatusRequest$.pipe(
+  readonly _change$ = this._changeRequest$.pipe(
     withLatestFrom(this._id$),
-    switchMap(([status, id]) =>
-      this._service.changeStatus(id, status).pipe(
-        catchError((e) => this.catchError(e)),
-        startWith(null),
-      ),
-    ),
+    switchMap(([request, id]) => {
+      const responseChange = request.content
+        ? this._service
+            .sendResponse(id, request.content)
+            .pipe(catchError((e) => this.catchError(e)))
+        : of(false);
+      const statusChange = request.status
+        ? this._service
+            .changeStatus(id, request.status)
+            .pipe(catchError((e) => this.catchError(e)))
+        : of(false);
+
+      return concat(responseChange, statusChange).pipe(startWith(null));
+    }),
     shareReplay(1),
   );
-
-  readonly _sendResponse$ = this._sendResponseRequest$.pipe(
-    withLatestFrom(this._id$),
-    switchMap(([content, id]) =>
-      this._service.sendResponse(id, content, this.token).pipe(
-        catchError((e) => this.catchError(e)),
-        startWith(null),
-      ),
-    ),
-    shareReplay(1),
-  );
-
-  readonly ticket$ = merge(
-    this._id$,
-    this._changeStatus$,
-    this._sendResponse$,
-  ).pipe(
+  readonly ticket$ = merge(this._id$, this._change$).pipe(
     switchMap(() => this._id$),
     switchMap((id) => this._service.get(id, this.token).pipe(startWith(null))),
     shareReplay(1),
@@ -131,7 +124,7 @@ export class TicketComponent {
     filter((data) => Boolean(data)),
   );
 
-  readonly responses$ = merge(this._id$, this._sendResponse$).pipe(
+  readonly responses$ = merge(this._id$, this._change$).pipe(
     switchMap(() => this._id$),
     switchMap((id) =>
       this._service.getResponses(id, this.token).pipe(
@@ -147,9 +140,8 @@ export class TicketComponent {
 
   readonly loading$ = combineLatest([
     this.ticket$,
-    this._changeStatus$.pipe(startWith(false)),
     this.responses$,
-    this._sendResponse$.pipe(startWith(false)),
+    this._change$.pipe(startWith(false)),
   ]).pipe(
     map((requests) => requests.some((r) => r === null)),
     startWith(false),
@@ -163,11 +155,14 @@ export class TicketComponent {
   sendResponse = () => {
     const { content } = this.responseForm.value;
     if (content) {
-      this._sendResponseRequest$.next(content);
+      this._changeRequest$.next({ content });
       this.responseForm.reset();
     }
   };
 
-  changeStatus = (status: Ticket['status']) =>
-    this._changeStatusRequest$.next(status);
+  changeStatus = (status: Ticket['status']) => {
+    const { content } = this.responseForm.value;
+    this._changeRequest$.next({ status, content });
+    this.responseForm.reset();
+  };
 }

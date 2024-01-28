@@ -44,7 +44,7 @@ export const Resource = {
     } else {
       cy.get(Resource.buttons.details).first().click();
     }
-    cy.url().should('match', /\/\d+$/);
+    cy.url().should('match', /\/(\d+|.+-.+)$/);
   },
   search(value: string) {
     const searchAlias = `search_${Date.now()}`;
