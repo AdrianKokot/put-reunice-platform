@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 import put.eunice.cms.development.CustomAuthenticationToken;
 import put.eunice.cms.resource.projections.ResourceDtoFormCreate;
 import put.eunice.cms.resource.projections.ResourceDtoFormUpdate;
@@ -180,10 +182,12 @@ public class BaseAPIControllerTest {
                             .param("description", dto.getDescription())
                             .param("url", dto.getUrl()));
         } else {
+            String parameterName = "param";
+            MultipartFile file = dto.getFile();
             return mvc.perform(
-                    put(getUrl(id))
+                    multipart(HttpMethod.PUT, getUrl(id))
+                            .file((MockMultipartFile) file)
                             .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                            .content(dto.getFile().getBytes())
                             .param("name", dto.getName())
                             .param("authorId", String.valueOf(dto.getAuthorId()))
                             .param("description", dto.getDescription())
