@@ -25,7 +25,13 @@ import put.eunice.cms.security.Role;
 import put.eunice.cms.user.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+            "app.path.uploads=./test/uploads/",
+            "app.path.templates=./test/templates/",
+            "app.path.backups=./test/backups/",
+        })
 @ActiveProfiles(profiles = {"h2", "secured", "test"})
 @ContextConfiguration(classes = {CmsApplication.class})
 public class BaseAPIControllerTest {
@@ -138,6 +144,15 @@ public class BaseAPIControllerTest {
      */
     protected ResultActions performDelete(Long id) throws Exception {
         return mvc.perform(delete(getUrl(id)).contentType(MediaType.APPLICATION_JSON));
+    }
+
+    /**
+     * @param id ID of the object to be deleted
+     * @param queryParams Query parameters to be appended to the API url returned by getUrl(id)
+     * @return Perform APPLICATION_JSON DELETE request to the API url returned by getUrl(id)
+     */
+    protected ResultActions performDelete(Long id, String queryParams) throws Exception {
+        return mvc.perform(delete(getUrl(id) + queryParams).contentType(MediaType.APPLICATION_JSON));
     }
 
     /** Set the current user to anonymous (guest) */
