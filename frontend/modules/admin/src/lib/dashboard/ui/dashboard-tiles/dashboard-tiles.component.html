@@ -5,11 +5,7 @@
     class="justify-start items-center"
     [attr.data-test]="'dashboard-tile-' + item.title"
   >
-    <tui-marker-icon
-      [src]="item.icon"
-      class="tui-island__marker"
-      size="xs"
-    ></tui-marker-icon>
+    <tui-marker-icon [src]="item.icon" class="tui-island__marker" size="xs" />
     <div>
       <div>
         {{ item.title | translate }}

@@ -9,7 +9,7 @@
       [status]="ticket | ticketToBadgeStatus"
       [value]="'TICKET_STATUS_' + ticket.status | translate"
       [tuiHint]="ticket?.lastStatusChangeBy ? lastStatusChange : null"
-    ></tui-badge>
+    />
   </h3>
 
   <ng-template #lastStatusChange>
@@ -40,7 +40,7 @@
       [class.tui-skeleton]="ticket === null"
       [text]="ticket?.requesterEmail ?? '-'"
       class="tui-space_top-1"
-    ></tui-avatar>
+    />
     <tui-island class="w-full" [class.tui-skeleton]="ticket === null">
       <div class="tui-text_body-s message-info">
         {{ ticket?.requesterEmail }}
@@ -54,10 +54,7 @@
   <ng-container *tuiLet="responsesKeepPrevious$ | async as responses">
     <ng-container *ngFor="let message of responses">
       <div class="d-flex gap-4 tui-space_top-4">
-        <tui-avatar
-          [text]="message.author"
-          class="tui-space_top-1"
-        ></tui-avatar>
+        <tui-avatar [text]="message.author" class="tui-space_top-1" />
         <tui-island class="w-full">
           <div class="tui-text_body-s message-info">
             {{ message?.author ?? '-' }}

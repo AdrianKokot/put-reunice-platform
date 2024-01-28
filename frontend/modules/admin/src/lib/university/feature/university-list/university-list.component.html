@@ -141,10 +141,7 @@
   </table>
 </tui-scrollbar>
 
-<tui-table-pagination
-  class="tui-space_top-2"
-  [total]="(total$ | async) ?? 0"
-></tui-table-pagination>
+<tui-table-pagination class="tui-space_top-2" [total]="(total$ | async) ?? 0" />
 
 <ng-template #emptyList>
   <tr>
@@ -157,7 +154,7 @@
 <ng-template #loadingList>
   <tr>
     <td [colSpan]="columns.length">
-      <tui-loader></tui-loader>
+      <tui-loader />
     </td>
   </tr>
 </ng-template>

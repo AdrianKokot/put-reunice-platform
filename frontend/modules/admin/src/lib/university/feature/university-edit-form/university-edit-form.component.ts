@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { UniversityService } from '@eunice/modules/shared/data-access';
+import {
+  MAX_FILE_SIZE,
+  UniversityService,
+} from '@eunice/modules/shared/data-access';
 import {
   formResourceFromRoute,
   FormSubmitWrapper,
@@ -72,4 +75,5 @@ export class UniversityEditFormComponent {
     successAlertMessage: 'UNIVERSITY_UPDATE_SUCCESS',
     effect: navigateToResourceDetails(),
   });
+  protected readonly MAX_FILE_SIZE = MAX_FILE_SIZE;
 }

@@ -34,9 +34,7 @@ import { TableStorageKeys } from '../storage';
       </tbody>
     </table>
 
-    <tui-table-pagination
-      [total]="(total$ | async) ?? 0"
-    ></tui-table-pagination>
+    <tui-table-pagination [total]="(total$ | async) ?? 0" />
   `,
   providers: [provideeuniceTable(PageService)],
 })
