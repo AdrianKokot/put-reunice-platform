@@ -147,7 +147,7 @@ public class FileResourceService {
                         filePath.toString(),
                         Objects.requireNonNull(form.getFile().getContentType()),
                         form.getFile().getSize());
-
+                fileRepository.save(fileResource);
                 fileService.deleteDirectory(FileResource.STORE_DIRECTORY + tempDirectoryName);
             } catch (IOException e) {
                 try {

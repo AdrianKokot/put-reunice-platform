@@ -13,9 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.web.multipart.MultipartFile;
 import put.eunice.cms.BaseAPIControllerTest;
 import put.eunice.cms.page.Content;
 import put.eunice.cms.page.Page;
@@ -261,24 +259,28 @@ class ResourceControllerTest extends BaseAPIControllerTest {
 
             @Test
             void update_ResourceToResource_User_TypeTest_Equal() throws Exception {
-                ResourceType previousType = fileResourceRepository.findById(resourceId).get().getResourceType();
+                ResourceType previousType =
+                        fileResourceRepository.findById(resourceId).get().getResourceType();
                 ResourceDtoFormUpdate dto =
                         new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
                 performAs(Role.USER, userId);
                 performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
-                ResourceType currentType = fileResourceRepository.findById(resourceId).get().getResourceType();
+                ResourceType currentType =
+                        fileResourceRepository.findById(resourceId).get().getResourceType();
                 Assert.isTrue(previousType.equals(currentType));
             }
 
             @Test
             void update_ResourceToLink_User_TypeTest_Equal() throws Exception {
-                ResourceType previousType = fileResourceRepository.findById(resourceId).get().getResourceType();
-                ResourceDtoFormUpdate dto =
-                        new ResourceDtoFormUpdate("name", "desc", userId, null, "URL");
+                ResourceType previousType =
+                        fileResourceRepository.findById(resourceId).get().getResourceType();
+                ResourceDtoFormUpdate dto = new ResourceDtoFormUpdate("name", "desc", userId, null, "URL");
                 performAs(Role.USER, userId);
                 performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
-                ResourceType currentType = fileResourceRepository.findById(resourceId).get().getResourceType();
-                Assert.isTrue(previousType.equals(ResourceType.FILE) && currentType.equals(ResourceType.LINK));
+                ResourceType currentType =
+                        fileResourceRepository.findById(resourceId).get().getResourceType();
+                Assert.isTrue(
+                        previousType.equals(ResourceType.FILE) && currentType.equals(ResourceType.LINK));
             }
 
             @Test
@@ -286,14 +288,16 @@ class ResourceControllerTest extends BaseAPIControllerTest {
                 FileResource file = fileResourceRepository.findById(resourceId).get();
                 file.setResourceType(ResourceType.LINK);
                 fileResourceRepository.save(file);
-                ResourceType previousType = fileResourceRepository.findById(resourceId).get().getResourceType();
-                ResourceDtoFormUpdate dto =
-                        new ResourceDtoFormUpdate("name", "desc", userId, null, "URL");
+                ResourceType previousType =
+                        fileResourceRepository.findById(resourceId).get().getResourceType();
+                ResourceDtoFormUpdate dto = new ResourceDtoFormUpdate("name", "desc", userId, null, "URL");
                 performAs(Role.USER, userId);
                 performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
-                ResourceType currentType = fileResourceRepository.findById(resourceId).get().getResourceType();
+                ResourceType currentType =
+                        fileResourceRepository.findById(resourceId).get().getResourceType();
                 Assert.isTrue(previousType.equals(currentType));
             }
+
             @Test
             void update_LinkToResource_User_TypeTest_NotEqual() throws Exception {
                 var linkResource =
@@ -315,8 +319,10 @@ class ResourceControllerTest extends BaseAPIControllerTest {
                         new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
                 performAs(Role.USER, userId);
                 performPutFile(linkResource.getId(), dto).andExpect(status().is2xxSuccessful());
-                ResourceType currentType = linkResource.getResourceType();
-                Assert.isTrue(previousType.equals(ResourceType.LINK) && currentType.equals(ResourceType.FILE));
+                ResourceType currentType =
+                        fileResourceRepository.findById(linkResource.getId()).get().getResourceType();
+                Assert.isTrue(
+                        previousType.equals(ResourceType.LINK) && currentType.equals(ResourceType.FILE));
             }
         }
 
