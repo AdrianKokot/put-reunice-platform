@@ -49,11 +49,15 @@ public class TicketService {
         Ticket ticket = getTicketDetailed(ticketId, token);
 
         Optional<LoggedUser> loggedUser = securityService.getPrincipal();
-        Optional<User> userOptional = loggedUser.isPresent() ? userService.getUserObjectOptional(loggedUser.get().getId()) : Optional.empty();
+        Optional<User> userOptional =
+                loggedUser.isPresent()
+                        ? userService.getUserObjectOptional(loggedUser.get().getId())
+                        : Optional.empty();
 
         String author =
                 userOptional.isPresent()
-                        ? String.format("%s %s", userOptional.get().getFirstName(), userOptional.get().getLastName())
+                        ? String.format(
+                                "%s %s", userOptional.get().getFirstName(), userOptional.get().getLastName())
                         : ticket.getRequesterEmail();
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
