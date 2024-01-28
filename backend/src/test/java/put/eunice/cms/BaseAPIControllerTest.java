@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,9 +23,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import put.eunice.cms.development.CustomAuthenticationToken;
+import put.eunice.cms.resource.projections.ResourceDtoFormCreate;
+import put.eunice.cms.resource.projections.ResourceDtoFormUpdate;
 import put.eunice.cms.security.Role;
 import put.eunice.cms.user.UserRepository;
 
@@ -130,6 +134,30 @@ public class BaseAPIControllerTest {
                         .content(objectMapper.writeValueAsString(object)));
     }
 
+    protected ResultActions performPostFile(ResourceDtoFormCreate dto) throws Exception {
+        if (dto.getFile() == null) {
+            return mvc.perform(
+                    MockMvcRequestBuilders.multipart(getUrl())
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
+        } else {
+            return mvc.perform(
+                    MockMvcRequestBuilders.multipart(getUrl())
+                            .file(
+                                    new MockMultipartFile(
+                                            dto.getFile().getName(),
+                                            dto.getFile().getOriginalFilename(),
+                                            dto.getFile().getContentType(),
+                                            dto.getFile().getInputStream()))
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
+        }
+    }
+
     /**
      * @param id ID of the object to be updated
      * @param object Object to be updated
@@ -140,6 +168,27 @@ public class BaseAPIControllerTest {
                 put(getUrl(id))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(object)));
+    }
+
+    protected ResultActions performPutFile(Long id, ResourceDtoFormUpdate dto) throws Exception {
+        if (dto.getFile() == null) {
+            return mvc.perform(
+                    put(getUrl(id))
+                            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
+        } else {
+            return mvc.perform(
+                    put(getUrl(id))
+                            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                            .content(dto.getFile().getBytes())
+                            .param("name", dto.getName())
+                            .param("authorId", String.valueOf(dto.getAuthorId()))
+                            .param("description", dto.getDescription())
+                            .param("url", dto.getUrl()));
+        }
     }
 
     /**
