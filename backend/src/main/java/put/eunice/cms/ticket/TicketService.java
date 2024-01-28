@@ -48,10 +48,12 @@ public class TicketService {
     public void addResponse(UUID ticketId, String content, Optional<UUID> token) {
         Ticket ticket = getTicketDetailed(ticketId, token);
 
-        Optional<LoggedUser> loggedUserOptional = securityService.getPrincipal();
+        Optional<LoggedUser> loggedUser = securityService.getPrincipal();
+        Optional<User> userOptional = loggedUser.isPresent() ? userService.getUserObjectOptional(loggedUser.get().getId()) : Optional.empty();
+
         String author =
-                loggedUserOptional.isPresent()
-                        ? loggedUserOptional.get().getUsername()
+                userOptional.isPresent()
+                        ? String.format("%s %s", userOptional.get().getFirstName(), userOptional.get().getLastName())
                         : ticket.getRequesterEmail();
 
         Optional<TicketUserStatus> userStatusOptional = getIfLoggedUserIsHandler(ticket);
