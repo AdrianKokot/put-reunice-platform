@@ -8,7 +8,7 @@
       [tuiTextfieldCleaner]="true"
     >
       {{ 'SEARCH' | translate }}
-      <input tuiTextfield type="text" />
+      <input tuiTextfield type="text" name="search" />
     </tui-input>
   </label>
 
@@ -139,6 +139,7 @@
             [icon]="'tuiIconExternalLink'"
             shape="rounded"
             [tuiHint]="'SEE_TICKET' | translate"
+            data-test="details-button"
           >
           </a>
         </td>

@@ -32,6 +32,7 @@ import {
   ucuu9,
 } from './use-cases/university-user';
 import { ucan1, ucan2, ucan3, ucan4, ucan5 } from './use-cases/anonymous-user';
+import { uccrh1, uccrh2, uccrh3 } from './use-cases/contact-request-handler';
 
 const testTimestamp = Date.now().toString();
 
@@ -96,7 +97,20 @@ describe('Use Cases', () => {
     ucan5(testTimestamp);
   });
 
-  describe('5. University User', () => {
+  describe('5. Contact Request Handler', () => {
+    rememberLogin(() => {
+      loginWith(
+        `edited_ua_user${testTimestamp}`,
+        UserPage.defaultFormValue.password,
+      );
+    });
+
+    uccrh1(testTimestamp);
+    uccrh2(testTimestamp);
+    uccrh3(testTimestamp);
+  });
+
+  describe('6. University User', () => {
     rememberLogin(() => {
       loginWith(
         `edited_ua_user${testTimestamp}`,
@@ -108,7 +122,7 @@ describe('Use Cases', () => {
     ucuu6(testTimestamp);
   });
 
-  describe('6. University Administrator', () => {
+  describe('7. University Administrator', () => {
     rememberLogin(() => {
       loginWith(
         `moderator${testTimestamp}`,
@@ -119,7 +133,7 @@ describe('Use Cases', () => {
     ucua4(testTimestamp);
   });
 
-  describe('7. Main Administrator', () => {
+  describe('8. Main Administrator', () => {
     rememberLogin(() => {
       login(E2EUser.MAIN_ADMIN);
     });
