@@ -16,7 +16,9 @@ import put.eunice.cms.page.exceptions.PageExceptionType;
 import put.eunice.cms.page.exceptions.PageForbiddenException;
 import put.eunice.cms.page.exceptions.PageNotFoundException;
 import put.eunice.cms.page.projections.*;
+import put.eunice.cms.resource.FileResource;
 import put.eunice.cms.resource.FileResourceRepository;
+import put.eunice.cms.resource.FileService;
 import put.eunice.cms.search.FullTextSearchService;
 import put.eunice.cms.search.projections.PageSearchHitDto;
 import put.eunice.cms.security.LoggedUser;
@@ -40,6 +42,7 @@ public class PageService {
     private final SecurityService securityService;
     private final FileResourceRepository fileResourceRepository;
     private final TicketRepository ticketRepository;
+    private final FileService fileService;
 
     @Transactional
     public PageDtoDetailed get(Long id) {
@@ -274,13 +277,22 @@ public class PageService {
             throw new PageException(PageExceptionType.DELETING_WITH_CHILD);
         }
 
+        List<FileResource> resourcesToDelete = List.of();
         if (deleteStaleResources) {
-            fileResourceRepository.deleteAll(pageRepository.findResourcesReferencedOnlyByPage(id));
+            resourcesToDelete = pageRepository.findResourcesReferencedOnlyByPage(id);
+            fileResourceRepository.deleteAll(resourcesToDelete);
         }
 
         ticketRepository.deleteAllByPageId(id);
 
         delete(page);
+
+        for (FileResource resource : resourcesToDelete) {
+            try {
+                fileService.deleteDirectory(FileResource.STORE_DIRECTORY + resource.getId());
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     public PageDtoHierarchy getHierarchy(long universityId) {

@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
@@ -14,10 +16,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import put.eunice.cms.BaseAPIControllerTest;
+import put.eunice.cms.configuration.ApplicationConfigurationProvider;
 import put.eunice.cms.page.projections.PageDtoDetailed;
 import put.eunice.cms.page.projections.PageDtoFormCreate;
 import put.eunice.cms.page.projections.PageDtoFormUpdate;
+import put.eunice.cms.resource.FileResource;
+import put.eunice.cms.resource.FileResourceRepository;
+import put.eunice.cms.resource.FileResourceService;
+import put.eunice.cms.resource.projections.ResourceDtoFormCreate;
 import put.eunice.cms.security.Role;
 import put.eunice.cms.university.University;
 import put.eunice.cms.university.UniversityRepository;
@@ -27,6 +35,10 @@ class PageControllerTest extends BaseAPIControllerTest {
     @Autowired private UniversityRepository universityRepository;
 
     @Autowired private PageRepository pageRepository;
+    @Autowired private FileResourceService fileResourceService;
+    @Autowired private FileResourceRepository fileResourceRepository;
+
+    @Autowired private ApplicationConfigurationProvider config;
 
     private Long universityId = 99L;
     private Long mainPageId = 99L;
@@ -567,6 +579,78 @@ class PageControllerTest extends BaseAPIControllerTest {
         void delete_Administrator_Success() throws Exception {
             performAs(Role.ADMIN);
             performDelete(pageId).andExpect(status().is2xxSuccessful());
+        }
+
+        @Nested
+        class DeletePageWithResourceTestClass {
+            private Long resourceId = 99L;
+
+            @BeforeEach
+            public void setup() {
+                performAs(Role.ADMIN, userId);
+                var resource =
+                        fileResourceService.create(
+                                new ResourceDtoFormCreate(
+                                        "TEST_NAME",
+                                        "TEST_DESCRIPTION",
+                                        userId,
+                                        new MockMultipartFile(
+                                                "TEST_FILE",
+                                                "TEST_FILE.txt",
+                                                "application/octet-stream",
+                                                "TEST_FILE".getBytes(StandardCharsets.UTF_8)),
+                                        null));
+                resourceId = resource.getId();
+
+                pageRepository
+                        .findById(pageId)
+                        .ifPresent(
+                                page -> {
+                                    page.setResources(Set.of(fileResourceRepository.findById(resourceId).get()));
+                                    pageRepository.save(page);
+                                });
+            }
+
+            @AfterEach
+            public void cleanup() {
+                if (fileResourceRepository.existsById(resourceId))
+                    fileResourceRepository.deleteById(resourceId);
+            }
+
+            @Test
+            void delete_PageWithResources_ShouldDeleteResourcesAndDirectories() throws Exception {
+                assertThat(
+                        Files.exists(
+                                config.getUploadsDirectory().resolve(FileResource.STORE_DIRECTORY + resourceId)),
+                        is(true));
+
+                performAs(Role.ADMIN);
+                performDelete(pageId, "?with_resources=true").andExpect(status().is2xxSuccessful());
+
+                assertThat(
+                        Files.exists(
+                                config.getUploadsDirectory().resolve(FileResource.STORE_DIRECTORY + resourceId)),
+                        is(false));
+                assertThat(fileResourceRepository.findById(resourceId).isEmpty(), is(true));
+            }
+
+            @Test
+            void delete_PageWithResourcesButNotSpecifyThatOption_ShouldNotDeleteResourcesAndDirectories()
+                    throws Exception {
+                assertThat(
+                        Files.exists(
+                                config.getUploadsDirectory().resolve(FileResource.STORE_DIRECTORY + resourceId)),
+                        is(true));
+
+                performAs(Role.ADMIN);
+                performDelete(pageId, "?with_resources=false").andExpect(status().is2xxSuccessful());
+
+                assertThat(
+                        Files.exists(
+                                config.getUploadsDirectory().resolve(FileResource.STORE_DIRECTORY + resourceId)),
+                        is(true));
+                assertThat(fileResourceRepository.findById(resourceId).isEmpty(), is(false));
+            }
         }
     }
 }

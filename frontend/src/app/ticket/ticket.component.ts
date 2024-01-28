@@ -16,6 +16,7 @@ import {
   TuiAlertService,
   TuiButtonModule,
   TuiGroupModule,
+  TuiHintModule,
 } from '@taiga-ui/core';
 import { resourceIdFromRoute } from '@eunice/modules/shared/util';
 import { CommonModule } from '@angular/common';
@@ -67,6 +68,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     LocalizedPipeModule,
     TicketToBadgeStatusModule,
     TranslateModule,
+    TuiHintModule,
   ],
   providers: [tuiAvatarOptionsProvider({ autoColor: true })],
 })

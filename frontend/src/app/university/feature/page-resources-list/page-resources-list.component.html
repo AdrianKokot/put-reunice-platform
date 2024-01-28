@@ -48,12 +48,7 @@
           ></a>
         </tui-file>
         <ng-template #icon>
-          <tui-marker-icon
-            mode="link"
-            new
-            size="xs"
-            [src]="file | fileIcon"
-          ></tui-marker-icon>
+          <tui-marker-icon mode="link" new size="xs" [src]="file | fileIcon" />
         </ng-template>
       </ng-container>
     </ng-container>
@@ -72,7 +67,7 @@
             length: files?.length ?? 0
           })
         "
-      ></tui-preview-pagination>
+      />
 
       <a
         tuiIconButton
@@ -102,15 +97,11 @@
         *ngIf="!state.loading && state.type === 'unsupported'"
         class="preview-unavailable-container"
       >
-        <tui-svg [src]="'tuiIconFileLarge'" class="t-icon"></tui-svg>
+        <tui-svg [src]="'tuiIconFileLarge'" class="t-icon" />
         <div>{{ 'PREVIEW_UNAVAILABLE' | translate }}</div>
       </div>
 
-      <tui-loader
-        *ngIf="state.loading"
-        size="xl"
-        class="preview-loader"
-      ></tui-loader>
+      <tui-loader *ngIf="state.loading" size="xl" class="preview-loader" />
     </tui-preview>
   </ng-template>
 </ng-container>

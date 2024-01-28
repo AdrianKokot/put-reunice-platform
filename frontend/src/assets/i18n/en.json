@@ -266,6 +266,7 @@
   "TEMPLATES": "Templates",
   "THIS_FILE_STORED_OUTSIDE_APP_WARNING": "Be careful! This file is stored outside the application.",
   "TICKET_ID": "Ticket #{{id}}",
+  "TICKET_LAST_STATUS_CHANGE": "Last status change by {{firstName}} {{lastName}}",
   "TICKET_LEAVE_REPLY": "Leave a reply",
   "TICKET_MARK_DELETED_SUCCESS": "Ticket has been marked as deleted",
   "TICKET_MARK_DELETED": "Mark as deleted",
