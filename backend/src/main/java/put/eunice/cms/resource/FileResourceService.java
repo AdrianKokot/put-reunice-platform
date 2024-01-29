@@ -17,15 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import put.eunice.cms.SearchCriteria;
 import put.eunice.cms.page.PageRepository;
-import put.eunice.cms.resource.exceptions.FileNotFoundException;
-import put.eunice.cms.resource.exceptions.ResourceException;
-import put.eunice.cms.resource.exceptions.ResourceExceptionType;
-import put.eunice.cms.resource.exceptions.ResourceNotFoundException;
+import put.eunice.cms.resource.exceptions.*;
 import put.eunice.cms.resource.projections.ResourceDtoDetailed;
 import put.eunice.cms.resource.projections.ResourceDtoFormCreate;
 import put.eunice.cms.resource.projections.ResourceDtoFormUpdate;
 import put.eunice.cms.security.Role;
 import put.eunice.cms.security.SecurityService;
+import put.eunice.cms.university.University;
 import put.eunice.cms.user.User;
 import put.eunice.cms.user.UserRepository;
 import put.eunice.cms.validation.exceptions.UnauthorizedException;
@@ -166,29 +164,36 @@ public class FileResourceService {
     public ResourceDtoDetailed update(Long id, ResourceDtoFormUpdate form) {
         var principal = securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
 
-        if (!principal.getId().equals(form.getAuthorId())
-                && !securityService.hasHigherRoleThan(Role.USER)) {
-            throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
+        var resource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+
+        if (!canModifyResource(resource)) {
+            throw new ResourceForbiddenException();
         }
 
-        User author =
-                userRepository
-                        .findById(form.getAuthorId())
-                        .orElseThrow(() -> new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
+        if (!resource.getAuthor().getId().equals(form.getAuthorId())) {
+            if (!principal.getId().equals(form.getAuthorId())
+                    && !securityService.hasHigherRoleThan(Role.USER)) {
+                throw new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID);
+            }
 
-        var fileResource = fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
+            User author =
+                    userRepository
+                            .findById(form.getAuthorId())
+                            .orElseThrow(() -> new ResourceException(ResourceExceptionType.AUTHOR_NOT_VALID));
 
-        fileResource.setName(form.getName());
-        fileResource.setDescription(form.getDescription());
-        fileResource.setAuthor(author);
+            resource.setAuthor(author);
+        }
 
-        if (fileResource.getResourceType() == ResourceType.LINK) {
-            updateLinkResource(fileResource, form);
+        resource.setName(form.getName());
+        resource.setDescription(form.getDescription());
+
+        if (resource.getResourceType() == ResourceType.LINK) {
+            updateLinkResource(resource, form);
         } else {
-            updateFileResource(fileResource, form);
+            updateFileResource(resource, form);
         }
 
-        return ResourceDtoDetailed.of(fileRepository.save(fileResource));
+        return ResourceDtoDetailed.of(fileRepository.save(resource));
     }
 
     private org.springframework.data.domain.Page<FileResource> _getAll(
@@ -248,17 +253,37 @@ public class FileResourceService {
     @Transactional
     @Secured("ROLE_USER")
     public void deleteFile(Long fileId) {
-        FileResource file = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
+        FileResource resource = fileRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
 
-        if (!file.getPages().isEmpty())
+        if (!canModifyResource(resource)) {
+            throw new ResourceForbiddenException();
+        }
+
+        if (!resource.getPages().isEmpty())
             throw new ResourceException(ResourceExceptionType.FILE_IS_USED_IN_PAGE);
 
         try {
-            fileService.deleteDirectory(FileResource.STORE_DIRECTORY + file.getId());
+            fileService.deleteDirectory(FileResource.STORE_DIRECTORY + resource.getId());
         } catch (IOException e) {
             throw new ResourceException(ResourceExceptionType.FAILED_TO_DELETE_FILE);
         }
 
         fileRepository.deleteById(fileId);
+    }
+
+    private boolean canModifyResource(FileResource resource) {
+        var principal = securityService.getPrincipal().orElseThrow(UnauthorizedException::new);
+
+        if (securityService.hasHigherRoleThan(Role.MODERATOR)) return true;
+
+        if (resource.getAuthor().getId().equals(principal.getId())) return true;
+
+        var resourceAuthorUniversities =
+                resource.getAuthor().getEnrolledUniversities().stream()
+                        .map(University::getId)
+                        .collect(Collectors.toSet());
+        resourceAuthorUniversities.retainAll(principal.getUniversities());
+
+        return !resourceAuthorUniversities.isEmpty();
     }
 }

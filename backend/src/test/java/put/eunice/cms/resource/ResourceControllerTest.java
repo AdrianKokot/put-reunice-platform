@@ -2,7 +2,7 @@ package put.eunice.cms.resource;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -34,6 +34,7 @@ class ResourceControllerTest extends BaseAPIControllerTest {
     private Long universityId = 99L;
     private Long pageId = 99L;
     private Long userId = 99L;
+    private Long anotherUserId = 99L;
     private Long resourceId = 99L;
 
     @Override
@@ -54,11 +55,15 @@ class ResourceControllerTest extends BaseAPIControllerTest {
         user = userRepository.save(user);
         this.userId = user.getId();
 
+        var anotherUser = new User("ANOTHER_TEST_USER", Role.USER, true);
+        anotherUser = userRepository.save(anotherUser);
+        this.anotherUserId = anotherUser.getId();
+
         var university = new University("TEST_UNIVERSITY", "TST_U", false);
         university = universityRepository.save(university);
         this.universityId = university.getId();
 
-        university.setEnrolledUsers(Set.of(user));
+        university.setEnrolledUsers(Set.of(user, anotherUser));
         university = universityRepository.save(university);
 
         var page =
@@ -77,7 +82,7 @@ class ResourceControllerTest extends BaseAPIControllerTest {
                 new FileResource(
                         1L,
                         "Test File",
-                        "Test decription",
+                        "Test description",
                         "test path",
                         "test filetype",
                         1L,
@@ -97,6 +102,8 @@ class ResourceControllerTest extends BaseAPIControllerTest {
         if (pageRepository.existsById(this.pageId)) pageRepository.deleteById(this.pageId);
 
         if (userRepository.existsById(this.userId)) userRepository.deleteById(this.userId);
+        if (userRepository.existsById(this.anotherUserId))
+            userRepository.deleteById(this.anotherUserId);
 
         if (universityRepository.existsById(this.universityId))
             universityRepository.deleteById(this.universityId);
@@ -203,6 +210,48 @@ class ResourceControllerTest extends BaseAPIControllerTest {
                         new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
                 performAsGuest();
                 performPutFile(resourceId, dto).andExpect(status().isUnauthorized());
+            }
+
+            @Test
+            void update_Resource_UserOfOtherUniversity_Forbidden() throws Exception {
+                ResourceDtoFormUpdate dto =
+                        new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
+                performAs(Role.USER, Set.of(-1L), 1L);
+                performPutFile(resourceId, dto).andExpect(status().isForbidden());
+            }
+
+            @Test
+            void update_Resource_UniversityAdministratorOfOtherUniversity_Forbidden() throws Exception {
+                ResourceDtoFormUpdate dto =
+                        new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
+                performAs(Role.MODERATOR, Set.of(-1L), 1L);
+                performPutFile(resourceId, dto).andExpect(status().isForbidden());
+            }
+
+            @Test
+            void update_Resource_AdministratorNotAuthor_Success() throws Exception {
+                ResourceDtoFormUpdate dto =
+                        new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
+                performAs(Role.ADMIN);
+                performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            void update_Resource_UserOfTheSameUniversityButNotAuthor_Success() throws Exception {
+                ResourceDtoFormUpdate dto =
+                        new ResourceDtoFormUpdate(
+                                "name", "desc", anotherUserId, createMockMultipartFile(), null);
+                performAs(Role.USER, Set.of(universityId), anotherUserId);
+                performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
+            }
+
+            @Test
+            void update_Resource_UniversityAdministratorOfTheSameUniversityButNotAuthor_Success()
+                    throws Exception {
+                ResourceDtoFormUpdate dto =
+                        new ResourceDtoFormUpdate("name", "desc", userId, createMockMultipartFile(), null);
+                performAs(Role.MODERATOR, Set.of(universityId), anotherUserId);
+                performPutFile(resourceId, dto).andExpect(status().is2xxSuccessful());
             }
 
             @Test
