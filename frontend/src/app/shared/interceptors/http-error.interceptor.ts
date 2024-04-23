@@ -66,7 +66,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 403 || error.status === 500 || error.status === 413) {
+        if (
+          error.status === 403 ||
+          error.status === 500 ||
+          error.status === 413
+        ) {
           this._errorAlert$.next({
             title: this.translate(`ERROR_${error.status}_TITLE`),
             message: this.translate(`ERROR_${error.status}_MESSAGE`),
