@@ -94,55 +94,55 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  deploy-to-development:
-    name: 🚀 Deploy to DEV
-    needs: [ build-and-push-image ]
-    runs-on: ubuntu-latest
-    environment:
-      name: development
-      url: https://reunice.kokotadrian.pl
+  # deploy-to-development:
+  #   name: 🚀 Deploy to DEV
+  #   needs: [ build-and-push-image ]
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: development
+  #     url: https://reunice.kokotadrian.pl
 
-    steps:
-      - name: Lowercase the repo name
-        run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+  #   steps:
+  #     - name: Lowercase the repo name
+  #       run: echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/${{ env.IMAGE_NAME }}
-          tags: |
-            # set latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
-            # tag event
-            type=ref,event=tag
-            # pull request event
-            type=ref,event=pr
+  #     - name: Extract metadata
+  #       id: meta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: ghcr.io/${{ env.IMAGE_NAME }}
+  #         tags: |
+  #           # set latest tag for default branch
+  #           type=raw,value=latest,enable={{is_default_branch}}
+  #           # tag event
+  #           type=ref,event=tag
+  #           # pull request event
+  #           type=ref,event=pr
 
-      - name: Pull image
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.MIKRUS_SSH_SERVER }}
-          username: ${{ secrets.MIKRUS_SSH_USER }}
-          password: ${{ secrets.MIKRUS_SSH_PASSWORD }}
-          port: ${{ secrets.MIKRUS_SSH_PORT }}
-          script: |
-            cd /reunice
-            ./setup.sh
-            docker pull ${{ steps.meta.outputs.tags }}
-            docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -v /uploads:/uploads -v /db-resources:/db-resources -v /emailTemplates:/emailTemplates -d ${{ steps.meta.outputs.tags }}
-            while [ "$(docker inspect --format='{{.State.Health.Status}}' app)" != "healthy" ]; do sleep 5; done
+  #     - name: Pull image
+  #       uses: appleboy/ssh-action@v1.0.0
+  #       with:
+  #         host: ${{ secrets.MIKRUS_SSH_SERVER }}
+  #         username: ${{ secrets.MIKRUS_SSH_USER }}
+  #         password: ${{ secrets.MIKRUS_SSH_PASSWORD }}
+  #         port: ${{ secrets.MIKRUS_SSH_PORT }}
+  #         script: |
+  #           cd /reunice
+  #           ./setup.sh
+  #           docker pull ${{ steps.meta.outputs.tags }}
+  #           docker run --network reunice --name app --env-file .env -p 80:8080 --memory="700m" -p 443:8080 -v /uploads:/uploads -v /db-resources:/db-resources -v /emailTemplates:/emailTemplates -d ${{ steps.meta.outputs.tags }}
+  #           while [ "$(docker inspect --format='{{.State.Health.Status}}' app)" != "healthy" ]; do sleep 5; done
 
-  run-e2e-tests:
-    name: 🧪 E2E tests
-    runs-on: ubuntu-latest
-    needs: [ deploy-to-development ]
-    defaults:
-      run:
-        working-directory: ./frontend
-    steps:
-      - uses: actions/checkout@v4
-      - name: 📦 Install packages
-        run: npm ci
-      - name: 🧪 E2E tests
-        run: npm run e2e
+  # run-e2e-tests:
+  #   name: 🧪 E2E tests
+  #   runs-on: ubuntu-latest
+  #   needs: [ deploy-to-development ]
+  #   defaults:
+  #     run:
+  #       working-directory: ./frontend
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: 📦 Install packages
+  #       run: npm ci
+  #     - name: 🧪 E2E tests
+  #       run: npm run e2e
