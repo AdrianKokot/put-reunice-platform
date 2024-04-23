@@ -52,7 +52,7 @@ public class EmailSendingService implements EmailSending {
         }
     }
 
-    @Value("${spring.mail.username}")
+    @Value("${app.mail.sender}")
     private String sender;
 
     @Async

@@ -49,6 +49,11 @@
       "name": "app.typesense.cache.ttl",
       "type": "java.lang.Integer",
       "description": "Determine Typesense cache TTL when app.typesense.cache.enabled=true."
+    },
+    {
+      "name": "app.mail.sender",
+      "type": "java.lang.String",
+      "description": "Determine email sender name."
     }
   ]
 }

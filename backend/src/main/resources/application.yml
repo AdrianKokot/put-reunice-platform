@@ -14,6 +14,8 @@ app:
     schema:
       create-type: ${DATABASE_SCHEMA_CREATE_TYPE:populate}
       handling-on-startup: ${DATABASE_SCHEMA_HANDLING_ON_STARTUP:create}
+  mail:
+    sender: ${MAIL_SENDER:Reunice Platform}
 
 ---
 

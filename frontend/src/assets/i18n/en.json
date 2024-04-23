@@ -70,6 +70,8 @@
   "ERROR_404_TITLE": "Page not found",
   "ERROR_500_MESSAGE": "An error occurred while processing your request.",
   "ERROR_500_TITLE": "Internal server error",
+  "ERROR_413_TITLE": "Request entity too large",
+  "ERROR_413_MESSAGE": "The request entity is too large.",
   "ERROR_DURING_DELETE": "An error occurred while deleting",
   "ERROR": "Error",
   "ERRORS.400": "Bad request",
