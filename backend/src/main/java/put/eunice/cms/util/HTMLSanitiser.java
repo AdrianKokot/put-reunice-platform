@@ -85,7 +85,7 @@ public class HTMLSanitiser {
 
     // list of HTML attributes that will be retained in the final output:
     private static final Set<String> VALID_ATTRIBUTE_NAMES =
-            new HashSet<>(Arrays.asList("id", "class", "href", "target", "title", "style"));
+            new HashSet<>(Arrays.asList("id", "class", "href", "src", "target", "title", "style"));
 
     private static final Object VALID_MARKER = new Object();
 
