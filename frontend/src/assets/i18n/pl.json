@@ -71,7 +71,7 @@
   "ERROR_500_MESSAGE": "Wystąpił błąd podczas przetwarzania Twojego żądania.",
   "ERROR_500_TITLE": "Wewnętrzny błąd serwera",
   "ERROR_413_TITLE": "Zbyt duży plik",
-  "ERROR_413_MESSAGE": "Plik, który próbujesz przesłać, jest zbyt duży. Maksymalny rozmiar pliku to 30 MB.",
+  "ERROR_413_MESSAGE": "Plik, który próbujesz przesłać, jest zbyt duży.",
   "ERROR_DURING_DELETE": "Wystąpił błąd podczas usuwania",
   "ERROR": "Błąd",
   "ERRORS.400": "Złe zapytanie",
