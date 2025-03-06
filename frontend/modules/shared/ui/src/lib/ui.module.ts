@@ -6,8 +6,19 @@ import { SearchComponent } from './layout/search/search.component';
 import { FooterComponent } from './layout/footer/footer.component';
 
 @NgModule({
-  imports: [CommonModule, TopBarComponent, SidebarComponent, SearchComponent, FooterComponent],
+  imports: [
+    CommonModule,
+    TopBarComponent,
+    SidebarComponent,
+    SearchComponent,
+    FooterComponent,
+  ],
   declarations: [],
-  exports: [TopBarComponent, SidebarComponent, SearchComponent, FooterComponent],
+  exports: [
+    TopBarComponent,
+    SidebarComponent,
+    SearchComponent,
+    FooterComponent,
+  ],
 })
 export class UiModule {}
