@@ -1,0 +1,19 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.less';
+
+:host {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+img {
+  max-height: 6rem;
+}
+
+@media @tui-mobile {
+  :host {
+    justify-content: center;
+    flex-direction: column;
+  }
+}
