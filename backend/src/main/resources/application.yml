@@ -6,6 +6,7 @@ app:
       ttl: ${TYPESENSE_CACHE_TTL:60000}
     host: ${TYPESENSE_HOST:localhost}
     key: ${TYPESENSE_API_KEY:devapikey}
+    use_embedding: ${TYPESENSE_USE_EMBEDDING:false}
   path:
     backups: ${BACKUPS_DIRECTORY:/db-resources/}
     uploads: ${UPLOADS_DIRECTORY:/uploads/}

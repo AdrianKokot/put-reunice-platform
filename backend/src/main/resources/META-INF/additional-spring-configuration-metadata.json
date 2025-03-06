@@ -21,6 +21,11 @@
       "description": "API Key for typesense server."
     },
     {
+      "name": "app.typesense.use_embedding",
+      "type": "java.lang.Boolean",
+      "description": "Whether use embeddings for typesense collection."
+    },
+    {
       "name": "app.typesense.host",
       "type": "java.lang.String",
       "description": "Typesense server host."

@@ -23,6 +23,7 @@ public class ApplicationConfigurationProvider {
     private final Path emailTemplatesDirectory;
     private final boolean typesenseCacheEnabled;
     private final int typesenseCacheTtl;
+    private final boolean typesenseEmbeddingsEnabled;
 
     /**
      * Constructs this application configuration provider.
@@ -44,7 +45,8 @@ public class ApplicationConfigurationProvider {
             @Value("${app.path.backups}") String backupsDirectory,
             @Value("${app.path.templates}") String emailTemplatesDirectory,
             @Value("${app.typesense.cache.enabled}") Boolean typesenseCacheEnabled,
-            @Value("${app.typesense.cache.ttl}") Integer typesenseCacheTtl) {
+            @Value("${app.typesense.cache.ttl}") Integer typesenseCacheTtl,
+            @Value("${app.typesense.use_embedding}") Boolean typesenseEnableEmbeddings) {
         this.applicationServer = applicationServer;
         this.databaseSchemaHandlingOnStartup = databaseSchemaHandlingOnStartup;
         this.databaseSchemaCreateType = databaseSchemaCreateType;
@@ -52,6 +54,7 @@ public class ApplicationConfigurationProvider {
         this.typesenseHost = typesenseHost;
         this.typesenseCacheEnabled = typesenseCacheEnabled;
         this.typesenseCacheTtl = this.typesenseCacheEnabled ? typesenseCacheTtl : 0;
+        this.typesenseEmbeddingsEnabled = typesenseEnableEmbeddings;
 
         this.uploadsDirectory = Path.of(uploadsDirectory).toAbsolutePath().normalize();
         this.backupsDirectory = Path.of(backupsDirectory).toAbsolutePath().normalize();
@@ -70,6 +73,7 @@ public class ApplicationConfigurationProvider {
         System.out.println("** -- Typesense");
         System.out.println("** host = " + this.typesenseHost);
         System.out.println("** cacheEnabled = " + this.typesenseCacheEnabled);
+        System.out.println("** embeddingsEnabled = " + this.typesenseEmbeddingsEnabled);
         if (this.typesenseCacheEnabled) System.out.println("** cacheTtl = " + this.typesenseCacheTtl);
 
         System.out.println("** --");
