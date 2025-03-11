@@ -11,10 +11,13 @@
 // taiga-ui customization
 :root {
   --top-bar-height: 3.9375rem;
+  --footer-height: 15rem;
 }
 
 .t-root-content {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 tui-island {
@@ -192,6 +195,10 @@ form.form-skeleton [tuiWrapper],
 
 .tui-space_left-auto {
   margin-left: auto;
+}
+
+.tui-space_top-auto {
+  margin-top: auto;
 }
 
 // Language

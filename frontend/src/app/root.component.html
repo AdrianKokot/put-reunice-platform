@@ -30,11 +30,14 @@
       </div>
 
       <div>
-        <ng-container
-          *polymorpheusOutlet="side.rightSide$ | async as content"
-          >{{ content }}</ng-container
-        >
+        <ng-container *polymorpheusOutlet="side.rightSide$ | async as content">
+          {{ content }}
+        </ng-container>
       </div>
     </div>
+
+    <footer class="tui-space_top-auto">
+      <eunice-ui-footer class="tui-space_top-8"></eunice-ui-footer>
+    </footer>
   </ng-container>
 </tui-root>

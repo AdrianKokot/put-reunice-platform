@@ -14,6 +14,7 @@ import { TuiAvatarModule, tuiAvatarOptionsProvider } from '@taiga-ui/kit';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { NotificationsComponent } from '../notifications/notifications.component';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'eunice-ui-top-bar',
@@ -33,6 +34,7 @@ import { NotificationsComponent } from '../notifications/notifications.component
     TranslateModule,
     LanguageSwitcherComponent,
     NotificationsComponent,
+    NgOptimizedImage,
   ],
   providers: [
     tuiButtonOptionsProvider({
