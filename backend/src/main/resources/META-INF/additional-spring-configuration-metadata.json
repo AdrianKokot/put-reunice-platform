@@ -26,6 +26,11 @@
       "description": "Whether use embeddings for typesense collection."
     },
     {
+      "name": "app.typesense.distance_threshold",
+      "type": "java.lang.Float",
+      "description": "Determines how close the result's embedding should be to the query's embedding for it to be returned when app.typesense.use_embedding=true"
+    },
+    {
       "name": "app.typesense.host",
       "type": "java.lang.String",
       "description": "Typesense server host."

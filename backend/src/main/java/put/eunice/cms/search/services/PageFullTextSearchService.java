@@ -1,5 +1,7 @@
 package put.eunice.cms.search.services;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.java.Log;
 import net.htmlparser.jericho.Source;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,6 @@ import put.eunice.cms.page.Page;
 import put.eunice.cms.search.FullTextSearchService;
 import put.eunice.cms.search.projections.PageSearchHitDto;
 import put.eunice.cms.university.University;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Log
@@ -67,30 +66,34 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
     }
 
     public List<PageSearchHitDto> search(String query) {
-        SearchParameters searchParameters =
-                new SearchParameters()
-                        .q(query);
+        SearchParameters searchParameters = new SearchParameters().q(query);
 
         if (this.applicationConfigurationProvider.isTypesenseEmbeddingsEnabled()) {
-            searchParameters = searchParameters
-                    .queryBy("title,description,content,creator,university,embedding")
-                    .queryByWeights("1,2,2,1,1,5")
-                    .vectorQuery(String.format("embedding:([], distance_threshold:%f)",
-                            this.applicationConfigurationProvider.getTypesenseEmbeddingsDistanceThreshold()))
-                    .excludeFields("content,embedding");
+            searchParameters =
+                    searchParameters
+                            .queryBy("title,description,content,creator,university,embedding")
+                            .queryByWeights("1,2,2,1,1,5")
+                            .vectorQuery(
+                                    String.format(
+                                            "embedding:([], distance_threshold:%f)",
+                                            this.applicationConfigurationProvider
+                                                    .getTypesenseEmbeddingsDistanceThreshold()))
+                            .excludeFields("content,embedding");
         } else {
-            searchParameters = searchParameters
-                    .queryBy("title,description,content,creator,university")
-                    .queryByWeights("1,2,2,1,1")
-                    .excludeFields("content");
+            searchParameters =
+                    searchParameters
+                            .queryBy("title,description,content,creator,university")
+                            .queryByWeights("1,2,2,1,1")
+                            .excludeFields("content");
         }
 
-        searchParameters = searchParameters
-                .perPage(10)
-                .highlightFields("title,description")
-                .useCache(this.applicationConfigurationProvider.isTypesenseCacheEnabled())
-                .cacheTtl(this.applicationConfigurationProvider.getTypesenseCacheTtl())
-                .filterBy("hidden:=false");
+        searchParameters =
+                searchParameters
+                        .perPage(10)
+                        .highlightFields("title,description")
+                        .useCache(this.applicationConfigurationProvider.isTypesenseCacheEnabled())
+                        .cacheTtl(this.applicationConfigurationProvider.getTypesenseCacheTtl())
+                        .filterBy("hidden:=false");
 
         List<SearchResultHit> list = List.of();
 
@@ -122,7 +125,7 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         try {
             if (client.collections(COLLECTION_NAME).retrieve() != null) {
                 if (this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()
-                    == DatabaseSchemaHandlingOnStartup.CREATE) return;
+                        == DatabaseSchemaHandlingOnStartup.CREATE) return;
 
                 client.collections(COLLECTION_NAME).delete();
             }
@@ -149,12 +152,7 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
                             .embed(
                                     new FieldEmbed()
                                             .from(List.of("title", "description", "content"))
-                                            .modelConfig(
-                                                    new FieldEmbedModelConfig()
-                                                            .modelName("ts/all-MiniLM-L12-v2")
-                                            )
-                            )
-            );
+                                            .modelConfig(new FieldEmbedModelConfig().modelName("ts/all-MiniLM-L12-v2"))));
         }
 
         CollectionSchema collectionSchema = new CollectionSchema();
@@ -187,12 +185,12 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         map.put(
                 "university",
                 university.getName()
-                + " "
-                + university.getShortName()
-                + " "
-                + university.getAddress()
-                + " "
-                + university.getDescription());
+                        + " "
+                        + university.getShortName()
+                        + " "
+                        + university.getAddress()
+                        + " "
+                        + university.getDescription());
         map.put("universityName", university.getName());
 
         return map;
