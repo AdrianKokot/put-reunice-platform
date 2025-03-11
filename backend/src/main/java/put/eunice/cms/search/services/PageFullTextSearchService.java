@@ -75,6 +75,8 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
             searchParameters = searchParameters
                     .queryBy("title,description,content,creator,university,embedding")
                     .queryByWeights("1,2,2,1,1,5")
+                    .vectorQuery(String.format("embedding:([], distance_threshold:%f)",
+                            this.applicationConfigurationProvider.getTypesenseEmbeddingsDistanceThreshold()))
                     .excludeFields("content,embedding");
         } else {
             searchParameters = searchParameters

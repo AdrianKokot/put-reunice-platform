@@ -24,6 +24,7 @@ public class ApplicationConfigurationProvider {
     private final boolean typesenseCacheEnabled;
     private final int typesenseCacheTtl;
     private final boolean typesenseEmbeddingsEnabled;
+    private final float typesenseEmbeddingsDistanceThreshold;
 
     /**
      * Constructs this application configuration provider.
@@ -46,7 +47,8 @@ public class ApplicationConfigurationProvider {
             @Value("${app.path.templates}") String emailTemplatesDirectory,
             @Value("${app.typesense.cache.enabled}") Boolean typesenseCacheEnabled,
             @Value("${app.typesense.cache.ttl}") Integer typesenseCacheTtl,
-            @Value("${app.typesense.use_embedding}") Boolean typesenseEnableEmbeddings) {
+            @Value("${app.typesense.use_embedding}") Boolean typesenseEnableEmbeddings,
+            @Value("${app.typesense.distance_threshold}") float typesenseEmbeddingsDistanceThreshold) {
         this.applicationServer = applicationServer;
         this.databaseSchemaHandlingOnStartup = databaseSchemaHandlingOnStartup;
         this.databaseSchemaCreateType = databaseSchemaCreateType;
@@ -59,6 +61,7 @@ public class ApplicationConfigurationProvider {
         this.uploadsDirectory = Path.of(uploadsDirectory).toAbsolutePath().normalize();
         this.backupsDirectory = Path.of(backupsDirectory).toAbsolutePath().normalize();
         this.emailTemplatesDirectory = Path.of(emailTemplatesDirectory).toAbsolutePath().normalize();
+        this.typesenseEmbeddingsDistanceThreshold = typesenseEmbeddingsDistanceThreshold;
 
         System.out.println("** Properties read:");
         System.out.println("** --");
@@ -74,6 +77,7 @@ public class ApplicationConfigurationProvider {
         System.out.println("** host = " + this.typesenseHost);
         System.out.println("** cacheEnabled = " + this.typesenseCacheEnabled);
         System.out.println("** embeddingsEnabled = " + this.typesenseEmbeddingsEnabled);
+        System.out.println("** distanceThreshold = " + this.typesenseEmbeddingsDistanceThreshold);
         if (this.typesenseCacheEnabled) System.out.println("** cacheTtl = " + this.typesenseCacheTtl);
 
         System.out.println("** --");
