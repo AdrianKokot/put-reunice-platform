@@ -22,7 +22,7 @@ import put.eunice.cms.university.University;
 @Profile("postgres")
 public class PageFullTextSearchService extends BaseFullTextSearchService
         implements FullTextSearchService<Page, PageSearchHitDto> {
-    private static final String COLLECTION_NAME = "pages";
+    private static final String COLLECTION_NAME = "eunice_pages";
 
     public PageFullTextSearchService(
             @Autowired ApplicationConfigurationProvider applicationConfigurationProvider) {
@@ -34,7 +34,7 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         if (!isConnected()) return;
 
         try {
-            client.collections("pages").documents().upsert(pageToMap(page));
+            client.collections(COLLECTION_NAME).documents().upsert(pageToMap(page));
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while upserting document", e);
         }
@@ -45,11 +45,11 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
 
         try {
             client
-                    .collections("pages")
+                    .collections(COLLECTION_NAME)
                     .documents()
                     .import_(
                             pages.stream().map(this::pageToMap).collect(Collectors.toList()),
-                            new ImportDocumentsParameters().action("upsert"));
+                            new ImportDocumentsParameters().action(IndexAction.UPSERT));
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while upserting document collection", e);
         }
@@ -59,18 +59,36 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         if (!isConnected()) return;
 
         try {
-            client.collections("pages").documents(page.getId().toString()).delete();
+            client.collections(COLLECTION_NAME).documents(page.getId().toString()).delete();
         } catch (Exception e) {
             log.log(java.util.logging.Level.SEVERE, "Error while deleting document", e);
         }
     }
 
     public List<PageSearchHitDto> search(String query) {
-        SearchParameters searchParameters =
-                new SearchParameters()
-                        .q(query)
-                        .queryBy("title,description,content,creator,university")
-                        .queryByWeights("1,2,2,1,1")
+        SearchParameters searchParameters = new SearchParameters().q(query);
+
+        if (this.applicationConfigurationProvider.isTypesenseEmbeddingsEnabled()) {
+            searchParameters =
+                    searchParameters
+                            .queryBy("title,description,content,creator,university,embedding")
+                            .queryByWeights("1,2,2,1,1,5")
+                            .vectorQuery(
+                                    String.format(
+                                            "embedding:([], distance_threshold:%f)",
+                                            this.applicationConfigurationProvider
+                                                    .getTypesenseEmbeddingsDistanceThreshold()))
+                            .excludeFields("content,embedding");
+        } else {
+            searchParameters =
+                    searchParameters
+                            .queryBy("title,description,content,creator,university")
+                            .queryByWeights("1,2,2,1,1")
+                            .excludeFields("content");
+        }
+
+        searchParameters =
+                searchParameters
                         .perPage(10)
                         .highlightFields("title,description")
                         .useCache(this.applicationConfigurationProvider.isTypesenseCacheEnabled())
@@ -125,6 +143,17 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         fields.add(new Field().name("creator").type(FieldTypes.STRING));
         fields.add(new Field().name("university").type(FieldTypes.STRING));
         fields.add(new Field().name("universityName").type(FieldTypes.STRING));
+
+        if (this.applicationConfigurationProvider.isTypesenseEmbeddingsEnabled()) {
+            fields.add(
+                    new Field()
+                            .name("embedding")
+                            .type(FieldTypes.FLOAT_ARRAY)
+                            .embed(
+                                    new FieldEmbed()
+                                            .from(List.of("title", "description", "content"))
+                                            .modelConfig(new FieldEmbedModelConfig().modelName("ts/all-MiniLM-L12-v2"))));
+        }
 
         CollectionSchema collectionSchema = new CollectionSchema();
         collectionSchema.name(COLLECTION_NAME).fields(fields);
