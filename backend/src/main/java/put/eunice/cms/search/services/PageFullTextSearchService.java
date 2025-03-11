@@ -122,16 +122,6 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
     }
 
     public void createCollection() {
-        try {
-            if (client.collections(COLLECTION_NAME).retrieve() != null) {
-                if (this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()
-                        == DatabaseSchemaHandlingOnStartup.CREATE) return;
-
-                client.collections(COLLECTION_NAME).delete();
-            }
-        } catch (Exception ignored) {
-        }
-
         List<Field> fields = new ArrayList<>();
 
         fields.add(new Field().name("pageId").type(FieldTypes.INT32));
@@ -159,6 +149,16 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         collectionSchema.name(COLLECTION_NAME).fields(fields);
 
         try {
+            try {
+                if (client.collections(COLLECTION_NAME).retrieve() != null) {
+                    if (this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()
+                            == DatabaseSchemaHandlingOnStartup.CREATE) return;
+
+                    client.collections(COLLECTION_NAME).delete();
+                }
+            } catch (Exception ignored) {
+            }
+
             client.collections().create(collectionSchema);
             log.info("** Created \"" + COLLECTION_NAME + "\" collection **");
         } catch (Exception e) {
