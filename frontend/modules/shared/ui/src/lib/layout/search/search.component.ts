@@ -5,6 +5,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  shareReplay,
   startWith,
   switchMap,
 } from 'rxjs';
@@ -17,7 +18,7 @@ import {
 } from '@taiga-ui/core';
 import { TuiInputModule } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
-import { TuiElementModule } from '@taiga-ui/cdk';
+import { TuiElementModule, TuiLetModule } from '@taiga-ui/cdk';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -34,6 +35,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TuiLoaderModule,
     TranslateModule,
     TuiHintModule,
+    TuiLetModule,
   ],
   templateUrl: './search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,5 +54,6 @@ export class SearchComponent {
     distinctUntilChanged(),
     filter(() => this.canOpen),
     switchMap((query) => this.service.searchPages(query).pipe(startWith(null))),
+    shareReplay(1),
   );
 }
