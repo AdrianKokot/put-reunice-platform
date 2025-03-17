@@ -113,9 +113,3 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
----
-
-logging:
-  level:
-    org.springframework.web: TRACE
