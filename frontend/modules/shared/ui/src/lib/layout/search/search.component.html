@@ -1,5 +1,6 @@
 <tui-input
   #input
+  *tuiLet="results$ | async as results"
   tuiTextfieldSize="m"
   [tuiTextfieldIconLeft]="'tuiIconSearch'"
   tuiTextfieldAppearance="outline"
@@ -10,12 +11,16 @@
   data-test="app-search"
 >
   {{ 'SEARCH' | translate }}
-  <input tuiTextfield name="globalSearch" />
+  <input
+    tuiTextfield
+    name="globalSearch"
+    (click)="input.open = (results?.length ?? 0) > 0"
+  />
 
   <ng-container *ngIf="canOpen">
     <ng-container *tuiDataList>
       <tui-data-list
-        *ngIf="results$ | async as results; else loading"
+        *ngIf="results; else loading"
         data-test="app-search-options"
       >
         <a

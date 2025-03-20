@@ -11,7 +11,6 @@ import org.typesense.api.FieldTypes;
 import org.typesense.api.exceptions.RequestMalformed;
 import org.typesense.model.*;
 import put.eunice.cms.configuration.ApplicationConfigurationProvider;
-import put.eunice.cms.configuration.DatabaseSchemaHandlingOnStartup;
 import put.eunice.cms.page.Page;
 import put.eunice.cms.search.FullTextSearchService;
 import put.eunice.cms.search.projections.PageSearchHitDto;
@@ -72,10 +71,10 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
             searchParameters =
                     searchParameters
                             .queryBy("title,description,content,creator,university,embedding")
-                            .queryByWeights("1,2,2,1,1,5")
+                            .queryByWeights("1,2,2,1,1,0")
                             .vectorQuery(
                                     String.format(
-                                            "embedding:([], distance_threshold:%f)",
+                                            "embedding:([], distance_threshold: %f)",
                                             this.applicationConfigurationProvider
                                                     .getTypesenseEmbeddingsDistanceThreshold()))
                             .excludeFields("content,embedding");
@@ -151,10 +150,8 @@ public class PageFullTextSearchService extends BaseFullTextSearchService
         try {
             try {
                 if (client.collections(COLLECTION_NAME).retrieve() != null) {
-                    if (this.applicationConfigurationProvider.getDatabaseSchemaHandlingOnStartup()
-                            == DatabaseSchemaHandlingOnStartup.CREATE) return;
-
                     client.collections(COLLECTION_NAME).delete();
+                    log.info("** Deleted \"" + COLLECTION_NAME + "\" collection **");
                 }
             } catch (Exception ignored) {
             }
